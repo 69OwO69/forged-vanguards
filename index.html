@@ -1031,7 +1031,7 @@ const MIS=[
 {id:5,n:"Cooling Station",t:0,l:1,w:[2,2,0],mul:1.1,r:260},
 {id:6,n:"Thermal Run",t:0,l:1,w:[2,1,0],mul:1.2,r:300},
 {id:7,n:"Siege Line",t:0,l:0,w:[1,2,0],mul:1.3,r:350},
-{id:4,n:"Foreman Brute",t:7,l:3,w:[10,10,9,19,9,19,15],mul:1,r:400,u:1,boss:1,fixed:1,arm:1},
+{id:4,n:"Foreman Brute",t:7,l:3,w:[null,null,9,19,9,19,15],mul:1,r:400,u:1,boss:1,fixed:1,arm:1},
 {id:9,n:"Hook Alley",t:0,l:1,w:[1,1,0],mul:1.5,r:420},
 {id:10,n:"Ion Storm",t:0,l:1,w:[2,1,2],mul:1.6,r:480},
 {id:25,n:"Relay Tower",t:0,l:1,w:[1,1,2],mul:1.7,r:520},
@@ -1093,7 +1093,7 @@ function camp(){
   {$("gp0").textContent=MIS.slice(0,35).filter(m=>S.camp.includes(m.id)).length+" / 35 CLEARED";let hi=-1;for(let i=0;i<35;i++)if(S.camp.includes(MIS[i].id))hi=Math.max(hi,CM.ri[i]);const pp=a=>a.map((q,k)=>(k?"L":"M")+q[0]+" "+q[1]).join(" ");$("rt0").setAttribute("d",pp(CM.r));$("rt1").setAttribute("d",hi>0?pp(CM.r.slice(0,hi+1)):"");
   let foc=34;for(let i=0;i<35;i++)if(ok(i)&&!S.camp.includes(MIS[i].id)){foc=i;break}if(cpos.f!==foc){cpos.f=foc;cpos.t=CM.n[foc];cpos.pend=true}cApply();requestAnimationFrame(cApply)}
   const m=sm!=null&&ok(sm)?MIS[sm]:null,d=m&&S.camp.includes(m.id);
-  $("mi").innerHTML=m&&m.swarm?`<b>${m.n}</b> <span style="color:#b05cff">(side mission)</span><br>Enemy: swarm of 12 drones · 24 HP each · each fires 2 shots per turn at random times · bullets that hit one drone waste any extra damage, so multi-shot guns work best<br>Reward: ${d?Math.round(m.r/3)+" SM (replay)":m.r+" SM"}<button class="btn" data-start="1">Start mission</button>`:m?`<b>${m.n}</b><br>Enemy: ${m.fixed?"Shiny Juggernaut on shiny Hellfire Treads · 2 Mine Launchers, 2 Rotary Miniguns, 2 Shotguns · shiny Lv50 Siphon Drone MK2 · 8 Armor Plates":`${T[m.t].n} · ${Math.round(T[m.t].hp*m.mul)} HP · ${T[m.t].res||0}% armor · ${m.w.map(i=>W[i].n).join(", ")}`}<br>Reward: ${d?Math.round(m.r/3)+" SM (replay)":m.r+" SM"+(m.u!=null?" + first-clear "+W[m.u].n:"")}<button class="btn" data-start="1">Start mission</button>`:"Select an open mission. Beat each one to unlock the next.";
+  $("mi").innerHTML=m&&m.swarm?`<b>${m.n}</b> <span style="color:#b05cff">(side mission)</span><br>Enemy: swarm of 12 drones · 24 HP each · each fires 2 shots per turn at random times · bullets that hit one drone waste any extra damage, so multi-shot guns work best<br>Reward: ${d?Math.round(m.r/3)+" SM (replay)":m.r+" SM"}<button class="btn" data-start="1">Start mission</button>`:m?`<b>${m.n}</b><br>Enemy: ${m.fixed?"Shiny Juggernaut on shiny Hellfire Treads · 2 Rotary Miniguns, 2 Shotguns · shiny Lv50 Siphon Drone MK2 · 8 Armor Plates":`${T[m.t].n} · ${Math.round(T[m.t].hp*m.mul)} HP · ${T[m.t].res||0}% armor · ${m.w.map(i=>W[i].n).join(", ")}`}<br>Reward: ${d?Math.round(m.r/3)+" SM (replay)":m.r+" SM"+(m.u!=null?" + first-clear "+W[m.u].n:"")}<button class="btn" data-start="1">Start mission</button>`:"Select an open mission. Beat each one to unlock the next.";
 }
 $("camp").onclick=e=>{const b=e.target.closest("button");if(!b)return;const d=b.dataset;
   if(d.go)return show(d.go);if(d.m!=null){sm=+d.m;return camp()}
@@ -1134,15 +1134,15 @@ try{if(!S.bot&&S.sel&&(S.sel.t!=null||S.sel.l!=null)){S.bot=JSON.parse(JSON.stri
 try{if(!S.fb&&S.sel&&S.sel.t!=null){S.fb=JSON.parse(JSON.stringify(S.sel));save()}}catch(e){}
 const FBM=null;
 /* Foreman Brute: a fixed, hand-built mech (same for every player). Shiny mythic Juggernaut + shiny mythic Hellfire Treads,
-   Top: 2 Mine Launchers | Left 1 + Right 1: Rotary Miniguns | Left 2 + Right 2: Shotguns | Drone: shiny Lv50 Siphon Drone MK2
+   Top: empty | Left 1 + Right 1: Rotary Miniguns | Left 2 + Right 2: Shotguns | Drone: shiny Lv50 Siphon Drone MK2
    Mods: 8 Armor Plates */
 function foremanMech(){
   const bs=JSON.stringify(S.sel),bx=JSON.stringify(S.xs);let m;
   try{
     let u=900000;const mk=(k,i,x,sh)=>{const c={u:++u,x:x||0};if(sh)c.s=1;S.xs[k]=S.xs[k]||{};(S.xs[k][i]=S.xs[k][i]||[]).push(c);return c.u};
-    const t=mk("t",7,0,1),l=mk("l",3,0,1),dr=mk("w",15,MAXP[RI("w",15)],1),mn=[mk("w",10),mk("w",10)],mg=[mk("w",9),mk("w",9)],sg=[mk("w",19),mk("w",19)];
+    const t=mk("t",7,0,1),l=mk("l",3,0,1),dr=mk("w",15,MAXP[RI("w",15)],1),mg=[mk("w",9),mk("w",9)],sg=[mk("w",19),mk("w",19)];
     const mods=[2,2,2,2,2,2,2,2].map(i=>({i,u:mk("m",i,0,0)}));
-    S.sel={t:7,tu:t,l:3,lu:l,w:[10,10,9,19,9,19,15],wu:[mn[0],mn[1],mg[0],sg[0],mg[1],sg[1],dr],m:mods[0].i,mu:mods[0].u,mx:mods.slice(1).map(q=>q.i),mxu:mods.slice(1).map(q=>q.u)};
+    S.sel={t:7,tu:t,l:3,lu:l,w:[null,null,9,19,9,19,15],wu:[null,null,mg[0],sg[0],mg[1],sg[1],dr],m:mods[0].i,mu:mods[0].u,mx:mods.slice(1).map(q=>q.i),mxu:mods.slice(1).map(q=>q.u)};
     m=mechOf(7,3,[],1,true,S.sel.w)
   }finally{S.sel=JSON.parse(bs);S.xs=JSON.parse(bx)}
   return m}
