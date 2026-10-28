@@ -879,7 +879,7 @@ function work(){
   $("sts").insertAdjacentHTML("afterbegin",`<div class="wt ${t&&wt>t.cap?"bad":""}" style="margin:0 0 6px;text-align:center">${wt} t / ${t?t.cap+" t":"no torso"}</div>`);
   const SEC=[["t","t","Torso"],["w","drone","Drones"],["l","l","Legs"],["w","side","Side guns"],["w","top","Top guns"],["m","m","Mods"]];
   $("inv").innerHTML=SEC.map(([k,sec,nm])=>{
-    const rows=K[k].flatMap((it,i)=>(k=="w"&&(it.drone?"drone":it.side?"side":"top")!=sec)?[]:S.own[k].includes(i)?XS(k,i).map(c=>[it,i,c]):[[it,i,null]]).filter(([it,i])=>!FL.own||S.own[k].includes(i)).sort((a,b)=>SORTS[FL.sort](a,b)||(b[2]?b[2].x:0)-(a[2]?a[2].x:0));
+    const rows=K[k].flatMap((it,i)=>(k=="w"&&(it.drone?"drone":it.side?"side":"top")!=sec)?[]:S.own[k].includes(i)?XS(k,i).filter(c=>!(k=="w"?(s.wu||[]).includes(c.u):k=="m"?[s.mu].concat(s.mxu||[]).includes(c.u):s[k+"u"]===c.u)).map(c=>[it,i,c]):[[it,i,null]]).filter(([it,i])=>!FL.own||S.own[k].includes(i)).sort((a,b)=>SORTS[FL.sort](a,b)||(b[2]?b[2].x:0)-(a[2]?a[2].x:0));
     if(!rows.length)return "";
     return `<div class="invh" id="sec_${sec}">${nm}</div>`+rows.map(([it,i,c])=>{const own=!!c,eq=c?(k=="w"?(s.wu||[]).includes(c.u):k=="m"?[s.mu].concat(s.mxu||[]).includes(c.u):s[k+"u"]===c.u):false;return `<button class="tile rt rt${RI(k,i)} ${own?"":"lock"} ${eq?"eq":""} ${c&&c.s?"shn":""}" data-k="${k}" data-i="${i}" ${c?`data-cu="${c.u}"`:""}>${ICO(k,it,c&&c.s)}${own?"":`<i>${it.cost} SM</i>`}${own?`<b class="clv">${lvOfP(RI(k,i),c.x)}</b>`:""}</button>`}).join("")}).join("");
   $("tabs").innerHTML="";
