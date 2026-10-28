@@ -1210,8 +1210,8 @@ function chargeUI(p,mine){const sel=B.ch.sel,spent=sel.reduce((a,i)=>a+p.weps[i]
 function controls(){
   const p=B.p,idle=B.turn=="p"&&!B.busy&&!B.over&&!p_did(),mine=B.turn=="p"&&(!B.busy||B.nb>0)&&!B.over&&!p_did(),d=dist();
   $("ctl").innerHTML=`<button data-a="l" ${mine&&canMove(p)?"":"disabled"}>◀ Move<small>${p.did?"turn used":p.s+" tile"+(p.s>1?"s":"")}</small></button><button data-a="r" ${mine&&canMove(p)?"":"disabled"}>Move ▶<small>${p.did?"turn used":p.s+" tile"+(p.s>1?"s":"")}</small></button>`+
-  (B.ch?"":p.weps.map((w,i)=>w.drone?"":`<button data-f="${i}" ${mine&&legal(p,B.e,i)?"":"disabled"}>${w.n}<small>${w.rocket?"rocket · lands in 4 turns · "+w.dr.join("-")+" dmg":w.rkp?w.shots+" rockets · "+w.dr.join("-")+" dmg each":w.mine?"2 mines · "+w.dr.join("-")+" dmg each":(w.shots?w.shots+" × ":"")+(w.dr?w.dr.join("-"):w.dmg)+" dmg"}${w.hd?" · "+(w.hdr?w.hdr.join("-"):w.hd)+" heat dmg":""}${w.push?" · push "+w.push:""}${w.pushS?" · 2nd shot pushes "+w.pushS[1]:""}${w.pull?" · pull "+w.pull:""}${w.ed?" · drains "+w.ed+" energy":""}${w.rd?" · -"+w.rd+"% armor":""}${w.cd?" · -"+w.cd+" cooling":""} · ${w.en} en${w.am?" · "+w.am+" ammo":""}${w.ra?" · "+w.ra+" rocket":""} · +${w.ht} heat · range ${w.min}-${w.max}</small></button>`).join(""))+(B.ch?chargeUI(p,mine):"")+
-  `${!B.ch&&p.buff?(p.ovT>0?`<button disabled>Overdrive<small>+20% damage · ${p.ovT} of 3 turns left</small></button>`:!p.ovUsed?`<button data-a="ovd" ${idle&&p.en>=3?"":"disabled"}>Overdrive<small>+20% damage for your next 3 turns · 3 en · once per battle</small></button>`:""):""}${!B.ch&&p.gas&&!p.gsUsed?`<button data-a="gas" ${idle&&p.en>=3?"":"disabled"}>Toxic Gas<small>poison gas covers the ground until the match ends · 3 en · once per battle</small></button>`:""}${!B.ch&&p.stomp&&!p.stUsed?`<button data-a="stomp" ${idle&&p.en>=3?"":"disabled"}>Stomp<small>stomps and drops a Twin Walker 2 tiles ahead · 3 en · once per battle</small></button>`:""}${!B.ch&&p.weps.some(w=>w.drone)&&!p.don?`<button data-a="drone" ${idle?"":"disabled"}>Activate Drone<small>flies out from behind your mech · then acts at the end of each turn</small></button>`:""}${B.ch?"":`<button data-a="ch" ${mine&&p.weps.filter((w,i)=>legal(p,B.e,i)).length>=2?"":"disabled"}>Charge<small>fire many guns at once</small></button>`}${!B.ch&&swordIdx(p).length>=4?`<button data-a="bar" ${idle&&canBar(p,B.e)?"":"disabled"}>Barrage<small>36 swings · ${BAR.dmg} dmg each · +${BAR.ht} heat · range 1-2</small></button>`:""}<button data-a="sur" ${B.over?"disabled":""}>Surrender</button><button class="end" data-a="end" ${idle?"":"disabled"}>End turn</button>`;
+  (B.ch?"":p.weps.map((w,i)=>w.drone?"":`<button data-f="${i}" ${mine&&legal(p,B.e,i)?"":"disabled"}>${w.n}<small>${w.rocket?"rocket · lands in 4 turns · "+w.dr.join("-")+" dmg":w.rkp?w.shots+" rockets · "+w.dr.join("-")+" dmg each":w.mine?"2 mines · "+w.dr.join("-")+" dmg each":(w.shots?w.shots+" × ":"")+(w.dr?w.dr.join("-"):w.dmg)+" dmg"}${w.hd?" · "+(w.hdr?w.hdr.join("-"):w.hd)+" heat dmg":""}${w.push?" · push "+w.push:""}${w.pushS?" · 2nd shot pushes "+w.pushS[1]:""}${w.pull?" · pull "+w.pull:""}${w.ed?" · drains "+w.ed+" energy":""}${w.rd?" · -"+w.rd+"% armor":""}${w.cd?" · -"+w.cd+" cooling":""} · ${w.en} en${w.am?" · "+w.am+" ammo":""}${w.ra?" · "+w.ra+" rocket":""} · +${w.ht} heat · range ${w.min}-${w.max}</small></button>`).join(""))+
+  `${!B.ch&&p.buff?(p.ovT>0?`<button disabled>Overdrive<small>+20% damage · ${p.ovT} of 3 turns left</small></button>`:!p.ovUsed?`<button data-a="ovd" ${idle&&p.en>=3?"":"disabled"}>Overdrive<small>+20% damage for your next 3 turns · 3 en · once per battle</small></button>`:""):""}${!B.ch&&p.gas&&!p.gsUsed?`<button data-a="gas" ${idle&&p.en>=3?"":"disabled"}>Toxic Gas<small>poison gas covers the ground until the match ends · 3 en · once per battle</small></button>`:""}${!B.ch&&p.stomp&&!p.stUsed?`<button data-a="stomp" ${idle&&p.en>=3?"":"disabled"}>Stomp<small>stomps and drops a Twin Walker 2 tiles ahead · 3 en · once per battle</small></button>`:""}${!B.ch&&p.weps.some(w=>w.drone)&&!p.don?`<button data-a="drone" ${idle?"":"disabled"}>Activate Drone<small>flies out from behind your mech · then acts at the end of each turn</small></button>`:""}${!B.ch&&swordIdx(p).length>=4?`<button data-a="bar" ${idle&&canBar(p,B.e)?"":"disabled"}>Barrage<small>36 swings · ${BAR.dmg} dmg each · +${BAR.ht} heat · range 1-2</small></button>`:""}<button data-a="sur" ${B.over?"disabled":""}>Surrender</button><button class="end" data-a="end" ${idle?"":"disabled"}>End turn</button>`;
 }
 const p_did=()=>!!(B&&B.p&&B.p.did&&!B.p.swarm);
 const canMove=m=>m.swarm?m.en>=1:!m.did;
@@ -1529,11 +1529,7 @@ $("ctl").onclick=async e=>{
   if(b.dataset.a=="l"||b.dataset.a=="r"){
     if(!move(p,B.e,b.dataset.a=="l"?-1:1,p.s))say("Blocked. Something is in the way.");else say("");
     controls();autoEnd();
-  }else if(b.dataset.a=="ch"){B.ch={sel:[]};controls()}
-  else if(b.dataset.a=="cc"){B.ch=null;controls()}
-  else if(b.dataset.a=="bar"){p.did=true;await barrage(p,B.e);autoEnd()}else if(b.dataset.a=="drone"){await droneOn(p);autoEnd()}else if(b.dataset.a=="stomp"){await stompOn(p);autoEnd()}else if(b.dataset.a=="gas"){await gasOn(p);autoEnd()}else if(b.dataset.a=="ovd"){await ovdOn(p);autoEnd()}
-  else if(b.dataset.c!=null){const i=+b.dataset.c,sl=B.ch.sel,at=sl.indexOf(i);if(at>=0)sl.splice(at,1);else sl.push(i);controls()}
-  else if(b.dataset.a=="go"){const sl=B.ch.sel.slice();B.ch=null;p.did=true;await Promise.all(sl.map(i=>shoot(p,B.e,i)));autoEnd()}
+  }else if(b.dataset.a=="bar"){p.did=true;await barrage(p,B.e);autoEnd()}else if(b.dataset.a=="drone"){await droneOn(p);autoEnd()}else if(b.dataset.a=="stomp"){await stompOn(p);autoEnd()}else if(b.dataset.a=="gas"){await gasOn(p);autoEnd()}else if(b.dataset.a=="ovd"){await ovdOn(p);autoEnd()}
   else if(b.dataset.f!=null){p.did=true;await shoot(p,B.e,+b.dataset.f);autoEnd()}
   else if(b.dataset.a=="end")endTurn();else if(b.dataset.a=="sur"){B.busy=true;controls();p.hp=0;await kill(p);finish(false)}
 };
@@ -1815,12 +1811,9 @@ function aiGun(a,b,w,ov){const n=w.shots||1,raw=w.dr?(w.dr[0]+w.dr[1])/2:w.dmg,a
   if(w.rocket)t*=.75;else if(w.mine)t*=.4;
   return t+(w.hd||0)*.3+(w.ed?Math.min(b.en||0,w.ed)*.5:0)+(w.cd||0)*.3+(w.rd&&b.res>0?w.rd*.5:0)}
 function aiOk(a,w,d,R){return !w.drone&&!w.heal&&d>=w.min&&d<=w.max&&R.en>=w.en&&R.am>=(w.am||0)&&R.ra>=(w.ra||0)}
-/* every action the attacker could take from x against a foe at fx: single guns, Charge (many guns at once), Barrage */
+/* every action the attacker could take from x against a foe at fx: single guns, Barrage */
 function aiShots(a,b,x,fx,R,ov,top){const d=Math.abs(x-fx),ok=[],out=[];
   a.weps.forEach((w,i)=>{if(aiOk(a,w,d,R)){ok.push(i);out.push({t:"g",ix:[i],dmg:aiGun(a,b,w,ov),en:w.en,ht:w.ht||0,am:w.am||0,ra:w.ra||0})}});
-  if(ok.length>=2){const L=Math.min(ok.length,top?6:7);for(let m=3;m<1<<L;m++){if((m&(m-1))==0)continue;let en=0,ht=0,am=0,ra=0,dmg=0;const ix=[];
-    for(let j=0;j<L;j++)if(m>>j&1){const i=ok[j],w=a.weps[i];en+=w.en;ht+=w.ht||0;am+=w.am||0;ra+=w.ra||0;dmg+=aiGun(a,b,w,ov);ix.push(i)}
-    if(en<=R.en&&am<=R.am&&ra<=R.ra)out.push({t:"c",ix,dmg,en,ht,am,ra})}}
   const sw=swordIdx(a);if(sw.length>=4&&sw.slice(0,4).every(i=>{const w=a.weps[i];return d>=w.min&&d<=w.max&&R.en>=w.en})){
     const ar=1-(b.res||0)/100;out.push({t:"b",ix:sw.slice(0,4),dmg:BAR.stag*Math.max(1,Math.floor(BAR.dmg*ov*ar))+Math.max(1,Math.floor((BAR.dmg-rsOf(b,{ty:"phys"}))*ar)),en:BAR.en,ht:BAR.ht,am:0,ra:0})}
   return out}
