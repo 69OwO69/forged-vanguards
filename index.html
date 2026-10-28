@@ -1775,7 +1775,7 @@ async function endTurn(){
   if(B.over)return;
   {const cur=B.turn=="p"?B.p:B.e,oth=B.turn=="p"?B.e:B.p;if((B.tl[B.turn]<=1&&await droneVolley(cur,oth))||B.over)return;if(await summonVolley(cur,oth)||B.over)return;if(await gasTick()||B.over)return;if(cur.ovT>0){cur.ovT--;if(cur.ovT==0)say("Overdrive ended.")}}
   const cu=B.turn,ot=cu=="p"?"e":"p";B.tl[cu]--;const next=B.tl[cu]>0?cu:ot,m=B[next];if(next!=cu&&B.tl[next]<=0)B.tl[next]=2;
-  B.turn=next;B.ch=null;m.en=Math.min(m.en+m.enMax,m.enCap||m.enMax*2);m.used=[];m.did=false;m.heat=Math.max(0,m.heat-m.cool);
+  B.turn=next;B.ch=null;m.en=Math.min(m.en+m.enMax,m.enCap||m.enMax*2);if(next!=cu)m.used=[];m.did=false;m.heat=Math.max(0,m.heat-m.cool);
   if((B.rk||[]).length){B.busy=true;controls();const dd=await rocketTick();B.busy=false;if(dd||B.over)return}
   if(m.heat>=m.hc){m.heat-=Math.round(m.hc/2);B.fl.push({x:px(m.x),y:GY-130,t:"OVERHEAT",l:80});shutSnd();say((next=="p"?"You overheat":"Enemy overheats")+" and lose the turn.");B.busy=true;controls();await sleep(1100);B.busy=false;return endTurn()}
   controls();
@@ -1823,11 +1823,13 @@ function aiGun(a,b,w,ov){const n=w.shots||1,raw=w.dr?(w.dr[0]+w.dr[1])/2:w.dmg,a
   return t+(w.hd||0)*.3+(w.ed?Math.min(b.en||0,w.ed)*.5:0)+(w.cd||0)*.3+(w.rd&&b.res>0?w.rd*.5:0)}
 function aiOk(a,w,d,R){return !w.drone&&!w.heal&&d>=w.min&&d<=w.max&&R.en>=w.en&&R.am>=(w.am||0)&&R.ra>=(w.ra||0)}
 /* every action the attacker could take from x against a foe at fx: single guns, Barrage */
-function aiShots(a,b,x,fx,R,ov,top){const d=Math.abs(x-fx),ok=[],out=[];
-  a.weps.forEach((w,i)=>{if(aiOk(a,w,d,R)){ok.push(i);out.push({t:"g",ix:[i],dmg:aiGun(a,b,w,ov),en:w.en,ht:w.ht||0,am:w.am||0,ra:w.ra||0})}});
-  const sw=swordIdx(a);if(sw.length>=4&&sw.slice(0,4).every(i=>{const w=a.weps[i];return d>=w.min&&d<=w.max&&R.en>=w.en})){
+function aiShots(a,b,x,fx,R,ov,top,used){const d=Math.abs(x-fx),ok=[],out=[];
+  a.weps.forEach((w,i)=>{if(!(used&&used.includes(i))&&aiOk(a,w,d,R)){ok.push(i);out.push({t:"g",ix:[i],dmg:aiGun(a,b,w,ov),en:w.en,ht:w.ht||0,am:w.am||0,ra:w.ra||0})}});
+  const sw=swordIdx(a);if(sw.length>=4&&sw.slice(0,4).every(i=>{const w=a.weps[i];return !(used&&used.includes(i))&&d>=w.min&&d<=w.max&&R.en>=w.en})){
     const ar=1-(b.res||0)/100;out.push({t:"b",ix:sw.slice(0,4),dmg:BAR.stag*Math.max(1,Math.floor(BAR.dmg*ov*ar))+Math.max(1,Math.floor((BAR.dmg-rsOf(b,{ty:"phys"}))*ar)),en:BAR.en,ht:BAR.ht,am:0,ra:0})}
   return out}
+/* best damage over two turns standing still: two DIFFERENT guns (a gun fires once per round) */
+function aiBest2(a,b,x,fx,R,ov){const o=aiShots(a,b,x,fx,R,ov,1,null);let best=0;for(let i=0;i<o.length;i++){if(o[i].dmg>best)best=o[i].dmg;for(let j=i+1;j<o.length;j++){if(o[i].ix.some(q=>o[j].ix.includes(q)))continue;const t=o[i].dmg+o[j].dmg;if(t>best)best=t}}return best}
 function aiBest(a,b,x,fx,R,ov){let bd=0;for(const o of aiShots(a,b,x,fx,R,ov,1))if(o.dmg>bd)bd=o.dmg;return bd}
 function aiReach(m,ox,s){const r=new Set([m.x]);for(const dir of[-1,1])for(let n=1;n<=s;n++){let t=Math.max(0,Math.min(12,m.x+dir*n));if(m.x<ox&&t>=ox)t=ox-1;if(m.x>ox&&t<=ox)t=ox+1;r.add(t)}return[...r]}
 function aiPlan(e,p){
@@ -1835,18 +1837,18 @@ function aiPlan(e,p){
   const hasDr=e.weps.some(w=>w.drone),drV=e.weps.filter(w=>w.drone).reduce((t,w)=>t+aiGun(e,p,w,1),0)*.8*2.5;
   const fR={en:Math.min(p.en+p.enMax,p.enCap||p.enMax*2),am:p.am||0,ra:p.ra||0},fOv=OVM(p),cB={},cT={},cP={};
   /* the foe's best single action when it stands at fx and I stand at mx */
-  const fB=(fx,mx)=>{const k=fx+"|"+mx;return cB[k]!=null?cB[k]:(cB[k]=aiBest(p,e,fx,mx,fR,fOv))};
+  const fB=(fx,mx)=>{const k=fx+"|"+mx;return cB[k]!=null?cB[k]:(cB[k]=aiBest(p,e,fx,mx,fR,fOv))},cB2={},fB2=(fx,mx)=>{const k=fx+"|"+mx;return cB2[k]!=null?cB2[k]:(cB2[k]=aiBest2(p,e,fx,mx,fR,fOv))};
   /* what the foe can do to me during its coming two turns (shoot twice, or step then shoot) */
-  const thr=(mx,fx)=>{const k=mx+"|"+fx;if(cT[k]!=null)return cT[k];let t=1.75*fB(fx,mx);for(const x2 of aiReach(p,mx,p.s||1))if(x2!=fx)t=Math.max(t,fB(x2,mx));return cT[k]=t};
+  const thr=(mx,fx)=>{const k=mx+"|"+fx;if(cT[k]!=null)return cT[k];let t=fB2(fx,mx);for(const x2 of aiReach(p,mx,p.s||1))if(x2!=fx)t=Math.max(t,fB(x2,mx));return cT[k]=t};
   const myR=(st)=>({en:Math.min(st.en+e.enMax,enCap),am:st.am,ra:st.ra});
-  const pot=(st)=>{const k=st.x+"|"+st.fx+"|"+(st.ov>0?1:0);if(cP[k]!=null)return cP[k];const R=myR(st),ov=st.ov>1?1.2:1;let t=1.75*aiBest(e,p,st.x,st.fx,R,ov);for(const x2 of aiReach({x:st.x},st.fx,e.s||1))if(x2!=st.x)t=Math.max(t,aiBest(e,p,x2,st.fx,R,ov));return cP[k]=t};
+  const pot=(st)=>{const k=st.x+"|"+st.fx+"|"+(st.ov>0?1:0);if(cP[k]!=null)return cP[k];const R=myR(st),ov=st.ov>1?1.2:1;let t=aiBest2(e,p,st.x,st.fx,R,ov);for(const x2 of aiReach({x:st.x},st.fx,e.s||1))if(x2!=st.x)t=Math.max(t,aiBest(e,p,x2,st.fx,R,ov));return cP[k]=t};
   const gB=e.weps.filter(w=>!w.drone&&!w.heal).map(w=>({d:aiGun(e,p,w,1),mn:w.min,mx:w.max}));
   /* long-range pull: the closer I am to the range band of my guns, the better (so it walks into the fight instead of waiting) */
   const att=(x,fx)=>{const d=Math.abs(x-fx);let t=0;for(const g of gB){const gap=d<g.mn?g.mn-d:d>g.mx?d-g.mx:0;t=Math.max(t,g.d*Math.max(0,1-.12*gap))}return t};
   const term=(st)=>{const T=thr(st.x,st.fx);let sc=-LAM*(Math.min(T,e.hp)+(T>=e.hp?250:0))+MU*pot(st)+.35*(1+.5*stall)*att(st.x,st.fx);if(st.heat-cool>=e.hc)sc-=90;sc-=Math.max(0,(st.heat-cool)/Math.max(1,e.hc)-.6)*25;return sc};
   const gen=(st)=>{const out=[],ov=st.ov>0?1.2:1,R={en:st.en,am:st.am,ra:st.ra};
-    aiShots(e,p,st.x,st.fx,R,ov).sort((a,b)=>b.dmg-a.dmg).slice(0,14).forEach(o=>{const hot=st.heat+o.ht;const kill=o.dmg>=st.fhp*.95;if(hot>=e.hc&&!kill)return;
-      out.push({a:{t:o.t,ix:o.ix},g:Math.min(o.dmg,st.fhp)+(kill?2000:0),ns:{...st,en:st.en-o.en,heat:hot,am:st.am-o.am,ra:st.ra-o.ra,fhp:st.fhp-o.dmg}})});
+    aiShots(e,p,st.x,st.fx,R,ov,0,st.used).sort((a,b)=>b.dmg-a.dmg).slice(0,14).forEach(o=>{const hot=st.heat+o.ht;const kill=o.dmg>=st.fhp*.95;if(hot>=e.hc&&!kill)return;
+      out.push({a:{t:o.t,ix:o.ix},g:Math.min(o.dmg,st.fhp)+(kill?2000:0),ns:{...st,en:st.en-o.en,heat:hot,am:st.am-o.am,ra:st.ra-o.ra,fhp:st.fhp-o.dmg,used:st.used.concat(o.ix)}})});
     for(const x2 of aiReach({x:st.x},st.fx,e.s||1)){if(x2==st.x)continue;let g=-.5*Math.abs(x2-st.x);
       if((B.mines||[]).some(q=>q.own!="e"&&q.x>=Math.min(st.x,x2)&&q.x<=Math.max(st.x,x2)&&q.x!=st.x))g-=95*(1-(e.res||0)/100);
       out.push({a:{t:"m",x:x2},g,ns:{...st,x:x2}})}
@@ -1858,7 +1860,7 @@ function aiPlan(e,p){
   const ev=(st,depth)=>{let best={sc:-1e9,a:null};for(const o of gen(st)){let sc=o.g;const ns=o.ns;
       if(ns.fhp<=0){sc+=0}else if(depth>1){let h=ns.heat-cool;const lost=h>=e.hc;if(lost)h-=Math.round(e.hc/2);sc+=lost?term(ns)*.5:ev({...ns,heat:Math.max(0,h),en:Math.min(ns.en+e.enMax,enCap),ov:Math.max(0,ns.ov-1)},depth-1).sc}else sc+=term(ns);
       sc*=1+(Math.random()-.5)*.03;if(sc>best.sc)best={sc,a:o.a}}return best};
-  return ev({x:e.x,fx:p.x,fhp:p.hp,en:e.en,heat:e.heat,am:e.am||0,ra:e.ra||0,ov:e.ovT||0,dn:!!e.don,ovU:!!e.ovUsed,stU:!!e.stUsed,gsU:!!e.gsUsed},1+tlAfter).a}
+  return ev({used:e.used.map((u,i)=>u?i:-1).filter(i=>i>=0),x:e.x,fx:p.x,fhp:p.hp,en:e.en,heat:e.heat,am:e.am||0,ra:e.ra||0,ov:e.ovT||0,dn:!!e.don,ovU:!!e.ovUsed,stU:!!e.stUsed,gsU:!!e.gsUsed},1+tlAfter).a}
 function aiSimple(e,p){const d=dist();let best=-1;const val=w=>(w.shots||1)*(w.dr?(w.dr[0]+w.dr[1])/2:w.dmg);e.weps.forEach((w,i)=>{if(legal(e,p,i)&&e.heat+(w.ht||0)<e.hc&&(best<0||val(w)>val(e.weps[best])))best=i});
   if(best>=0)return{t:"g",ix:[best]};const st=e.weps.reduce((a,w)=>val(w)>val(a)?w:a,e.weps[0]),pref=Math.round((st.min+st.max)/2);
   if(d!=pref){const dir=(d>pref?1:-1)*(e.x>p.x?-1:1);return{t:"m",x:e.x+dir*Math.min(e.s,Math.abs(d-pref))}}return{t:"p"}}
