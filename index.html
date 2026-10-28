@@ -887,6 +887,13 @@ function work(){
   $("sl").innerHTML=ph("Hook")+ph("Charger","Charge Buster")+ph("Teleport")+(t?sl("t",t,"t","Torso"):`<button class="slot ${tab=="t"?"on":""}" data-s="t"><span>+</span><em>Torso</em></button>`)+(s.l==null?`<button class="slot ${tab=="l"?"on":""}" data-s="l"><span>+</span><em>Legs</em></button>`:sl("l",L[s.l],"l","Legs"));
   $("sr").innerHTML=wsb(6)+ph("Shield");
   $("sb").innerHTML=[0,1,4,5,2,3].map(wsb).join("");
+  {const cb=document.createElement("button");cb.textContent="Copy build code";cb.style.cssText="display:block;margin:6px auto 0;padding:5px 10px;font:600 11px system-ui,sans-serif;border:1px solid #4a5a73;border-radius:6px;background:#17202e;color:#cfe0f5;cursor:pointer";
+    cb.onclick=()=>{let txt;try{const m=myMech();txt="FBM:"+JSON.stringify(m)}catch(e){txt="ERR "+e.message}
+      const fin=()=>{const ov=document.createElement("div");ov.style.cssText="position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.75);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:16px";
+        const ta=document.createElement("textarea");ta.value=txt;ta.readOnly=true;ta.style.cssText="width:min(720px,92vw);height:40vh;font:11px monospace";const b=document.createElement("button");b.textContent="Close";b.style.cssText="padding:8px 18px;font:700 14px system-ui";b.onclick=()=>ov.remove();
+        const t=document.createElement("div");t.textContent="Select all, copy, and paste this into the chat";t.style.cssText="color:#fff;font:600 14px system-ui";ov.append(t,ta,b);document.body.appendChild(ov);ta.focus();ta.select()};
+      try{navigator.clipboard.writeText(txt).then(()=>toast("Build code copied - paste it into the chat"),fin)}catch(e){fin()}};
+    $("sts").appendChild(cb)}
   $("sts").insertAdjacentHTML("afterbegin",`<div class="wt ${t&&wt>t.cap?"bad":""}" style="margin:0 0 6px;text-align:center">${wt} t / ${t?t.cap+" t":"no torso"}</div>`);
   const SEC=[["t","t","Torso"],["w","drone","Drones"],["l","l","Legs"],["w","side","Side guns"],["w","top","Top guns"],["m","m","Mods"]];
   $("inv").innerHTML=SEC.map(([k,sec,nm])=>{
@@ -1124,7 +1131,8 @@ function startBattle(mi){playBuf("match");stopMusic(1);if(mi&&!mi.arm)pairFade()
 /* arena bot = a frozen copy of the loadout that was equipped when it was first needed; later changes to your mech do not affect it */
 try{if(!S.bot&&S.sel&&(S.sel.t!=null||S.sel.l!=null)){S.bot=JSON.parse(JSON.stringify(S.sel));save()}}catch(e){}
 try{if(!S.fb&&S.sel&&S.sel.t!=null){S.fb=JSON.parse(JSON.stringify(S.sel));save()}}catch(e){}
-function fbMech(){if(!S.fb){S.fb=JSON.parse(JSON.stringify(S.sel));save()}const cur=S.sel;S.sel=JSON.parse(JSON.stringify(S.fb));let m;try{m=myMech()}finally{S.sel=cur}return m}
+const FBM=null;
+function fbMech(){if(FBM)return JSON.parse(JSON.stringify(FBM));if(!S.fb){S.fb=JSON.parse(JSON.stringify(S.sel));save()}const cur=S.sel;S.sel=JSON.parse(JSON.stringify(S.fb));let m;try{m=myMech()}finally{S.sel=cur}return m}
 function botMech(){if(!S.bot){S.bot=JSON.parse(JSON.stringify(S.sel));save()}const cur=S.sel,sb=JSON.parse(JSON.stringify(S.bot));sb.w=(sb.w||[]).slice();sb.w[0]=null;sb.w[1]=null;S.sel=sb;let m;try{m=myMech()}finally{S.sel=cur}return m}
 function startBattle0(mi){
   const rnd=n=>Math.floor(Math.random()*n),tier=S.wins;
