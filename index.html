@@ -893,7 +893,7 @@ function work(){
   const LB=(k,i,u)=>`<b class="clv">${LVU(k,i,u)}</b>`;
   const sl=(k,it,d,cap)=>`<button class="slot rt rt${tier(it.cost)} ${tab==d?"on":""}" data-s="${d}" style="border-color:${RAR(it.cost)}">${ICO(k,it)}<em>${cap}</em>${LB(k,K[k].indexOf(it),s[d+"u"])}</button>`;
   const wsb=si=>{const id=s.w[si];return `<button class="slot ${id!=null?"rt rt"+tier(W[id].cost):""} ${SSEL===si?"on":""} ${id!=null&&isSh("w",id,s.wu&&s.wu[si])?"shn":""}" data-ws="${si}" ${id!=null?`style="border-color:${RAR(W[id].cost)}"`:`title="${SN[si]}"`}>${id!=null?ICO("w",W[id],isSh("w",id,s.wu&&s.wu[si])):"+"}<em>${SN[si]}</em>${id!=null?LB("w",id,s.wu&&s.wu[si]):""}</button>`};
-  const msb=q=>{const id=q==0?s.m:s.mx[q-1];return id!=null?`<button class="slot rt rt${tier(M[id].cost)}" data-um="${q+1}" style="border-color:${RAR(M[id].cost)}">${ICO("m",M[id])}<em>${q==8?"Teleport":"Module"}</em>${LB("m",id,q==0?s.mu:(s.mxu||[])[q-1])}</button>`:`<button class="slot ${tab=="m"?"on":""}" data-s="m"><span>+</span><em>${q==8?"Teleport":"Module"}</em></button>`},
+  const msb=q=>{const id=q==0?s.m:s.mx[q-1];return id!=null?`<button class="slot rt rt${tier(M[id].cost)}" data-um="${q+1}" style="border-color:${RAR(M[id].cost)}">${ICO("m",M[id])}<em>${q==8?"Teleport":"Module"}</em>${LB("m",id,q==0?s.mu:(s.mxu||[])[q-1])}</button>`:`<button class="slot ${tab==(q==8?"tp":"m")?"on":""}" data-s="${q==8?"tp":"m"}"><span>+</span><em>${q==8?"Teleport":"Module"}</em></button>`},
   ph=(lb,tt)=>`<button class="slot empty" disabled title="${tt||lb} (coming soon)"><span>+</span><em>${lb}</em></button>`;
   $("stop").innerHTML=[0,1,2,3,4,5,6,7].map(msb).join("");
   $("sl").innerHTML=ph("Hook")+ph("Charger","Charge Buster")+msb(8)+(t?sl("t",t,"t","Torso"):`<button class="slot ${tab=="t"?"on":""}" data-s="t"><span>+</span><em>Torso</em></button>`)+(s.l==null?`<button class="slot ${tab=="l"?"on":""}" data-s="l"><span>+</span><em>Legs</em></button>`:sl("l",L[s.l],"l","Legs"));
@@ -901,9 +901,9 @@ function work(){
   $("sb").innerHTML=[0,1,4,5,2,3].map(wsb).join("");
   
   $("sts").insertAdjacentHTML("afterbegin",`<div class="wt ${t&&wt>t.cap?"bad":""}" style="margin:0 0 6px;text-align:center">${wt} t / ${t?t.cap+" t":"no torso"}</div>`);
-  const SEC=[["t","t","Torso"],["w","drone","Drones"],["l","l","Legs"],["w","side","Side guns"],["w","top","Top guns"],["m","m","Mods"]];
+  const SEC=[["t","t","Torso"],["w","drone","Drones"],["l","l","Legs"],["w","side","Side guns"],["w","top","Top guns"],["m","m","Mods"],["m","tp","Teleporters"]];
   $("inv").innerHTML=SEC.map(([k,sec,nm])=>{
-    const rows=K[k].flatMap((it,i)=>(k=="w"&&(it.drone?"drone":it.side?"side":"top")!=sec)?[]:S.own[k].includes(i)?XS(k,i).filter(c=>!(k=="w"?(s.wu||[]).includes(c.u):k=="m"?[s.mu].concat(s.mxu||[]).includes(c.u):s[k+"u"]===c.u)).map(c=>[it,i,c]):[[it,i,null]]).filter(([it,i])=>!FL.own||S.own[k].includes(i)).sort((a,b)=>SORTS[FL.sort](a,b)||(b[2]?b[2].x:0)-(a[2]?a[2].x:0));
+    const rows=K[k].flatMap((it,i)=>((k=="w"&&(it.drone?"drone":it.side?"side":"top")!=sec)||(k=="m"&&(it.tp?"tp":"m")!=sec))?[]:S.own[k].includes(i)?XS(k,i).filter(c=>!(k=="w"?(s.wu||[]).includes(c.u):k=="m"?[s.mu].concat(s.mxu||[]).includes(c.u):s[k+"u"]===c.u)).map(c=>[it,i,c]):[[it,i,null]]).filter(([it,i])=>!FL.own||S.own[k].includes(i)).sort((a,b)=>SORTS[FL.sort](a,b)||(b[2]?b[2].x:0)-(a[2]?a[2].x:0));
     if(!rows.length)return "";
     return `<div class="invh" id="sec_${sec}">${nm}</div>`+rows.map(([it,i,c])=>{const own=!!c,eq=c?(k=="w"?(s.wu||[]).includes(c.u):k=="m"?[s.mu].concat(s.mxu||[]).includes(c.u):s[k+"u"]===c.u):false;return `<button class="tile rt rt${RI(k,i)} ${own?"":"lock"} ${eq?"eq":""} ${c&&c.s?"shn":""}" data-k="${k}" data-i="${i}" ${c?`data-cu="${c.u}"`:""}>${ICO(k,it,c&&c.s)}${own?"":`<i>${it.cost} SM</i>`}${own?`<b class="clv">${lvOfP(RI(k,i),c.x)}</b>`:""}</button>`}).join("")}).join("");
   $("tabs").innerHTML="";
@@ -964,7 +964,7 @@ const src=e=>{const b=e.target.closest("#work button");if(!b)return null;const d
  if((d.s=="t"||d.s=="l")&&S.sel[d.s]!=null)return{k:d.s,i:S.sel[d.s],u:S.sel[d.s+"u"],from:d.s,b};return null};
 const tgt=el=>{if(!el||!dg)return null;const k=dg.s.k,fr=dg.s.from,b=el.closest("#work button");
  if(b){const d=b.dataset;if(d.ws!=null&&k=="w")return{t:"ws",si:+d.ws,el:b};
-  if((d.s=="t"&&k=="t")||(d.s=="l"&&k=="l")||(k=="m"&&(d.s=="m"||d.um)))return{t:"eq",el:b}}
+  if((d.s=="t"&&k=="t")||(d.s=="l"&&k=="l")||(k=="m"&&((M[dg.s.i]&&M[dg.s.i].tp)?(d.s=="tp"||d.um=="9"):(d.s=="m"||(d.um&&d.um!="9")))))return{t:"eq",el:b}}
  if(el.closest("#pv"))return{t:"eq",el:$("pv")};
  if(fr!=null&&el.closest(".invw"))return{t:"inv",el:el.closest(".invw")};return null};
 const clr=()=>{if(hlE){hlE.classList.remove("dz");hlE=null}};
