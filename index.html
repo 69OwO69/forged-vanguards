@@ -887,13 +887,7 @@ function work(){
   $("sl").innerHTML=ph("Hook")+ph("Charger","Charge Buster")+ph("Teleport")+(t?sl("t",t,"t","Torso"):`<button class="slot ${tab=="t"?"on":""}" data-s="t"><span>+</span><em>Torso</em></button>`)+(s.l==null?`<button class="slot ${tab=="l"?"on":""}" data-s="l"><span>+</span><em>Legs</em></button>`:sl("l",L[s.l],"l","Legs"));
   $("sr").innerHTML=wsb(6)+ph("Shield");
   $("sb").innerHTML=[0,1,4,5,2,3].map(wsb).join("");
-  {const cb=document.createElement("button");cb.textContent="Copy build code";cb.style.cssText="display:block;margin:6px auto 0;padding:5px 10px;font:600 11px system-ui,sans-serif;border:1px solid #4a5a73;border-radius:6px;background:#17202e;color:#cfe0f5;cursor:pointer";
-    cb.onclick=()=>{let txt;try{const m=myMech();txt="FBM:"+JSON.stringify(m)}catch(e){txt="ERR "+e.message}
-      const fin=()=>{const ov=document.createElement("div");ov.style.cssText="position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.75);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:16px";
-        const ta=document.createElement("textarea");ta.value=txt;ta.readOnly=true;ta.style.cssText="width:min(720px,92vw);height:40vh;font:11px monospace";const b=document.createElement("button");b.textContent="Close";b.style.cssText="padding:8px 18px;font:700 14px system-ui";b.onclick=()=>ov.remove();
-        const t=document.createElement("div");t.textContent="Select all, copy, and paste this into the chat";t.style.cssText="color:#fff;font:600 14px system-ui";ov.append(t,ta,b);document.body.appendChild(ov);ta.focus();ta.select()};
-      try{navigator.clipboard.writeText(txt).then(()=>toast("Build code copied - paste it into the chat"),fin)}catch(e){fin()}};
-    $("sts").appendChild(cb)}
+  
   $("sts").insertAdjacentHTML("afterbegin",`<div class="wt ${t&&wt>t.cap?"bad":""}" style="margin:0 0 6px;text-align:center">${wt} t / ${t?t.cap+" t":"no torso"}</div>`);
   const SEC=[["t","t","Torso"],["w","drone","Drones"],["l","l","Legs"],["w","side","Side guns"],["w","top","Top guns"],["m","m","Mods"]];
   $("inv").innerHTML=SEC.map(([k,sec,nm])=>{
@@ -1030,7 +1024,7 @@ const MIS=[
 {id:5,n:"Cooling Station",t:0,l:1,w:[2,2,0],mul:1.1,r:260},
 {id:6,n:"Thermal Run",t:0,l:1,w:[2,1,0],mul:1.2,r:300},
 {id:7,n:"Siege Line",t:0,l:0,w:[1,2,0],mul:1.3,r:350},
-{id:4,n:"Foreman Brute",t:0,l:1,w:[2,0,2],mul:1.4,r:400,u:1,boss:1,copy:1,arm:1},
+{id:4,n:"Foreman Brute",t:1,l:1,w:[10,10,2,2,19,19],mul:1.4,r:400,u:1,boss:1,arm:1},
 {id:9,n:"Hook Alley",t:0,l:1,w:[1,1,0],mul:1.5,r:420},
 {id:10,n:"Ion Storm",t:0,l:1,w:[2,1,2],mul:1.6,r:480},
 {id:25,n:"Relay Tower",t:0,l:1,w:[1,1,2],mul:1.7,r:520},
@@ -1827,7 +1821,7 @@ async function swarmAI(){
 /* ================= smarter AI (plans each action by expected damage, range, heat, ammo, resistance and the foe's reply) ================= */
 function aiGun(a,b,w,ov){const n=w.shots||1,raw=w.dr?(w.dr[0]+w.dr[1])/2:w.dmg,ar=1-(b.res||0)/100;
   const d1=Math.max(1,Math.floor(raw*ov*ar)),dl=Math.max(1,Math.floor((raw*ov-rsOf(b,w))*ar));let t=(n-1)*d1+dl;
-  if(w.rocket)t*=.75;else if(w.mine)t*=.4;
+  if(w.rocket)t*=.75;else if(w.mine)t*=.4/(1+3*((B&&B.stall)||0));
   return t+(w.hd||0)*.3+(w.ed?Math.min(b.en||0,w.ed)*.5:0)+(w.cd||0)*.3+(w.rd&&b.res>0?w.rd*.5:0)}
 function aiOk(a,w,d,R){return !w.drone&&!w.heal&&d>=w.min&&d<=w.max&&R.en>=w.en&&R.am>=(w.am||0)&&R.ra>=(w.ra||0)}
 /* every action the attacker could take from x against a foe at fx: single guns, Barrage */
