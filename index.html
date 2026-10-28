@@ -763,10 +763,15 @@ if(S.gmk3r){S.gmk3r=0;S.gmk3=0}
 if(!S.gmk3){S.gmk3=1;for(let n=0;n<4;n++)addI("w",18);save()}
 if(!S.gsd2){S.gsd2=1;addI("w",15);save()}
 if(!S.rmcu){S.rmcu=1;const cl=(k,len)=>{S.own[k]=(S.own[k]||[]).filter(x=>x<len);for(const x in (S.xs[k]||{}))if(+x>=len)delete S.xs[k][x]};cl("t",T.length);cl("l",L.length);cl("m",M.length);const q=S.sel;if(q.t!=null&&q.t>=T.length){q.t=0;q.tu=null}if(q.l!=null&&q.l>=L.length){q.l=0;q.lu=null}if(q.m!=null&&q.m>=M.length){q.m=null;q.mu=null}if(q.mx){q.mx=q.mx.filter(x=>x<M.length)}(S.loads||[]).forEach(l=>{if(!l)return;if(l.t!=null&&l.t>=T.length)l.t=0;if(l.l!=null&&l.l>=L.length)l.l=0;if(l.m!=null&&l.m>=M.length)l.m=null;if(l.mx)l.mx=l.mx.filter(x=>x<M.length)});save()}
-function fixU(sel){sel.wu=sel.wu||[null,null,null,null,null,null,null];const used=new Set(),pk=(k,i,u)=>{const a=XS(k,i);let c=a.find(x=>x.u===u&&!used.has(x.u));if(!c)c=a.slice().sort((p,q)=>q.x-p.x).find(x=>!used.has(x.u));if(c)used.add(c.u);return c?c.u:null};
+function fixU(sel){sel.wu=sel.wu||[null,null,null,null,null,null,null];
+  sel.mx=sel.mx||[];sel.mxu=sel.mxu||[];while(sel.mx.length<8)sel.mx.push(null);while(sel.mxu.length<8)sel.mxu.push(null);
+  {const isT=id=>id!=null&&M[id]&&M[id].tp;if(isT(sel.m)){if(sel.mx[7]==null){sel.mx[7]=sel.m;sel.mxu[7]=sel.mu}sel.m=null;sel.mu=null}
+   for(let q=0;q<7;q++)if(isT(sel.mx[q])){if(sel.mx[7]==null){sel.mx[7]=sel.mx[q];sel.mxu[7]=sel.mxu[q]}sel.mx[q]=null;sel.mxu[q]=null}
+   if(sel.mx[7]!=null&&!isT(sel.mx[7])){sel.mx[7]=null;sel.mxu[7]=null}}
+const used=new Set(),pk=(k,i,u)=>{const a=XS(k,i);let c=a.find(x=>x.u===u&&!used.has(x.u));if(!c)c=a.slice().sort((p,q)=>q.x-p.x).find(x=>!used.has(x.u));if(c)used.add(c.u);return c?c.u:null};
   for(let si=0;si<7;si++)sel.wu[si]=sel.w[si]==null?null:pk("w",sel.w[si],sel.wu[si]);
   for(const k of["t","l","m"])sel[k+"u"]=sel[k]==null?null:pk(k,sel[k],sel[k+"u"]);
-  sel.mx=sel.mx||[null,null,null,null,null,null,null];sel.mxu=sel.mxu||[null,null,null,null,null,null,null];for(let q=0;q<7;q++)sel.mxu[q]=sel.mx[q]==null?null:pk("m",sel.mx[q],sel.mxu[q]);return sel}
+  for(let q=0;q<8;q++)sel.mxu[q]=sel.mx[q]==null?null:pk("m",sel.mx[q],sel.mxu[q]);return sel}
 fixU(S.sel);
 let FZ=null;
 const fzTile=(k,i,extra)=>`<div class="ft" style="border-color:${RAR(K[k][i].cost)}">${ICO(k,K[k][i])}<i>${K[k][i].n.split(" ")[0]}</i>${extra||""}</div>`;
@@ -888,10 +893,10 @@ function work(){
   const LB=(k,i,u)=>`<b class="clv">${LVU(k,i,u)}</b>`;
   const sl=(k,it,d,cap)=>`<button class="slot rt rt${tier(it.cost)} ${tab==d?"on":""}" data-s="${d}" style="border-color:${RAR(it.cost)}">${ICO(k,it)}<em>${cap}</em>${LB(k,K[k].indexOf(it),s[d+"u"])}</button>`;
   const wsb=si=>{const id=s.w[si];return `<button class="slot ${id!=null?"rt rt"+tier(W[id].cost):""} ${SSEL===si?"on":""} ${id!=null&&isSh("w",id,s.wu&&s.wu[si])?"shn":""}" data-ws="${si}" ${id!=null?`style="border-color:${RAR(W[id].cost)}"`:`title="${SN[si]}"`}>${id!=null?ICO("w",W[id],isSh("w",id,s.wu&&s.wu[si])):"+"}<em>${SN[si]}</em>${id!=null?LB("w",id,s.wu&&s.wu[si]):""}</button>`};
-  const msb=q=>{const id=q==0?s.m:s.mx[q-1];return id!=null?`<button class="slot rt rt${tier(M[id].cost)}" data-um="${q+1}" style="border-color:${RAR(M[id].cost)}">${ICO("m",M[id])}<em>Module</em>${LB("m",id,q==0?s.mu:(s.mxu||[])[q-1])}</button>`:`<button class="slot ${tab=="m"?"on":""}" data-s="m"><span>+</span><em>Module</em></button>`},
+  const msb=q=>{const id=q==0?s.m:s.mx[q-1];return id!=null?`<button class="slot rt rt${tier(M[id].cost)}" data-um="${q+1}" style="border-color:${RAR(M[id].cost)}">${ICO("m",M[id])}<em>${q==8?"Teleport":"Module"}</em>${LB("m",id,q==0?s.mu:(s.mxu||[])[q-1])}</button>`:`<button class="slot ${tab=="m"?"on":""}" data-s="m"><span>+</span><em>${q==8?"Teleport":"Module"}</em></button>`},
   ph=(lb,tt)=>`<button class="slot empty" disabled title="${tt||lb} (coming soon)"><span>+</span><em>${lb}</em></button>`;
   $("stop").innerHTML=[0,1,2,3,4,5,6,7].map(msb).join("");
-  $("sl").innerHTML=ph("Hook")+ph("Charger","Charge Buster")+ph("Teleport")+(t?sl("t",t,"t","Torso"):`<button class="slot ${tab=="t"?"on":""}" data-s="t"><span>+</span><em>Torso</em></button>`)+(s.l==null?`<button class="slot ${tab=="l"?"on":""}" data-s="l"><span>+</span><em>Legs</em></button>`:sl("l",L[s.l],"l","Legs"));
+  $("sl").innerHTML=ph("Hook")+ph("Charger","Charge Buster")+msb(8)+(t?sl("t",t,"t","Torso"):`<button class="slot ${tab=="t"?"on":""}" data-s="t"><span>+</span><em>Torso</em></button>`)+(s.l==null?`<button class="slot ${tab=="l"?"on":""}" data-s="l"><span>+</span><em>Legs</em></button>`:sl("l",L[s.l],"l","Legs"));
   $("sr").innerHTML=wsb(6)+ph("Shield");
   $("sb").innerHTML=[0,1,4,5,2,3].map(wsb).join("");
   
@@ -912,7 +917,7 @@ function info(k,i,u){const it=K[k][i];let x=`<b>${it.n}</b><br>${desc(k,it)}`;
 function placeM(n,i,u,eqOnly){const ms=[n.m].concat(n.mx),us=[n.mu].concat(n.mxu),set=(q,id,uu)=>{if(q==0){n.m=id;n.mu=uu}else{n.mx[q-1]=id;n.mxu[q-1]=uu}};
   if(u==null){const fr=XS("m",i).slice().sort((p,q)=>q.x-p.x).find(c=>!us.includes(c.u));if(fr)u=fr.u;else{if(eqOnly)return "No spare copy of that module.";set(ms.lastIndexOf(i),null,null);return ""}}
   else if(us.includes(u)){if(eqOnly)return "";set(us.indexOf(u),null,null);return ""}
-  const q=ms.indexOf(null);if(q<0)return "All 8 module slots are full. Tap a module to remove it.";set(q,i,u);return ""}
+  const q=M[i]&&M[i].tp?8:ms.slice(0,8).indexOf(null);if(q<0)return "All 8 module slots are full. Tap a module to remove it.";set(q,i,u);return ""}
 function pick(k,i,u){
   const it=K[k][i];info(k,i,u);
   if(!S.own[k].includes(i)){if(S.cr<it.cost)return toast("Not enough credits. Win battles to earn more.");S.cr-=it.cost;addI(k,i);return work()}
