@@ -1004,7 +1004,7 @@ const MIS=[
 {id:5,n:"Cooling Station",t:0,l:1,w:[2,2,0],mul:1.1,r:260},
 {id:6,n:"Thermal Run",t:0,l:1,w:[2,1,0],mul:1.2,r:300},
 {id:7,n:"Siege Line",t:0,l:0,w:[1,2,0],mul:1.3,r:350},
-{id:4,n:"Foreman Brute",t:0,l:1,w:[2,0,2],mul:1.4,r:400,u:1,boss:1},
+{id:4,n:"Foreman Brute",t:0,l:1,w:[2,0,2],mul:1.4,r:400,u:1,boss:1,copy:1},
 {id:9,n:"Hook Alley",t:0,l:1,w:[1,1,0],mul:1.5,r:420},
 {id:10,n:"Ion Storm",t:0,l:1,w:[2,1,2],mul:1.6,r:480},
 {id:25,n:"Relay Tower",t:0,l:1,w:[1,1,2],mul:1.7,r:520},
@@ -1066,7 +1066,7 @@ function camp(){
   {$("gp0").textContent=MIS.slice(0,35).filter(m=>S.camp.includes(m.id)).length+" / 35 CLEARED";let hi=-1;for(let i=0;i<35;i++)if(S.camp.includes(MIS[i].id))hi=Math.max(hi,CM.ri[i]);const pp=a=>a.map((q,k)=>(k?"L":"M")+q[0]+" "+q[1]).join(" ");$("rt0").setAttribute("d",pp(CM.r));$("rt1").setAttribute("d",hi>0?pp(CM.r.slice(0,hi+1)):"");
   let foc=34;for(let i=0;i<35;i++)if(ok(i)&&!S.camp.includes(MIS[i].id)){foc=i;break}if(cpos.f!==foc){cpos.f=foc;cpos.t=CM.n[foc];cpos.pend=true}cApply();requestAnimationFrame(cApply)}
   const m=sm!=null&&ok(sm)?MIS[sm]:null,d=m&&S.camp.includes(m.id);
-  $("mi").innerHTML=m&&m.swarm?`<b>${m.n}</b> <span style="color:#b05cff">(side mission)</span><br>Enemy: swarm of 12 drones · 24 HP each · each fires 2 shots per turn at random times · bullets that hit one drone waste any extra damage, so multi-shot guns work best<br>Reward: ${d?Math.round(m.r/3)+" SM (replay)":m.r+" SM"}<button class="btn" data-start="1">Start mission</button>`:m?`<b>${m.n}</b><br>Enemy: ${T[m.t].n} · ${Math.round(T[m.t].hp*m.mul)} HP · ${T[m.t].res||0}% armor · ${m.w.map(i=>W[i].n).join(", ")}<br>Reward: ${d?Math.round(m.r/3)+" SM (replay)":m.r+" SM"+(m.u!=null?" + first-clear "+W[m.u].n:"")}<button class="btn" data-start="1">Start mission</button>`:"Select an open mission. Beat each one to unlock the next.";
+  $("mi").innerHTML=m&&m.swarm?`<b>${m.n}</b> <span style="color:#b05cff">(side mission)</span><br>Enemy: swarm of 12 drones · 24 HP each · each fires 2 shots per turn at random times · bullets that hit one drone waste any extra damage, so multi-shot guns work best<br>Reward: ${d?Math.round(m.r/3)+" SM (replay)":m.r+" SM"}<button class="btn" data-start="1">Start mission</button>`:m?`<b>${m.n}</b><br>Enemy: ${m.copy?"a copy of your current build":`${T[m.t].n} · ${Math.round(T[m.t].hp*m.mul)} HP · ${T[m.t].res||0}% armor · ${m.w.map(i=>W[i].n).join(", ")}`}<br>Reward: ${d?Math.round(m.r/3)+" SM (replay)":m.r+" SM"+(m.u!=null?" + first-clear "+W[m.u].n:"")}<button class="btn" data-start="1">Start mission</button>`:"Select an open mission. Beat each one to unlock the next.";
 }
 $("camp").onclick=e=>{const b=e.target.closest("button");if(!b)return;const d=b.dataset;
   if(d.go)return show(d.go);if(d.m!=null){sm=+d.m;return camp()}
@@ -1108,7 +1108,7 @@ function botMech(){if(!S.bot){S.bot=JSON.parse(JSON.stringify(S.sel));save()}con
 function startBattle0(mi){
   const rnd=n=>Math.floor(Math.random()*n),tier=S.wins;
   const ws=[];const pool=W.map((_,i)=>i).filter(i=>i<=2+tier&&!W[i].side&&!W[i].drone&&!W[i].mythic);while(ws.length<3)ws.push(pool[rnd(pool.length)]);
-  const p=myMech(),e=mi?mechOf(mi.t,mi.l,mi.w,mi.mul):botMech();
+  const p=myMech(),e=mi?(mi.copy?myMech():mechOf(mi.t,mi.l,mi.w,mi.mul)):botMech();
   if(mi&&mi.swarm)setupSwarm(e);e.c="#d9604f";p.x=0;e.x=12;p.vx=0;e.vx=12;if(p.weps.some(w=>w.drone))p.dp=0;if(e.weps.some(w=>w.drone))e.dp=0;
   B={mi,p,e,turn:"p",busy:false,over:false,proj:null,zin:true,cz:1,cx:427.5,projs:[],debris:[],sparks:[],boom:[],fl:[],mines:[],lobs:[],rk:[],rkup:[],rkdn:[],rkm:[],mb:0,hit:{p:0,e:0}};
   document.body.classList.remove("fs");document.body.style.overflow="hidden";{const bi=rnd(6),gd=GR[PAIR[bi]];$("bgl").style.backgroundImage="url("+BGS[bi]+")";$("gnd").src=gd.u;$("gnd").style.bottom="0";B.foot=gd.f;B.gb=gd.u?gd.b:0;B.go=null;B.gld=!gd.u;{const gn_=$("gnd"),B_=B,fin_=()=>{if(B===B_){B_.gld=true;B_.go=null}};gn_.onload=fin_;if(gd.u&&gn_.decode)gn_.decode().then(fin_,fin_)}B.gx=.031;$("zoomb").classList.remove("out")}$("hangar").classList.add("hide");$("battle").classList.remove("hide");$("over").classList.add("hide");
