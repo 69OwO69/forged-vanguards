@@ -1766,7 +1766,7 @@ async function siphonFly(a,b,i,w){
 }
 async function endTurn(){
   if(B.over)return;
-  {const cur=B.turn=="p"?B.p:B.e,oth=B.turn=="p"?B.e:B.p;if(await droneVolley(cur,oth)||B.over)return;if(await summonVolley(cur,oth)||B.over)return;if(await gasTick()||B.over)return;if(cur.ovT>0){cur.ovT--;if(cur.ovT==0)say("Overdrive ended.")}}
+  {const cur=B.turn=="p"?B.p:B.e,oth=B.turn=="p"?B.e:B.p;if((B.tl[B.turn]<=1&&await droneVolley(cur,oth))||B.over)return;if(await summonVolley(cur,oth)||B.over)return;if(await gasTick()||B.over)return;if(cur.ovT>0){cur.ovT--;if(cur.ovT==0)say("Overdrive ended.")}}
   const cu=B.turn,ot=cu=="p"?"e":"p";B.tl[cu]--;const next=B.tl[cu]>0?cu:ot,m=B[next];if(next!=cu&&B.tl[next]<=0)B.tl[next]=2;
   B.turn=next;B.ch=null;m.en=Math.min(m.en+m.enMax,m.enCap||m.enMax*2);m.used=[];m.did=false;m.heat=Math.max(0,m.heat-m.cool);
   if((B.rk||[]).length){B.busy=true;controls();const dd=await rocketTick();B.busy=false;if(dd||B.over)return}
