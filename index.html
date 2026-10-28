@@ -675,7 +675,7 @@ function drawParts(g,m,tm){
       W[id].mfl.forEach(([qx,qy],qi)=>{if(!(performance.now()-(m.mfl[wi][qi]||0)<(W[id].mfd||60)))return;const lx=(qx/iw-e.ax)*ww,ly=(qy/ih-e.ay)*e.h,fx=mx+ox+lx*cr-ly*sr,fy=my+oy+lx*sr+ly*cr,R_=(1.9+Math.random()*1.3)*(e.h/22)*(W[id].mfs||1),gr=g.createRadialGradient(fx,fy,0,fx,fy,R_*1.7);gr.addColorStop(0,"rgba(255,255,235,1)");gr.addColorStop(.35,"rgba(255,214,90,.85)");gr.addColorStop(1,"rgba(255,120,20,0)");for(let rp=0;rp<(W[id].mfb||1);rp++){g.fillStyle=gr;g.beginPath();g.arc(fx,fy,R_*1.7,0,7);g.fill()}
         g.save();g.translate(fx,fy);g.rotate(sw*.02+rt);g.fillStyle="rgba(255,240,170,.9)";g.beginPath();g.moveTo(0,-R_*.35);g.lineTo(R_*3*(.8+Math.random()*.4),0);g.lineTo(0,R_*.35);g.closePath();g.fill();g.restore()});
       g.globalCompositeOperation=op}
-    if(e&&W[id].smoke&&m.pmT&&m.pmT[wi]){const a0=performance.now()-m.pmT[wi];if(a0>0&&a0<3900){const iw=e.img.naturalWidth,ih=e.img.naturalHeight,ww=e.h*iw/ih,cr=Math.cos(sw*.02+rt),sr=Math.sin(sw*.02+rt);W[id].mfl.forEach(([qx,qy],qi)=>{for(let k=0;k<22;k++){const ag=a0-50-k*110-qi*35;if(ag<0||ag>1300)continue;const lx=(qx/iw-e.ax)*ww,ly=(qy/ih-e.ay)*e.h,fx=mx+ox+lx*cr-ly*sr+ag*.008+Math.sin(k*7.3+qi)*2.2,fy=my+oy+lx*sr+ly*cr-ag*.03-Math.abs(Math.sin(k*3.1))*2+Math.sin(ag*.005+k*2)*.8,rr=1.3+ag*.004+Math.abs(Math.sin(k*5.1))*.6;g.save();g.globalAlpha=.42*(1-k/40)*(1-ag/1300);g.fillStyle="#d4d8dd";g.beginPath();g.arc(fx,fy,rr,0,7);g.fill();g.restore()}})}}
+    if(e&&W[id].smoke&&m.pmT&&m.pmT[wi]){const a0=performance.now()-m.pmT[wi];if(a0>0&&a0<3900){const iw=e.img.naturalWidth,ih=e.img.naturalHeight,ww=e.h*iw/ih,cr=Math.cos(sw*.02+rt),sr=Math.sin(sw*.02+rt);g.save();g.fillStyle="#d4d8dd";W[id].mfl.forEach(([qx,qy],qi)=>{const k0=Math.max(0,Math.ceil((a0-50-qi*35-1300)/110)),k1=Math.min(21,Math.floor((a0-50-qi*35)/110));for(let k=k0;k<=k1;k++){const ag=a0-50-k*110-qi*35;if(ag<0||ag>1300)continue;const lx=(qx/iw-e.ax)*ww,ly=(qy/ih-e.ay)*e.h,fx=mx+ox+lx*cr-ly*sr+ag*.008+Math.sin(k*7.3+qi)*2.2,fy=my+oy+lx*sr+ly*cr-ag*.03-Math.abs(Math.sin(k*3.1))*2+Math.sin(ag*.005+k*2)*.8,rr=1.3+ag*.004+Math.abs(Math.sin(k*5.1))*.6;g.globalAlpha=.42*(1-k/40)*(1-ag/1300);g.beginPath();g.arc(fx,fy,rr,0,7);g.fill()}});g.restore()}}
     if(!back&&e&&e.lz&&m.lzg&&m.lzg[wi]&&m.dmz&&m.dmz[wi]){const G_=m.lzg[wi],nT_=performance.now(),fi_=G_.fire&&nT_<G_.fire,ch_=fi_?1:(G_.ch||0);
       if(ch_>0){const Z_=m.dmz[wi],op_=g.globalCompositeOperation;if("filter" in g)g.filter="none";g.globalCompositeOperation="lighter";
         const orb=(x,y,R,a1)=>{const gr=g.createRadialGradient(x,y,0,x,y,R);gr.addColorStop(0,"rgba(240,250,255,"+a1+")");gr.addColorStop(.35,"rgba(90,180,255,"+a1*.7+")");gr.addColorStop(1,"rgba(30,90,255,0)");g.fillStyle=gr;g.beginPath();g.arc(x,y,R,0,7);g.fill()};
@@ -714,13 +714,20 @@ function drawMech(g,x,y,dir,m,hit){
   if(m.hc&&m.heat>=m.hc*.75&&!m.dead){ga=.75+.25*Math.sin(tm*7);gf="255,90,20"}
   if(m.healGlow&&!m.dead){ga=.75+.25*Math.sin(tm*7);gf="40,230,100"}
   m.gf="";if(m.sawIn)gf="";
-  if(gf&&!m.sawIn){const o=OC.getContext("2d");o.setTransform(1,0,0,1,0,0);o.clearRect(0,0,OW,OH);o.setTransform(2,0,0,2,OW/2,OH-60);m._dm=1;drawParts(o,m,tm);o.setTransform(1,0,0,1,0,0);if(false){o.globalCompositeOperation="source-atop";o.fillStyle="rgba(255,255,255,"+hit+")";o.fillRect(0,0,OW,OH);o.globalCompositeOperation="source-over"}
-    const bx=-OW/4,by=-(OH-60)/2,bw=OW/2,bh=OH/2;
-    if(gf){const c1=GC1.getContext("2d"),c2=GC2.getContext("2d"),w4=OW/4,h4=OH/4;c1.setTransform(1,0,0,1,0,0);c1.clearRect(0,0,w4,h4);c1.globalCompositeOperation="source-over";c1.drawImage(OC,0,0,w4,h4);c1.globalCompositeOperation="source-atop";c1.fillStyle="rgb("+gf+")";c1.fillRect(0,0,w4,h4);c1.globalCompositeOperation="source-over";
-      c2.clearRect(0,0,w4,h4);try{c2.filter="blur(4px)"}catch(e){}c2.drawImage(GC1,0,0);try{c2.filter="none"}catch(e){}
-      g.save();g.globalCompositeOperation="lighter";g.globalAlpha=Math.min(1,ga);g.drawImage(GC2,bx,by,bw,bh);g.drawImage(GC2,bx,by,bw,bh);g.drawImage(GC2,bx,by,bw,bh);g.globalAlpha=Math.min(1,ga*.8);g.drawImage(GC1,bx,by,bw,bh);g.restore()}
-    g.drawImage(OC,bx,by,bw,bh);
-    if(m.dfx&&m.dfx.some(f=>f&&(Math.abs(f[0])>120||f[1]<-200))){g.save();g.beginPath();g.rect(-6000,-3000,12000,6000);g.rect(bx,by,bw,bh);g.clip("evenodd");drawParts(g,m,tm);g.restore()}m._dm=2;drawParts(g,m,tm);m._dm=0}
+  if(gf&&!m.sawIn){
+    /* heat/heal glow: the silhouette is re-rendered only ~11x/sec into small per-mech canvases and blurred by down/up-scaling
+       (no ctx.filter, no per-frame offscreen redraw of the whole mech); the mech itself is drawn directly. */
+    const nw=performance.now(),bx=-OW/4,by=-(OH-60)/2,bw=OW/2,bh=OH/2,w4=OW/4,h4=OH/4;
+    if(!m._g1){const mk=(w,h)=>{const c=document.createElement("canvas");c.width=w;c.height=h;return c};m._g1=mk(w4,h4);m._g3=mk(w4/2,h4/2);m._g2=mk(w4/4,h4/4);m._g4=mk(w4,h4);m._g5=mk(w4/4,h4/4)}
+    if(m._gk!=gf||nw-(m._gt||0)>90){
+      m._gk=gf;m._gt=nw;
+      const c1=m._g1.getContext("2d"),c3=m._g3.getContext("2d"),c2=m._g2.getContext("2d");
+      c1.setTransform(1,0,0,1,0,0);c1.globalCompositeOperation="source-over";c1.clearRect(0,0,w4,h4);c1.setTransform(.5,0,0,.5,OW/8,(OH-60)/4);m._dm=1;try{drawParts(c1,m,tm)}finally{m._dm=0}c1.setTransform(1,0,0,1,0,0);c1.globalCompositeOperation="source-atop";c1.fillStyle="rgb("+gf+")";c1.fillRect(0,0,w4,h4);c1.globalCompositeOperation="source-over";
+      c3.clearRect(0,0,w4/2,h4/2);c3.drawImage(m._g1,0,0,w4/2,h4/2);c2.clearRect(0,0,w4/4,h4/4);c2.drawImage(m._g3,0,0,w4/4,h4/4);
+      const c5=m._g5.getContext("2d");c5.globalCompositeOperation="source-over";c5.clearRect(0,0,w4/4,h4/4);c5.globalCompositeOperation="lighter";c5.globalAlpha=1/9;for(let dx=-1;dx<2;dx++)for(let dy=-1;dy<2;dy++)c5.drawImage(m._g2,dx*1.6,dy*1.6);c5.globalAlpha=1;c5.globalCompositeOperation="source-over";
+      const c4=m._g4.getContext("2d");c4.globalCompositeOperation="source-over";c4.clearRect(0,0,w4,h4);c4.globalAlpha=.8;c4.drawImage(m._g1,0,0);c4.globalCompositeOperation="lighter";c4.globalAlpha=1;for(let i=0;i<3;i++)c4.drawImage(m._g5,0,0,w4,h4);c4.globalCompositeOperation="source-over"}
+    g.save();g.globalCompositeOperation="lighter";g.globalAlpha=Math.min(1,ga);g.drawImage(m._g4,bx,by,bw,bh);g.restore();
+    drawParts(g,m,tm)}
   else drawParts(g,m,tm);
   g.restore()}
 const bg=(g,w,h)=>{const k=g.createLinearGradient(0,0,0,h);k.addColorStop(0,"#16233a");k.addColorStop(1,"#38506f");g.fillStyle=k;g.fillRect(0,0,w,h)};
