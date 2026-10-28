@@ -655,7 +655,7 @@ function drawDivWheel(g,m,tm,cx,top,th){
   const ex=m._wex||0,tg=m._wtg||0,rem=tg-ex;m._wex=ex+rem*(1-Math.exp(-dt*5.5));m._wg=Math.max(Math.min(1,rem/.7),(m._wg||0)*Math.exp(-dt*2.2));
   m._wph=(m._wph||0)+dt*(1.1+Math.abs(m._wlag)*.05);m._wlt=tm}
  if(!DWF)DWF=dwBuild();
- const lag=m._wlag||0,q=Math.PI/4,ph=(m._wph||0)+(m._wex||0),k=((ph%q)+q)%q/q,ix=Math.floor(k*DWF.n)%DWF.n,fr=DWF.f[ix],u=th*.153,sc=u/DWF.S,w=fr.width*sc,h=fr.height*sc,sink=Math.abs(lag)/46*u*.25,bob=Math.sin(tm*1.8)*u*.08,cy=top-h*.5+th*.01+sink+bob,gl=Math.max(0,Math.min(1,m._wg||0));
+ const lag=m._wlag||0,q=Math.PI/4,ph=(m._wph||0)+(m._wex||0),k=((ph%q)+q)%q/q,ix=Math.floor(k*DWF.n)%DWF.n,fr=DWF.f[ix],u=th*.187,sc=u/DWF.S,w=fr.width*sc,h=fr.height*sc,sink=Math.abs(lag)/46*u*.25,bob=Math.sin(tm*1.8)*u*.08,cy=top-h*.5+th*.01+sink+bob,gl=Math.max(0,Math.min(1,m._wg||0));
  g.save();g.translate(cx+lag,cy);g.rotate(-.2-lag/46*.12);g.imageSmoothingEnabled=true;g.imageSmoothingQuality="high";
  if(gl>.01){g.save();g.globalCompositeOperation="lighter";const rr=w*.62,gg=g.createRadialGradient(0,0,rr*.1,0,0,rr);gg.addColorStop(0,"rgba(255,255,255,"+(.55*gl)+")");gg.addColorStop(1,"rgba(255,255,255,0)");g.scale(1,.62);g.fillStyle=gg;g.beginPath();g.arc(0,0,rr,0,7);g.fill();g.restore()}
  g.drawImage(fr,-w/2,-h/2,w,h);
