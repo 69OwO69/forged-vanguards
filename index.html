@@ -656,16 +656,16 @@ function dwBuild(){
   items.push({d:.7,f:hub});
   sphere(0,.05,0,.11,.71);
   const m1=items.length;
-  for(let k=0;k<8;k++){const ak=rot+k*Math.PI/4,cs=Math.cos(ak),sn=Math.sin(ak);box(ak,RO-.03,1.32,.045,-.09,0);const od=dep(cs*(RO-.03+1.32)/2,0,sn*(RO-.03+1.32)/2)+.02;sphere(cs*1.32,.02,sn*1.32,.215,od)}
+  for(let k=0;k<8;k++){const ak=rot+k*Math.PI/4,cs=Math.cos(ak),sn=Math.sin(ak);box(ak,RO-.03,1.5,.045,-.09,0);const od=dep(cs*(RO-.03+1.5)/2,0,sn*(RO-.03+1.5)/2)+.02;sphere(cs*1.5,.02,sn*1.5,.225,od)}
   for(let i=n0;i<items.length;i++)items[i].p=i<m1?0:1;
   items.sort((a,b)=>(a.p||0)-(b.p||0)||a.d-b.d);items.forEach(it=>it.f());
   fr.push(c);const wc=document.createElement("canvas");wc.width=W;wc.height=H;const wg=wc.getContext("2d");wg.drawImage(c,0,0);wg.globalCompositeOperation="source-in";wg.fillStyle="#fff";wg.fillRect(0,0,W,H);wh.push(wc)}
  return{f:fr,w:wh,n:N,S:S}}
 function drawDivWheel(g,m,tm,cx,top,th){
  if(m._wlt!==tm){const dt=Math.min(.05,tm-(m._wlt==null?tm:m._wlt)),d=(m.wx-(m._wlx==null?m.wx:m._wlx))*(m.sdir||1);m._wlx=m.wx;m._wlag=Math.max(-46,Math.min(46,((m._wlag||0)-d*1.4)*Math.exp(-dt*3.2)));
-  if(typeof m.hp=="number"){if(typeof m._whp=="number"&&m.hp<m._whp-.01){m._wtg=(m._wtg||0)+Math.PI/2;m._wg=1;if(m===B.p||m===B.e)playBuf("wheel",.8,1)}m._whp=m.hp}
-  const ex=m._wex||0,tg=m._wtg||0,rem=tg-ex;m._wex=ex+rem*(1-Math.exp(-dt*5.5));m._wg=Math.max(Math.min(1,rem/.7),(m._wg||0)*Math.exp(-dt*2.2));
-  m._wph=(m._wph||0)+dt*(1.1+Math.abs(m._wlag)*.05);m._wlt=tm}
+  if(typeof m.hp=="number"){if(typeof m._whp=="number"&&m.hp<m._whp-.01){m._wtg=(m._wtg||0)+Math.PI*2;m._wg=1;if(m===B.p||m===B.e)playBuf("wheel",.8,1)}m._whp=m.hp}
+  const ex=m._wex||0,tg=m._wtg||0,rem=tg-ex;m._wex=ex+rem*(1-Math.exp(-dt*3.4));m._wg=Math.max(Math.min(1,rem/.6),(m._wg||0)*Math.exp(-dt*2.2));
+  m._wph=(m._wph||0)+dt*(.22+Math.abs(m._wlag)*.012);m._wlt=tm}
  if(!DWF)DWF=dwBuild();
  const lag=m._wlag||0,q=Math.PI/4,ph=(m._wph||0)+(m._wex||0),k=((ph%q)+q)%q/q,ix=Math.floor(k*DWF.n)%DWF.n,fr=DWF.f[ix],u=th*.196,sc=u/DWF.S,w=fr.width*sc,h=fr.height*sc,sink=Math.abs(lag)/46*u*.25,bob=Math.sin(tm*1.8)*u*.08,cy=top-h*.5+th*.01+sink+bob,gl=Math.max(0,Math.min(1,m._wg||0));
  g.save();g.translate(cx+lag,cy);g.rotate(-.3-lag/46*.12);g.imageSmoothingEnabled=true;g.imageSmoothingQuality="high";
