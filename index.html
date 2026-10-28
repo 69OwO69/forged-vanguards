@@ -664,7 +664,8 @@ function dwBuild(){const DP=window.DWP||{c:1.7,r:.243},DC=DP.c,DR=DP.r,ZS=DP.z||
 function drawDivWheel(g,m,tm,cx,top,th){
  if(m._wlt!==tm){const dt=Math.min(.05,tm-(m._wlt==null?tm:m._wlt)),d=(m.wx-(m._wlx==null?m.wx:m._wlx))*(m.sdir||1);m._wlx=m.wx;m._wlag=Math.max(-46,Math.min(46,((m._wlag||0)-d*1.4)*Math.exp(-dt*3.2)));
   if(typeof m.hp=="number"){if(typeof m._whp=="number"&&m.hp<m._whp-.01&&!m._wpd)m._wpd=performance.now();m._whp=m.hp}
-  if(m._wpd&&(m._wfire||(!(m._wv>0)&&performance.now()-m._wpd>450))){m._wpd=0;m._wfire=0;m._wtg=(m._wtg||0)+Math.PI*2;m._wg=1;if(m===B.p||m===B.e)playBuf("wheel",.8,1)}
+  if(m._wpd&&(m._wfire||(!(m._wv>0)&&performance.now()-m._wpd>450))){m._wpd=0;m._wfire=0;(m._wq=m._wq||[]).push(tm+.3);if(m===B.p||m===B.e)playBuf("wheel",.8,1)}
+  if(m._wq&&m._wq.length&&tm>=m._wq[0]){m._wq.shift();m._wtg=(m._wtg||0)+Math.PI*2;m._wg=1}
   const ex=m._wex||0,tg=m._wtg||0,rem=tg-ex;m._wex=ex+rem*(1-Math.exp(-dt*3.4));m._wg=Math.max(Math.min(1,rem/.6),(m._wg||0)*Math.exp(-dt*2.2));
   m._wlt=tm}
  if(!DWF)DWF=dwBuild();
