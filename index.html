@@ -1438,7 +1438,7 @@ function draw(){hudUpdate();
   g.globalAlpha=1;B.sparks=B.sparks.filter(q=>q.l>0);
   B.hfx=B.hfx||[];for(const f of B.fl)if(!f.hx&&/^-\d+$/.test(f.t)){f.hx=1;if(!f.tot&&B.act){B.act.n++;B.act.sum+=+f.t.slice(1)}if(f.tot)continue;const m=[B.p,B.e,...(B.sms||[]).filter(o=>o&&!o.gone)].reduce((bst,o)=>Math.abs(px(o.vx!=null?o.vx:o.x)-f.x)<Math.abs(px(bst.vx!=null?bst.vx:bst.x)-f.x)?o:bst);B.hfx.push({x:px(m.vx)+(Math.random()-.5)*44,y:GY-35-Math.random()*75,t0:now,z:.9+Math.random()*.5});spawnScrap(m,+f.t.slice(1),now);{const hx0=px(m.vx!=null?m.vx:m.x),n=5+Math.min(6,Math.floor(+f.t.slice(1)/6));for(let q=0;q<n;q++){const an=Math.random()*Math.PI*2,v=1.8+Math.random()*4.2;B.sparks.push({x:hx0+(Math.random()-.5)*40,y:GY-40-Math.random()*70,vx:Math.cos(an)*v,vy:Math.sin(an)*v-1.8,z:3+Math.random()*3,l:38+Math.random()*32|0,L:70})}}}
   B.scrap=(B.scrap||[]).filter(q=>now-q.t0<q.life);for(const q of B.scrap){const dt=.45*fd,sc=q.tg/Math.max(1,Math.max(q.im.naturalWidth,q.im.naturalHeight)),w=q.im.naturalWidth*sc,h=q.im.naturalHeight*sc;q.vy+=.35*dt*.9;q.x+=q.vx*dt;q.y+=q.vy*dt;q.r+=q.vr*dt;const gy=GY-Math.min(w,h)*.4;if(q.y>=gy){q.y=gy;if(q.vy>1.6)q.vy*=-.38;else q.vy=0;q.vx*=Math.pow(.9,fd);q.vr*=Math.pow(.88,fd)}if(!q.im.complete||!w)continue;const k=(now-q.t0)/q.life;g.save();g.globalAlpha=k>.75?Math.max(0,(1-k)/.25):1;g.translate(q.x,q.y);g.rotate(q.r);g.drawImage(q.im,-w/2,-h/2,w,h);g.restore()}
-  B.swv=(B.swv||[]).filter(q=>now-q.t0<q.dur);for(const q of B.swv){const k=(now-q.t0)/q.dur,x=q.x0+(q.x1-q.x0)*(1-Math.pow(1-k,2)),h=135*(.75+.45*Math.min(1,k*3)),w=h*1.6;g.save();g.globalAlpha=k<.1?k/.1:Math.max(0,Math.min(1,(1-k)/.45));g.translate(x,GY-h*.45);g.scale(q.dir,1);if(SHWI.complete)g.drawImage(SHWI,-w*.55,-h/2,w,h);g.restore()}
+  B.swv=(B.swv||[]).filter(q=>now-q.t0<q.dur);for(const q of B.swv){const k=(now-q.t0)/q.dur,x=q.x0+(q.x1-q.x0)*(1-Math.pow(1-k,2)),h=64*(.75+.45*Math.min(1,k*3)),w=h*1.6;g.save();g.globalAlpha=k<.1?k/.1:Math.max(0,Math.min(1,(1-k)/.45));g.translate(x,GY-h*.34);g.scale(q.dir,1);if(SHWI.complete)g.drawImage(SHWI,-w*.55,-h/2,w,h);g.restore()}
   B.hfx=B.hfx.filter(q=>now-q.t0<210);for(const q of B.hfx){const fi=HFX[Math.min(2,Math.floor((now-q.t0)/70))],z=103*q.z*.3;if(fi.complete)g.drawImage(fi,q.x-z/2,q.y-z/2,z,z)}
   for(const p of B.projs){const k=Math.min(1,(performance.now()-p.t0)/(p.dur||380));if(p.fx){const fi=FLM[Math.min(FLM.length-1,Math.floor(k*FLM.length))],sc=Math.max(1.1,Math.min(2.3,Math.abs(p.x1-p.x0)/90));if(fi&&fi.complete){g.save();g.translate(p.x0,p.y);g.scale(p.dir,1);g.drawImage(fi,-14*sc,-82*sc,129*sc,129*sc);g.restore()}continue}if(p.msh&&MSH.complete&&MSH.naturalWidth){const x=p.x0+(p.x1-p.x0)*k,yy=p.y+(p.y1!=null?(p.y1-p.y)*k:0)-Math.sin(k*Math.PI)*p.arc,dxv=p.x1-p.x0,dyv=(p.y1!=null?p.y1-p.y:0)-Math.cos(k*Math.PI)*Math.PI*p.arc;g.save();g.translate(x,yy);g.rotate(Math.atan2(dyv,dxv));if(dxv<0)g.scale(1,-1);g.drawImage(MSH,-10,-4.9,20,9.7);g.restore();continue}g.fillStyle=p.c;g.beginPath();g.arc(p.x0+(p.x1-p.x0)*k,p.y+(p.y1!=null?(p.y1-p.y)*k:0)-Math.sin(k*Math.PI)*p.arc,p.rapid?3:6,0,7);g.fill()}
   const fdt=Math.min(12,Math.max(0,(t0-(B.ftm||t0))/16.667));B.ftm=t0;B.fl=B.fl.filter(f=>f.l>0);B.fl.forEach(f=>{f.l-=fdt;const y=f.y-(f.tot?(90-f.l)*.25:(60-f.l)*.7),num=/^[-+]\d+$/.test(f.t);g.save();g.globalAlpha=Math.min(1,f.l/20);
@@ -1929,18 +1929,20 @@ async function stompHit(a){
   const wk=a.stomp&&!a.stUsed&&Math.abs(o.x-a.x)>=2;if(!tg().length&&!wk)return;
   let sm=null;if(wk){a.stUsed=true;let t=Math.max(0,Math.min(12,a.x+dir*2));if(dir>0)t=Math.min(t,o.x-1);else t=Math.max(t,o.x+1);
     sm=mechOf(null,null,[],1,false,[2,null,null,null,null,null,null]);Object.assign(sm,{tid:100,lid:100,name:"Twin Walker",c:"#8a93a0",own:a,x:t,vx:t,life:3,hp:Math.max(1,Math.round(a.max/2)),max:Math.max(1,Math.round(a.max/2)),en:99,enMax:99,enCap:99,hc:1e9,cool:0,s:0,summon:1});B.sms=B.sms||[]}
-  B.busy=true;a.en-=STP.en;a.did=true;controls();say("Stomp!");let slam=false;
-  await anim(1100,k=>{a.stk=k;if(k>=.6&&!slam){slam=true;B.shake=18;playBuf("boom",1);playBuf("foot",1,.7);B.swv=B.swv||[];B.swv.push({x0:px(a.vx)+dir*20,x1:px(a.x+dir*1.6),t0:performance.now(),dur:520,dir});if(sm){sm.t0=performance.now();B.sms.push(sm)}}});
-  a.stk=0;if(sm&&!B.sms.includes(sm)){sm.t0=performance.now();B.sms.push(sm)}await sleep(230);
-  let dead=null;
-  for(const t of tg()){
-    const raw=STP.dmg[0]+Math.floor(Math.random()*(STP.dmg[1]-STP.dmg[0]+1)),dmg=RDM(a,t,{ty:"phys",n:"Stomp"},raw,true);
-    t.hp=Math.max(0,t.hp-dmg);if(!t.summon)B.hit[t==B.p?"p":"e"]=.9;t.flT=performance.now();t.flA=1;
-    B.fl.push({x:px(t.vx!=null?t.vx:t.x),y:GY-160,t:"-"+dmg,l:60});say((a==B.p?"You":"Enemy")+" stomped for "+dmg+".");
-    if(t.hp>0){const sg=Math.sign(t.x-a.x)||dir;let tt=Math.max(0,Math.min(12,t.x+sg*STP.push));const bl=[B.p,B.e,...(B.sms||[])].filter(q=>q&&q!==t&&!q.dead&&!q.gone);if(bl.some(q=>q.x==tt))tt=t.x;
-      if(tt!=t.x){const ox0=t.x;t.x=tt;t.ps={a:t.vx!=null?t.vx:ox0,b:tt,t0:performance.now(),dur:Math.min(850,320+55*Math.abs(tt-ox0))};mineCheck(t,ox0,tt,true)}}
-    else if(t.summon)killS(t);else dead=t}
-  await sleep(450);
+  B.busy=true;a.en-=STP.en;a.did=true;controls();say("Stomp!");let slam=false,dead=null;
+  /* everything happens on the frame the foot / wheel touches the ground: shockwave, sound, shake, damage and knockback */
+  const land=()=>{
+    slam=true;B.shake=18;playBuf("boom",1);playBuf("foot",1,.7);B.swv=B.swv||[];B.swv.push({x0:px(a.vx)+dir*20,x1:px(a.x+dir*1.6),t0:performance.now(),dur:520,dir});if(sm){sm.t0=performance.now();B.sms.push(sm)}
+    for(const t of tg()){
+      const raw=STP.dmg[0]+Math.floor(Math.random()*(STP.dmg[1]-STP.dmg[0]+1)),dmg=RDM(a,t,{ty:"phys",n:"Stomp"},raw,true);
+      t.hp=Math.max(0,t.hp-dmg);if(!t.summon)B.hit[t==B.p?"p":"e"]=.9;t.flT=performance.now();t.flA=1;
+      B.fl.push({x:px(t.vx!=null?t.vx:t.x),y:GY-160,t:"-"+dmg,l:60});say((a==B.p?"You":"Enemy")+" stomped for "+dmg+".");
+      if(t.hp>0){const sg=Math.sign(t.x-a.x)||dir;let tt=Math.max(0,Math.min(12,t.x+sg*STP.push));const bl=[B.p,B.e,...(B.sms||[])].filter(q=>q&&q!==t&&!q.dead&&!q.gone);if(bl.some(q=>q.x==tt))tt=t.x;
+        if(tt!=t.x){const ox0=t.x;t.x=tt;t.ps={a:t.vx!=null?t.vx:ox0,b:tt,t0:performance.now(),dur:Math.min(850,320+55*Math.abs(tt-ox0))};mineCheck(t,ox0,tt,true)}}
+      else if(t.summon)killS(t);else dead=t}};
+  await anim(1100,k=>{a.stk=k;if(k>=.59&&!slam)land()});
+  a.stk=0;if(!slam)land();if(sm&&!B.sms.includes(sm)){sm.t0=performance.now();B.sms.push(sm)}
+  await sleep(380);
   if(dead){B.busy=true;controls();await kill(dead);finish(dead==B.e);return}
   B.busy=false;controls();
 }
