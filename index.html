@@ -602,7 +602,7 @@ const ART={t:{},l:{},w:{}};ART.m={3:{img:Object.assign(new Image(),{src:"data:im
 /* Sandevistan teleporter skin: shiny icon = the module with cyan + magenta afterimages trailing behind it */
 (()=>{const e=ART.m[3],mk=()=>{try{const w=e.img.naturalWidth,h=e.img.naturalHeight;if(!w)return;const c=document.createElement("canvas");c.width=w;c.height=h;const x=c.getContext("2d"),sc=.74,dw=w*sc,dh=h*sc,ox=w-dw-2,oy=(h-dh)/2;
   const tint=(col,al,dx)=>{const t=document.createElement("canvas");t.width=w;t.height=h;const q=t.getContext("2d");q.drawImage(e.img,0,0,w,h);q.globalCompositeOperation="source-atop";q.fillStyle=col;q.fillRect(0,0,w,h);x.globalAlpha=al;x.drawImage(t,ox-dx,oy,dw,dh)};
-  tint("#00e5ff",.38,34);tint("#ff2a96",.55,20);tint("#00e5ff",.75,9);x.globalAlpha=1;x.drawImage(e.img,ox,oy,dw,dh);
+  tint("#3dff7a",.34,38);tint("#00e5ff",.42,28);tint("#ff2a96",.55,18);tint("#00e5ff",.75,8);x.globalAlpha=1;x.drawImage(e.img,ox,oy,dw,dh);
   x.globalCompositeOperation="source-atop";const gr=x.createLinearGradient(0,0,w,h);gr.addColorStop(0,"rgba(0,229,255,.0)");gr.addColorStop(.55,"rgba(0,229,255,.10)");gr.addColorStop(1,"rgba(255,40,150,.28)");x.fillStyle=gr;x.fillRect(0,0,w,h);
   const im=new Image();im.src=c.toDataURL("image/png");ART.m[103]={img:im}}catch(err){}};
   if(e.img.complete)mk();else e.img.addEventListener("load",mk)})();
@@ -1866,34 +1866,42 @@ function drawTPT(g){if(!B||!B.tpSel||B.over)return;const vt=tpTiles(B.p),pul=.65
 const hovPul=()=>.8+.2*Math.sin(performance.now()/180);
 
 /* ---------- Sandevistan teleport (shiny Teleporter): the mech streaks across the map in a blink, leaving cyan + magenta afterimages of itself ---------- */
-const SDV={DUR:640,LIFE:620,SP:34,W:760,H:560,AX:380,AY:470};
+const SDV={DUR:640,LIFE:560,SP:34,W:760,H:560,AX:380,AY:470};
 const sdvE=k=>k<=0?0:k>=1?1:k<.5?16*k*k*k*k*k:1-Math.pow(-2*k+2,5)/2;
 const sdvK=(f,T)=>sdvE(T/SDV.DUR);
 function sdvVx(m){const f=B&&B.tpfx;if(!f||!f.sv||f.m!=m||f.moved)return m.vx;return f.x0+(f.x1-f.x0)*sdvK(f,performance.now()-f.t0)}
+const SDVC=["0,232,255","255,36,150","60,255,120"];
+const sdvInv=e=>e<=0?0:e>=1?1:e<.5?Math.pow(e/16,.2):1-Math.pow(2*(1-e),.2)/2;
 function sdvSnap(a){
   const W=SDV.W,H=SDV.H,c0=document.createElement("canvas");c0.width=W;c0.height=H;
   const sg=c0.getContext("2d"),og=GWO,dir=fdir(a);GWO=null;
   try{drawMech(sg,SDV.AX,SDV.AY,dir,a,0)}catch(e){}
   GWO=og;
-  const tint=col=>{const c=document.createElement("canvas");c.width=W;c.height=H;const q=c.getContext("2d");q.drawImage(c0,0,0);q.globalCompositeOperation="source-atop";q.fillStyle=col;q.fillRect(0,0,W,H);return c};
-  return[tint("rgba(0,232,255,.94)"),tint("rgba(255,36,150,.94)")]}
+  let x0=0,y0=0,x1=W-1,y1=H-1;
+  try{const d=sg.getImageData(0,0,W,H).data;x0=W;y0=H;x1=0;y1=0;for(let y=0;y<H;y++)for(let x=0;x<W;x++)if(d[(y*W+x)*4+3]>10){if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y}
+    if(x1<x0){x0=0;y0=0;x1=W-1;y1=H-1}}catch(e){x0=0;y0=0;x1=W-1;y1=H-1}
+  x0=Math.max(0,x0-6);y0=Math.max(0,y0-6);x1=Math.min(W-1,x1+6);y1=Math.min(H-1,y1+6);
+  const bb={x:x0,y:y0,w:x1-x0+1,h:y1-y0+1};
+  const tint=c=>{const e=document.createElement("canvas");e.width=bb.w;e.height=bb.h;const q=e.getContext("2d");q.drawImage(c0,bb.x,bb.y,bb.w,bb.h,0,0,bb.w,bb.h);q.globalCompositeOperation="source-atop";q.fillStyle="rgba("+c+",.96)";q.fillRect(0,0,bb.w,bb.h);return e};
+  return{cv:SDVC.map(tint),bb}}
 function sdvGhosts(g,f){
-  if(!f.sc)return;const T=performance.now()-f.t0,md=Math.sign(f.x1-f.x0)||1,X0=px(f.x0),X1=px(f.x1),n=Math.ceil(SDV.DUR/SDV.SP);
-  g.save();g.globalCompositeOperation="lighter";
-  for(let j=0;j<=n;j++){const s=Math.min(SDV.DUR,j*SDV.SP),age=T-s;if(age<=0||age>=SDV.LIFE)continue;
-    const k=1-age/SDV.LIFE,a=.7*k*k,x=X0+(X1-X0)*sdvE(s/SDV.DUR),off=5+16*(1-k),y=GY+(f.dy||0)-SDV.AY;
-    g.globalAlpha=a;g.drawImage(f.sc[0],x-SDV.AX-md*off,y);
-    g.globalAlpha=a*.85;g.drawImage(f.sc[1],x-SDV.AX+md*off*.7,y)}
+  const S_=f.sc;if(!S_)return;const T=performance.now()-f.t0,md=Math.sign(f.x1-f.x0)||1,X0=px(f.x0),X1=px(f.x1),bb=S_.bb;
+  const n=Math.min(36,Math.max(2,Math.ceil(Math.abs(X1-X0)/40)));
+  g.save();
+  for(let j=0;j<=n;j++){const kk=j/n,s=SDV.DUR*sdvInv(kk),age=T-s;if(age<=0||age>=SDV.LIFE)continue;
+    const k=1-age/SDV.LIFE,a=.66*Math.pow(k,1.4),x=X0+(X1-X0)*kk,off=4+16*(1-k),dy=GY+(f.dy||0)-SDV.AY+bb.y,dx=x-SDV.AX+bb.x;
+    g.globalAlpha=a*.75;g.drawImage(S_.cv[(j+1)%3],dx+md*off,dy);
+    g.globalAlpha=a;g.drawImage(S_.cv[j%3],dx-md*off*.6,dy)}
   g.restore()}
 function sdvFx(g,f){
   const nw=performance.now(),T=nw-f.t0,md=Math.sign(f.x1-f.x0)||1,X0=px(f.x0),X1=px(f.x1),cl=v=>Math.max(0,Math.min(1,v));
   const pos=t=>X0+(X1-X0)*sdvE(t/SDV.DUR),y0=GY-95;
-  const burst=(x,k,r)=>{if(k<=0||k>=1)return;const a=(1-k)*(1-k),R=r*(.4+.9*k),gr=g.createRadialGradient(x,y0,0,x,y0,R);gr.addColorStop(0,"rgba(255,255,255,"+(.9*a)+")");gr.addColorStop(.28,"rgba(0,232,255,"+(.75*a)+")");gr.addColorStop(.62,"rgba(255,36,150,"+(.35*a)+")");gr.addColorStop(1,"rgba(255,36,150,0)");g.fillStyle=gr;g.fillRect(x-R,y0-R,R*2,R*2)};
+  const burst=(x,k,r)=>{if(k<=0||k>=1)return;const a=(1-k)*(1-k),R=r*(.4+.9*k),gr=g.createRadialGradient(x,y0,0,x,y0,R);gr.addColorStop(0,"rgba(255,255,255,"+(.9*a)+")");gr.addColorStop(.22,"rgba(0,232,255,"+(.75*a)+")");gr.addColorStop(.45,"rgba(60,255,120,"+(.5*a)+")");gr.addColorStop(.7,"rgba(255,36,150,"+(.3*a)+")");gr.addColorStop(1,"rgba(255,36,150,0)");g.fillStyle=gr;g.fillRect(x-R,y0-R,R*2,R*2)};
   g.save();g.globalCompositeOperation="lighter";
   burst(X0,T/260,170);
   if(f.moved)burst(X1,(nw-f.tm)/320,190);
   if(T<SDV.DUR+90){const t=Math.min(T,SDV.DUR),sp=Math.abs(pos(t)-pos(Math.max(0,t-28)))/28,L=26+sp*80,hx=pos(t);
-    if(sp>.15)for(let i=0;i<11;i++){const yy=GY-14-i*15+((i*37)%7),ln=L*(.55+((i*53)%10)/16),c=i%2?"255,36,150":"0,232,255",gr=g.createLinearGradient(hx,0,hx-md*ln,0);gr.addColorStop(0,"rgba("+c+","+cl(sp*.5)*.7+")");gr.addColorStop(1,"rgba("+c+",0)");g.fillStyle=gr;g.fillRect(Math.min(hx,hx-md*ln),yy,ln,1.6)}}
+    if(sp>.15)for(let i=0;i<11;i++){const yy=GY-14-i*15+((i*37)%7),ln=L*(.55+((i*53)%10)/16),c=SDVC[i%3],gr=g.createLinearGradient(hx,0,hx-md*ln,0);gr.addColorStop(0,"rgba("+c+","+cl(sp*.5)*.7+")");gr.addColorStop(1,"rgba("+c+",0)");g.fillStyle=gr;g.fillRect(Math.min(hx,hx-md*ln),yy,ln,1.6)}}
   g.restore()}
 async function sdvTp(a,t,f){
   f.sc=sdvSnap(a);playBuf("sdv",1);
