@@ -386,6 +386,8 @@ body.fs main{padding:0;max-width:none}
 #battle #zoomb{position:absolute;z-index:8;right:clamp(12px,2vw,28px);bottom:clamp(120px,24vh,200px);width:52px;height:52px;border-radius:12px;background:rgba(8,14,24,.78);border:1px solid rgba(120,160,210,.5);display:flex;align-items:center;justify-content:center;padding:0}
 #battle #zoomb img{width:30px;height:auto}
 #battle #zoomb.out{border-color:var(--ac)}
+#battle.imp1 #bgl,#battle.imp1 #gwrap,#battle.imp1 #cv{filter:grayscale(1) contrast(4) brightness(1.15)}
+#battle.imp2 #bgl,#battle.imp2 #gwrap,#battle.imp2 #cv{filter:grayscale(1) contrast(4) brightness(1.15) invert(1)}
 #battle #bgl{position:absolute;top:0;left:0;width:100%;height:100%;will-change:transform;background:#0b111a 0 0/100% 100% no-repeat}
 #battle #gnd{position:absolute;left:0;bottom:0;width:100%;height:auto;display:block;pointer-events:none}
 #battle #over{z-index:12}
@@ -2098,12 +2100,42 @@ async function rocketTick(){
   if(!B.over)for(const sd of ["p","e"])if(cn[sd]>1&&tl[sd]>0){const bt=sd=="p"?B.p:B.e;say(cn[sd]+" rockets hit "+(sd=="p"?"you":"the enemy")+" for "+tl[sd]+" total.");B.fl.push({x:px(bt.vx!=null?bt.vx:bt.x),y:GY-215,t:"-"+tl[sd],l:110})}
   return res.some(Boolean);
 }
+/* manga-style impact frame, played when a Big Rocket Launcher rocket lands. Set IMPACT_FRAME=false to turn it off. */
+let IMPACT_FRAME=true;
+async function impactFrame(hx){
+  if(!IMPACT_FRAME||!B||!B.cam)return;
+  try{if(matchMedia("(prefers-reduced-motion: reduce)").matches)return}catch(e){}
+  const bt=$("battle"),cam=B.cam,W=innerWidth,H=innerHeight;
+  let c=$("impf");if(!c){c=document.createElement("canvas");c.id="impf";c.style.cssText="position:absolute;left:0;top:0;width:100%;height:100%;z-index:30;pointer-events:none;background:transparent;border-radius:0";bt.appendChild(c)}
+  const dpr=Math.min(1.5,devicePixelRatio||1);c.width=Math.round(W*dpr);c.height=Math.round(H*dpr);
+  const g=c.getContext("2d");g.setTransform(dpr,0,0,dpr,0,0);
+  const cx=W/2+(hx-cam.cxc)*cam.sc*cam.cz,cy=cam.fy-55*cam.sc*cam.cz,R=Math.max(W,H)*1.25,BR=Math.min(W,H)*.2;
+  const mk=()=>{const L=[];for(let i=0;i<130;i++)L.push({a:Math.random()*6.2832,w:.004+Math.random()*.02,r0:BR*(.9+Math.random()*.9),r1:R*(.6+Math.random()*.4)});
+    const S=[];const n=30;for(let i=0;i<n*2;i++){const a=i/(n*2)*6.2832;S.push([a,i%2?BR*(.5+Math.random()*.2):BR*(.95+Math.random()*.5)])}return{L,S}};
+  let sh=mk(),lastSh=0;
+  const draw=(ink,paper,a)=>{g.clearRect(0,0,W,H);g.globalAlpha=a;
+    g.fillStyle=ink;for(const l of sh.L){const x1=cx+Math.cos(l.a-l.w)*l.r1,y1=cy+Math.sin(l.a-l.w)*l.r1,x2=cx+Math.cos(l.a+l.w)*l.r1,y2=cy+Math.sin(l.a+l.w)*l.r1,x0=cx+Math.cos(l.a)*l.r0,y0=cy+Math.sin(l.a)*l.r0;g.beginPath();g.moveTo(x1,y1);g.lineTo(x2,y2);g.lineTo(x0,y0);g.closePath();g.fill()}
+    g.beginPath();sh.S.forEach(([an,r],i)=>{const x=cx+Math.cos(an)*r,y=cy+Math.sin(an)*r;i?g.lineTo(x,y):g.moveTo(x,y)});g.closePath();g.fillStyle=paper;g.fill();g.lineWidth=Math.max(5,BR*.09);g.strokeStyle=ink;g.lineJoin="miter";g.stroke();
+    g.globalAlpha=1};
+  const cls=n=>{bt.classList.remove("imp1","imp2");if(n)bt.classList.add(n)};
+  const t0=performance.now();let ph=-1;
+  for(;;){const t=performance.now()-t0;if(t>640)break;
+    const np=t<40?0:t<190?1:t<310?2:t<430?3:4;
+    if(t-lastSh>55){sh=mk();lastSh=t}
+    if(np!=ph){ph=np;cls(np==1||np==3?"imp1":np==2?"imp2":"")}
+    if(np==0){g.clearRect(0,0,W,H);g.fillStyle="#fff";g.fillRect(0,0,W,H)}
+    else if(np==1||np==3)draw("#000","#fff",1);
+    else if(np==2)draw("#fff","#000",1);
+    else{const k=(t-430)/210;draw("#000","#fff",1-k);if(k<.25){g.fillStyle="rgba(255,255,255,"+(.5*(1-k/.25))+")";g.fillRect(0,0,W,H)}}
+    await sleep(16)}
+  cls("");g.clearRect(0,0,W,H);
+}
 async function rocketStrike(r,k=0,tl=null){
   const{a,b,w}=r;if(B.over||b.dead)return false;
   const D=900,x=px(b.vx!=null?b.vx:b.x)+(k?((k%2?1:-1)*Math.ceil(k/2)*34):0),rd={x,y0:rkTop(),y1:GY-60,t0:performance.now(),dur:D};
   say("Incoming rocket!");B.rkdn.push(rd);playBuf("rkfire",1,.8);await sleep(D);B.rkdn=B.rkdn.filter(q=>q!==rd);if(B.over||b.dead)return false;
   const hx=x,side=b==B.p?"p":"e";
-  playBuf("rkx1",1);playBuf("rkx2",1);B.shake=34;
+  playBuf("rkx1",1);playBuf("rkx2",1);await impactFrame(hx);if(B.over)return false;B.shake=34;
   B.boom.push({x:hx,y:GY-55,t0:performance.now(),s:1.7});setTimeout(()=>B.boom.push({x:hx-30,y:GY-40,t0:performance.now(),s:1.1}),120);setTimeout(()=>B.boom.push({x:hx+30,y:GY-70,t0:performance.now(),s:1.1}),220);
   for(let k=0;k<40;k++){const an=Math.random()*Math.PI*2,v=3+Math.random()*8;B.sparks.push({x:hx,y:GY-55,vx:Math.cos(an)*v,vy:Math.sin(an)*v-4,z:8+Math.random()*9,l:35+Math.random()*35|0,L:70})}
   const raw=w.dr[0]+Math.floor(Math.random()*(w.dr[1]-w.dr[0]+1)),dmg=RDM(a,b,w,raw,true);RBRK(b,w,true,hx);
