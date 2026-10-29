@@ -1454,10 +1454,10 @@ function draw(){hudUpdate();
        /* flying numbers, like the original BMFlyingNumber: American Captain Eternal, rises 8px/frame slowing x0.9, holds, then shrinks x0.7 per frame */
        const l0=f.l0||(f.l0=f.l+fdt),age=Math.max(0,l0-f.l),rise=80*(1-Math.pow(.9,Math.min(age,27))),shr=Math.max(27,l0-6),sc=(age<6?1.3-.05*age:1)*(age<shr?1:Math.pow(.7,age-shr));
        if(sc<.04)return;
-       const raw=String(f.t).toUpperCase(),num=/^[-+]\d+$/.test(f.t),heal=f.t[0]=="+",sz=f.tot?60:num?(heal?40:48):26;
+       const raw=String(f.t).toUpperCase(),num=/^[-+]\d+$/.test(f.t),heal=f.t[0]=="+",sz=f.tot?36:num?(heal?24:28):18;
        g.save();g.translate(f.x,f.y-rise);g.scale(sc,sc);g.textAlign="center";g.textBaseline="middle";g.lineJoin="round";
-       if(f.tot){g.font="24px ACE,sans-serif";g.lineWidth=5;g.strokeStyle="rgba(0,0,0,.85)";g.strokeText("TOTAL",0,-sz*.7);g.fillStyle=FLCOL.yellow;g.fillText("TOTAL",0,-sz*.7)}
-       g.font=sz+"px ACE,sans-serif";g.lineWidth=Math.max(4,sz*.16);g.strokeStyle="rgba(0,0,0,.85)";g.strokeText(raw,0,0);g.fillStyle=flCol(f);g.fillText(raw,0,0);
+       if(f.tot){g.font="16px ACE,sans-serif";g.fillStyle=FLCOL.yellow;g.fillText("TOTAL",0,-sz*.7)}
+       g.font=sz+"px ACE,sans-serif";g.fillStyle=flCol(f);g.fillText(raw,0,0);
        g.restore()});g.restore();
 }
 const wdesc=w=>`${DTX(w.dr||[w.dmg,w.dmg],w.shots||1)} dmg · ${w.en} en${w.am?" · "+w.am+" ammo":""}${w.ra?" · "+w.ra+" rocket":""} · +${w.ht||0} heat · range ${w.min}-${w.max}`;
