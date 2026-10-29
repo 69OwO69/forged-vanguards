@@ -1456,7 +1456,7 @@ function draw(){hudUpdate();
        const l0=f.l0||(f.l0=f.l+fdt),age=Math.max(0,l0-f.l),rise=80*(1-Math.pow(.9,Math.min(age,27))),shr=Math.max(27,l0-6),sc=(age<6?1.3-.05*age:1)*(age<shr?1:Math.pow(.7,age-shr));
        if(sc<.04)return;
        const raw=String(f.t).toUpperCase(),num=/^[-+]\d+$/.test(f.t),heal=f.t[0]=="+",sz=f.tot?36:num?(heal?24:28):18;
-       g.save();g.translate(f.x,f.y-rise);g.scale(sc,sc);g.textAlign="center";g.textBaseline="middle";g.lineJoin="round";
+       g.save();g.translate(f.x,f.y+95-rise*.3);g.scale(sc,sc);g.textAlign="center";g.textBaseline="middle";g.lineJoin="round";
        if(f.tot){g.font="16px ACE,sans-serif";g.fillStyle=FLCOL.yellow;g.fillText("TOTAL",0,-sz*.7)}
        g.font=sz+"px ACE,sans-serif";g.fillStyle=flCol(f);g.fillText(raw,0,0);
        g.restore()});g.restore();
