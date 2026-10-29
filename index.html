@@ -398,20 +398,26 @@ body.fs main{padding:0;max-width:none}
 #ctl .cpn .none{color:#7f93ad;font-size:13px;padding:8px}
 #ctl .cttl{align-self:center;min-width:min(520px,80vw);padding:3px 18px;text-align:center;font-weight:700;font-size:13px;letter-spacing:.04em;color:#bff5c8;background:rgba(6,22,12,.88);border:1px solid rgba(80,160,100,.35);border-radius:3px}
 #ctl .crow{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;width:100%}
-#battle{--cibs:clamp(64px,6.4vw,96px)}
+#battle{--cibs:clamp(72px,min(17vh,10.2vw),190px)}
 #battle .ctl .cib em{position:absolute;left:4px;right:4px;bottom:3px;font-size:10px;font-style:normal;font-weight:600;line-height:1.1;color:#e8fff0;text-align:center;text-shadow:0 1px 2px #000,0 0 3px #000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #battle .ctl .cib.cap img{top:8%;height:62%}
 #battle .ctl .cib .oor{position:absolute;right:4px;bottom:4px;width:34%;height:34%;border-radius:4px;background:rgba(0,0,0,.6);pointer-events:none;overflow:visible}
 #battle .ctl .cib .oor img{position:absolute;inset:8%;width:84%;height:84%;object-fit:contain}
 #battle .ctl .cib .oor i{position:absolute;left:-12%;top:calc(50% - 1.5px);width:124%;height:3px;border-radius:2px;background:#ff3b3b;box-shadow:0 0 2px #000;transform:rotate(-45deg)}
 #battle .ctl .cib.cap img[src*="svg+xml"]{object-fit:contain}
-#ctl .cbar{display:flex;gap:6px}
-#battle .ctl .cib{position:relative;width:var(--cibs,84px);height:var(--cibs,84px);padding:0;font-size:0;border:none;border-radius:0;background:var(--cbf) center/100% 100% no-repeat,#0b110d}
+#ctl .cbar{display:flex;gap:6px;flex:1 1 auto;min-width:0;justify-content:space-between}
+#battle .ctl .cib{position:relative;flex:0 1 var(--cibs,84px);width:var(--cibs,84px);height:auto;aspect-ratio:1;min-width:0;padding:0;font-size:0;border:none;border-radius:0;background:var(--cbf) center/100% 100% no-repeat,#0b110d}
 #battle .ctl .cib img{position:absolute;left:14%;top:14%;width:72%;height:72%;object-fit:contain;pointer-events:none}
 #battle .ctl .cib.on{background:var(--cbf) center/100% 100% no-repeat,#16361f}
 #battle .ctl .cib:hover:not(:disabled){background:var(--cbf) center/100% 100% no-repeat,#12281a}
 #battle .ctl .cib:disabled{opacity:.38;cursor:default}
-#ctl .cside{display:flex;gap:6px;align-items:flex-end}
+#ctl .cside{position:absolute;left:calc(50% + 120px);bottom:calc(min(var(--cibs),17vh) + 8px);display:flex;gap:6px;align-items:flex-end}
+#battle .ctl{background:none!important;border:0!important;border-radius:0!important;padding:0!important;max-width:none!important;width:100%;position:relative}
+#battle .bot{padding:0 0 6px!important}
+#battle .ctl .crow{gap:0;padding:0 6px;box-sizing:border-box}
+@media(max-width:700px){#ctl .cside{left:calc(50% + 62px)}}
+#battle #ctl .cttl{background:none;border:0;text-shadow:0 2px 3px #000,0 0 4px #000;font-size:16px;color:#d8ffe0}
+#battle .ctl .cib em{font-size:clamp(10px,1.4vw,15px)}
 #battle #st{position:absolute;z-index:6;top:12px;left:clamp(44px,6vw,80px);margin:0;color:#fff;font-weight:700;text-shadow:0 1px 3px #000}
 #battle #lg{position:absolute;z-index:6;top:40px;left:clamp(44px,6vw,80px);margin:0;min-height:0;width:42%;color:#e1ecf8;text-shadow:0 1px 3px #000}
 #battle #mu{position:absolute;z-index:6;top:10px;right:clamp(44px,6vw,80px);float:none!important}
