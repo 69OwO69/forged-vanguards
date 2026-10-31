@@ -392,8 +392,6 @@ body.fs main{padding:0;max-width:none}
 #battle #zoomb{position:absolute;z-index:8;right:clamp(12px,2vw,28px);bottom:clamp(120px,24vh,200px);width:52px;height:52px;border-radius:12px;background:rgba(8,14,24,.78);border:1px solid rgba(120,160,210,.5);display:flex;align-items:center;justify-content:center;padding:0}
 #battle #zoomb img{width:30px;height:auto}
 #battle #zoomb.out{border-color:var(--ac)}
-#battle.imp1 #bgl,#battle.imp1 #gwrap,#battle.imp1 #cv{filter:grayscale(1) contrast(4) brightness(1.15)}
-#battle.imp2 #bgl,#battle.imp2 #gwrap,#battle.imp2 #cv{filter:grayscale(1) contrast(4) brightness(1.15) invert(1)}
 #battle #bgl{position:absolute;top:0;left:0;width:100%;height:100%;will-change:transform;background:#0b111a 0 0/100% 100% no-repeat}
 #battle #gnd{position:absolute;left:0;bottom:0;width:100%;height:auto;display:block;pointer-events:none}
 #battle #over{z-index:12}
@@ -2109,59 +2107,12 @@ async function rocketTick(){
   if(!B.over)for(const sd of ["p","e"])if(cn[sd]>1&&tl[sd]>0){const bt=sd=="p"?B.p:B.e;say(cn[sd]+" rockets hit "+(sd=="p"?"you":"the enemy")+" for "+tl[sd]+" total.");B.fl.push({x:px(bt.vx!=null?bt.vx:bt.x),y:GY-215,t:"-"+tl[sd],l:110})}
   return res.some(Boolean);
 }
-/* manga-style impact frame, played when a Big Rocket Launcher rocket lands. Set IMPACT_FRAME=false to turn it off. */
-let IMPACT_FRAME=true;
-async function impactFrame(hx){
-  if(!IMPACT_FRAME||!B||!B.cam)return;
-  const cam=B.cam,W=innerWidth,H=innerHeight,cv=$("cv"),rc=cv?cv.getBoundingClientRect():{left:0,top:0,width:W};
-  let c=$("impf");if(c)c.remove();
-  c=document.createElement("canvas");c.id="impf";c.style.cssText="position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:99999;pointer-events:none;background:#fff;border-radius:0;margin:0;border:0";document.body.appendChild(c);
-  const dpr=Math.min(1.5,devicePixelRatio||1);c.width=Math.max(1,Math.round(W*dpr));c.height=Math.max(1,Math.round(H*dpr));
-  const g=c.getContext("2d");
-  const raw=rc.left+rc.width/2+(hx-cam.cxc)*cam.sc*cam.cz,cx=W/2+(raw-W/2)*.3,gy=H*.9,U=Math.min(W,H),R=Math.hypot(W,H),rnd=Math.random;
-  const ccy=gy-U*.46; /* centre of the cloud head, where the speed lines radiate from */
-  /* a fresh set of ink strokes for every frame so the lines boil like hand-drawn frames */
-  const mk=()=>{const L=[],B=[],P=[];
-    for(let i=0;i<460;i++){const a=rnd()*6.2832,r0=U*(.3+rnd()*.35);L.push({a,w:(.4+rnd()*rnd()*2.6)*U/720,r0,r1:Math.min(R,r0+R*(.25+rnd()*.7))})}
-    const n=46;for(let i=0;i<n;i++){const a=i/n*6.2832;B.push([a,U*(i%2?.3+rnd()*.06:.4+rnd()*.12)])}
-    for(let i=0;i<13;i++){const a=Math.PI+i/12*Math.PI;P.push([cx+Math.cos(a)*U*.26*(.8+rnd()*.3),ccy+Math.sin(a)*U*.17*(.8+rnd()*.3)-U*.02,U*(.07+rnd()*.07)])}
-    for(let i=0;i<7;i++)P.push([cx+(rnd()-.5)*U*.4,ccy+(rnd()-.2)*U*.12,U*(.08+rnd()*.06)]);
-    return{L,B,P,sx:(rnd()-.5)*U*.03,sy:(rnd()-.5)*U*.03,z:1+rnd()*.07}};
-  const FR=[ /* ink, paper, cloud, detail */
-    {bg:"#fff",ln:"#000",cl:"#000",dt:"#fff"},
-    {bg:"#000",ln:"#fff",cl:"#fff",dt:"#000"},
-    {bg:"#5a5a5a",ln:"#fff",cl:"#fff",dt:"#2a2a2a",burst:1},
-    {bg:"#fff",ln:"#000",cl:"#000",dt:"#fff",burst:1}];
-  const draw=(f,s)=>{g.setTransform(dpr,0,0,dpr,0,0);g.fillStyle=f.bg;g.fillRect(0,0,W,H);
-    g.save();g.translate(cx+s.sx,ccy+s.sy);g.scale(s.z,s.z);g.translate(-cx,-ccy);
-    g.fillStyle=f.ln;for(const l of s.L){const ca=Math.cos(l.a),sa=Math.sin(l.a),rm=l.r0+(l.r1-l.r0)*.3;g.beginPath();g.moveTo(cx+ca*l.r0,ccy+sa*l.r0);g.lineTo(cx+ca*rm-sa*l.w,ccy+sa*rm+ca*l.w);g.lineTo(cx+ca*l.r1,ccy+sa*l.r1);g.lineTo(cx+ca*rm+sa*l.w,ccy+sa*rm-ca*l.w);g.closePath();g.fill()}
-    if(f.burst){g.fillStyle=f.ln;g.beginPath();s.B.forEach(([a,r],i)=>{const x=cx+Math.cos(a)*r,y=ccy+Math.sin(a)*r;i?g.lineTo(x,y):g.moveTo(x,y)});g.closePath();g.fill()}
-    /* mushroom cloud: skirt of dust, tapering stem, cauliflower head with billow lines */
-    g.fillStyle=f.cl;g.beginPath();g.ellipse(cx,gy,U*.34,U*.045,0,0,6.2832);g.fill();
-    g.beginPath();g.moveTo(cx-U*.11,gy);g.quadraticCurveTo(cx-U*.03,gy-U*.12,cx-U*.045,ccy+U*.08);g.lineTo(cx+U*.045,ccy+U*.08);g.quadraticCurveTo(cx+U*.03,gy-U*.12,cx+U*.11,gy);g.closePath();g.fill();
-    for(const [x,y,r] of s.P){g.beginPath();g.arc(x,y,r,0,6.2832);g.fill()}
-    g.beginPath();g.ellipse(cx,ccy+U*.02,U*.24,U*.1,0,0,6.2832);g.fill();
-    g.strokeStyle=f.dt;g.lineCap="round";g.lineWidth=Math.max(2.5,U*.006);for(const [x,y,r] of s.P.slice(0,10)){g.beginPath();g.arc(x,y+r*.15,r*.7,Math.PI*1.05,Math.PI*1.8);g.stroke()}
-    g.lineWidth=Math.max(2,U*.005);for(let i=0;i<6;i++){const y=gy-U*(.06+i*.05);g.beginPath();g.moveTo(cx-U*.05,y);g.quadraticCurveTo(cx,y-U*.02,cx+U*.05,y);g.stroke()}
-    g.restore()};
-  /* very fast strobe: white flash, then alternating ink / negative / grey frames with a punch-in, then a short fade */
-  const SEQ=[[0,40,-1],[40,85,0],[85,125,1],[125,185,2],[185,225,1],[225,270,0],[270,320,3],[320,360,1],[360,420,0]];
-  let s=mk(),last=0,t0=performance.now();
-  for(;;){const t=performance.now()-t0;if(t>480)break;
-    const q=SEQ.find(e=>t>=e[0]&&t<e[1]);
-    if(t-last>38){s=mk();last=t}
-    if(!q&&t>=420){c.style.opacity=String(Math.max(0,1-(t-420)/60))}
-    else if(q[2]<0){g.setTransform(1,0,0,1,0,0);g.fillStyle="#fff";g.fillRect(0,0,c.width,c.height)}
-    else draw(FR[q[2]],s);
-    await sleep(8)}
-  c.remove();
-}
 async function rocketStrike(r,k=0,tl=null){
   const{a,b,w}=r;if(B.over||b.dead)return false;
   const D=900,x=px(b.vx!=null?b.vx:b.x)+(k?((k%2?1:-1)*Math.ceil(k/2)*34):0),rd={x,y0:rkTop(),y1:GY-60,t0:performance.now(),dur:D};
   say("Incoming rocket!");B.rkdn.push(rd);playBuf("rkfire",1,.8);await sleep(D);B.rkdn=B.rkdn.filter(q=>q!==rd);if(B.over||b.dead)return false;
   const hx=x,side=b==B.p?"p":"e";
-  playBuf("rkx1",1);playBuf("rkx2",1);await impactFrame(hx);if(B.over)return false;B.shake=34;
+  playBuf("rkx1",1);playBuf("rkx2",1);B.shake=34;
   B.boom.push({x:hx,y:GY-55,t0:performance.now(),s:1.7});setTimeout(()=>B.boom.push({x:hx-30,y:GY-40,t0:performance.now(),s:1.1}),120);setTimeout(()=>B.boom.push({x:hx+30,y:GY-70,t0:performance.now(),s:1.1}),220);
   for(let k=0;k<40;k++){const an=Math.random()*Math.PI*2,v=3+Math.random()*8;B.sparks.push({x:hx,y:GY-55,vx:Math.cos(an)*v,vy:Math.sin(an)*v-4,z:8+Math.random()*9,l:35+Math.random()*35|0,L:70})}
   const raw=w.dr[0]+Math.floor(Math.random()*(w.dr[1]-w.dr[0]+1)),dmg=RDM(a,b,w,raw,true);RBRK(b,w,true,hx);
