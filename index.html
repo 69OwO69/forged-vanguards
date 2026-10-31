@@ -499,8 +499,8 @@ body.cine #hudL,body.cine #hudR,body.cine #ctl,body.cine #zoomb{opacity:0!import
 #cname{position:fixed;left:0;right:0;top:22vh;text-align:center;z-index:71;pointer-events:none;font:800 clamp(38px,8vw,112px)/1 "Chakra Petch","Arial Black",system-ui,sans-serif;color:#ff2a2a;letter-spacing:.14em;padding-left:.14em;text-shadow:0 0 22px rgba(255,30,30,.85),0 5px 0 #5a0000,0 0 3px #000;transition:opacity .45s}#cname.out{opacity:0}#cname span{display:inline-block;opacity:0;animation:cnl .14s ease-out forwards}@keyframes cnl{from{opacity:0;transform:scale(1.7) translateY(-14px)}to{opacity:1;transform:none}}
 </style><style id="wsx">
 /* workshop + top bar, restyled after the real game's workshop */
-#work{--u:min(calc((100vh - 52px)/1052),calc(100vw/1536));padding:52px calc(var(--u)*14) calc(var(--u)*10)!important;overflow:hidden!important;background:#000!important}
-#work .wk{display:grid!important;grid-template-columns:calc(var(--u)*118) minmax(0,1fr) calc(var(--u)*478) calc(var(--u)*122)!important;gap:calc(var(--u)*12);height:calc(100vh - 52px - 8px);min-height:0;align-items:stretch;flex:none!important}
+#work{--wh:min(100vh,56.25vw);--u:min(calc((var(--wh) - 52px)/1052),calc(100vw/1536));padding:calc(52px + (100vh - var(--wh))/2) calc(var(--u)*14) calc(var(--u)*10)!important;overflow:hidden!important;background:#000!important}
+#work .wk{display:grid!important;grid-template-columns:calc(var(--u)*118) minmax(0,1fr) calc(var(--u)*478) calc(var(--u)*122)!important;gap:calc(var(--u)*12);height:calc(var(--wh) - 52px - 8px);min-height:0;align-items:stretch;flex:none!important}
 #work .lnav{display:flex!important;flex-direction:column;gap:calc(var(--u)*12);justify-content:flex-start;padding:0;margin:0}
 #work .lnav button,#work .cat{box-sizing:border-box;position:relative;width:100%;aspect-ratio:1;flex:none;padding:0;border:calc(var(--u)*5) solid #1853a8;border-radius:calc(var(--u)*10);background:linear-gradient(#2f86ea,#1257b8 55%,#0b3f8e);box-shadow:inset 0 0 0 calc(var(--u)*3) #0a2d68;display:flex;align-items:center;justify-content:center;cursor:pointer}
 #work .lnav button:hover,#work .cat:hover{filter:brightness(1.15)}
