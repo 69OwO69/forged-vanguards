@@ -1490,7 +1490,7 @@ const MYTHGEAR=()=>{const ring=(r,n,rr,col)=>Array.from({length:n},(_,i)=>{const
   <circle r="200" fill="url(#mgm)" stroke="#04060a" stroke-width="4"/><circle r="188" fill="#0a0d11" stroke="#323b46" stroke-width="2"/>${ring(194,32,3.2,"#7d8998")}
   <circle class="lr" r="178" fill="none" style="stroke:var(--o)" stroke-width="7" stroke-dasharray="28 9" filter="url(#mgg)"/>
   <g class="r1"><path d="${gearPath(168,40)}" fill="url(#mgm)" stroke="#04060a" stroke-width="3"/><circle r="146" fill="#10141a" stroke="#04060a" stroke-width="3"/>${ring(156,40,2.4,"#0b0e12")}</g>
-  <g class="r2"><circle r="132" fill="#0b0e12" stroke="#3d4753" stroke-width="2"/>${ticks}<text font-size="10.5" font-weight="700" letter-spacing="3.1" fill="#8d9db1" font-family="Chakra Petch,monospace"><textPath href="#mgt">SUMMON PROTOCOL &#9642; RARITY MATRIX &#9642; ARMORY FOUNDRY &#9642; CORE SYNC &#9642; </textPath></text></g>
+  <g class="r2"><circle r="132" fill="#0b0e12" stroke="#3d4753" stroke-width="2"/>${ticks}<text font-size="10.5" font-weight="700" letter-spacing="3.1" fill="#8d9db1" font-family="Chakra Petch,monospace"><textPath href="#mgt">SUMMON PROTOCOL &#9642; RARITY MATRIX &#9642; FORGED VANGUARDS &#9642; CORE SYNC &#9642; </textPath></text></g>
   <circle r="96" fill="#07090c" stroke="#3a444f" stroke-width="2"/>
   <g class="ir">${blades}</g>
   <circle r="50" fill="#04060a" stroke="#4b5663" stroke-width="3"/><g class="r3"><circle r="46" fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="1.6" stroke-dasharray="6 9"/></g>
@@ -1504,7 +1504,7 @@ function mythScene(g,done){
   const ART=mythArtGet(),el=document.createElement("div");el.id="myth";["wall","door","door2","s3"].forEach(k=>el.style.setProperty("--"+k,`url(${ART[k]})`));
   const ZG=[[50,0],[50,30],[43,42],[52,55],[45,68],[48,100]];
   el.innerHTML=`<div class="mw"><div class="cam"><div class="wall"></div><div class="sweep"></div>${ART.wl.map(([x,y],i)=>`<div class="lamp" style="left:${(x*100).toFixed(1)}%;top:${(y*100).toFixed(1)}%;animation-delay:${(i*.37).toFixed(2)}s"></div>`).join("")}
-  <div class="hud"><i class="cn a"></i><i class="cn b"></i><i class="cn c"></i><i class="cn d"></i><div class="ht"><b>MECH FOUNDRY</b> // SUMMON PROTOCOL<small>ARMORY LINK ESTABLISHED</small></div><div class="hx"></div><div class="hb"><div class="hbt"><span class="hm">INITIALISING</span><span class="hp">0%</span></div><div class="hbf"><i></i></div></div></div>
+  <div class="hud"><i class="cn a"></i><i class="cn b"></i><i class="cn c"></i><i class="cn d"></i><div class="ht"><b>FORGED VANGUARDS</b> // SUMMON PROTOCOL<small>ARMORY LINK ESTABLISHED</small></div><div class="hx"></div><div class="hb"><div class="hbt"><span class="hm">INITIALISING</span><span class="hp">0%</span></div><div class="hbf"><i></i></div></div></div>
   <div class="tag">SUMMON</div><div class="emb">${MYTHEMB()}</div>
   <div class="dr t">${Array.from({length:9},(_,i)=>`<i class="dl" style="left:${8+i*10.5}%;animation-delay:${(i*.13).toFixed(2)}s"></i>`).join("")}</div><div class="dr b">${Array.from({length:9},(_,i)=>`<i class="dl" style="left:${8+i*10.5}%;animation-delay:${(i*.13+.5).toFixed(2)}s"></i>`).join("")}</div><div class="seam"></div>
   <div class="mc"><div class="rail"></div>${MYTHSG("a",34,12)}${MYTHSG("b",34,12)}${MYTHSG("c",22,9)}${MYTHGEAR()}</div></div>
