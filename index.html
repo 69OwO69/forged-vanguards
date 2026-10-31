@@ -1474,6 +1474,9 @@ function draw(){hudUpdate();
   for(const p of B.projs){const k=Math.min(1,(performance.now()-p.t0)/(p.dur||380));if(p.fx){const fi=FLM[Math.min(FLM.length-1,Math.floor(k*FLM.length))],sc=Math.max(1.1,Math.min(2.3,Math.abs(p.x1-p.x0)/90));if(fi&&fi.complete){g.save();g.translate(p.x0,p.y);g.scale(p.dir,1);g.drawImage(fi,-14*sc*MK,-82*sc*MK,129*sc*MK,129*sc*MK);g.restore()}continue}if(p.msh&&MSH.complete&&MSH.naturalWidth){const x=p.x0+(p.x1-p.x0)*k,yy=p.y+(p.y1!=null?(p.y1-p.y)*k:0)-Math.sin(k*Math.PI)*p.arc,dxv=p.x1-p.x0,dyv=(p.y1!=null?p.y1-p.y:0)-Math.cos(k*Math.PI)*Math.PI*p.arc;g.save();g.translate(x,yy);g.rotate(Math.atan2(dyv,dxv));if(dxv<0)g.scale(1,-1);g.drawImage(MSH,-10*MK,-4.9*MK,20*MK,9.7*MK);g.restore();continue}g.fillStyle=p.c;g.beginPath();g.arc(p.x0+(p.x1-p.x0)*k,p.y+(p.y1!=null?(p.y1-p.y)*k:0)-Math.sin(k*Math.PI)*p.arc,(p.rapid?3:6)*MK,0,7);g.fill()}
   const fdt=Math.min(12,Math.max(0,(t0-(B.ftm||t0))/16.667));B.ftm=t0;B.fl=B.fl.filter(f=>f.l>0);B.fl.forEach(f=>{f.l-=fdt;
        /* flying numbers, like the original BMFlyingNumber: American Captain Eternal, rises 8px/frame slowing x0.9, holds, then shrinks x0.7 per frame */
+       if(!f.tot&&/^[-+]\d+%?$/.test(f.t)){const l0=f.l0||(f.l0=(f.l=Math.max(f.l,120))+fdt),fr=Math.max(0,l0-f.l)/2,ps=flPose(fr);if(!ps.vis)return;
+         const cam=B.cam,S=(W/800)/(cam.sc*cam.cz),mm=[B.p,B.e,...(B.sms||[]).filter(o=>o&&!o.gone)].reduce((bst,o)=>Math.abs(px(o.vx!=null?o.vx:o.x)-f.x)<Math.abs(px(bst.vx!=null?bst.vx:bst.x)-f.x)?o:bst),sp=flNum(String(f.t).toUpperCase(),flCol(f),(W/800)*RS);
+         g.save();g.translate(px(mm.vx!=null?mm.vx:mm.x),GY+(-30+ps.y)*S);g.scale(S*ps.s,S*ps.s);g.drawImage(sp.c,sp.x,sp.y+19.51,sp.w,sp.h);g.restore();return}
        const l0=f.l0||(f.l0=f.l+fdt),age=Math.max(0,l0-f.l),rise=80*MK*(1-Math.pow(.9,Math.min(age,27))),shr=Math.max(27,l0-6),sc=(age<6?1.3-.05*age:1)*(age<shr?1:Math.pow(.7,age-shr));
        if(sc<.04)return;
        const raw=String(f.t).toUpperCase(),num=/^[-+]\d+%?$/.test(f.t),heal=f.t[0]=="+"&&!f.c,sz=(f.tot?36:num?(heal?24:28):18)*MK;
@@ -1902,8 +1905,35 @@ function drawTPT(g){if(!B||!B.tpSel||B.over)return;const vt=tpTiles(B.p),pul=.65
 const hovPul=()=>.8+.2*Math.sin(performance.now()/180);
 
 /* ---------- Sandevistan teleport (shiny Teleporter): the mech streaks across the map in a blink, leaving cyan + magenta afterimages of itself ---------- */
-const FLCOL={red:"#E01818",green:"#00CC00",blue:"#00CCFF",orange:"#FF6600",gray:"#DDDDDD",yellow:"#FFCC00"};
+const FLCOL={red:"#CC0000",green:"#00CC00",blue:"#00CCFF",orange:"#FF6600",gray:"#DDDDDD",yellow:"#FFCC00"};
 /* flying numbers are drawn like the original: ACE text with a 1px bevel (white bottom-right, black top-left) and a thick black glow */
+/* BMFlyingNumber, exact: 49px ACE, the SWF bevel (1px, 45deg, strength 1.25) and glow (blur 5, strength 3.6) rebuilt per pixel, cached per text+colour */
+const FLN=new Map();
+function flNum(t,col,res){
+  res=Math.min(3,Math.max(.5,Math.round(res*64)/64));const key=t+"|"+col+"|"+res,hit=FLN.get(key);if(hit)return hit;
+  const F="49px ACE,sans-serif",cv=document.createElement("canvas"),g=cv.getContext("2d");g.font=F;g.textAlign="center";
+  const m=g.measureText(t),half=Math.ceil(Math.max(m.width/2,m.actualBoundingBoxLeft||0,m.actualBoundingBoxRight||0)+12),top=-Math.ceil((m.actualBoundingBoxAscent||49)+12),bot=Math.ceil((m.actualBoundingBoxDescent||12)+12);
+  const w=Math.ceil(half*2*res),h=Math.ceil((bot-top)*res);cv.width=w;cv.height=h;
+  g.setTransform(res,0,0,res,half*res,-top*res);g.font=F;g.textAlign="center";g.textBaseline="alphabetic";g.fillStyle=col;g.fillText(t,0,0);
+  const im=g.getImageData(0,0,w,h),D=im.data,N=w*h,M=new Float32Array(N);let cr=0,cg=0,cb=0,cn=0;
+  for(let i=0;i<N;i++){const a=D[i*4+3]/255;M[i]=a;if(a>.98&&!cn){cr=D[i*4];cg=D[i*4+1];cb=D[i*4+2];cn=1}}
+  if(!cn){const r=parseInt(col.slice(1,3),16),gg=parseInt(col.slice(3,5),16),b=parseInt(col.slice(5,7),16);cr=r;cg=gg;cb=b}
+  const shift=(a,dx,dy)=>{const o=new Float32Array(N);for(let y=0;y<h;y++)for(let x=0;x<w;x++){const sx=x-dx,sy=y-dy,x0=Math.floor(sx),y0=Math.floor(sy),fx=sx-x0,fy=sy-y0,at=(xx,yy)=>xx<0||yy<0||xx>=w||yy>=h?0:a[yy*w+xx];o[y*w+x]=at(x0,y0)*(1-fx)*(1-fy)+at(x0+1,y0)*fx*(1-fy)+at(x0,y0+1)*(1-fx)*fy+at(x0+1,y0+1)*fx*fy}return o};
+  const blur=(a,s)=>{const r=Math.max(1,Math.ceil(s*3)),k=[];let ks=0;for(let i=-r;i<=r;i++){const v=Math.exp(-i*i/(2*s*s));k.push(v);ks+=v}k.forEach((v,i)=>k[i]=v/ks);
+    const t1=new Float32Array(N),o=new Float32Array(N);
+    for(let y=0;y<h;y++)for(let x=0;x<w;x++){let s2=0;for(let i=-r;i<=r;i++){const xx=x+i;if(xx>=0&&xx<w)s2+=a[y*w+xx]*k[i+r]}t1[y*w+x]=s2}
+    for(let y=0;y<h;y++)for(let x=0;x<w;x++){let s2=0;for(let i=-r;i<=r;i++){const yy=y+i;if(yy>=0&&yy<h)s2+=t1[yy*w+x]*k[i+r]}o[y*w+x]=s2}return o};
+  const d=.70711*res,A=shift(M,d,d),Bs=shift(M,-d,-d),R=new Float32Array(N),Bl=new Float32Array(N);
+  for(let i=0;i<N;i++){const r1=Math.min(1,1.25*(1-A[i]))*M[i],b9=Math.min(1,1.25*(1-Bs[i]))*M[i],r10=r1*(1-b9),b11=b9*(1-r1);R[i]=r10;Bl[i]=(1-r10)*b11}
+  const sg=.866*res,Rb=blur(R,sg),Bb=blur(Bl,sg),Gb=blur(M,1.41421*res);
+  for(let i=0;i<N;i++){const v=1.25*(Rb[i]-Bb[i]),ov=v>=0?255:0,oa=Math.min(1,Math.abs(v)),mA=M[i],gA=Math.min(1,3.59765625*Gb[i]);
+    const cR=ov*oa+cr*(1-oa),cG=ov*oa+cg*(1-oa),cB=ov*oa+cb*(1-oa),oA=mA+gA*(1-mA);
+    D[i*4]=oA>0?cR*mA/oA:0;D[i*4+1]=oA>0?cG*mA/oA:0;D[i*4+2]=oA>0?cB*mA/oA:0;D[i*4+3]=Math.round(oA*255)}
+  g.setTransform(1,0,0,1,0,0);g.putImageData(im,0,0);
+  if(FLN.size>=64)FLN.delete(FLN.keys().next().value);
+  const o={c:cv,x:-half,y:top,w:w/res,h:h/res};FLN.set(key,o);return o}
+/* BMFlyingNumber motion at 30fps: rises 8px/frame x0.9 (80px total, 27 frames), holds, shrinks x0.7 per frame from frame 46, gone at frame 57 */
+function flPose(fr){const r=Math.min(fr,27);return{y:-80*(1-Math.pow(.9,r)),s:Math.pow(.7,Math.max(0,Math.floor(fr-27)-18)),vis:fr>=0&&fr<57}}
 const FLC=new Map();
 function flSprite(t,col,sz){const k=t+"|"+col+"|"+Math.round(sz),h0=FLC.get(k);if(h0)return h0;
   const r=Math.min(2,devicePixelRatio||1),f=sz*r,pad=Math.ceil(f*.16)+4,m=document.createElement("canvas").getContext("2d");m.font=f+"px ACE,sans-serif";
