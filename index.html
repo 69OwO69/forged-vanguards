@@ -2220,7 +2220,7 @@ const OVM=a=>a&&a.ovT>0?1.2:1;
 const RTY=w=>w&&w.ty=="energy"?"e":w&&(w.ty=="fire"||w.ty=="heat")?"f":"p",RNM={p:"phys",f:"fire",e:"energy"};
 const rsOf=(b,w)=>(b&&b.rs&&b.rs[RTY(w)])||0;
 /* total-damage roll: the whole attack rolls ONE number (per-hit range x hits), then splits it across the hits */
-const RPL=(w,n)=>{n=Math.max(1,n||1);let t;if(w.dr)t=w.dr[0]*n+Math.floor(Math.random()*((w.dr[1]-w.dr[0])*n+1));else t=Math.round(w.dmg*n*(.9+Math.random()*.2));const q=Math.floor(t/n),r=t-q*n,a=Array(n).fill(q);for(let i=0;i<r;i++)a[i]++;return a};
+const RPL=(w,n)=>{n=Math.max(1,n||1);let t;if(w.dr)t=w.dr[0]*n+Math.floor(Math.random()*((w.dr[1]-w.dr[0])*n+1));else t=Math.round(w.dmg*n*(.9+Math.random()*.2));const q=Math.floor(t/n),r=t-q*n,a=Array(n).fill(q);for(let i=0;i<r;i++)a[n-1-i]++;return a};/* lowest hits first, the bumped-up (highest) hits land last */
 const DTX=(rg,n,u)=>{const lo=rg[0]*n,hi=rg[1]*n,t=lo==hi?""+lo:lo+"-"+hi;return n>1?t+" ("+n+" "+(u||"hits")+")":t};
 const RDM=(a,b,w,raw,last)=>Math.max(1,Math.floor((raw*OVM(a)-(last?rsOf(b,w):0))*(1-(b.res||0)/100)));
 /* armor breaking: w.brk={p:2,f:1,e:3} lowers the target's resistance (can go negative); once per volley, on the last hit */
