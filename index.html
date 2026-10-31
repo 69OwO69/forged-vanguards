@@ -1476,7 +1476,7 @@ function draw(){hudUpdate();
        /* flying numbers, like the original BMFlyingNumber: American Captain Eternal, rises 8px/frame slowing x0.9, holds, then shrinks x0.7 per frame */
        if(!f.tot&&/^[-+]\d+%?$/.test(f.t)){const l0=f.l0||(f.l0=(f.l=Math.max(f.l,120))+fdt),fr=Math.max(0,l0-f.l)/2,ps=flPose(fr);if(!ps.vis)return;
          const cam=B.cam,S=(W/800)/(cam.sc*cam.cz),mm=[B.p,B.e,...(B.sms||[]).filter(o=>o&&!o.gone)].reduce((bst,o)=>Math.abs(px(o.vx!=null?o.vx:o.x)-f.x)<Math.abs(px(bst.vx!=null?bst.vx:bst.x)-f.x)?o:bst),sp=flNum(String(f.t).toUpperCase(),flCol(f),(W/800)*RS);
-         if(f.ox==null){f.ox=(Math.random()-.5)*110;f.oy=-Math.random()*30}const ZS=.7;g.save();g.translate(px(mm.vx!=null?mm.vx:mm.x)+f.ox*S,GY+(-30+ps.y-30+f.oy)*S);g.scale(S*ps.s*ZS,S*ps.s*ZS);g.drawImage(sp.c,sp.x,sp.y+19.51,sp.w,sp.h);g.restore();return}
+         if(f.ox==null){f.ox=(Math.random()-.5)*110;f.oy=-Math.random()*22}const ZS=.6,te=ART.t[mm.tid],le=mm.lid!=null?ART.l[mm.lid]:null,MH=te?((te.h||50)+(le?(le.h||0)*.65:0))*MK:110*MK;g.save();g.translate(px(mm.vx!=null?mm.vx:mm.x)+f.ox*S,GY-MH+(ps.y+f.oy)*S);g.scale(S*ps.s*ZS,S*ps.s*ZS);g.drawImage(sp.c,sp.x,sp.y+19.51,sp.w,sp.h);g.restore();return}
        const l0=f.l0||(f.l0=f.l+fdt),age=Math.max(0,l0-f.l),rise=80*MK*(1-Math.pow(.9,Math.min(age,27))),shr=Math.max(27,l0-6),sc=(age<6?1.3-.05*age:1)*(age<shr?1:Math.pow(.7,age-shr));
        if(sc<.04)return;
        const raw=String(f.t).toUpperCase(),num=/^[-+]\d+%?$/.test(f.t),heal=f.t[0]=="+"&&!f.c,sz=(f.tot?36:num?(heal?24:28):18)*MK;
