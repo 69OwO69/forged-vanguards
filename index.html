@@ -2117,29 +2117,43 @@ async function impactFrame(hx){
   let c=$("impf");if(c)c.remove();
   c=document.createElement("canvas");c.id="impf";c.style.cssText="position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:99999;pointer-events:none;background:#fff;border-radius:0;margin:0;border:0";document.body.appendChild(c);
   const dpr=Math.min(1.5,devicePixelRatio||1);c.width=Math.max(1,Math.round(W*dpr));c.height=Math.max(1,Math.round(H*dpr));
-  const g=c.getContext("2d");g.setTransform(dpr,0,0,dpr,0,0);
-  const cx=Math.max(W*.12,Math.min(W*.88,rc.left+rc.width/2+(hx-cam.cxc)*cam.sc*cam.cz)),cy=Math.min(H*.86,Math.max(H*.55,rc.top+cam.fy-40*cam.sc*cam.cz)),R=Math.hypot(W,H),U=Math.min(W,H),rnd=Math.random;
-  /* one manga frame: soft halo, tapered speed lines, jagged cracks, the black rocket column and the flat shock ellipse on the ground */
-  const mk=()=>{const L=[],K=[];
-    for(let i=0;i<300;i++){const a=rnd()*6.2832,near=U*(.05+rnd()*.3);L.push({a,w:(.5+rnd()*rnd()*3.2)*U/720,r0:near,r1:R*(.35+rnd()*.65),m:.25+rnd()*.5})}
-    const crack=(x,y,an,len,w,d)=>{const P=[[x,y,w]];let n=0,cl=0;while(cl<len){const sl=U*(.03+rnd()*.05);an+=(rnd()-.5)*.9;x+=Math.cos(an)*sl;y+=Math.sin(an)*sl;cl+=sl;w=Math.max(2.2,w*.93);P.push([x,y,w]);if(d<2&&rnd()<.16&&n++<3)crack(x,y,an+(rnd()<.5?-1:1)*(.5+rnd()*.6),len*.4,w*.8,d+1)}K.push(P)};
-    for(let i=0;i<9;i++){const up=rnd()<.7;crack(cx+(rnd()-.5)*U*.2,cy-U*.01,up?-Math.PI*(.05+rnd()*.9):Math.PI*(rnd()<.5?rnd()*.12:1-rnd()*.12),U*(.5+rnd()*.7),U*.012,0)}
-    return{L,K}};
-  let sh=mk(),lastSh=0;
-  const draw=(ink,paper)=>{g.clearRect(0,0,W,H);g.fillStyle=paper;g.fillRect(0,0,W,H);
-    const hg=g.createRadialGradient(cx,cy,0,cx,cy,U*.55);hg.addColorStop(0,ink=="#000"?"rgba(0,0,0,.62)":"rgba(255,255,255,.62)");hg.addColorStop(.45,ink=="#000"?"rgba(0,0,0,.16)":"rgba(255,255,255,.16)");hg.addColorStop(1,"rgba(0,0,0,0)");g.fillStyle=hg;g.fillRect(0,0,W,H);
-    g.fillStyle=ink;for(const l of sh.L){const ca=Math.cos(l.a),sa=Math.sin(l.a),rm=l.r0+(l.r1-l.r0)*l.m,px_=-sa*l.w,py_=ca*l.w;g.beginPath();g.moveTo(cx+ca*l.r0,cy+sa*l.r0);g.lineTo(cx+ca*rm+px_,cy+sa*rm+py_);g.lineTo(cx+ca*l.r1,cy+sa*l.r1);g.lineTo(cx+ca*rm-px_,cy+sa*rm-py_);g.closePath();g.fill()}
-    g.strokeStyle=ink;g.lineCap="round";g.lineJoin="round";for(const P of sh.K)for(let i=1;i<P.length;i++){g.lineWidth=P[i][2];g.beginPath();g.moveTo(P[i-1][0],P[i-1][1]);g.lineTo(P[i][0],P[i][1]);g.stroke()}
-    const cw=U*.075;g.fillStyle=ink;g.beginPath();g.moveTo(cx-cw*.5,-5);g.lineTo(cx+cw*.5,-5);g.lineTo(cx+cw*.5,cy-U*.05);g.quadraticCurveTo(cx+cw*.55,cy-U*.012,cx+cw*1.5,cy-U*.004);g.lineTo(cx-cw*1.5,cy-U*.004);g.quadraticCurveTo(cx-cw*.55,cy-U*.012,cx-cw*.5,cy-U*.05);g.closePath();g.fill();
-    g.beginPath();g.ellipse(cx,cy,U*.36,U*.034,0,0,6.2832);g.fill();g.fillStyle=paper;g.globalAlpha=.9;g.beginPath();g.ellipse(cx,cy-U*.004,U*.2,U*.012,0,0,6.2832);g.fill();g.globalAlpha=1};
-  const t0=performance.now();
-  for(;;){const t=performance.now()-t0;if(t>1000)break;
-    if(t-lastSh>70&&t<800){sh=mk();lastSh=t}
-    if(t<60){g.fillStyle="#fff";g.fillRect(0,0,W,H)}
-    else if(t>380&&t<480)draw("#fff","#000");
-    else draw("#000","#fff");
-    if(t>850)c.style.opacity=String(Math.max(0,1-(t-850)/150));
-    await sleep(16)}
+  const g=c.getContext("2d");
+  const raw=rc.left+rc.width/2+(hx-cam.cxc)*cam.sc*cam.cz,cx=W/2+(raw-W/2)*.3,gy=H*.9,U=Math.min(W,H),R=Math.hypot(W,H),rnd=Math.random;
+  const ccy=gy-U*.46; /* centre of the cloud head, where the speed lines radiate from */
+  /* a fresh set of ink strokes for every frame so the lines boil like hand-drawn frames */
+  const mk=()=>{const L=[],B=[],P=[];
+    for(let i=0;i<460;i++){const a=rnd()*6.2832,r0=U*(.3+rnd()*.35);L.push({a,w:(.4+rnd()*rnd()*2.6)*U/720,r0,r1:Math.min(R,r0+R*(.25+rnd()*.7))})}
+    const n=46;for(let i=0;i<n;i++){const a=i/n*6.2832;B.push([a,U*(i%2?.3+rnd()*.06:.4+rnd()*.12)])}
+    for(let i=0;i<13;i++){const a=Math.PI+i/12*Math.PI;P.push([cx+Math.cos(a)*U*.26*(.8+rnd()*.3),ccy+Math.sin(a)*U*.17*(.8+rnd()*.3)-U*.02,U*(.07+rnd()*.07)])}
+    for(let i=0;i<7;i++)P.push([cx+(rnd()-.5)*U*.4,ccy+(rnd()-.2)*U*.12,U*(.08+rnd()*.06)]);
+    return{L,B,P,sx:(rnd()-.5)*U*.03,sy:(rnd()-.5)*U*.03,z:1+rnd()*.07}};
+  const FR=[ /* ink, paper, cloud, detail */
+    {bg:"#fff",ln:"#000",cl:"#000",dt:"#fff"},
+    {bg:"#000",ln:"#fff",cl:"#fff",dt:"#000"},
+    {bg:"#5a5a5a",ln:"#fff",cl:"#fff",dt:"#2a2a2a",burst:1},
+    {bg:"#fff",ln:"#000",cl:"#000",dt:"#fff",burst:1}];
+  const draw=(f,s)=>{g.setTransform(dpr,0,0,dpr,0,0);g.fillStyle=f.bg;g.fillRect(0,0,W,H);
+    g.save();g.translate(cx+s.sx,ccy+s.sy);g.scale(s.z,s.z);g.translate(-cx,-ccy);
+    g.fillStyle=f.ln;for(const l of s.L){const ca=Math.cos(l.a),sa=Math.sin(l.a),rm=l.r0+(l.r1-l.r0)*.3;g.beginPath();g.moveTo(cx+ca*l.r0,ccy+sa*l.r0);g.lineTo(cx+ca*rm-sa*l.w,ccy+sa*rm+ca*l.w);g.lineTo(cx+ca*l.r1,ccy+sa*l.r1);g.lineTo(cx+ca*rm+sa*l.w,ccy+sa*rm-ca*l.w);g.closePath();g.fill()}
+    if(f.burst){g.fillStyle=f.ln;g.beginPath();s.B.forEach(([a,r],i)=>{const x=cx+Math.cos(a)*r,y=ccy+Math.sin(a)*r;i?g.lineTo(x,y):g.moveTo(x,y)});g.closePath();g.fill()}
+    /* mushroom cloud: skirt of dust, tapering stem, cauliflower head with billow lines */
+    g.fillStyle=f.cl;g.beginPath();g.ellipse(cx,gy,U*.34,U*.045,0,0,6.2832);g.fill();
+    g.beginPath();g.moveTo(cx-U*.11,gy);g.quadraticCurveTo(cx-U*.03,gy-U*.12,cx-U*.045,ccy+U*.08);g.lineTo(cx+U*.045,ccy+U*.08);g.quadraticCurveTo(cx+U*.03,gy-U*.12,cx+U*.11,gy);g.closePath();g.fill();
+    for(const [x,y,r] of s.P){g.beginPath();g.arc(x,y,r,0,6.2832);g.fill()}
+    g.beginPath();g.ellipse(cx,ccy+U*.02,U*.24,U*.1,0,0,6.2832);g.fill();
+    g.strokeStyle=f.dt;g.lineCap="round";g.lineWidth=Math.max(2.5,U*.006);for(const [x,y,r] of s.P.slice(0,10)){g.beginPath();g.arc(x,y+r*.15,r*.7,Math.PI*1.05,Math.PI*1.8);g.stroke()}
+    g.lineWidth=Math.max(2,U*.005);for(let i=0;i<6;i++){const y=gy-U*(.06+i*.05);g.beginPath();g.moveTo(cx-U*.05,y);g.quadraticCurveTo(cx,y-U*.02,cx+U*.05,y);g.stroke()}
+    g.restore()};
+  /* very fast strobe: white flash, then alternating ink / negative / grey frames with a punch-in, then a short fade */
+  const SEQ=[[0,40,-1],[40,85,0],[85,125,1],[125,185,2],[185,225,1],[225,270,0],[270,320,3],[320,360,1],[360,420,0]];
+  let s=mk(),last=0,t0=performance.now();
+  for(;;){const t=performance.now()-t0;if(t>480)break;
+    const q=SEQ.find(e=>t>=e[0]&&t<e[1]);
+    if(t-last>38){s=mk();last=t}
+    if(!q&&t>=420){c.style.opacity=String(Math.max(0,1-(t-420)/60))}
+    else if(q[2]<0){g.setTransform(1,0,0,1,0,0);g.fillStyle="#fff";g.fillRect(0,0,c.width,c.height)}
+    else draw(FR[q[2]],s);
+    await sleep(8)}
   c.remove();
 }
 async function rocketStrike(r,k=0,tl=null){
