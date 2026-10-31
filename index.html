@@ -2269,7 +2269,8 @@ async function endTurn(){
   if(B.over)return;
   {const cur=B.turn=="p"?B.p:B.e,oth=B.turn=="p"?B.e:B.p;if((B.tl[B.turn]<=1&&await droneVolley(cur,oth))||B.over)return;if(await summonVolley(cur,oth)||B.over)return;if(await gasTick()||B.over)return;if(cur.ovT>0){cur.ovT--;if(cur.ovT==0)say("Overdrive ended.")}}
   const cu=B.turn,ot=cu=="p"?"e":"p";B.tl[cu]--;const next=B.tl[cu]>0?cu:ot,m=B[next];if(next!=cu&&B.tl[next]<=0)B.tl[next]=2;
-  B.turn=next;B.ch=null;m.en=Math.min(m.en+m.enMax,m.enCap||m.enMax*2);if(next!=cu)m.used=[];m.did=false;m.heat=Math.max(0,m.heat-m.cool);
+  if(next!=cu){const c=B[cu];c.en=Math.min(c.en+c.enMax,c.enCap||c.enMax*2);c.heat=Math.max(0,c.heat-c.cool)}/* energy regen + cooling land at the END of a mech's own turn, so draining it on yours leaves it empty for its whole turn */
+  B.turn=next;B.ch=null;if(next!=cu)m.used=[];m.did=false;
   if((B.rk||[]).length){B.busy=true;controls();const dd=await rocketTick();B.busy=false;if(dd||B.over)return}
   if(m.heat>=m.hc){m.heat-=Math.round(m.hc/2);B.fl.push({x:px(m.x),y:GY-130,t:"OVERHEAT",l:80});shutSnd();say((next=="p"?"You overheat":"Enemy overheats")+" and lose the turn.");B.busy=true;controls();await sleep(1100);B.busy=false;return endTurn()}
   controls();
@@ -2329,7 +2330,7 @@ function aiReach(m,ox,s){const r=new Set([m.x]);for(const dir of[-1,1])for(let n
 function aiPlan(e,p){
   const cool=e.cool||0,enCap=e.enCap||e.enMax*2,tlAfter=Math.max(0,(B.tl.e||1)-1),stall=B.stall||0,LAM=.85/(1+.5*stall),MU=.55;
   const hasDr=e.weps.some(w=>w.drone),drV=e.weps.filter(w=>w.drone).reduce((t,w)=>t+aiGun(e,p,w,1),0)*.8*2.5;
-  const fR={en:Math.min(p.en+p.enMax,p.enCap||p.enMax*2),am:p.am||0,ra:p.ra||0},fOv=OVM(p),cB={},cT={},cP={};
+  const fR={en:p.en,am:p.am||0,ra:p.ra||0},fOv=OVM(p),cB={},cT={},cP={};
   /* the foe's best single action when it stands at fx and I stand at mx */
   const fB=(fx,mx)=>{const k=fx+"|"+mx;return cB[k]!=null?cB[k]:(cB[k]=aiBest(p,e,fx,mx,fR,fOv))},cB2={},fB2=(fx,mx)=>{const k=fx+"|"+mx;return cB2[k]!=null?cB2[k]:(cB2[k]=aiBest2(p,e,fx,mx,fR,fOv))};
   /* what the foe can do to me during its coming two turns (shoot twice, or step then shoot) */
