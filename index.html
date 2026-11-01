@@ -2675,8 +2675,8 @@ function legsIntro(done){
   const dpr=Math.min(devicePixelRatio||1,lo?1:1.25),k0=Math.min(1,Math.sqrt(2.3e6/(innerWidth*innerHeight*dpr*dpr)));
   const W=cv.width=Math.max(2,Math.round(innerWidth*dpr*k0)),H=cv.height=Math.max(2,Math.round(innerHeight*dpr*k0)),g=cv.getContext("2d");g.imageSmoothingQuality="high";
   const ocv=document.createElement("canvas");ocv.width=W;ocv.height=H;const oc=ocv.getContext("2d");oc.imageSmoothingQuality="high";
-  const CYC=2.7/* seconds per full stride (two steps) */;
-  const gy=H*.8,z=H*.8/44/* world units from the floor to the top of the picture: only the lower legs */,x0=-W*.45,xEnd=W*.62;
+  const CYC=2.0/* seconds per full stride (two steps) */;
+  const gy=H*.8,z=H*.8/44/* world units from the floor to the top of the picture: only the lower legs */,x0=-W*.12,xEnd=W*.52;
   const ease=x=>x<=0?0:x>=1?1:x*x*(3-2*x);
   let raf=0,over=false,wd=Math.PI*.3,sn=-1,stopT=0,last=performance.now();const T0=last;
   m.mvb=0;m.wd=0;m.wph=0;m.fw=1;
@@ -2691,7 +2691,7 @@ function legsIntro(done){
     g.setTransform(1,0,0,1,0,0);g.fillStyle="#000";g.fillRect(0,0,W,H);
     g.save();
     /* very grey floor, lit softly where the mech comes into view */
-    const mx=x0+wd/(2*Math.PI)*85.2*z;if(!stopT&&mx>=xEnd)stopT=t;/* one stride = .75 tile = 85.2 mech units, so the planted foot never slides on the floor */
+    const mx=x0+wd/(2*Math.PI)*22.4*z;if(!stopT&&mx>=xEnd)stopT=t;/* measured from the walk animation: the planted foot travels 22.4 mech units per stride, so it stays put on the floor */
     const fl=g.createLinearGradient(0,gy,0,H);fl.addColorStop(0,"#74777e");fl.addColorStop(.3,"#53555b");fl.addColorStop(1,"#1e1f22");g.fillStyle=fl;g.fillRect(-20,gy,W+40,H-gy+20);
     g.globalAlpha=.9;g.fillStyle=g.createPattern(noise,"repeat");g.fillRect(-20,gy,W+40,H-gy+20);g.globalAlpha=1;
     g.fillStyle="rgba(190,195,205,.16)";g.fillRect(-20,gy,W+40,2);
