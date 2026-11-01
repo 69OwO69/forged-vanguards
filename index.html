@@ -2019,10 +2019,11 @@ function arnInit(){const st=document.getElementById("astg");if(!st||ARD)return;A
 /* the screen glow animation switches itself off on slow devices (or with a fixed lower graphics setting) */
 /* online matchmaking test queue (no server yet): stays in the queue until cancelled or the cockpit is left.
    2v2 first opens a friends list to invite a partner (test list); solo 2v2 is matched with a stranger. */
-let ARQM=null,ARPT=null,ARFS={};
+let ARQM=null,ARPT=null,ARFS={},ARQT=0;
 const ARFR=[["SHADOWFOX","on"],["NOVA_7","on"],["IRONCLAD","game"],["KIRA","off"]];
 function arnBn(){const d=ARD&&ARD[0]&&ARD[0].querySelector(".bn");if(!d)return;let t,dim=0;
-  if(ARQM=="1v1")t="SEARCHING 1V1  //  SOLO";
+  if(ARQM=="found")t="MATCH FOUND  //  2V2";
+  else if(ARQM=="1v1")t="SEARCHING 1V1  //  SOLO";
   else if(ARQM=="2v2")t=ARPT?"SEARCHING 2V2  //  YOU + "+ARPT:"SEARCHING 2V2  //  SOLO - PARTNER AUTO-MATCHED";
   else if(ARPT)t="PARTY  //  YOU + "+ARPT+"  //  LEADER: YOU";
   else{t="SOLO  //  NO PARTY";dim=1}
@@ -2034,18 +2035,18 @@ function arnPanel(){const c=ARD&&ARD[4],pn=c&&c.querySelector(".pn");if(!pn)retu
     return '<div class="fr"><span class="nm">'+n+'</span><span class="st'+(st=="on"||isP?" on":"")+'">'+lab+'</span>'+btn+'</div>'}).join("");
   pn.innerHTML='<h3><span>INVITE A FRIEND</span><span>2V2</span></h3>'+rows+'<div class="nt">LEADER FIGHTS FIRST - WHEN YOU FALL YOUR PARTNER DROPS IN</div><div class="ft"><button data-pf="back">BACK</button><button data-pf="go">'+(ARPT?"START QUEUE":"PLAY SOLO")+'</button></div>'}
 function arnQueue(q){if(!ARD)return;const c=ARD[4];
-  if(q=="cancel"||ARQM==q){ARQM=null;c.classList.remove("inq");arnBn();toast("Queue cancelled");return}
+  if(q=="cancel"||ARQM==q){ARQT++;ARQM=null;c.classList.remove("inq");arnBn();toast("Queue cancelled");return}
   if(q=="2v2"){ARFS={};c.classList.add("inf");arnPanel();return}
   ARQM=q;c.classList.remove("inf");c.classList.add("inq");arnBn();toast("Searching for a "+q+" match...")}
 function arnPF(a){if(!ARD)return;const c=ARD[4];
   if(a=="back"){c.classList.remove("inf");ARFS={};return}
-  if(a=="go"){ARQM="2v2";c.classList.remove("inf");c.classList.add("inq");arnBn();toast(ARPT?"Searching for a 2v2 match with "+ARPT+"...":"Searching for a 2v2 match (solo)...");return}
+  if(a=="go"){ARQM="2v2";c.classList.remove("inf");c.classList.add("inq");arnBn();toast(ARPT?"Searching for a 2v2 match with "+ARPT+"...":"Searching for a 2v2 match (solo)...");const tk=++ARQT;setTimeout(()=>{if(ARQT==tk&&ARQM=="2v2")arnFound()},3000);return}
   if(a=="rm"){ARPT=null;arnPanel();arnBn();return}
   if(a.startsWith("inv:")){const n=ARFR[+a.slice(4)][0];
     if(ARFS[n]=="p"){delete ARFS[n];arnPanel();return}
     ARFS[n]="p";arnPanel();toast("Invite sent to "+n);
     setTimeout(()=>{if(ARFS[n]=="p"&&c.classList.contains("inf")){delete ARFS[n];ARPT=n;arnPanel();arnBn();toast(n+" joined your party")}},1500)}}
-{const _sq=show;show=function(v){if(v!="arn"&&ARD){ARQM=null;ARD[4].classList.remove("inq","inf");ARFS={};arnBn()}return _sq(v)}}
+{const _sq=show;show=function(v){if(v!="arn"&&ARD){ARQT++;ARQM=null;ARD[4].classList.remove("inq","inf");ARFS={};arnBn()}return _sq(v)}}
 function arnPerf(){const a=document.getElementById("arn");if(!a)return;if(S.gq>0){a.classList.add("lowfx");return}if(a._pf)return;a._pf=1;let n=0,l=performance.now(),sum=0;(function f(t){if(a.classList.contains("hide")){a._pf=0;return}if(n>2){sum+=t-l}l=t;if(++n<46)requestAnimationFrame(f);else{a._pf=0;if(sum/43>28)a.classList.add("lowfx")}})(l)}
 function arnLay(){{const gb=document.getElementById("gband"),a0=document.getElementById("arn");if(gb&&a0)a0.style.setProperty("--gh",Math.round(gb.getBoundingClientRect().height)+"px")}arnInit();arnPerf();const st=document.getElementById("astg");if(!st||!ARD||!st.clientWidth)return;const k=st.clientWidth/ARW;
   ARD.forEach((sc,i)=>{const q=ARQ[i].map(p=>[p[0]*k,p[1]*k]);sc.style.transform=arnHomog(1000,parseFloat(sc.style.height),q)});
@@ -2598,6 +2599,38 @@ show=function(v){const was=!document.getElementById("arn").classList.contains("h
 window.__boot=boot;
 })();
 
+/* ================= 2v2 test mode: relay fight. The leader fights first; when a mech falls, the next one on that team drops in. ================= */
+function arnFound(){if(ARQM!="2v2")return;ARQM="found";arnBn();setTimeout(()=>{if(ARQM!="found")return;ARQM=null;ARD[4].classList.remove("inq");arnBn();start2v2()},900)}
+function t2Init(m){if(m&&m.weps&&m.weps.some(w=>w.drone))m.dp=0;return m}
+function start2v2(){
+  if(S.sel.t==null){toast("Equip a torso first.");return show("work")}if(weight()>CAPO(S.sel)){toast("Your mech is too heavy.");return show("work")}
+  if(!S.sel.w.some(i=>i!=null)){toast("Equip at least one weapon.");return show("work")}
+  const pn=ARPT||("PILOT_"+(1000+Math.floor(Math.random()*9000)));
+  startBattle();const b=B;if(!b)return;
+  const pm=t2Init(myMech()),em=t2Init(botMech());em.c="#d9604f";
+  b.t2={p:[pm],e:[em],pn,pst:["act","wait"],est:["act","wait"]};
+  t2Hud();say("2v2 - you lead. Your partner "+pn+" drops in when you fall.")}
+function t2Hud(){let e=document.getElementById("t2h");const T=B&&B.t2;if(!T||B.over&&!B.t2live){if(e)e.remove();return}
+  if(!e){e=document.createElement("div");e.id="t2h";e.style.cssText="position:fixed;top:4px;left:50%;transform:translateX(-50%);z-index:9000;font:12px 'Russo One',sans-serif;letter-spacing:.08em;color:#cfe;background:rgba(5,16,28,.8);border:1px solid #2a6a4a;border-radius:6px;padding:3px 12px;pointer-events:none;white-space:nowrap;display:flex;gap:14px;align-items:center";document.body.appendChild(e)}
+  const pip=(n,st)=>'<span style="display:inline-flex;align-items:center;gap:5px;opacity:'+(st=="wait"?.7:st=="dead"?.4:1)+';color:'+(st=="act"?"#7dffb0":st=="dead"?"#ff6b5b":"#9fb4c8")+'"><i style="width:9px;height:9px;border-radius:50%;background:'+(st=="act"?"#46d46a":st=="dead"?"#ff4a4a":"#3a4a5c")+';display:inline-block"></i>'+n+'</span>';
+  e.innerHTML='<b style="color:#ffb02e">2V2</b>'+pip("YOU",T.pst[0])+pip(T.pn,T.pst[1])+'<span style="color:#6a8">VS</span>'+pip("FOE 1",T.est[0])+pip("FOE 2",T.est[1])}
+async function t2Drop(side){
+  const b=B,T=b.t2;b.over=true;b.t2live=1;b.busy=true;const old=b[side],st=side=="p"?T.pst:T.est,i=st.indexOf("act");if(i>=0)st[i]="dead";
+  const next=T[side].shift(),ni=st.indexOf("wait");if(ni>=0)st[ni]="act";
+  const nm=side=="p"?T.pn:"FOE 2";
+  say(side=="p"?"Your mech is down! "+nm+" drops in.":"Enemy mech down! Their second pilot drops in.");t2Hud();
+  try{document.getElementById("t2b")||0}catch(e){}
+  {let d=document.getElementById("t2b");if(d)d.remove();d=document.createElement("div");d.id="t2b";d.style.cssText="position:fixed;left:0;right:0;top:34%;text-align:center;z-index:9001;pointer-events:none;font:900 clamp(22px,4.4vw,56px)/1.1 'Russo One',sans-serif;letter-spacing:.14em;color:#fff;text-shadow:0 0 14px "+(side=="p"?"#5df2ff":"#ff7a5b")+",0 0 34px "+(side=="p"?"#5df2ff":"#ff7a5b")+"";d.innerHTML=(side=="p"?nm.toUpperCase()+" DROPS IN":"ENEMY REINFORCEMENT")+'<div style="font-size:.32em;letter-spacing:.3em;margin-top:6px;color:#ffb02e">'+(side=="p"?"TEAMMATE TAKES CONTROL":"SECOND PILOT DEPLOYING")+'</div>';document.body.appendChild(d);setTimeout(()=>d.remove(),2100)}
+  await sleep(1500);
+  if(B!==b)return;
+  const x=old&&old.x!=null?old.x:(side=="p"?0:MAXT);next.x=x;next.vx=x;if(side=="e")next.c="#d9604f";
+  b[side]=next;b.fl=b.fl||[];b.proj=null;
+  b.over=false;b.t2live=0;b.busy=false;
+  /* the survivor keeps its place; the turn goes back to the player with fresh action counts unless it was already the player's turn and an enemy fell */
+  if(!(side=="e"&&b.turn=="p")){b.turn="p";b.tl={p:1,e:2};b.p.used=[];b.p.did=false;b.ch=null}
+  controls();say(side=="p"?nm+" is in. Your turn.":"New enemy deployed. Your turn.");t2Hud()}
+{const _f2=finish;finish=function(won){const b=B;if(b&&b.t2&&!b.over&&!b.skipFin){const q=won?b.t2.e:b.t2.p;if(q.length){t2Drop(won?"e":"p");return}}
+  const r=_f2.apply(this,arguments);if(b&&b.t2){setTimeout(()=>{const e=document.getElementById("t2h");if(e)e.remove()},50)}return r}}
 function lobbyOff(){pairStop();menuTrackSync()}
 async function lobbyOn(){if(PR||S.mute||!AC||!$("battle").classList.contains("hide")){menuTrackSync();return}await pairStart("lobby");menuTrackSync()}
 {const vm=$("vm"),vs=$("vs2");vm.value=Math.round(100*(S.vm==null?1:S.vm));vs.value=Math.round(100*(S.vs==null?1:S.vs));
@@ -2772,7 +2805,7 @@ $("ctl").onclick=async e=>{
     controls();autoEnd();
   }else if(b.dataset.a=="bar"){p.did=true;await barrage(p,B.e);autoEnd()}else if(b.dataset.a=="drone"){await droneOn(p);autoEnd()}else if(b.dataset.a=="stompA"){await stompHit(p);autoEnd()}else if(b.dataset.a=="stomp"){await stompOn(p);autoEnd()}else if(b.dataset.a=="gas"){await gasOn(p);autoEnd()}else if(b.dataset.a=="ovd"){await ovdOn(p);autoEnd()}
   else if(b.dataset.f!=null){p.did=true;await shoot(p,B.e,+b.dataset.f);autoEnd()}
-  else if(b.dataset.a=="end")endTurn();else if(b.dataset.a=="sur"){B.busy=true;controls();p.hp=0;await kill(p);finish(false)}
+  else if(b.dataset.a=="end")endTurn();else if(b.dataset.a=="sur"){B.busy=true;controls();if(B.t2)B.t2.p.length=0;p.hp=0;await kill(p);finish(false)}
 };
 /* the turn passes by itself once your move is used up, or you have fired and have nothing left that can fire */
 async function autoEnd(){const p=B.p,tn=B.nturn||0;let g=0;while((B.busy||Math.abs(p.vx-p.x)>.05)&&!B.over&&B.turn=="p"&&g++<60)await sleep(80);
