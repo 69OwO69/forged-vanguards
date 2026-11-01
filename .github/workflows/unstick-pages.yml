@@ -1,0 +1,22 @@
+name: unstick-pages
+on:
+  push:
+    paths: [".github/workflows/unstick-pages.yml"]
+permissions:
+  pages: write
+  deployments: write
+  contents: read
+jobs:
+  cancel:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Diagnose and cancel
+        env:
+          GH_TOKEN: ${{ github.token }}
+          R: ${{ github.repository }}
+        run: |
+          set +e
+          echo "== pages deployment status"; gh api repos/$R/pages/deployments/9c032a01e6e827d7a10a76302e1b009ae049cafb 2>&1 | head -c 600
+          echo; echo "== cancel"; gh api -X POST repos/$R/pages/deployments/9c032a01e6e827d7a10a76302e1b009ae049cafb/cancel 2>&1 | head -c 600
+          echo; echo "== deployments list"; gh api "repos/$R/deployments?environment=github-pages&per_page=6" --jq '.[]|[.id,.sha[0:7],.created_at]|@tsv' 2>&1 | head -12
+          for id in $(gh api "repos/$R/deployments?environment=github-pages&per_page=6" --jq '.[].id' 2>/dev/null); do echo "status $id:"; gh api repos/$R/deployments/$id/statuses --jq '.[0]|[.state,.created_at]|@tsv' 2>&1 | head -2; done
