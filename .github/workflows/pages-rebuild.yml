@@ -1,5 +1,5 @@
-# GitHub's automatic Pages deploy has been failing with "in progress deployment" errors.
-# Requesting a legacy Pages build through the API works, so do that on every push to main.
+# GitHub's automatic Pages deploy keeps failing with "in progress deployment" because the previous
+# deployment of this (large) site stays locked for ~30 minutes. Keep requesting a build until one sticks.
 name: pages-rebuild
 on:
   push:
@@ -7,12 +7,29 @@ on:
 permissions:
   pages: write
   contents: read
+concurrency:
+  group: pages-rebuild
+  cancel-in-progress: true
 jobs:
   rebuild:
     runs-on: ubuntu-latest
+    timeout-minutes: 90
     steps:
       - env:
           GH_TOKEN: ${{ github.token }}
+          R: ${{ github.repository }}
+          SHA: ${{ github.sha }}
         run: |
-          sleep 45
-          gh api -X POST repos/${{ github.repository }}/pages/builds
+          set +e
+          sleep 60
+          for i in $(seq 1 40); do
+            gh api -X POST repos/$R/pages/builds >/dev/null 2>&1
+            for j in $(seq 1 8); do
+              sleep 20
+              st=$(gh api repos/$R/pages/builds/latest --jq '.status+" "+.commit' 2>/dev/null)
+              echo "try $i/$j: $st"
+              case "$st" in "built $SHA"*) echo "deployed $SHA"; exit 0;; "errored"*) break;; esac
+            done
+            sleep 120
+          done
+          echo "::error::Pages never deployed $SHA"; exit 1
