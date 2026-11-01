@@ -2682,7 +2682,7 @@ function start2v2(){
   b.t2={p:[pm],e:[em],pn,pst:["act","wait"],est:["act","wait"]};
   t2Hud();say("2v2 - you lead. Your partner "+pn+" drops in when you fall.")}
 function t2Hud(){let e=document.getElementById("t2h");const T=B&&B.t2;if(!T||B.over&&!B.t2live){if(e)e.remove();return}
-  if(!e){e=document.createElement("div");e.id="t2h";e.style.cssText="position:fixed;top:4px;left:50%;transform:translateX(-50%);z-index:9000;font:12px 'Russo One',sans-serif;letter-spacing:.08em;color:#cfe;background:rgba(5,16,28,.8);border:1px solid #2a6a4a;border-radius:6px;padding:3px 12px;pointer-events:none;white-space:nowrap;display:flex;gap:14px;align-items:center";document.body.appendChild(e)}
+  if(!e){e=document.createElement("div");e.id="t2h";e.style.cssText="position:fixed;top:calc(min(100vw*135/800,100vh*.3) + 4px);left:50%;transform:translateX(-50%);z-index:9000;font:12px 'Russo One',sans-serif;letter-spacing:.08em;color:#cfe;background:rgba(5,16,28,.8);border:1px solid #2a6a4a;border-radius:6px;padding:3px 12px;pointer-events:none;white-space:nowrap;display:flex;gap:14px;align-items:center";document.body.appendChild(e)}
   const pip=(n,st)=>'<span style="display:inline-flex;align-items:center;gap:5px;opacity:'+(st=="wait"?.7:st=="dead"?.4:1)+';color:'+(st=="act"?"#7dffb0":st=="dead"?"#ff6b5b":"#9fb4c8")+'"><i style="width:9px;height:9px;border-radius:50%;background:'+(st=="act"?"#46d46a":st=="dead"?"#ff4a4a":"#3a4a5c")+';display:inline-block"></i>'+n+'</span>';
   e.innerHTML='<b style="color:#ffb02e">2V2</b>'+pip("YOU",T.pst[0])+pip(T.pn,T.pst[1])+'<span style="color:#6a8">VS</span>'+pip("FOE 1",T.est[0])+pip("FOE 2",T.est[1])}
 async function t2Drop(side){
