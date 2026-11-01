@@ -1737,7 +1737,7 @@ function mythScene(g,done){
   document.body.appendChild(el);{const im=new Image();im.onload=()=>SH.paint(el,im);im.src=ART.s3}
   const $q=s=>el.querySelector(s),cd=$q(".cd"),nm=$q(".mnm"),tr=$q(".tr"),fl=$q(".mfl"),hint=$q(".mhint"),cls=(...a)=>el.classList.add(...a),FX=mythFX($q(".fxc")),mst=$q(".tl");
   /* watch the frame rate: slow machine -> switch to the light look (and remember it); still very slow -> skip ahead to the cards */
-  {let n=0,l=0,sum=0,lvl=el.classList.contains("mlite")?1:0;(function f(t){if(!el.isConnected)return;if(l&&n>8)sum+=t-l;l=t;n++;if(n>=44){const a=sum/35;n=0;sum=0;if(!lvl&&a>24){lvl=1;el.classList.add("mlite");S.mls=1;try{save()}catch(e){}try{FX.fit()}catch(e){}}}}requestAnimationFrame(f)})(performance.now())}
+  {let n=0,l=0,sum=0,lvl=el.classList.contains("mlite")?1:0;(function f(t){if(!el.isConnected)return;if(l&&n>8)sum+=t-l;l=t;n++;if(n>=44){const a=sum/35;n=0;sum=0;if(!lvl&&a>24){lvl=1;el.classList.add("mlite");S.mls=1;try{save()}catch(e){}try{FX.fit()}catch(e){}}}requestAnimationFrame(f)})(performance.now())}
   const W=()=>innerWidth,H=()=>innerHeight,VM=()=>Math.min(innerWidth,innerHeight),GX=()=>W()/2,GY=()=>H()*.32,GR=()=>VM()*.26,rnd=(a,z)=>a+Math.random()*(z-a),sc=ch=>ch.map(p=>[p[0]*W()/WC,p[1]*H()/HC]);
   const at=(ms,f)=>T.push(setTimeout(f,ms)),flash=(a,d)=>{fl.style.transition="none";fl.style.opacity=a;void fl.offsetWidth;fl.style.transition="opacity "+d+"s";fl.style.opacity=0},pop=(n,t)=>{n.textContent=t;n.classList.remove("pop");void n.offsetWidth;n.classList.add("pop")};
   const end=()=>{if(fin)return;fin=1;T.forEach(clearTimeout);[idle,ember,arcs,zig,hudT].forEach(clearInterval);FX.stop();el.classList.remove("on");setTimeout(()=>{el.remove();MYTHB=0},380);done()};
