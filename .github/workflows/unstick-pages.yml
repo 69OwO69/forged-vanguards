@@ -16,7 +16,11 @@ jobs:
           R: ${{ github.repository }}
         run: |
           set +e
-          echo "== pages deployment status"; gh api repos/$R/pages/deployments/9c032a01e6e827d7a10a76302e1b009ae049cafb 2>&1 | head -c 600
-          echo; echo "== cancel"; gh api -X POST repos/$R/pages/deployments/9c032a01e6e827d7a10a76302e1b009ae049cafb/cancel 2>&1 | head -c 600
-          echo; echo "== deployments list"; gh api "repos/$R/deployments?environment=github-pages&per_page=6" --jq '.[]|[.id,.sha[0:7],.created_at]|@tsv' 2>&1 | head -12
-          for id in $(gh api "repos/$R/deployments?environment=github-pages&per_page=6" --jq '.[].id' 2>/dev/null); do echo "status $id:"; gh api repos/$R/deployments/$id/statuses --jq '.[0]|[.state,.created_at]|@tsv' 2>&1 | head -2; done
+          S=9c032a01e6e827d7a10a76302e1b009ae049cafb
+          a=$(gh api repos/$R/pages/deployments/$S 2>&1 | head -c 400 | tr '\n' ' ')
+          echo "::notice title=status::$a"
+          b=$(gh api -X POST repos/$R/pages/deployments/$S/cancel 2>&1 | head -c 400 | tr '\n' ' ')
+          echo "::notice title=cancel::$b"
+          c=$(gh api "repos/$R/deployments?environment=github-pages&per_page=5" --jq '.[]|"\(.id) \(.sha[0:7]) \(.created_at)"' 2>&1 | head -c 400 | tr '\n' ';')
+          echo "::notice title=deployments::$c"
+          for id in $(gh api "repos/$R/deployments?environment=github-pages&per_page=3" --jq '.[].id' 2>/dev/null); do d=$(gh api repos/$R/deployments/$id/statuses --jq '.[0]|"\(.state) \(.created_at)"' 2>&1 | head -c 150); echo "::notice title=dep $id::$d"; done
