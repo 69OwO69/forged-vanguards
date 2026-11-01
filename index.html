@@ -2343,9 +2343,9 @@ async function rkVolley(a,b,i,w,hit){
   while(pend>0)await sleep(40);await sleep(300)}
 async function shoot0(a,b,i){
   const w=a.weps[i];{const sb=interceptT(a,b,w);if(sb&&legal(a,sb,i))b=sb}if(!legal(a,b,i))return;B.nb=(B.nb||0)+1;B.busy=true;a.used[i]=true;a.en-=w.en;if(w.am)a.am-=w.am;if(w.ra)a.ra-=w.ra;a.heat+=w.ht||0;controls();
-  const n=w.shots||1,dr=fdir(a),rapid=n>=5&&!w.bolt&&!w.rkp&&!w.shotgun,DUR=w.durR?Math.round(w.durR[0]+(w.durR[1]-w.durR[0])*Math.random()):(w.dur||380),gap=w.gapMs||rapid&&w.snd?w.gapMs||((BUF[w.snd]?BUF[w.snd].duration:1.357)*1000-DUR*0)/n:(w.gap||0);let tot=0,dead=false,hn=0;const PL=RPL(w,n);if(rapid&&w.snd)playBuf(w.snd,w.sv||1);
+  const n=w.shots||1,dr=fdir(a),rapid=n>=5&&!w.bolt&&!w.rkp&&!w.shotgun,DUR=w.durR?Math.round(w.durR[0]+(w.durR[1]-w.durR[0])*Math.random()):(w.dur||380),gap=w.gapMs||rapid&&w.snd?w.gapMs||((BUF[w.snd]?BUF[w.snd].duration:1.357)*1000-DUR*0)/n:(w.gap||0);let tot=0,dead=false,hn=0;const RS={c:0,d:0},PL=RPL(w,n);if(rapid&&w.snd)playBuf(w.snd,w.sv||1);
   const hit=(s,x1)=>{if(B.over||b.dead)return;
-    const raw=PL[Math.min(hn,n-1)],lastH=++hn>=n,dmg=RDM(a,b,w,raw,lastH);
+    const raw=PL[Math.min(hn,n-1)],lastH=++hn>=n,dmg=RDM(a,b,w,raw,lastH,RS);
     if(B.act)B.act.tb=b;b.hp=Math.max(0,b.hp-dmg);tot+=dmg;if(!b.summon)B.hit[b==B.p?"p":"e"]=rapid?.4:.9;b.flT=performance.now();b.flA=rapid?.4:1;
     if(w.hd&&(!w.hde||s%w.hde==w.hde-1)&&(!w.hdFrom||s>=w.hdFrom)){const hv=w.hdr?w.hdr[0]+Math.floor(Math.random()*(w.hdr[1]-w.hdr[0]+1)):w.hd;b.heat+=hv}
     if(rapid){if(w.hitSnd)playBuf(w.hitSnd,.35,.9+Math.random()*.2);B.shake=3;B.fl.push({x:x1+(Math.random()-.5)*70,y:GY-150-Math.random()*40,t:"-"+dmg,l:40})}else{B.fl.push({x:x1+(w.rkp?(Math.random()-.5)*40:w.shotgun?(s%4-1.5)*46:0),y:GY-160-(w.rkp?(s%4)*16+Math.random()*10:w.shotgun?(s>>2)*28:s*16),t:"-"+dmg,l:60});w.rkp||(w.shotgun&&s>0)?0:w.hsnd?playBuf(w.hsnd,1,w.rnd?1+(Math.random()*2-1)*w.rnd:1):sfx(110,.25,"sawtooth");B.shake=w.hs||(w.hsnd?18:12);
@@ -2632,7 +2632,11 @@ const rsOf=(b,w)=>(b&&b.rs&&b.rs[RTY(w)])||0;
 /* total-damage roll: the whole attack rolls ONE number (per-hit range x hits), then splits it across the hits */
 const RPL=(w,n)=>{n=Math.max(1,n||1);let t;if(w.dr)t=w.dr[0]*n+Math.floor(Math.random()*((w.dr[1]-w.dr[0])*n+1));else t=Math.round(w.dmg*n*(.9+Math.random()*.2));const q=Math.floor(t/n),r=t-q*n,a=Array(n).fill(q);for(let i=0;i<r;i++)a[n-1-i]++;return a};/* lowest hits first, the bumped-up (highest) hits land last */
 const DTX=(rg,n,u)=>{const lo=rg[0]*n,hi=rg[1]*n,t=lo==hi?""+lo:lo+"-"+hi;return n>1?t+" ("+n+" "+(u||"hits")+")":t};
-const RDM=(a,b,w,raw,last)=>Math.max(1,Math.floor((raw*OVM(a)-(last?rsOf(b,w):0))*(1-(b.res||0)/100)));
+const RDM=(a,b,w,raw,last,st)=>{if(!st)return Math.max(1,Math.floor((raw*OVM(a)-(last?rsOf(b,w):0))*(1-(b.res||0)/100)));
+  /* multi-hit volley: resistance is a flat pool taken off the volley's running total, lowest hits first, so early hits can do 0 and the last hits carry what is left. Negative resistance adds its extra on the last hit. Armor % is applied to the running total so no fractions are lost. */
+  const R=rsOf(b,w),k=1-(b.res||0)/100;st.c=(st.c||0)+raw*OVM(a);
+  const E=R>0?Math.max(0,st.c-R):(last?st.c-R:st.c),tot=Math.max(0,Math.floor(E*k));let d=tot-(st.d||0);if(last&&tot<1&&(st.d||0)<1)d=1-(st.d||0);
+  st.d=(st.d||0)+Math.max(0,d);return Math.max(0,d)};
 /* armor breaking: w.brk={p:2,f:1,e:3} lowers the target's resistance (can go negative); once per volley, on the last hit */
 const RBRK=(b,w,last,x)=>{if(!last||!w||!w.brk||!b||!b.rs)return;let y=GY-232;for(const k of["p","f","e"]){const v=w.brk[k];if(!v)continue;b.rs[k]-=v;B.fl.push({x,y,t:"-"+v+" "+RNM[k]+" resist",l:60});y-=14}};
 async function ovdOn(a){
@@ -2686,11 +2690,11 @@ async function droneVolley(a,b){
     await sleep(DUR);B.projs=B.projs.filter(q=>q!==sh);if(B.over)return;
     playBuf("dsplit",.9);B.shake=Math.max(B.shake||0,8);const sx=hx,sy=hy;
     for(let k=0;k<10;k++){const an=Math.random()*Math.PI*2,v=1+Math.random()*3;B.sparks.push({x:sx,y:sy,vx:Math.cos(an)*v,vy:Math.sin(an)*v-1,z:6+Math.random()*5,l:16+Math.random()*14|0,L:30})}
-    say("The shell splits into "+(w.shots||12)+" pellets!");let done=0;const n=w.shots||12,PL=RPL(w,n);
+    say("The shell splits into "+(w.shots||12)+" pellets!");let done=0;const n=w.shots||12,RS={c:0,d:0},PL=RPL(w,n);
     for(let k=0;k<n;k++)setTimeout(()=>{
       const tx=x1+(Math.random()-.5)*26,ty=GY-30-Math.random()*115,pd=240+Math.random()*50,pr={x0:sx+(Math.random()-.5)*24,x1:tx,y:sy+(Math.random()-.5)*14,y1:ty,t0:performance.now(),dur:pd,c:"#ffe27a",arc:0,rapid:true,dir:dr};B.projs.push(pr);
       setTimeout(()=>{B.projs=B.projs.filter(q=>q!==pr);done++;if(B.over||b.dead)return;
-        const raw=PL[Math.min(done-1,n-1)],dmg=RDM(a,b,w,raw,done>=n);
+        const raw=PL[Math.min(done-1,n-1)],dmg=RDM(a,b,w,raw,done>=n,RS);
         b.hp=Math.max(0,b.hp-dmg);B.hit[b==B.p?"p":"e"]=.4;B.shake=Math.max(B.shake||0,2);B.fl.push({x:tx+(Math.random()-.5)*30,y:GY-150-Math.random()*40,t:"-"+dmg,l:40});
         playBuf("dhit",.18,.85+Math.random()*.3);B.sparks.push({x:tx,y:ty,vx:(Math.random()-.5)*3,vy:-1-Math.random()*2,z:5+Math.random()*3,l:10+Math.random()*8|0,L:20})},pd)},0);
     await sleep(700)}
@@ -2746,9 +2750,9 @@ async function sawStab(a,b,i,w){
   say((a==B.p?"You raise":"Enemy raises")+" the "+w.n+"...");sfx(150,.14,"sawtooth");await swUp(a,i,1);await sleep(45);
   sfx(620,.16,"sawtooth");sfx(310,.12,"square");await swRec(a,i,1.35,.5,75);
   {const t0=performance.now(),D=90;while(performance.now()-t0<D){const k=(performance.now()-t0)/D;a.stb[i]=T*k;a.aim[i]=.5;await sleep(16)}a.aim[i]=.5;a.stb[i]=0;B.shake=Math.max(B.shake||0,10)}
-  const PL=RPL(w,w.shots||10);for(let s=0;s<(w.shots||10)&&!B.over&&b.hp>0;s++){
+  const RS={c:0,d:0},PL=RPL(w,w.shots||10);for(let s=0;s<(w.shots||10)&&!B.over&&b.hp>0;s++){
     a.stb[i]=0;a.aim[i]=.5+(s%2?-.05:.04);
-    const raw=PL[Math.min(s,PL.length-1)],lastS=s>=(w.shots||10)-1,dmg=RDM(a,b,w,raw,lastS);RBRK(b,w,lastS,x1);
+    const raw=PL[Math.min(s,PL.length-1)],lastS=s>=(w.shots||10)-1,dmg=RDM(a,b,w,raw,lastS,RS);RBRK(b,w,lastS,x1);
     b.hp=Math.max(0,b.hp-dmg);tot+=dmg;hits++;B.hit[side]=.7;B.shake=Math.max(B.shake||0,4);playBuf("sawhit",.9,.9+Math.random()*.2);
     B.fl.push({x:x1+(Math.random()-.5)*70,y:GY-150-Math.random()*40,t:"-"+dmg,l:40});
     for(let k=0;k<3;k++)B.sparks.push({x:x1-dir*28,y:GY-70-Math.random()*50,vx:-dir*(1+Math.random()*3),vy:-1-Math.random()*3,z:6+Math.random()*4,l:14+Math.random()*12|0,L:26});
@@ -2798,7 +2802,7 @@ function beamSnd(kind,dur,big){if(S.nosfx)return;try{AC.resume();const t=AC.curr
   else{const o=mkO("sawtooth",big?80:130),o2=mkO("square",big?83:134),l=mkO("sine",34),lg=AC.createGain(),f=AC.createBiquadFilter(),g=AC.createGain();lg.gain.value=.05;l.connect(lg);lg.connect(g.gain);f.type="lowpass";f.frequency.setValueAtTime(big?1400:1000,t);g.gain.setValueAtTime(.001,t);g.gain.linearRampToValueAtTime(big?.17:.12,t+.04);g.gain.setValueAtTime(big?.17:.12,t+Math.max(.05,D-.12));g.gain.linearRampToValueAtTime(0,t+D+.05);o.connect(f);o2.connect(f);f.connect(g);g.connect(SB);[o,o2,l].forEach(x=>{x.start(t);x.stop(t+D+.08)});playBuf("elec",big?.7:.5,big?.8:1)}
  }catch(e){}}
 async function beamFire(a,b,i,w){
-  const L=w.lz,dr=fdir(a),foe=b==B.p?"p":"e",nm=a==B.p?"Your":"Enemy";a.lzg=a.lzg||[];B.lzs=B.lzs||[];let tot=0;const PL=RPL(w,(L.n||1)*(L.tk||1));
+  const L=w.lz,dr=fdir(a),foe=b==B.p?"p":"e",nm=a==B.p?"Your":"Enemy";a.lzg=a.lzg||[];B.lzs=B.lzs||[];let tot=0;const RS={c:0,d:0},PL=RPL(w,(L.n||1)*(L.tk||1));
   if(L.charge){say(nm+" "+w.n+" is charging...");const G=a.lzg[i]={ch:0};beamSnd("charge",L.charge);const t0=performance.now();while(performance.now()-t0<L.charge&&!B.over){G.ch=(performance.now()-t0)/L.charge;await sleep(16)}G.ch=1;if(B.over){a.lzg[i]=null;return}}
   say(nm+" "+w.n+" fires!");
   for(let n=0;n<(L.n||1)&&!B.over&&b.hp>0;n++){
@@ -2807,7 +2811,7 @@ async function beamFire(a,b,i,w){
     const qs=[mk("m",L.big?6.5:3.2,L.big?1.5:0)];if(L.big){qs.push(mk("s0",1.8,-1.5));qs.push(mk("s1",1.8,1.5))}
     if(L.sfx)playBuf(L.sfx,.9);else beamSnd("fire",L.dur,L.big);const step=L.dur/L.tk;
     for(let k=0;k<L.tk;k++){await sleep(k?step:step*.5);if(B.over||b.dead)break;
-      const raw=PL[Math.min(n*(L.tk||1)+k,PL.length-1)],lastB=n==(L.n||1)-1&&k==L.tk-1,dmg=RDM(a,b,w,raw,lastB);RBRK(b,w,lastB,tx);
+      const raw=PL[Math.min(n*(L.tk||1)+k,PL.length-1)],lastB=n==(L.n||1)-1&&k==L.tk-1,dmg=RDM(a,b,w,raw,lastB,RS);RBRK(b,w,lastB,tx);
       b.hp=Math.max(0,b.hp-dmg);tot+=dmg;B.hit[foe]=.4;B.shake=Math.max(B.shake||0,L.big?6:3);
       B.fl.push({x:tx+(Math.random()-.5)*40,y:GY-150-Math.random()*40,t:"-"+dmg,l:40});
       for(let q=0;q<3;q++)B.sparks.push({x:tx,y:ty+(Math.random()-.5)*24,vx:-dr*(1+Math.random()*3),vy:-1-Math.random()*3,z:5+Math.random()*4,l:12+Math.random()*10|0,L:22});
@@ -2927,7 +2931,7 @@ async function swarmAI(){
 }
 /* ================= smarter AI (plans each action by expected damage, range, heat, ammo, resistance and the foe's reply) ================= */
 function aiGun(a,b,w,ov){const n=w.shots||1,raw=w.dr?(w.dr[0]+w.dr[1])/2:w.dmg,ar=1-(b.res||0)/100;
-  const d1=Math.max(1,Math.floor(raw*ov*ar)),dl=Math.max(1,Math.floor((raw*ov-rsOf(b,w))*ar));let t=(n-1)*d1+dl;
+  const rv=rsOf(b,w);let t=Math.max(1,Math.floor(Math.max(0,n*raw*ov-rv)*ar));
   if(w.rocket)t*=.75;else if(w.mine)t*=.4/(1+3*((B&&B.stall)||0));
   return t+(w.hd||0)*.3+(w.ed?Math.min(b.en||0,w.ed)*.5:0)+(w.cd||0)*.3+(w.rd&&b.res>0?w.rd*.5:0)}
 function aiOk(a,w,d,R){return !w.drone&&!w.heal&&d>=w.min&&d<=w.max&&R.en>=w.en&&R.am>=(w.am||0)&&R.ra>=(w.ra||0)}
