@@ -2522,7 +2522,7 @@ function boot(done,mi){
   const cm=q(".mc"),ch=q(".mh"),gm=cm.getContext("2d"),gh=ch.getContext("2d");
   const pat=document.createElement("canvas");pat.width=4;pat.height=4;{const g=pat.getContext("2d");g.fillStyle="rgba(0,0,0,.55)";g.fillRect(0,0,4,1.4)}
   const patt=gh.createPattern(pat,"repeat");
-  function drawM(){if(!m)return;gm.clearRect(0,0,640,640);gm.save();{let f=1;try{f=fitF()}catch(e){}const z=3.2*f;gm.scale(z,z);try{drawMech(gm,320/z,(640-46)/z,1,m,0)}catch(e){}}gm.restore();
+  function drawM(){if(!m)return;gm.clearRect(0,0,640,640);gm.save();{let f=1;try{f=fitF()}catch(e){}const z=2.56*f;gm.scale(z,z);try{drawMech(gm,320/z,(640-46)/z,1,m,0)}catch(e){}}gm.restore();
     gh.globalCompositeOperation="source-over";gh.clearRect(0,0,640,640);gh.drawImage(cm,0,0);gh.globalCompositeOperation="source-atop";gh.fillStyle="rgba(40,205,255,.66)";gh.fillRect(0,0,640,640);gh.globalCompositeOperation="destination-out";gh.fillStyle=patt;gh.fillRect(0,0,640,640);gh.globalCompositeOperation="source-over"}
   /* telemetry + ecg + progress */
   const ecg=q("canvas.ecg"),ge=ecg.getContext("2d"),cells=[...el.querySelectorAll(".bsg i")];let lastC=-1;
