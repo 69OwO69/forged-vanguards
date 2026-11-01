@@ -2078,9 +2078,9 @@ function startBattle(mi){playBuf("match");stopMusic(1);if(mi&&!mi.arm)pairFade()
   const v=$("vs"),pl=v.querySelector(".vl"),pr=v.querySelector(".vr"),cl=pl.querySelector("canvas"),cr=pr.querySelector("canvas"),b=B;
   pr.querySelector(".nm").textContent=mi?(mi.n||"MISSION "+mi.id):"ENEMY";
   [pl,pr,cl,cr,$("vsb")].forEach(e=>e.classList.remove("in","out"));v.classList.remove("hide");v.classList.remove("on");
-  const draw=(c,m,dir,m2)=>{const g=c.getContext("2d");g.clearRect(0,0,c.width,c.height);const t2=!!b.t2,K2=t2?2.45:3.5;
+  const draw=(c,m,dir,m2)=>{const g=c.getContext("2d");g.clearRect(0,0,c.width,c.height);const t2=!!b.t2,K2=b.mi?2.45:2.94;/* campaign/missions 2.45; arena 1v1 and 2v2 are 20% bigger */
     if(t2&&m2){const k=K2*.92;g.save();g.filter="brightness(.6)";g.scale(k,k);drawMech(g,c.width*(dir>0?.28:.72)/k,(c.height*.925)/k,dir,m2,0);g.restore()}
-    g.save();g.scale(K2,K2);drawMech(g,c.width*(t2?(dir>0?.53:.47):(dir>0?.37:.57))/K2,(c.height*.97)/K2,dir,m,0);g.restore()};
+    g.save();g.scale(K2,K2);drawMech(g,c.width*(t2?(dir>0?.53:.47):(dir>0?.45:.55))/K2,(c.height*.97)/K2,dir,m,0);g.restore()};
   let live=true;(function lp(){if(!live)return;draw(cl,b.p,1,b.t2&&b.t2.p[0]);if(b.e.swarm){const g=cr.getContext("2d");g.clearRect(0,0,cr.width,cr.height);g.save();g.scale(2.2,2.2);drawSwarmCore(g,b.e,performance.now(),cr.width*.5/2.2,cr.height*.75/2.2,-1,0);g.restore()}else draw(cr,b.e,-1,b.t2&&b.t2.e[0]);requestAnimationFrame(lp)})();
   setTimeout(()=>{v.classList.add("on");pl.classList.add("in");pr.classList.add("in")},40);
   setTimeout(()=>{cl.classList.add("in");cr.classList.add("in")},700);setTimeout(()=>{$("vsb").classList.add("in");sfx(90,.3,"sawtooth")},1100);
@@ -2626,6 +2626,7 @@ async function t2Drop(side){
   try{document.getElementById("t2b")||0}catch(e){}
   {let d=document.getElementById("t2b");if(d)d.remove();d=document.createElement("div");d.id="t2b";d.style.cssText="position:fixed;left:0;right:0;top:34%;text-align:center;z-index:9001;pointer-events:none;font:900 clamp(22px,4.4vw,56px)/1.1 'Russo One',sans-serif;letter-spacing:.14em;color:#fff;text-shadow:0 0 14px "+(side=="p"?"#5df2ff":"#ff7a5b")+",0 0 34px "+(side=="p"?"#5df2ff":"#ff7a5b")+"";d.innerHTML=(side=="p"?nm.toUpperCase()+" DROPS IN":"ENEMY REINFORCEMENT")+'<div style="font-size:.32em;letter-spacing:.3em;margin-top:6px;color:#ffb02e">'+(side=="p"?"TEAMMATE TAKES CONTROL":"SECOND PILOT DEPLOYING")+'</div>';document.body.appendChild(d);setTimeout(()=>d.remove(),2100)}
   await sleep(1500);
+  {const w0=performance.now();while((b.aiRun||0)>0&&B===b&&performance.now()-w0<8000)await sleep(100)}/* let the enemy's running turn unwind first, or it would carry on into the new turn */
   if(B!==b)return;
   const x=old&&old.x!=null?old.x:(side=="p"?0:MAXT);next.x=x;next.vx=x;if(side=="e")next.c="#d9604f";
   b[side]=next;b.fl=b.fl||[];b.proj=null;
@@ -2635,6 +2636,7 @@ async function t2Drop(side){
   if(!(side=="e"&&b.turn=="p")){b.turn="p";b.tl={p:1,e:2};b.p.used=[];b.p.did=false;b.ch=null}
   controls();say(side=="p"?nm+" is dropping in...":"Enemy pilot is dropping in...");t2Hud();
   await sleep(1450);if(B!==b||b.over)return;b.busy=false;controls();autoEnd();say(side=="p"?nm+" is in. Your turn.":"New enemy deployed. Your turn.")}
+{const wrap=(f)=>async function(){const b=B;if(b)b.aiRun=(b.aiRun||0)+1;try{return await f.apply(this,arguments)}finally{if(b)b.aiRun--}};ai=wrap(ai);endTurn=wrap(endTurn)}
 {const _f2=finish;finish=function(won){const b=B;if(b&&b.t2&&!b.over&&!b.skipFin){const q=won?b.t2.e:b.t2.p;if(q.length){t2Drop(won?"e":"p");return}}
   const r=_f2.apply(this,arguments);if(b&&b.t2){setTimeout(()=>{const e=document.getElementById("t2h");if(e)e.remove()},50)}return r}}
 function lobbyOff(){pairStop();menuTrackSync()}
