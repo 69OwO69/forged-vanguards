@@ -1338,7 +1338,7 @@ function fitF(){const q=S.sel,le=q.l==null?null:art("l",q.l),te=q.t==null?null:a
 function mcDraw(){const c=$("mc"),W=innerWidth,H=innerHeight;if(c.width!=W||c.height!=H){c.width=W;c.height=H}const g=c.getContext("2d");g.clearRect(0,0,W,H);const k=H/250,cx=W/2,cy=H*.7,fk=fitF()*.772;
   if(PED.complete&&PED.naturalWidth){const sc=200*k/PED.naturalWidth;g.drawImage(PED,cx-150*sc,cy-34*sc,PED.naturalWidth*sc,PED.naturalHeight*sc)}else{g.fillStyle="rgba(10,18,30,.8)";g.beginPath();g.ellipse(cx,cy+8*k,92*k,14*k,0,0,7);g.fill();g.fillStyle="#a8283a";g.beginPath();g.ellipse(cx,cy+3*k,78*k,11*k,0,0,7);g.fill();g.fillStyle="rgba(255,120,120,.25)";g.beginPath();g.ellipse(cx,cy+1*k,66*k,8*k,0,0,7);g.fill();}
   g.save();g.scale(k*fk,k*fk);drawMech(g,(cx-50)/(k*fk)-8,(cy-8)/(k*fk)-4,1,myMech(),0);g.restore()}
-function pvDraw(){const c=$("pv"),g=c.getContext("2d");g.clearRect(0,0,c.width,c.height);{const z=2.9*fitF();g.save();g.scale(z,z);drawMech(g,(c.width/2)/z,(c.height-50)/z,1,myMech(),0);g.restore()}}
+function pvDraw(){const c=$("pv"),g=c.getContext("2d");g.clearRect(0,0,c.width,c.height);{const z=2.9*.7*fitF();g.save();g.scale(z,z);drawMech(g,(c.width/2)/z,(c.height-50)/z,1,myMech(),0);g.restore()}}
 (function tick(){if($("hangar").classList.contains("hide")){}else if(!$("menu").classList.contains("hide"))mcDraw();else if(!$("work").classList.contains("hide"))pvDraw();requestAnimationFrame(tick)})();
 const FL={own:false,sort:0};
 const SORTS=[(a,b)=>tier(b[0].cost)-tier(a[0].cost)||b[0].cost-a[0].cost||a[1]-b[1],(a,b)=>b[0].cost-a[0].cost||a[1]-b[1],(a,b)=>a[0].n.localeCompare(b[0].n),(a,b)=>(b[2]?b[2].x:0)-(a[2]?a[2].x:0)||a[1]-b[1]];
