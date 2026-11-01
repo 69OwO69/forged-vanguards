@@ -925,6 +925,11 @@ body.mython>*:not(#myth){visibility:hidden!important}
 #work .pgr{top:calc(431*var(--s))!important}
 </style>
 <style id="nosel">
+/* nothing in the game UI can be highlighted or dragged out as an image */
+html,body,body *{-webkit-user-select:none!important;user-select:none!important;-webkit-touch-callout:none}
+input,textarea,[contenteditable="true"]{-webkit-user-select:text!important;user-select:text!important}
+img,canvas,svg{-webkit-user-drag:none}
+[draggable="true"] img,[draggable="true"] canvas,[draggable="true"] svg{-webkit-user-drag:auto}
 /* no orange selection frames in the workshop (slots + category tabs); upgrade tiles get the same rank badge as the workshop */
 #work .cat.on::before{display:none!important}
 #work .cat.on{border-color:#1853a8!important;background:#07162c!important;box-shadow:inset 0 0 0 calc(var(--u)*3) #0a2d68!important;filter:brightness(1.22)}
@@ -2905,6 +2910,7 @@ function finish(won){if(B.over&&!B.skipFin)return;if(B.skipFin){B.skipFin=false;
   setTimeout(()=>sfx(660,.2,"triangle"),500);setTimeout(()=>sfx(880,.25,"triangle"),800);
   $("back").onclick=()=>{stopMusic(1);pairLobby();$("battle").classList.add("hide");$("hangar").classList.remove("hide");mi?show("camp"):hangar()};
 }
+{const ed=t=>t&&t.closest&&t.closest("input,textarea,[contenteditable='true']");addEventListener("contextmenu",e=>{if(!ed(e.target))e.preventDefault()},true);addEventListener("selectstart",e=>{if(!ed(e.target))e.preventDefault()},true);addEventListener("dragstart",e=>{const t=e.target;if(t&&/^(IMG|CANVAS|svg)$/i.test(t.tagName||""))e.preventDefault()},true)}
 $("zoomb").onclick=()=>{if(!B)return;B.zin=!B.zin;$("zoomb").classList.toggle("out",!B.zin)};
 $("ctl").onmouseover=e=>{const b=e.target.closest&&e.target.closest(".bkb");if(!b)return;bkInfo(b.dataset.t.split(" · ")[0]);if(b.classList.contains("dis")){const k=b.dataset.e||"gen",p=B&&B.p,wi=b.dataset.f!=null&&p?+b.dataset.f:-1;bkErr([k,k=="gen"&&wi>=0&&p.used&&p.used[wi]?"Already fired":k=="gen"&&p&&p.did?"Already acted":null])}else bkErr(null)};
 $("ctl").onmouseout=e=>{if(!(e.relatedTarget&&e.relatedTarget.closest&&e.relatedTarget.closest(".bkb"))){bkInfo(null);bkErr(null)}};
