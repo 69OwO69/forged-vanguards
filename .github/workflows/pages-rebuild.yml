@@ -1,0 +1,18 @@
+# GitHub's automatic Pages deploy has been failing with "in progress deployment" errors.
+# Requesting a legacy Pages build through the API works, so do that on every push to main.
+name: pages-rebuild
+on:
+  push:
+    branches: [main]
+permissions:
+  pages: write
+  contents: read
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          sleep 45
+          gh api -X POST repos/${{ github.repository }}/pages/builds
