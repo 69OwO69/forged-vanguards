@@ -848,6 +848,15 @@ body.cine #hudL,body.cine #hudR,body.cine #ctl,body.cine #zoomb{opacity:0!import
 #cfs.lite #crate::before,#cfs.lite #crate::after,#cfs.lite .sw::after{display:none!important}
 #cfs.lite #cscr.glow #crate.t2 #cdots i{box-shadow:none!important;animation:none!important}
 #cfs.lite .cd.fl{animation:none!important}
+#myth.mlite .ov::after{display:none}
+#myth.mlite .fxc,#myth.mlite .lamp{mix-blend-mode:normal}
+#myth.mlite .lamp{display:none}
+#myth.mlite .wall,#myth.mlite .sweep,#myth.mlite .dl{animation:none!important}
+#myth.mlite .g0,#myth.mlite .sg,#myth.mlite .cn,#myth.mlite .emb,#myth.mlite .hud *{filter:none!important}
+#myth.mlite .sg g,#myth.mlite .emb svg g{animation:none!important}
+#myth.mlite *{text-shadow:none!important}
+#myth.mlite .dr,#myth.mlite .dr::after,#myth.mlite .dl,#myth.mlite .seam,#myth.mlite .rail,#myth.mlite .rail::before{box-shadow:none!important}
+#myth.mlite.zm .cam{filter:none!important}
 </style>
 </head>
 <body><div id="gband"><div class="bar"><span class="lv">Lv <span class="lvv"></span></span><span class="sp"></span><span class="cpills"></span></div><div id="gt"></div></div><main>
@@ -1153,9 +1162,12 @@ function drawLegFlames(g,le,lh,tm,ph){if(!EXM.complete||!EXM.naturalWidth)return
   le.fl.forEach((q,i)=>{const f=Math.floor((((tm+i*.19+ph)%dur+dur)%dur)/dur*N)%N;g.save();g.translate((q[0]-le.ax)*lw+(le.fdx||0),(q[1]-le.ay)*lh+(le.fdy||0));g.rotate(Math.PI+Math.sin(tm*5+i*2)*.08);g.globalAlpha=.92;g.drawImage(EXM,f*FS,0,FS,FS,-8*sc*1.34,-71*sc*1.34,FS*sc*1.34,FS*sc*1.34);g.restore()})}
 /* BMMechView limp effect (BMScreenBattle.MECH_LIMP_EFFECT_HP_RATIO = 0.25): one leg swings at half distance without lifting, and the body only moves at half speed while it swings */
 function limpOn(m){if(!(m.hp>0&&m.max&&m.hp/m.max<=.25)||m.lid==null||m.swarm)return false;if(m._lpk!==m.lid){m._lpk=m.lid;const e=art("l",m.lid);m._lpo=!!(e&&!e.one&&!e.three)}return m._lpo}
+/* at 25% HP or less every mech visibly limps (walk stutter + body drop on the weak step + slump); two-legged mechs also keep the APK half-step */
+function limpHP(m){return !!(m.hp>0&&m.max&&m.hp/m.max<=.25&&m.lid!=null&&!m.swarm&&!m.dead)}
 function drawParts(g,m,tm){
   const mv=m.vx!=null&&Math.abs(m.x-m.vx)>.001,f=2.2,ph=m.ph||0,mvb=m.mvb||0,PH=m.wd||0;
   let bob=Math.sin(tm*f+ph)*.6*(1-mvb)+Math.abs(Math.cos(PH))*(m.lid==1||m.lid==3?.3:1)*mvb,sw=Math.sin(tm*f*.8+ph+1)*.3*(1-mvb)+Math.cos(PH*2)*.1*mvb,step=Math.sin(PH)*5*mvb;
+  {m._lpv=(m._lpv||0)+((limpHP(m)?1:0)-(m._lpv||0))*.1;const lk=m._lpv;if(lk>.01){const u_=((PH/(2*Math.PI))%1+1)%1,dip=u_>=.5?Math.sin((u_-.5)*2*Math.PI):0;bob+=lk*(1.6+Math.sin(tm*1.4+ph)*.5*(1-mvb)+dip*3.4*mvb);sw+=lk*(.18+dip*.3*mvb)}}
   const le=m.lid==null?null:art("l",m.lsh&&ART.l[m.lid+100]?m.lid+100:m.lid),te=m.tid==null?null:art("t",m.tsh&&ART.t[m.tid+100]?m.tid+100:m.tid),lh=le?le.h:34,lw=le?lh*le.img.naturalWidth/le.img.naturalHeight:40,hp=le&&le.hip?le.hip:[.5,.12],hx=exl(le,te)?(2+(le.rf||0)-(le.lb||0)-8+(le.mt[0]-le.ax)*lw+(te.ax-te.lg[0][0])*te.h*te.img.naturalWidth/te.img.naturalHeight+3):(le?-le.ax*lw+hp[0]*lw:0)+(le&&le.exact&&te?3+(le.tf||0)-((le.l1&&te.lg?[(te.la||[.592,.931])[0]+(te.lg[0][0]-(te.la||[.592,.931])[0])*le.l1,te.lg[0][1]]:te.la||[.592,.931])[0]-te.ax)*(te.h*te.img.naturalWidth/te.img.naturalHeight):0),th=te?te.h:44,ty=exl(le,te)?((le.mt[1]-le.ay)*lh+th*(1-te.lg[0][1])+bob+(te.dy||0)+(m.stk>0?STB(m.stk):0)):(m.lid==null?0:le?-le.ay*lh+hp[1]*lh:-30)+bob-2+7+(te&&te.dy||0)+(le&&le.exact&&te?(1-(le.l1&&te.lg?[(te.la||[.592,.931])[0]+(te.lg[0][0]-(te.la||[.592,.931])[0])*le.l1,te.lg[0][1]]:te.la||[.592,.931])[1])*te.h-5:0)+(m.stk>0?STB(m.stk):0);
   const tw=te?th*te.img.naturalWidth/te.img.naturalHeight:44,tx0=hx+(te?-te.ax*tw:-22)-3,TDX=(te&&te.sl)?0:(te&&te.tdx||0),TDY=(te&&te.sl)?0:(te&&te.tdy||0);
   const DEF=[[.4,.05],[.68,.03],[.6,.45],[.6,.7],[.6,.4],[.6,.62],[-.18,-.38]];
@@ -1590,7 +1602,7 @@ function mythArt(W,H,seed,o={}){
   return{url:c.toDataURL("image/jpeg",.9),lamps:lamps.slice(0,16)}}
 const mythArtK=()=>innerWidth+"x"+innerHeight+"/"+(S.gq|0);
 /* mythic scene art: generated in small steps while idle (and at a size that matches the graphics setting) so it never freezes the page */
-function mythArtSz(){const cap=S.gq>=3?800:S.gq>=2?1024:1600;const W=Math.min(cap,Math.max(Math.min(cap,1280),Math.round(innerWidth*Math.min(2,devicePixelRatio||1)))),H=Math.min(Math.round(W*1.2),Math.max(Math.round(W*.5625),Math.round(W*innerHeight/innerWidth)));return[W,H]}
+function mythArtSz(){const cap=S.gq>=3?640:S.gq>=2?960:1280;const W=Math.max(640,Math.min(cap,Math.round(innerWidth*Math.min(2,devicePixelRatio||1)))),H=Math.min(Math.round(W*1.2),Math.max(Math.round(W*.5625),Math.round(W*innerHeight/innerWidth)));return[W,H]}
 const MYTHP={},MYTHJ=[["w",11,{min:150}],["d",29,{min:190,mid:1}],["d2",47,{min:270,mid:1}],["s3",83,{min:210,acc:[255,120,70]}]];
 function mythArtGet(){const k=mythArtK();if(MYTHART.k==k)return MYTHART;const[W,H]=mythArtSz();if(MYTHP.k!=k){for(const q in MYTHP)delete MYTHP[q];MYTHP.k=k}
   for(const[n,sd,o]of MYTHJ)if(!MYTHP[n])MYTHP[n]=mythArt(W,H,sd,o);
@@ -1604,7 +1616,7 @@ setTimeout(mythArtWarm,6000);addEventListener("resize",()=>{clearTimeout(mythArt
 function mythFX(cv){
   const g=cv.getContext("2d");let W=0,H=0,dpr=1,run=true,last=performance.now();const P=[],B=[],F=[],Rg=[];
   const R=(a,z)=>a+Math.random()*(z-a);
-  const fit=()=>{dpr=Math.min(2,devicePixelRatio||1);W=cv.clientWidth||innerWidth;H=cv.clientHeight||innerHeight;cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);g.setTransform(dpr,0,0,dpr,0,0)};fit();
+  const fit=()=>{const my=cv.closest&&cv.closest("#myth");dpr=Math.min(my&&my.classList.contains("mlite")?1:2,devicePixelRatio||1);W=cv.clientWidth||innerWidth;H=cv.clientHeight||innerHeight;cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);g.setTransform(dpr,0,0,dpr,0,0)};fit();
   const jag=(a,z,j,d,out)=>{if(d==0){out.push(z);return}const mx=(a[0]+z[0])/2+R(-j,j),my=(a[1]+z[1])/2+R(-j,j),m=[mx,my];jag(a,m,j/2,d-1,out);jag(m,z,j/2,d-1,out)};
   const path=(pts,j)=>{const out=[pts[0]];for(let i=1;i<pts.length;i++)jag(pts[i-1],pts[i],j,3,out);return out};
   const api={fit,
@@ -1709,8 +1721,11 @@ function mythScene(g,done){
   <div class="tr"></div><div class="rv"><div class="sq"></div><div class="sqt">MYTHIC</div></div><div class="mbg"></div><div class="beam"></div><div class="plat"></div><div class="mray"></div><div class="mwv"></div>
   <div class="mst"><div class="tl"><div class="cd c0 in${g.sh?" shy":""}"><div><div class="cbk">?</div><div class="cf"><div class="cim">${ICO(g.k,g.it,g.sh)}</div><b>${NM[4]}</b><span>${g.it.n}</span><em class="ty">${ty}</em></div></div></div></div></div><div class="mnm"></div></div>
   <canvas class="fxc"></canvas><div class="ov"></div><div class="mhint"></div><div class="mfl"></div><button class="mskip">SKIP &#9656;</button>`;
+  if(S.mls||S.gq>0||document.getElementById("cfs").classList.contains("lite"))el.classList.add("mlite");
   document.body.appendChild(el);{const im=new Image();im.onload=()=>SH.paint(el,im);im.src=ART.s3}
   const $q=s=>el.querySelector(s),cd=$q(".cd"),nm=$q(".mnm"),tr=$q(".tr"),fl=$q(".mfl"),hint=$q(".mhint"),cls=(...a)=>el.classList.add(...a),FX=mythFX($q(".fxc")),mst=$q(".tl");
+  /* watch the frame rate: slow machine -> switch to the light look (and remember it); still very slow -> skip ahead to the cards */
+  {let n=0,l=0,sum=0,lvl=el.classList.contains("mlite")?1:0;(function f(t){if(!el.isConnected)return;if(l&&n>8)sum+=t-l;l=t;n++;if(n>=44){const a=sum/35;n=0;sum=0;if(!lvl&&a>24){lvl=1;el.classList.add("mlite");S.mls=1;try{save()}catch(e){}try{FX.fit()}catch(e){}}else if(lvl&&a>45){const k=el.querySelector(".mskip");if(k&&!el._sk){el._sk=1;k.click();return}}}requestAnimationFrame(f)})(performance.now())}
   const W=()=>innerWidth,H=()=>innerHeight,VM=()=>Math.min(innerWidth,innerHeight),GX=()=>W()/2,GY=()=>H()*.32,GR=()=>VM()*.26,rnd=(a,z)=>a+Math.random()*(z-a),sc=ch=>ch.map(p=>[p[0]*W()/WC,p[1]*H()/HC]);
   const at=(ms,f)=>T.push(setTimeout(f,ms)),flash=(a,d)=>{fl.style.transition="none";fl.style.opacity=a;void fl.offsetWidth;fl.style.transition="opacity "+d+"s";fl.style.opacity=0},pop=(n,t)=>{n.textContent=t;n.classList.remove("pop");void n.offsetWidth;n.classList.add("pop")};
   const end=()=>{if(fin)return;fin=1;T.forEach(clearTimeout);[idle,ember,arcs,zig,hudT].forEach(clearInterval);FX.stop();el.classList.remove("on");setTimeout(()=>{el.remove();MYTHB=0},380);done()};
@@ -2024,7 +2039,7 @@ function draw(){hudUpdate();
   g.font="16px ACE,sans-serif";g.fillStyle="#d7e4f5";g.textAlign="center";
   B.sep=null;
   for(const k of(B.turn=="e"?["p","e"]:["e","p"])){
-    const m=B[k];if(m.dead)continue;const sx_=B.sep?B.sep[k]||0:0;B.hit[k]=Math.max(0,B.hit[k]-.04);{const d=m.x-m.vx,ad=Math.abs(d);if(m.swarm){m.vx=ad<.004?m.x:m.vx+d*Math.min(1,.045*cdt)}else if(ad>1e-4){if(m.ps&&m.ps.b!=m.x)m.ps=null;let v;if(m.ps){const kk=Math.min(1,(t0-m.ps.t0)/m.ps.dur),nx=m.ps.a+(m.ps.b-m.ps.a)*(1-Math.pow(1-kk,3));v=Math.min(ad,Math.abs(nx-m.vx));if(kk>=1)m.ps=null}else{v=Math.min(ad,.03*.75*Math.max(1,ad/2)*cdt);if(limpOn(m)&&(((m.wd||0)/(2*Math.PI))%1+1)%1>=.5)v*=.5}const vA=m.ps?.056*cdt:v/.75;m.vx+=Math.sign(d)*v;m.wph=(m.wph||0)+vA*2*Math.PI*Math.sign(d)*(k=="p"?1:-1);m.wd=(m.wd||0)+vA*2*Math.PI;m.fw=Math.sign(d)*(k=="p"?1:-1);const sn=Math.floor(m.wd/Math.PI);if(sn!=m.sn){if(m.sn!=null&&!(limpOn(m)&&sn%2==0)&&(!m.ps||t0-(m.lfs||0)>140)){playBuf("foot",.6,.93+Math.random()*.14);m.lfs=t0}m.sn=sn}}else m.vx=m.x;m.mvb=(m.mvb||0)+((ad>1e-4?1:0)-(m.mvb||0))*Math.min(1,.2*cdt);if(ad<=1e-4&&m.mvb<.02){m.mvb=0}}m.rc=m.rc.map(v=>Math.max(0,v-.05));
+    const m=B[k];if(m.dead)continue;const sx_=B.sep?B.sep[k]||0:0;B.hit[k]=Math.max(0,B.hit[k]-.04);{const d=m.x-m.vx,ad=Math.abs(d);if(m.swarm){m.vx=ad<.004?m.x:m.vx+d*Math.min(1,.045*cdt)}else if(ad>1e-4){if(m.ps&&m.ps.b!=m.x)m.ps=null;let v;if(m.ps){const kk=Math.min(1,(t0-m.ps.t0)/m.ps.dur),nx=m.ps.a+(m.ps.b-m.ps.a)*(1-Math.pow(1-kk,3));v=Math.min(ad,Math.abs(nx-m.vx));if(kk>=1)m.ps=null}else{v=Math.min(ad,.03*.75*Math.max(1,ad/2)*cdt);if(limpHP(m)&&(((m.wd||0)/(2*Math.PI))%1+1)%1>=.5)v*=.5}const vA=m.ps?.056*cdt:v/.75;m.vx+=Math.sign(d)*v;m.wph=(m.wph||0)+vA*2*Math.PI*Math.sign(d)*(k=="p"?1:-1);m.wd=(m.wd||0)+vA*2*Math.PI;m.fw=Math.sign(d)*(k=="p"?1:-1);const sn=Math.floor(m.wd/Math.PI);if(sn!=m.sn){if(m.sn!=null&&!(limpOn(m)&&sn%2==0)&&(!m.ps||t0-(m.lfs||0)>140)){playBuf("foot",.6,.93+Math.random()*.14);m.lfs=t0}m.sn=sn}}else m.vx=m.x;m.mvb=(m.mvb||0)+((ad>1e-4?1:0)-(m.mvb||0))*Math.min(1,.2*cdt);if(ad<=1e-4&&m.mvb<.02){m.mvb=0}}m.rc=m.rc.map(v=>Math.max(0,v-.05));
     let dy=0;if(m.drop){const dd=t0-m.drop.t0;if(dd<0)continue;const kk=Math.min(1,dd/m.drop.dur);dy=-900*(1-kk*kk);if(kk>=1&&!m.drop.landed){m.drop.landed=1;B.shake=24;const ex=px(m.x);GFX(ex,true);GFX(ex+22,true);GFX(ex-22,false);playBuf("blast",.55,1.2)}if(kk>=1){const rk=(dd-m.drop.dur)/1600;if(rk<1)B.shake=Math.max(B.shake,24*Math.pow(1-rk,1.6))}if(kk>=1&&dd>m.drop.dur+1700)m.drop=null}
     if(m.swarm){drawSwarm(g,m);continue}
     const hh=B.hit[k],tt=performance.now(),MS=MK*(B.mi?(k=="e"&&B.mi.boss?1.2:1):(k!="e"?1:1.3));if(B.tpfx&&B.tpfx.sv&&B.tpfx.m==m)sdvGhosts(g,B.tpfx,MS);m._ms=MS;if(MS!=1){g.save();const ox_=px(sdvVx(m))+sx_,oy_=GY+dy;g.translate(ox_,oy_);g.scale(MS,MS);g.translate(-ox_,-oy_)}GWT=g.getTransform();GWO=B.gas&&B.gas.own;const ta_=tpAlpha(m);if(ta_>.02){if(ta_<1){g.save();g.globalAlpha=ta_}drawMech(g,px(sdvVx(m))+sx_+(hh>0?Math.sin(tt*.07)*hh*2.5:0),GY+dy-(hh>0?Math.abs(Math.sin(tt*.045))*hh*.8:0),fdir(m),m,hh);if(ta_<1)g.restore()}
