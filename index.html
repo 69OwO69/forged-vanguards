@@ -2662,6 +2662,56 @@ const css=`
 @media (max-aspect-ratio:4/3){#boot .bpl{width:36%}#boot .bpr{display:none}}
 `;
 let SDONE=false;
+
+/* ===== arena intro cutscene: black void, the mech's feet walk slowly out of the dark onto a grey floor (boom, boom, boom), then the boarding sequence plays ===== */
+function legsIntro(done){
+  busy=true;
+  let m=null;try{m=fixU(S.sel)&&mechOf(S.sel.t,S.sel.l,[],1,true,S.sel.w.map(x=>x!=null&&W[x]&&W[x].drone?null:x))}catch(e){try{m=myMech()}catch(_){}}
+  if(!m||m.tid==null){busy=false;return done()}
+  const lo=!!(S.gq>0||document.getElementById("cfs")&&document.getElementById("cfs").classList.contains("lite"));
+  const el=document.createElement("div");el.id="lgi";el.style.cssText="position:fixed;inset:0;z-index:9490;background:#000;overflow:hidden;cursor:default;user-select:none;-webkit-user-select:none;touch-action:none";
+  const cv=document.createElement("canvas");cv.style.cssText="position:absolute;left:0;top:0;width:100%;height:100%;display:block";el.appendChild(cv);document.body.appendChild(el);
+  const dpr=Math.min(devicePixelRatio||1,lo?1:1.25),k0=Math.min(1,Math.sqrt(2.3e6/(innerWidth*innerHeight*dpr*dpr)));
+  const W=cv.width=Math.max(2,Math.round(innerWidth*dpr*k0)),H=cv.height=Math.max(2,Math.round(innerHeight*dpr*k0)),g=cv.getContext("2d");g.imageSmoothingQuality="high";
+  const ocv=document.createElement("canvas");ocv.width=W;ocv.height=H;const oc=ocv.getContext("2d");oc.imageSmoothingQuality="high";
+  const DUR=7600,WALK0=900,WALK1=DUR-1300,CYC=1.9/* seconds per full stride (two steps) */;
+  const gy=H*.8,z=H*.8/34/* world units from the floor to the top of the picture: only the very bottom of the legs */,span=W*.5,x0=-W*.12;
+  const ease=x=>x<=0?0:x>=1?1:x*x*(3-2*x),spf=t=>ease((t-WALK0)/900)*(1-ease((t-(WALK1-700))/700));let WDT=0;for(let q=0;q<DUR;q+=16)WDT+=spf(q)*2*Math.PI/CYC*.016;
+  let raf=0,over=false,wd=0,sn=-1,shake=0,last=performance.now();const T0=last;
+  m.mvb=0;m.wd=0;m.wph=0;m.fw=1;
+  const noise=document.createElement("canvas");noise.width=noise.height=128;{const c=noise.getContext("2d"),d=c.createImageData(128,128);for(let i=0;i<d.data.length;i+=4){const v=118+Math.random()*34|0;d.data[i]=d.data[i+1]=d.data[i+2]=v;d.data[i+3]=20}c.putImageData(d,0,0)}
+  try{syn(46,6.5,"sine",.16,0,36);noi(7,.05,160,70,0,1,"lowpass")}catch(e){}
+  function end(){if(over)return;over=true;cancelAnimationFrame(raf);document.removeEventListener("keydown",kd,true);g.fillStyle="#000";g.fillRect(0,0,W,H);busy=false;try{done()}catch(e){console.error(e)}setTimeout(()=>el.remove(),900)}
+  const kd=e=>{if(e.key=="Escape"||e.key==" "||e.key=="Enter")end()};document.addEventListener("keydown",kd,true);el.onclick=end;
+  function frame(now){
+    if(over)return;const t=now-T0,dt=Math.min(.05,(now-last)/1000);last=now;
+    /* walking speed eases in, runs steady, eases out */
+    const sp=spf(t);
+    const w=sp*2*Math.PI/CYC*dt;wd+=w;m.wd=wd;m.wph=wd;m.mvb=Math.min(1,(m.mvb||0)+(sp>.02?.12:-.12));m.fw=1;
+    const stp=Math.floor(wd/Math.PI);if(sn<0)sn=stp;else if(stp>sn){sn=stp;shake=1;try{playBuf("foot",1,.5);playBuf("tierboom",.55,.8);syn(52,.45,"sine",.8,0,26)}catch(e){}}
+    shake*=Math.pow(.02,dt);
+    g.setTransform(1,0,0,1,0,0);g.fillStyle="#000";g.fillRect(0,0,W,H);
+    const sy=(Math.sin(now*.09)*2.2*shake)*(H/720),sx=(Math.cos(now*.07)*1.2*shake)*(H/720);
+    g.save();g.translate(sx,sy);
+    /* very grey floor, lit softly where the mech comes into view */
+    const fl=g.createLinearGradient(0,gy,0,H);fl.addColorStop(0,"#74777e");fl.addColorStop(.3,"#53555b");fl.addColorStop(1,"#1e1f22");g.fillStyle=fl;g.fillRect(-20,gy,W+40,H-gy+20);
+    g.globalAlpha=.9;g.fillStyle=g.createPattern(noise,"repeat");g.fillRect(-20,gy,W+40,H-gy+20);g.globalAlpha=1;
+    g.fillStyle="rgba(190,195,205,.16)";g.fillRect(-20,gy,W+40,2);
+    const mx=x0+span*wd/WDT;
+    /* contact shadow */
+    g.fillStyle="rgba(0,0,0,.55)";g.beginPath();g.ellipse(mx+z*1.5,gy+H*.012,z*13,H*.022,0,0,Math.PI*2);g.fill();
+    oc.clearRect(0,0,W,H);oc.save();oc.scale(z,z);try{drawMech(oc,mx/z,gy/z,1,m,0)}catch(e){}oc.restore();g.drawImage(ocv,0,0);g.globalCompositeOperation="lighter";g.globalAlpha=.85;g.drawImage(ocv,0,0);g.globalAlpha=1;g.globalCompositeOperation="source-over";
+    g.restore();
+    /* the dark it walks out of + a heavy vignette */
+    const dk=g.createLinearGradient(0,0,W,0);dk.addColorStop(0,"rgba(0,0,0,1)");dk.addColorStop(.08,"rgba(0,0,0,.93)");dk.addColorStop(.28,"rgba(0,0,0,.42)");dk.addColorStop(.38,"rgba(0,0,0,0)");dk.addColorStop(.85,"rgba(0,0,0,.1)");dk.addColorStop(1,"rgba(0,0,0,.55)");g.fillStyle=dk;g.fillRect(0,0,W,H);
+    const vg=g.createRadialGradient(W*.5,gy,H*.3,W*.5,gy,Math.max(W,H)*.8);vg.addColorStop(0,"rgba(0,0,0,0)");vg.addColorStop(1,"rgba(0,0,0,.6)");g.fillStyle=vg;g.fillRect(0,0,W,H);
+    const top=g.createLinearGradient(0,0,0,gy);top.addColorStop(0,"rgba(0,0,0,.7)");top.addColorStop(.5,"rgba(0,0,0,.12)");top.addColorStop(1,"rgba(0,0,0,0)");g.fillStyle=top;g.fillRect(0,0,W,gy);
+    /* fade in from black, fade out into the boarding screen */
+    const a=Math.max(1-ease(t/900),ease((t-(DUR-650))/650));if(a>0){g.fillStyle="rgba(0,0,0,"+a+")";g.fillRect(0,0,W,H)}
+    if(t>=DUR)return end();
+    raf=requestAnimationFrame(frame)}
+  raf=requestAnimationFrame(frame);
+}
 function boot(done,mi){
   if(busy){return}busy=true;
   if(!SDONE){const s=document.createElement("style");s.textContent=css;document.head.appendChild(s);SDONE=true}
@@ -2723,7 +2773,7 @@ function boot(done,mi){
   }
 const esc0=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const _sh=show;
-show=function(v){const was=!document.getElementById("arn").classList.contains("hide");_sh(v);if(v=="arn"&&!was&&!busy)boot(()=>{})};
+show=function(v){const was=!document.getElementById("arn").classList.contains("hide");_sh(v);if(v=="arn"&&!was&&!busy)legsIntro(()=>boot(()=>{}))};
 window.__boot=boot;
 })();
 
