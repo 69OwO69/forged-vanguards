@@ -1,0 +1,18 @@
+name: unstick-pages
+on:
+  push:
+    paths: [".github/workflows/unstick-pages.yml"]
+  workflow_dispatch:
+permissions:
+  pages: write
+  contents: read
+jobs:
+  cancel:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel stuck Pages deployment
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api -X POST repos/${{ github.repository }}/pages/deployments/9c032a01e6e827d7a10a76302e1b009ae049cafb/cancel || true
+          gh api repos/${{ github.repository }}/pages/deployments 2>&1 | head -5 || true
