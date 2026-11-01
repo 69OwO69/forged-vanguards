@@ -2674,27 +2674,26 @@ function legsIntro(done){
   const dpr=Math.min(devicePixelRatio||1,lo?1:1.25),k0=Math.min(1,Math.sqrt(2.3e6/(innerWidth*innerHeight*dpr*dpr)));
   const W=cv.width=Math.max(2,Math.round(innerWidth*dpr*k0)),H=cv.height=Math.max(2,Math.round(innerHeight*dpr*k0)),g=cv.getContext("2d");g.imageSmoothingQuality="high";
   const ocv=document.createElement("canvas");ocv.width=W;ocv.height=H;const oc=ocv.getContext("2d");oc.imageSmoothingQuality="high";
-  const DUR=8200,WALK0=900,WALK1=DUR-1400,CYC=3.0/* seconds per full stride (two steps) */;
-  const gy=H*.8,z=H*.8/34/* world units from the floor to the top of the picture: only the very bottom of the legs */,span=W*.5,x0=-W*.12;
-  const ease=x=>x<=0?0:x>=1?1:x*x*(3-2*x),spf=t=>ease((t-WALK0)/900)*(1-ease((t-(WALK1-700))/700));let WDT=0;for(let q=0;q<DUR;q+=16)WDT+=spf(q)*2*Math.PI/CYC*.016;
-  let raf=0,over=false,wd=0,sn=-1,shake=0,last=performance.now();const T0=last;
+  const CYC=2.7/* seconds per full stride (two steps) */;
+  const gy=H*.8,z=H*.8/44/* world units from the floor to the top of the picture: only the lower legs */,x0=-W*.45,xEnd=W*.62;
+  const ease=x=>x<=0?0:x>=1?1:x*x*(3-2*x);
+  let raf=0,over=false,wd=Math.PI*.3,sn=-1,stopT=0,last=performance.now();const T0=last;
   m.mvb=0;m.wd=0;m.wph=0;m.fw=1;
   const noise=document.createElement("canvas");noise.width=noise.height=128;{const c=noise.getContext("2d"),d=c.createImageData(128,128);for(let i=0;i<d.data.length;i+=4){const v=118+Math.random()*34|0;d.data[i]=d.data[i+1]=d.data[i+2]=v;d.data[i+3]=20}c.putImageData(d,0,0)}
   function end(){if(over)return;over=true;cancelAnimationFrame(raf);g.fillStyle="#000";g.fillRect(0,0,W,H);busy=false;try{done()}catch(e){console.error(e)}setTimeout(()=>el.remove(),900)}
   function frame(now){
     if(over)return;const t=now-T0,dt=Math.min(.05,(now-last)/1000);last=now;
-    /* walking speed eases in, runs steady, eases out */
-    const sp=spf(t);
-    const w=sp*2*Math.PI/CYC*dt;wd+=w;m.wd=wd;m.wph=wd;m.mvb=Math.min(1,(m.mvb||0)+(sp>.02?.12:-.12));m.fw=1;
+    /* the camera never moves: walking speed eases in, runs steady, and eases out as the mech reaches its spot */
+    const sp=1;
+    const w=sp*2*Math.PI/CYC*dt;wd+=w;m.wd=wd;m.wph=wd;m.mvb=1;m.fw=1;
     const stp=Math.floor(wd/Math.PI);if(sn<0)sn=stp;else if(stp>sn){sn=stp;try{playBuf("foot",.9,1)}catch(e){}}
     g.setTransform(1,0,0,1,0,0);g.fillStyle="#000";g.fillRect(0,0,W,H);
     g.save();
     /* very grey floor, lit softly where the mech comes into view */
-    const wx=x0+wd/(2*Math.PI)*85.2*z,mx=Math.min(wx,W*.46),cam=Math.max(0,wx-W*.46);
+    const mx=x0+wd/(2*Math.PI)*85.2*z;if(!stopT&&mx>=xEnd)stopT=t;/* one stride = .75 tile = 85.2 mech units, so the planted foot never slides on the floor */
     const fl=g.createLinearGradient(0,gy,0,H);fl.addColorStop(0,"#74777e");fl.addColorStop(.3,"#53555b");fl.addColorStop(1,"#1e1f22");g.fillStyle=fl;g.fillRect(-20,gy,W+40,H-gy+20);
     g.globalAlpha=.9;g.fillStyle=g.createPattern(noise,"repeat");g.fillRect(-20,gy,W+40,H-gy+20);g.globalAlpha=1;
     g.fillStyle="rgba(190,195,205,.16)";g.fillRect(-20,gy,W+40,2);
-    {const sp_=H*.9;g.fillStyle="rgba(0,0,0,.28)";for(let k=Math.floor(cam/sp_)-1;k<=Math.ceil((cam+W)/sp_);k++){const xx=k*sp_-cam;g.fillRect(xx,gy,3,H-gy)}}
     /* contact shadow */
     g.fillStyle="rgba(0,0,0,.55)";g.beginPath();g.ellipse(mx+z*1.5,gy+H*.012,z*13,H*.022,0,0,Math.PI*2);g.fill();
     oc.clearRect(0,0,W,H);oc.save();oc.scale(z,z);try{drawMech(oc,mx/z,gy/z,1,m,0)}catch(e){}oc.restore();g.drawImage(ocv,0,0);g.globalCompositeOperation="lighter";g.globalAlpha=.85;g.drawImage(ocv,0,0);g.globalAlpha=1;g.globalCompositeOperation="source-over";
@@ -2704,8 +2703,8 @@ function legsIntro(done){
     const vg=g.createRadialGradient(W*.5,gy,H*.3,W*.5,gy,Math.max(W,H)*.8);vg.addColorStop(0,"rgba(0,0,0,0)");vg.addColorStop(1,"rgba(0,0,0,.6)");g.fillStyle=vg;g.fillRect(0,0,W,H);
     const top=g.createLinearGradient(0,0,0,gy);top.addColorStop(0,"rgba(0,0,0,.7)");top.addColorStop(.5,"rgba(0,0,0,.12)");top.addColorStop(1,"rgba(0,0,0,0)");g.fillStyle=top;g.fillRect(0,0,W,gy);
     /* fade in from black, fade out into the boarding screen */
-    const a=Math.max(1-ease(t/900),ease((t-(DUR-650))/650));if(a>0){g.fillStyle="rgba(0,0,0,"+a+")";g.fillRect(0,0,W,H)}
-    if(t>=DUR)return end();
+    const a=Math.max(1-ease(t/700),stopT?ease((t-stopT)/800):0);if(a>0){g.fillStyle="rgba(0,0,0,"+a+")";g.fillRect(0,0,W,H)}
+    if(stopT&&t>=stopT+900||t>14000)return end();
     raf=requestAnimationFrame(frame)}
   raf=requestAnimationFrame(frame);
 }
