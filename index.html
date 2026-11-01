@@ -2381,7 +2381,7 @@ async function menuTrackSync(){
     const x=AC.createBufferSource(),f=AC.createBiquadFilter(),f2=AC.createBiquadFilter(),g=AC.createGain(),t=AC.currentTime;
     x.buffer=AMB;x.loop=true;f.type="lowpass";f.frequency.value=AMF;f.Q.value=.7;f2.type="lowpass";f2.frequency.value=AMF*1.6;f2.Q.value=.5;
     g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.95,t+1.2);x.connect(f);f.connect(f2);f2.connect(g);g.connect(MB);x.start(t);AMM={x,g,o:[]};
-    if(AMD){const dx=AC.createBufferSource(),dg=AC.createGain();dx.buffer=AMD;dx.loop=true;dg.gain.setValueAtTime(0,t);dg.gain.linearRampToValueAtTime(.1,t+1.2);dx.connect(dg);dg.connect(MB);dx.start(t);AMM.o.push({x:dx,g:dg})}
+    if(AMD){const dx=AC.createBufferSource(),dg=AC.createGain();dx.buffer=AMD;dx.loop=true;dg.gain.setValueAtTime(0,t);dg.gain.linearRampToValueAtTime(.01,t+1.2);dx.connect(dg);dg.connect(MB);dx.start(t);AMM.o.push({x:dx,g:dg})}
     
     if(!$("arn").classList.contains("hide"))lobbyLevel(0)}catch(e){console.error("arena menu music",e)}}
 let AMLOCK=false;
