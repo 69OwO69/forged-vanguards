@@ -2372,7 +2372,7 @@ function menuTrackStop(fast){AMR++;if(!AMM)return;for(const m of[AMM].concat(AMM
 function lobbyLevel(v){if(!PR||PR.bt)return;try{const t=AC.currentTime;PR.ga.gain.cancelScheduledValues(t);PR.ga.gain.setValueAtTime(PR.ga.gain.value,t);PR.ga.gain.linearRampToValueAtTime(v,t+.8)}catch(e){}}
 async function menuTrackSync(){
   if(!AC)return;
-  const on=!$("arn").classList.contains("hide")&&$("battle").classList.contains("hide")&&!S.mute;
+  const on=!AMLOCK&&!$("arn").classList.contains("hide")&&$("battle").classList.contains("hide")&&!S.mute;
   if(!on){menuTrackStop();lobbyLevel(.4);return}
   lobbyLevel(0);if(AMM)return;const id=++AMR;
   try{await AC.resume();if(!AMB){if(!AMP)AMP=AC.decodeAudioData(b64buf(ARENA_MENU_MUS)).then(x=>{AMB=x}).catch(e=>console.error("arena menu music",e));await AMP}
@@ -2384,7 +2384,10 @@ async function menuTrackSync(){
     if(AMD){const dx=AC.createBufferSource(),dg=AC.createGain();dx.buffer=AMD;dx.loop=true;dg.gain.setValueAtTime(0,t);dg.gain.linearRampToValueAtTime(.7,t+1.2);dx.connect(dg);dg.connect(MB);dx.start(t);AMM.o.push({x:dx,g:dg})}
     
     if(!$("arn").classList.contains("hide"))lobbyLevel(0)}catch(e){console.error("arena menu music",e)}}
-{const _s3=show;show=function(v){_s3(v);menuTrackSync()}}
+let AMLOCK=false;
+{const _s3=show;show=function(v){AMLOCK=false;_s3(v);menuTrackSync()}}
+/* a fight never plays the menu tracks, even if the arena screen is still on screen while it loads */
+{const _sb=startBattle;startBattle=function(){AMLOCK=true;menuTrackStop(true);lobbyLevel(.4);return _sb.apply(this,arguments)}}
 function lobbyOff(){pairStop();menuTrackSync()}
 async function lobbyOn(){if(PR||S.mute||!AC||!$("battle").classList.contains("hide")){menuTrackSync();return}await pairStart("lobby");menuTrackSync()}
 {const vm=$("vm"),vs=$("vs2");vm.value=Math.round(100*(S.vm==null?1:S.vm));vs.value=Math.round(100*(S.vs==null?1:S.vs));
