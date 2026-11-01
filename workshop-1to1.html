@@ -832,6 +832,11 @@ body.cine #hudL,body.cine #hudR,body.cine #ctl,body.cine #zoomb{opacity:0!import
 #work .tile.rt:hover::before{filter:brightness(1.3)}
 #work .tile.rt img{width:82%!important;height:82%!important;object-fit:contain;position:relative;z-index:0}
 #work #wxx .mva,#work .swp{cursor:default}#work #wxx .mva:hover,#work .swp:hover{filter:none}
+
+/* APK rank badge in the item corner (APK rank icons, shown from level 2) */
+#work .slot.rt .clv,#work .tile.rt .clv{left:auto!important;right:3%!important;top:auto!important;bottom:3%!important;width:36%!important;height:36%!important;display:block!important;font-size:0!important}
+#work .clv .lvb{display:block;width:100%;height:100%}
+#work .clv .lvb img{position:static!important;left:auto!important;top:auto!important;width:100%!important;height:100%!important;object-fit:contain;filter:drop-shadow(0 0 1px #000)}
 </style>
 </head>
 <body><div id="gband"><div class="bar"><span class="lv">Lv <span class="lvv"></span></span><span class="sp"></span><span class="cpills"></span></div><div id="gt"></div></div><main>
@@ -1403,7 +1408,7 @@ function wxx(){const wk=document.querySelector("#work .wk");if(!wk||document.get
 function mvLoad(dr){const ix=(S.loads||[]).map((l,i)=>l?i:-1).filter(i=>i>=0);if(!ix.length)return toast("No saved mechs yet");let p=ix.indexOf(S._ldi);p=p<0?(dr>0?0:ix.length-1):(p+dr+ix.length)%ix.length;S._ldi=ix[p];S.sel=fixU(JSON.parse(JSON.stringify(S.loads[S._ldi])));work()}
 function work(){
   head();const s=S.sel,t=s.t==null?null:T[s.t],wt=weight();$("ld").innerHTML="";$("sts").innerHTML=`${HPI} ${myMech().max} · Armor ${myMech().res}% · Energy ${myMech().enMax}/turn (cap ${myMech().enCap}) ${(()=>{const r=myMech().rs;return r.p||r.f||r.e?"· Resist "+r.p+"/"+r.f+"/"+r.e+" ":""})()}${(()=>{const m=myMech();return m.am||m.ra?"· Ammo "+m.am+"/"+m.ra+" ":""})()}· Heat cap ${myMech().hc}, cooling ${myMech().cool} · ${s.l==null?0:L[s.l].s} tile/step`;
-  const LB=(k,i,u)=>`<b class="clv">${LVU(k,i,u)}</b>`;
+  const LB=(k,i,u)=>{const _l=LVU(k,i,u);return _l>1?`<b class="clv">${lvBadge(_l)}</b>`:""};
   const sl=(k,it,d,cap)=>{const sh=isSh(k,K[k].indexOf(it),s[d+"u"]);return `<button class="slot rt rt${tier(it.cost)} ${tab==d?"on":""} ${sh?"shn":""}" data-s="${d}" style="--rc:${RAR(it.cost)}">${ICO(k,it,sh)}<em>${cap}</em>${LB(k,K[k].indexOf(it),s[d+"u"])}</button>`};
   const wsb=si=>{const id=s.w[si];return `<button class="slot ${id!=null?"rt rt"+tier(W[id].cost):""} ${SSEL===si?"on":""} ${id!=null&&isSh("w",id,s.wu&&s.wu[si])?"shn":""}" data-ws="${si}" ${id!=null?`style="--rc:${RAR(W[id].cost)}"`:`title="${SN[si]}"`}>${id!=null?ICO("w",W[id],isSh("w",id,s.wu&&s.wu[si])):sli(SLW[si][0],SLW[si][1])}<em>${SN[si]}</em>${id!=null?LB("w",id,s.wu&&s.wu[si]):""}</button>`};
   const msb=q=>{const id=q==0?s.m:s.mx[q-1];return id!=null?`<button class="slot rt rt${tier(M[id].cost)} ${isSh("m",id,q==0?s.mu:(s.mxu||[])[q-1])?"shn":""}" data-um="${q+1}" style="--rc:${RAR(M[id].cost)}">${ICO("m",M[id],isSh("m",id,q==0?s.mu:(s.mxu||[])[q-1]))}<em>${q==8?"Teleport":"Module"}</em>${LB("m",id,q==0?s.mu:(s.mxu||[])[q-1])}</button>`:`<button class="slot ${tab==(q==8?"tp":"m")?"on":""}" data-s="${q==8?"tp":"m"}">${sli(q==8?"tp":"mod")}<em>${q==8?"Teleport":"Module"}</em></button>`},
@@ -1411,7 +1416,7 @@ function work(){
   $("stop").innerHTML=[0,1,2,3,4,5,6,7].map(msb).join("");
   $("sl").innerHTML=msb(8)+ph("Charger","Charge Buster","chg")+ph("Hook",0,"hook")+(t?sl("t",t,"t","Torso"):`<button class="slot ${tab=="t"?"on":""}" data-s="t">${sli("tor")}<em>Torso</em></button>`)+(s.l==null?`<button class="slot ${tab=="l"?"on":""}" data-s="l">${sli("leg")}<em>Legs</em></button>`:sl("l",L[s.l],"l","Legs"));
   $("sr").innerHTML=wsb(6)+ph("Shield",0,"shd")+ph("Special",0,"spc")+ph("Kit",0,"kit")+`<button class="swp" id="swp" title="Mech order"><img alt="" src="${WXI.swp}"></button>`;wxx();
-  $("sb").innerHTML=[0,1,4,5,2,3].map(wsb).join("");
+  $("sb").innerHTML=[0,1,2,4,3,5].map(wsb).join("");
   
   $("wtp").innerHTML=`<i><img alt="" src="${WSI.i_eye}"></i><i class="kg"><img alt="kg" src="${WSI.i_kg}"></i><b class="${t&&wt>t.cap?"bad":""}">${wt.toLocaleString()} / ${t?t.cap.toLocaleString():"-"}</b>`;
   $("wnav").innerHTML=[["camp","singlePlayer","Campaign"],["arena","multiPlayer","Arena"],["work","hanger","Workshop"],["store","shop","Shop"],["menu","community","Menu"],["prof","profile","Profile"]].map(([g,ic,tt])=>`<button data-go="${g}" class="${g=="work"?"on":""}" title="${tt}"><img src="${WSI["i_"+ic]}" alt=""></button>`).join("");
@@ -1419,7 +1424,7 @@ function work(){
   const rowsOf=([k,sec])=>K[k].flatMap((it,i)=>((k=="w"&&(it.drone?"drone":it.side?"side":"top")!=sec)||(k=="m"&&(it.tp?"tp":"m")!=sec))?[]:S.own[k].includes(i)?XS(k,i).filter(c=>!(k=="w"?(s.wu||[]).includes(c.u):k=="m"?[s.mu].concat(s.mxu||[]).includes(c.u):s[k+"u"]===c.u)).map(c=>[it,i,c]):[[it,i,null]]).filter(([it,i])=>S.own[k].includes(i)).sort((a,b)=>SORTS[FL.sort](a,b)||(b[2]?b[2].x:0)-(a[2]?a[2].x:0));
   const SR=SEC.map(sc=>({sc,rows:rowsOf(sc)}));if(!SR.some(x=>x.sc[1]==WCAT))WCAT="t";
   const cur=SR.find(x=>x.sc[1]==WCAT),k=cur.sc[0],PER=15,np=Math.max(1,Math.ceil(cur.rows.length/PER));WPG=Math.max(0,Math.min(WPG,np-1));
-  $("inv").innerHTML=cur.rows.slice(WPG*PER,(WPG+1)*PER).map(([it,i,c])=>{const own=!!c,eq=c?(k=="w"?(s.wu||[]).includes(c.u):k=="m"?[s.mu].concat(s.mxu||[]).includes(c.u):s[k+"u"]===c.u):false;return `<button class="tile rt rt${RI(k,i)} ${own?"":"lock"} ${eq?"eq":""} ${c&&c.s?"shn":""}" style="--rc:${RAR(it.cost)}" title="${it.n}" data-k="${k}" data-i="${i}" ${c?`data-cu="${c.u}"`:""}>${ICO(k,it,c&&c.s)}${own?`<b class="clv">${lvOfP(RI(k,i),c.x)}</b>`:""}</button>`}).join("")||'<div class="empt">Nothing here.</div>';
+  $("inv").innerHTML=cur.rows.slice(WPG*PER,(WPG+1)*PER).map(([it,i,c])=>{const own=!!c,eq=c?(k=="w"?(s.wu||[]).includes(c.u):k=="m"?[s.mu].concat(s.mxu||[]).includes(c.u):s[k+"u"]===c.u):false;return `<button class="tile rt rt${RI(k,i)} ${own?"":"lock"} ${eq?"eq":""} ${c&&c.s?"shn":""}" style="--rc:${RAR(it.cost)}" title="${it.n}" data-k="${k}" data-i="${i}" ${c?`data-cu="${c.u}"`:""}>${ICO(k,it,c&&c.s)}${own&&lvOfP(RI(k,i),c.x)>1?`<b class="clv">${lvBadge(lvOfP(RI(k,i),c.x))}</b>`:""}</button>`}).join("")||'<div class="empt">Nothing here.</div>';
   $("cats").innerHTML=SR.map(x=>`<button class="cat ${x.sc[1]==WCAT?"on":""}" data-cat="${x.sc[1]}" title="${x.sc[2]}"><img src="${WSI["c_"+x.sc[3]]}" alt=""><b>${x.rows.filter(r=>r[2]).length}</b></button>`).join("");
   document.querySelectorAll("#work .pgr button").forEach(b=>b.disabled=np<2);
   $("tabs").innerHTML="";
