@@ -3709,7 +3709,7 @@ function eggStart(){
  try{stopMusic()}catch(e){}try{CAMB.stop()}catch(e){}
  const mi={id:99999,n:"?",egg:1,t:0,l:1,w:[],mul:1,r:0},R=Math.random;
  Math.random=()=>(EGG_BG+.5)/6;try{startBattle0(mi)}finally{Math.random=R}
- const p=B.p,e=B.e,ent=38+Math.random()*6;
+ const p=B.p,e=B.e,ent=58+Math.random()*4;
  p.hp=1;p.heat=0;p.j=0;p.x=0;p.vx=0;
  e.hp=e.max=9999;e.weps=[];e.x=e.vx=Math.round(ent);e.egg=true;
  B.egg={out:0,mus:null};B.zin=true;B.cz=B.cz||1;
@@ -3727,12 +3727,12 @@ function eggExit(){
   setTimeout(()=>{fl.style.opacity=0;setTimeout(()=>fl.remove(),300)},120)},280)}
 /* called every frame from draw(): draws the "?" and fades the static in only when you are within 5 tiles */
 function eggFx(dd){
- const Z=B.egg,now=performance.now(),k=Math.max(0,Math.min(1,1-dd/12)),L=HUDR.hudL;Z.k=k;
+ const Z=B.egg,now=performance.now(),k=Math.max(0,Math.min(1,1-dd/20)),L=HUDR.hudL;Z.k=k;
  if(!Z.sh&&k>0&&Math.random()<.0012+.014*k*k)Z.sh={end:now+60+Math.random()*100};if(Z.sh&&now>Z.sh.end)Z.sh=null;
  if(!Z.tr&&k>0&&Math.random()<.004+.05*k*k){const n=3+(Math.random()*4|0),sl=[];for(let i=0;i<n;i++)sl.push({y:Math.random(),h:.02+Math.random()*.09,dx:(Math.random()-.5)*(60+120*k)});Z.tr={end:now+90+Math.random()*150,sl}}if(Z.tr&&now>Z.tr.end)Z.tr=null;
  /* the ambience cuts out for a moment just before the static starts, and now and then after that */
- if(dd<10.8&&!Z.dip1){Z.dip1=1;Z.dipU=now+1600}
- if(k>0&&now>(Z.dipN||0)){if(Z.dipN)Z.dipU=now+500+Math.random()*900;Z.dipN=now+9000+Math.random()*14000}
+ if(dd<20.8&&!Z.dip1){Z.dip1=1;Z.dipU=now+11000+Math.random()*3000;Z.dipN=Z.dipU+5000+Math.random()*9000}
+ if(Z.dip1&&now>Z.dipN){Z.dipU=now+9000+Math.random()*5000;Z.dipN=Z.dipU+5000+Math.random()*9000}
  if(Z.mus){const dip=now<(Z.dipU||0);if(dip!==Z.dipOn){Z.dipOn=dip;const a=Z.mus.g.gain;a.cancelScheduledValues(AC.currentTime);a.setTargetAtTime(dip?0:.2,AC.currentTime,dip?.04:.35)}}
  /* HUD flicker: the "?" side flashes real-looking numbers; your own HUD briefly turns into "?" */
  if(!Z.hf&&k>0&&Math.random()<.003+.04*k*k){Z.hf={end:now+80+Math.random()*150,kind:Math.random()<.5?0:1};
