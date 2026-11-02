@@ -3559,8 +3559,8 @@ async function ai(){
   const e=B.e,p=B.p;B.busy=true;controls();if(e.swarm)return swarmAI();
   if(!B.over){
     {const sg=[e.hp,p.hp,e.x,p.x].join("|");B.stall=B.lastSig===sg?(B.stall||0)+1:0;B.lastSig=sg}
-    /* the APK bot waits 20-59 frames before every action; it keeps acting until it has nothing left to do, then ends its turn */
-    for(let n=0;n<8&&!B.over;n++){
+    /* the APK bot waits 20-59 frames before every action; one action per round, then the round ends (same pacing as before) */
+    for(let n=0;n<1&&!B.over;n++){
       await sleep(330+Math.random()*660);if(B.over)break;
       let act=null;try{act=aiApk(e,p)}catch(err){try{console.error(err)}catch(_){}}
       if(!act){try{act=aiPlan(e,p)}catch(err){}}if(!act)act=aiSimple(e,p);
