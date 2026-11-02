@@ -3728,8 +3728,8 @@ function eggExit(){
   setTimeout(()=>{fl.style.opacity=0;setTimeout(()=>fl.remove(),300)},120)},280)}
 /* called every frame from draw(): draws the "?" and fades the static in only when you are within 5 tiles */
 function eggFx(dd){
- const Z=B.egg,now=performance.now(),k=Math.max(0,Math.min(1,1-dd/20)),L=HUDR.hudL;Z.k=k;
- if(!Z.sh&&k>0&&Math.random()<.00012+.0012*k*k)Z.sh={end:now+60+Math.random()*100};if(Z.sh&&now>Z.sh.end)Z.sh=null;
+ const Z=B.egg,now=performance.now(),k0=Math.max(0,Math.min(1,1-dd/20)),k=dd<20?.3+.7*k0:0,L=HUDR.hudL;Z.k=k;
+ if(!Z.sh&&k>0&&Math.random()<.0005+.004*k*k)Z.sh={end:now+90+Math.random()*130};if(Z.sh&&now>Z.sh.end)Z.sh=null;
  if(!Z.tr&&k>0&&Math.random()<.004+.05*k*k){const n=3+(Math.random()*4|0),sl=[];for(let i=0;i<n;i++)sl.push({y:Math.random(),h:.02+Math.random()*.09,dx:(Math.random()-.5)*(60+120*k)});Z.tr={end:now+90+Math.random()*150,sl}}if(Z.tr&&now>Z.tr.end)Z.tr=null;
  /* the ambience cuts out for a moment just before the static starts, and now and then after that */
  if(dd<20.8&&!Z.dip1){Z.dip1=1;Z.dipU=now+11000+Math.random()*3000;Z.dipN=Z.dipU+5000+Math.random()*9000}
@@ -3766,17 +3766,17 @@ function eggFx(dd){
 function eggEnt(g,m){
  const dd=m.x-B.p.vx,ex_=px(m.x);eggFx(dd);
  if(B.egg.sh){const p_=B.p,ox=px(p_.vx)-150,oy=GY;g.save();g.globalAlpha=1;try{g.filter="brightness(0)"}catch(x){}g.translate(ox,oy);g.scale(MK,MK);g.translate(-ox,-oy);try{drawMech(g,ox,oy,1,p_,0)}catch(x){}g.restore();p_.wx=px(p_.vx)}
- if(B.egg.nc&&dd<8){const Z=B.egg,k2=Math.min(1,(8-dd)/6),x0=px(B.p.vx);g.save();for(let i=0;i<7;i++){if(Math.random()>.45*k2)continue;const w=40+Math.random()*190,x=x0-420+Math.random()*(ex_-x0+520),y=GY+4+Math.random()*48,h=2+Math.random()*9;if(Math.random()<.5){g.globalAlpha=.9;g.fillStyle="#000";g.fillRect(x,y,w,h)}else{g.globalAlpha=Math.min(1,.5+Math.random()*.5);g.drawImage(Z.nc,Math.random()*60,Math.random()*100,Math.min(60,w),Math.min(20,h*2),x,y,w,h)}}g.restore()}
+ if(B.egg.nc&&dd<20){const Z=B.egg,k2=.3+.7*Math.min(1,(20-dd)/14),x0=px(B.p.vx);g.save();for(let i=0;i<7;i++){if(Math.random()>.45*k2)continue;const w=40+Math.random()*190,x=x0-420+Math.random()*(ex_-x0+520),y=GY+4+Math.random()*48,h=2+Math.random()*9;if(Math.random()<.5){g.globalAlpha=.9;g.fillStyle="#000";g.fillRect(x,y,w,h)}else{g.globalAlpha=Math.min(1,.5+Math.random()*.5);g.drawImage(Z.nc,Math.random()*60,Math.random()*100,Math.min(60,w),Math.min(20,h*2),x,y,w,h)}}g.restore()}
  if(B.egg.mus&&B.egg.mus.st){const k=Math.max(0,Math.min(1,1-dd/10)),v=.1*Math.pow(k,1.5);B.egg.mus.st.g.gain.setTargetAtTime(B.egg.out?0:v,AC.currentTime,.12)}
- if(dd<9){const al=Math.min(1,(9-dd)/3),nw=performance.now(),Z=B.egg;
+ if(dd<20){const al=dd<9?Math.min(1,(9-dd)/3):0,nw=performance.now(),Z=B.egg;
   if(!Z.nc){Z.nc=document.createElement("canvas");Z.nc.width=Z.nc.height=128;Z.nx=Z.nc.getContext("2d");Z.nd=Z.nx.createImageData(128,128);Z.gl=[];Z.gt=0}
   if(nw-Z.gt>70){Z.gt=nw;const d=Z.nd.data;for(let i=0;i<d.length;i+=4){const v=Math.random()<.55?Math.random()*255|0:0;d[i]=d[i+1]=d[i+2]=v;d[i+3]=255}Z.nx.putImageData(Z.nd,0,0);
    Z.gl=[];const n=16+(Math.random()*12|0);for(let i=0;i<n;i++){const w=30+Math.random()*190,h=Math.random()<.5?3+Math.random()*10:14+Math.random()*80;Z.gl.push({x:(Math.random()-.5)*300-w/2+(Math.random()<.25?(Math.random()-.5)*160:0),y:-(Math.random()*300),w,h,k:Math.random()<.6?0:1,a:.12+Math.random()*.45,sx:Math.random()*80,sy:Math.random()*80})}}
-  g.save();g.translate(ex_,GY+6);
+  if(al>0){g.save();g.translate(ex_,GY+6);
   g.fillStyle="#000";g.globalAlpha=al*.96;g.fillRect(-80+(Math.random()-.5)*6,-300,160,300);
   for(const q of Z.gl){if(q.k==0){g.globalAlpha=al;g.fillStyle="#000";g.fillRect(q.x,q.y,q.w,q.h)}else{g.globalAlpha=al*Math.min(1,q.a*2.6)*(.6+.4*Math.random());g.drawImage(Z.nc,q.sx,q.sy,Math.min(48,q.w),Math.min(48,q.h),q.x,q.y,q.w,q.h)}}
   g.globalAlpha=al*.5;for(let i=0;i<4;i++){const y=-Math.random()*300;g.drawImage(Z.nc,Math.random()*60,Math.random()*120,60,3,(Math.random()-.5)*340,y,200+Math.random()*160,2)}
-  g.restore()}
+  g.restore()}}
  if(!B.egg.out&&dd<=1.05)eggExit()}
 function eggHud(){
  const R=HUDR.hudR;if(!R)return;
