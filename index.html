@@ -1626,7 +1626,7 @@ function work(){
   $("tabs").innerHTML="";
   pvDraw();
 }
-function isbSync(){const v=$("inv"),b=$("isb");if(!v||!b)return;const th=b.querySelector("i"),B=24,H=b.clientHeight,R=H-2*B,sh=v.scrollHeight,ch=v.clientHeight;b.classList.toggle("off",sh<=ch+1);const h=Math.max(44,Math.min(R,R*ch/Math.max(sh,1))),mx=Math.max(1,sh-ch);th.style.height=h+"px";th.style.top=(B+(R-h)*(v.scrollTop/mx))+"px"}
+function isbSync(){const v=$("inv"),b=$("isb");if(!v||!b)return;const th=b.querySelector("i"),B=24,H=b.clientHeight,R=H-2*B,sh=v.scrollHeight,ch=v.clientHeight;b.classList.toggle("off",sh<=ch+1);const h=Math.max(Math.min(R,130),Math.min(R,R*ch/Math.max(sh,1))),mx=Math.max(1,sh-ch);th.style.height=h+"px";th.style.top=(B+(R-h)*(v.scrollTop/mx))+"px"}
 {const v=()=>$("inv"),b=()=>$("isb");let drag=null,rep=0;const stepBy=d=>v().scrollBy({top:d*75,behavior:"smooth"});
  addEventListener("load",()=>{v().addEventListener("scroll",isbSync);b().addEventListener("pointerdown",e=>{const iv=v(),th=b().querySelector("i"),hit=th.getBoundingClientRect(),k=b().getBoundingClientRect().height/b().offsetHeight;b().setPointerCapture(e.pointerId);
    if(e.target.classList.contains("u")||e.target.classList.contains("d")){const d=e.target.classList.contains("u")?-1:1;stepBy(d);clearInterval(rep);rep=setTimeout(()=>{rep=setInterval(()=>iv.scrollBy({top:d*30}),50)},350)}
