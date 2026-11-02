@@ -3694,6 +3694,7 @@ const EGG_STA="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//s4w
 const EGG_BG=2;
 const EGGQ=(()=>{const c=document.createElement("canvas");c.width=c.height=96;const g=c.getContext("2d");g.fillStyle="#0a0006";g.fillRect(0,0,96,96);g.font="700 78px ACE,sans-serif";g.textAlign="center";g.textBaseline="middle";g.shadowColor="#ff0010";g.shadowBlur=14;g.fillStyle="#e0141e";g.fillText("?",48,52);return c.toDataURL("image/png")})();
 let EGGA=null,EGGB=null;
+function eggNoiseURL(){const c=document.createElement("canvas");c.width=c.height=48;const g=c.getContext("2d"),d=g.createImageData(48,48);for(let i=0;i<d.data.length;i+=4){const v=Math.random()*255|0;d.data[i]=d.data[i+1]=d.data[i+2]=v;d.data[i+3]=255}g.putImageData(d,0,0);return c.toDataURL("image/png")}
 async function eggMusic(){
  if(S.mute||!AC)return null;
  try{await AC.resume();
@@ -3713,7 +3714,7 @@ function eggStart(){
  p.hp=1;p.heat=0;p.j=0;p.x=0;p.vx=0;
  e.hp=e.max=9999;e.weps=[];e.x=e.vx=Math.round(ent);e.egg=true;
  B.egg={out:0,mus:null};B.zin=true;B.cz=B.cz||1;
- document.body.classList.add("egg");
+ document.body.classList.add("egg");{const gw=$("gwrap");if(gw)gw.style.opacity=""}
  try{$("vs").classList.add("hide")}catch(x){}
  say("");controls();
  const b0=B;eggMusic().then(r=>{if(!r)return;if(B!==b0||!B.egg||B.egg.out){r.stop();return}B.egg.mus=r})}
@@ -3722,7 +3723,7 @@ function eggExit(){
  const fl=document.createElement("div");fl.style.cssText="position:fixed;inset:0;z-index:100000;background:#000;opacity:0;transition:opacity .25s";document.body.appendChild(fl);requestAnimationFrame(()=>{fl.style.opacity=1});try{playBuf("blast",.4,.6)}catch(x){}
  setTimeout(()=>{
   const m=b.egg.mus;if(m){try{m.g.gain.cancelScheduledValues(AC.currentTime);m.g.gain.setValueAtTime(0,AC.currentTime);m.st.g.gain.setValueAtTime(0,AC.currentTime);m.stop()}catch(x){}}
-  document.body.classList.remove("egg");$("battle").classList.add("hide");$("hangar").classList.remove("hide");
+  document.body.classList.remove("egg");{const gw=$("gwrap");if(gw)gw.style.opacity="";if(b.egg.lo)b.egg.lo.remove()}$("battle").classList.add("hide");$("hangar").classList.remove("hide");
   try{pairLobby()}catch(x){}try{show("camp")}catch(x){}
   setTimeout(()=>{fl.style.opacity=0;setTimeout(()=>fl.remove(),300)},120)},280)}
 /* called every frame from draw(): draws the "?" and fades the static in only when you are within 5 tiles */
@@ -3735,9 +3736,16 @@ function eggFx(dd){
  if(Z.dip1&&now>Z.dipN){Z.dipU=now+9000+Math.random()*5000;Z.dipN=Z.dipU+5000+Math.random()*9000}
  if(Z.mus){const dip=now<(Z.dipU||0);if(dip!==Z.dipOn){Z.dipOn=dip;const a=Z.mus.g.gain;a.cancelScheduledValues(AC.currentTime);a.setTargetAtTime(dip?0:.2,AC.currentTime,dip?.04:.35)}}
  /* HUD flicker: the "?" side flashes real-looking numbers; your own HUD briefly turns into "?" */
- if(!Z.hf&&k>0&&Math.random()<.003+.04*k*k){Z.hf={end:now+80+Math.random()*150,kind:Math.random()<.5?0:1};
-  if(Z.hf.kind==1&&L){Z.hf.nm=L.nm.textContent;Z.hf.hp=L.hp[1].textContent;L.nm.textContent="?";L.hp[1].textContent="? / ?"}}
- if(Z.hf&&now>Z.hf.end){if(Z.hf.kind==1&&L){L.nm.textContent=Z.hf.nm;L.hp[1].textContent=Z.hf.hp}Z.hf=null}
+ if(!Z.hf&&k>0&&Math.random()<.004+.05*k*k){const kd=Math.floor(Math.random()*4);Z.hf={end:now+80+Math.random()*170,kind:kd,txt:["?????","??","ERROR","\uFFFD\uFFFD\uFFFD","???????","NO SIGNAL"][Math.floor(Math.random()*6)]};
+  if(kd==1&&L){Z.hf.nm=L.nm.textContent;Z.hf.hp=L.hp[1].textContent;L.nm.textContent="?";L.hp[1].textContent="? / ?"}
+  if(kd==3&&L&&L.av){Z.hf.av=L.av.getAttribute("src");L.av.src=Math.random()<.5?EGGQ:eggNoiseURL()}}
+ if(Z.hf&&now>Z.hf.end){if(Z.hf.kind==1&&L){L.nm.textContent=Z.hf.nm;L.hp[1].textContent=Z.hf.hp}if(Z.hf.kind==3&&L&&L.av&&Z.hf.av!=null)L.av.src=Z.hf.av;Z.hf=null}
+ /* the floor cuts off 20 tiles from the "?" (a few stutters, then it is gone for good) */
+ if(dd<=20&&!Z.gnd)Z.gnd=now;
+ if(Z.gnd){const gw=$("gwrap");if(gw){const t=now-Z.gnd,o=t<420?(Math.floor(t/70)%2?.15:1):0;if(Z.go!==o){Z.go=o;gw.style.opacity=o}}}
+ /* lights out: once, somewhere between 15 and 6 tiles out, the whole screen goes black for 1 to 2 seconds */
+ if(Z.lot==null)Z.lot=6+Math.random()*9;
+ if(!Z.lo&&!Z.lod&&dd<=Z.lot){Z.lod=1;const o=document.createElement("div");o.style.cssText="position:fixed;inset:0;z-index:99990;background:#000;pointer-events:none;opacity:1";document.body.appendChild(o);Z.lo=o;setTimeout(()=>{if(Z.lo){Z.lo.remove();Z.lo=null}},1000+Math.random()*1000)}
  /* the turn clock skips, freezes or shows a wrong digit */
  if(!Z.cf&&k>0&&Math.random()<.0015+.02*k*k){const r=Math.random();Z.cf={until:now+200+Math.random()*600,v:r<.4?Math.floor(Math.random()*100):r<.6?88:r<.8?0:Math.ceil(B.clk||0)}}
  if(Z.cf&&now>Z.cf.until)Z.cf=null}
@@ -3758,7 +3766,7 @@ function eggEnt(g,m){
  if(!B.egg.out&&dd<=1.05)eggExit()}
 function eggHud(){
  const R=HUDR.hudR;if(!R)return;
- if(R.nm.textContent!="?")R.nm.textContent="?";if(R.lv.textContent!="")R.lv.textContent="";
+ {const nt=B.egg.hf&&B.egg.hf.kind==2?B.egg.hf.txt:"?";if(R.nm.textContent!=nt)R.nm.textContent=nt}if(R.lv.textContent!="")R.lv.textContent="";
  if(R.av.getAttribute("src")!==EGGQ){R.av.src=EGGQ;R.av.style.display="block"}
  const fk=B.egg.hf&&B.egg.hf.kind==0;for(const k of["hp","en","ht","am","ra"]){const q=R[k];if(!q||!q[1])continue;if(fk){q[1].textContent=Math.floor(Math.random()*180)+" / "+(40+Math.floor(Math.random()*200));if(q[0])q[0].style.width=(20+Math.random()*80)+"%"}else if(q[1].textContent!="?"||(q[0]&&q[0].style.width!="100%")){q[1].textContent="?";if(q[0])q[0].style.width="100%"}}}
 {const btn=document.getElementById("egg");if(btn){btn.addEventListener("click",ev=>{ev.stopPropagation();eggStart()});btn.addEventListener("pointerdown",ev=>ev.stopPropagation())}}
