@@ -3071,7 +3071,7 @@ document.addEventListener("keydown",e=>{if(!B||B.over||e.ctrlKey||e.altKey||e.me
 $("ctl").onclick=async e=>{
   const b=e.target.closest("button");if(!b||b.disabled||b.classList.contains("dis")||B.over)return;
   if(b.dataset.cat){if(B.tpSel)tpCancel();B.cat=b.dataset.cat;controls();return}if(b.dataset.back){if(B.tpSel)tpCancel();B.cat=null;controls();return}
-  if(b.dataset.a=="sur"&&B.egg){eggExit();return}if(B.turn!="p")return;if(b.dataset.a||b.dataset.f!=null)B.cat=null;
+  if(b.dataset.a=="sur"&&B.egg)return;if(B.turn!="p")return;if(b.dataset.a||b.dataset.f!=null)B.cat=null;
   if(B.busy&&!(B.nb>0&&(b.dataset.a=="l"||b.dataset.a=="r"||b.dataset.f!=null||b.dataset.a=="ch"||b.dataset.a=="cc"||b.dataset.c!=null||b.dataset.a=="go")))return;
   const p=B.p,wk_=B.tpMode=="walk";if(B.tpSel&&b.dataset.a!="tp"&&b.dataset.a!="mv")tpCancel();
   if(b.dataset.a=="tp"){tpBegin();return}if(b.dataset.a=="mv"){B.cat="m";walkBegin();return}if(b.dataset.a=="tpc"){if(wk_){B.cat="m";controls()}return}
@@ -3734,7 +3734,7 @@ function eggFx(dd){
  /* the ambience cuts out for a moment just before the static starts, and now and then after that */
  if(dd<20.8&&!Z.dip1){Z.dip1=1;Z.dipU=now+11000+Math.random()*3000;Z.dipN=Z.dipU+5000+Math.random()*9000}
  if(Z.dip1&&now>Z.dipN){Z.dipU=now+9000+Math.random()*5000;Z.dipN=Z.dipU+5000+Math.random()*9000}
- if(Z.mus){const dip=now<(Z.dipU||0);if(dip!==Z.dipOn){Z.dipOn=dip;const a=Z.mus.g.gain;a.cancelScheduledValues(AC.currentTime);a.setTargetAtTime(dip?0:.2,AC.currentTime,dip?.04:.35)}}
+ if(Z.mus){const dip=now<(Z.dipU||0)||now<(Z.revU||0);if(dip!==Z.dipOn){Z.dipOn=dip;const a=Z.mus.g.gain;a.cancelScheduledValues(AC.currentTime);a.setTargetAtTime(dip?0:.2,AC.currentTime,dip?.04:.35)}}
  /* HUD flicker: the "?" side flashes real-looking numbers; your own HUD briefly turns into "?" */
  if(!Z.hf&&k>0&&Math.random()<.004+.05*k*k){const kd=Math.floor(Math.random()*4);Z.hf={end:now+80+Math.random()*170,kind:kd,txt:["?????","??","ERROR","\uFFFD\uFFFD\uFFFD","???????","NO SIGNAL"][Math.floor(Math.random()*6)]};
   if(kd==1&&L){Z.hf.nm=L.nm.textContent;Z.hf.hp=L.hp[1].textContent;L.nm.textContent="?";L.hp[1].textContent="? / ?"}
@@ -3748,7 +3748,21 @@ function eggFx(dd){
  if(!Z.lo&&!Z.lod&&dd<=Z.lot){Z.lod=1;const o=document.createElement("div");o.style.cssText="position:fixed;inset:0;z-index:99990;background:#000;pointer-events:none;opacity:1";document.body.appendChild(o);Z.lo=o;setTimeout(()=>{if(Z.lo){Z.lo.remove();Z.lo=null}},1000+Math.random()*1000)}
  /* the turn clock skips, freezes or shows a wrong digit */
  if(!Z.cf&&k>0&&Math.random()<.0015+.02*k*k){const r=Math.random();Z.cf={until:now+200+Math.random()*600,v:r<.4?Math.floor(Math.random()*100):r<.6?88:r<.8?0:Math.ceil(B.clk||0)}}
- if(Z.cf&&now>Z.cf.until)Z.cf=null}
+ if(Z.cf&&now>Z.cf.until)Z.cf=null
+ /* fake footsteps: a second set of steps, a beat late; sometimes when you are standing still */
+ {const sn=Math.floor((B.p.wd||0)/Math.PI);if(Z.fsn==null)Z.fsn=sn;
+  if(sn!==Z.fsn){Z.fsn=sn;if(k>0&&Math.random()<.25+.6*k)setTimeout(()=>{if(B&&B.egg===Z&&!Z.out)try{playBuf("foot",.16+.1*k,.72+Math.random()*.08)}catch(x){}},170+Math.random()*150)}
+  if(k>.15&&(B.p.mvb||0)<.05){if(!Z.fsT)Z.fsT=now+3000+Math.random()*5000;if(now>Z.fsT){Z.fsT=0;let n=1+(Math.random()*3|0);const st=()=>{if(!B||B.egg!==Z||Z.out||n--<=0)return;try{playBuf("foot",.14,.7+Math.random()*.08)}catch(x){}setTimeout(st,420+Math.random()*80)};st()}}}
+ /* misleading UI: the walk buttons briefly look disabled, or a false "Already acted" banner shows */
+ if(!Z.mi&&k>0&&Math.random()<.0016+.012*k*k){Z.mi={end:now+250+Math.random()*450,kind:Math.random()<.5?0:1};
+  if(Z.mi.kind==1){try{bkErr(["gen","Already acted"])}catch(x){}}}
+ if(Z.mi){if(Z.mi.kind==0){document.querySelectorAll("#ctl .bkb[data-a=\"l\"],#ctl .bkb[data-a=\"r\"],#ctl .bkb[data-a=\"mv\"]").forEach(b=>{if(!b.classList.contains("dis")){b.classList.add("dis");b.dataset.fk=1}})}
+  if(now>Z.mi.end){if(Z.mi.kind==0)document.querySelectorAll("#ctl .bkb[data-fk]").forEach(b=>{b.classList.remove("dis");delete b.dataset.fk});else try{bkErr(null)}catch(x){}Z.mi=null}}
+ /* the ambience briefly plays backwards */
+ if(Z.mus&&k>0&&!Z.revU&&!Z.rev&&now>(Z.revN||(Z.revN=now+14000+Math.random()*12000))&&now>(Z.dipU||0)){Z.rev=1;Z.revN=now+22000+Math.random()*25000;
+  try{const sb=EGGB&&EGGB[0];if(sb){const sr=sb.sampleRate,len=Math.floor(sr*(1.6+Math.random()*.8)),off=Math.floor(Math.random()*(sb.length-len-1)),buf=AC.createBuffer(1,len,sr),d=buf.getChannelData(0),src=sb.getChannelData(0);for(let i=0;i<len;i++)d[i]=src[off+len-1-i];const bs=AC.createBufferSource(),gg=AC.createGain();bs.buffer=buf;gg.gain.value=0;gg.gain.linearRampToValueAtTime(.3,AC.currentTime+.15);gg.gain.setValueAtTime(.3,AC.currentTime+len/sr-.35);gg.gain.linearRampToValueAtTime(0,AC.currentTime+len/sr);bs.connect(gg);gg.connect(AC.destination);bs.start();Z.revU=now+len/sr*1000}}catch(x){}
+  Z.rev=0;if(!Z.revU)Z.revU=0}
+ if(Z.revU&&now>Z.revU)Z.revU=0}
 function eggEnt(g,m){
  const dd=m.x-B.p.vx,ex_=px(m.x);eggFx(dd);
  if(B.egg.sh){const p_=B.p,ox=px(p_.vx)-150,oy=GY;g.save();g.globalAlpha=1;try{g.filter="brightness(0)"}catch(x){}g.translate(ox,oy);g.scale(MK,MK);g.translate(-ox,-oy);try{drawMech(g,ox,oy,1,p_,0)}catch(x){}g.restore();p_.wx=px(p_.vx)}
