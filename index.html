@@ -3521,19 +3521,56 @@ function aiReach(m,ox,s,j){const r=new Set([m.x]);const add=(dir,n)=>{let t=Math
       if(ns.fhp<=0){sc+=0}else if(depth>1){let h=ns.heat>e.hc?ns.heat-cool:ns.heat;const lost=h>e.hc;sc+=lost?term(ns)*.5:ev({...ns,heat:Math.max(0,h),en:Math.min(ns.en+e.enMax,enCap),ov:Math.max(0,ns.ov-1)},depth-1).sc}else sc+=term(ns);
       sc*=1+(Math.random()-.5)*.03;if(sc>best.sc)best={sc,a:o.a}}return best};
   return ev({used:e.used.map((u,i)=>u?i:-1).filter(i=>i>=0),x:e.x,fx:p.x,fhp:p.hp,en:e.en,heat:e.heat,am:e.am||0,ra:e.ra||0,ov:e.ovT||0,dn:!!e.don,ovU:!!e.ovUsed,stU:!!e.stUsed,gsU:!!e.gsUsed},1+tlAfter).a}
+/* ---------- APK enemy AI (BMComputerManager.executeTurn), ported action-for-action ----------
+   Priority each step (first match wins): drone off / drone on -> fire (adjacent: a random in-range gun; otherwise the best-scoring gun, score = avg damage + 2*(heat+energy dmg) + 10*resist) -> reposition (jump right, walk right only when backing off, jump left, walk left only when backing off, up to 20 hops ahead, until the desired gun is in range) -> approach the player. Ends the turn (pass) when nothing is left. */
+function aiApk(e,p){
+  const W=e.weps,x=e.x,px_=p.x,d=Math.abs(x-px_),J=e.j||0,Sw=e.s||0,R={en:e.en,am:e.am||0,ra:e.ra||0};
+  const gunOK=w=>!w.drone&&!w.heal,afford=w=>e.en>=w.en&&(e.am||0)>=(w.am||0)&&(e.ra||0)>=(w.ra||0),inR=(w,dd)=>dd>=w.min&&dd<=w.max,heatOK=w=>e.heat+(w.ht||0)<=e.hc;
+  /* drone: switch on when energy covers 2 attacks, back off when it can no longer pay for one */
+  const dw=W.find(w=>w.drone);
+  if(dw){if(e.don){if(dw.en>e.en)return{t:"dd"}}else if(e.en>=dw.en*2&&!e.did)return{t:"d"}}
+  const score=w=>(w.shots||1)*(w.dr?(w.dr[0]+w.dr[1])/2:w.dmg)+2*((w.hd||0)+(w.ed||0)+(w.cd||0))+10*(w.rd||0);
+  const top=ix=>{if(!ix.length)return[];let b=-1e9;for(const i of ix)b=Math.max(b,score(W[i]));return ix.filter(i=>score(W[i])>=b-1e-6)};
+  const pick=a=>a[Math.floor(Math.random()*a.length)];
+  /* 1. adjacent: fire any gun that can reach, at random */
+  if(d==1){const near=W.map((w,i)=>i).filter(i=>gunOK(W[i])&&!e.used[i]&&afford(W[i])&&heatOK(W[i])&&inR(W[i],d));if(near.length)return{t:"g",ix:[pick(near)]}}
+  /* 2. the best gun I can pay for (any range), and the best one that is also in range and still unfired */
+  const l15=top(W.map((w,i)=>i).filter(i=>gunOK(W[i])&&afford(W[i])));
+  let want=-1;
+  if(l15.length){const l16=top(W.map((w,i)=>i).filter(i=>gunOK(W[i])&&afford(W[i])&&!e.used[i]&&inR(W[i],d)));want=l16.length?pick(l16):l15[0];
+    if(inR(W[want],d)){if(!e.used[want])return{t:"g",ix:[want]};return{t:"p"}}}/* already fired and still in range: hold position instead of shuffling */
+  /* 3. reposition so the wanted gun is in range */
+  if(canMove(e)){
+    const dir0=px_>x?1:-1;
+    const okDest=(t,w)=>t>=0&&t<=MAXT&&t!=px_&&((x<px_)==(t<px_))&&(!w||inR(w,Math.abs(t-px_)));
+    const hop=(dir,n,jump)=>{const t=moveDest(e,p,dir,n,jump);return t!=x?{t:"m",x:t}:null};
+    if(want>=0){const w=W[want];
+      if(J>0)for(let k=1;k<=20;k++)if(okDest(x+J*k,w)){const h=hop(1,J,true);if(h)return h;break}
+      if(x>px_&&Sw>0)for(let k=1;k<=20;k++)if(okDest(x+Sw*k,w)){const h=hop(1,Math.min(Sw,Math.abs(x+Sw*k-x)),false);if(h)return h;break}
+      if(J>0)for(let k=1;k<=20;k++)if(okDest(x-J*k,w)){const h=hop(-1,J,true);if(h)return h;break}
+      if(x<px_&&Sw>0)for(let k=1;k<=20;k++)if(okDest(x-Sw*k,w)){const h=hop(-1,Math.min(Sw,Math.abs(x-Sw*k-x)),false);if(h)return h;break}}
+    /* 4. nothing to shoot or reposition for: close in */
+    const adv=x<px_?1:-1;let h=J>0?hop(adv,J,true):null;if(!h&&Sw>0)h=hop(adv,Sw,false);if(!h&&J>0)h=hop(adv,Sw||1,false);if(h)return h}
+  return{t:"p"}}
 function aiSimple(e,p){const d=dist();let best=-1;const val=w=>(w.shots||1)*(w.dr?(w.dr[0]+w.dr[1])/2:w.dmg);e.weps.forEach((w,i)=>{if(legal(e,p,i)&&e.heat+(w.ht||0)<e.hc&&(best<0||val(w)>val(e.weps[best])))best=i});
   if(best>=0)return{t:"g",ix:[best]};const st=e.weps.reduce((a,w)=>val(w)>val(a)?w:a,e.weps[0]),pref=Math.round((st.min+st.max)/2);
   if(d!=pref){const dir=(d>pref?1:-1)*(e.x>p.x?-1:1);return{t:"m",x:e.x+dir*Math.min(e.s,Math.abs(d-pref))}}return{t:"p"}}
 async function ai(){
   const e=B.e,p=B.p;B.busy=true;controls();if(e.swarm)return swarmAI();
   if(!B.over){
-    await sleep(600);let act=null;{const sg=[e.hp,p.hp,e.x,p.x].join("|");B.stall=B.lastSig===sg?(B.stall||0)+1:0;B.lastSig=sg}
-    try{act=aiPlan(e,p)}catch(err){try{console.error(err)}catch(_){}}
-    if(!act)act=aiSimple(e,p);
-    if(act.t=="g"||act.t=="c"){if(act.ix.length>1)await Promise.all(act.ix.map(i=>shoot(e,p,i)));else await shoot(e,p,act.ix[0]);B.busy=true}
-    else if(act.t=="b"){await barrage(e,p);B.busy=true}
-    else if(act.t=="m"){const dir=Math.sign(act.x-e.x),nn_=Math.abs(act.x-e.x);if(dir&&move(e,p,dir,nn_,(e.j||0)>0&&nn_==e.j&&nn_!=e.s))await sleep(e.jp?1000:700)}
-    else if(act.t=="d"){await droneOn(e)}else if(act.t=="o"){await ovdOn(e)}else if(act.t=="s"){await stompOn(e)}else if(act.t=="k"){await gasOn(e)}
+    {const sg=[e.hp,p.hp,e.x,p.x].join("|");B.stall=B.lastSig===sg?(B.stall||0)+1:0;B.lastSig=sg}
+    /* the APK bot waits 20-59 frames before every action; it keeps acting until it has nothing left to do, then ends its turn */
+    for(let n=0;n<8&&!B.over;n++){
+      await sleep(330+Math.random()*660);if(B.over)break;
+      let act=null;try{act=aiApk(e,p)}catch(err){try{console.error(err)}catch(_){}}
+      if(!act){try{act=aiPlan(e,p)}catch(err){}}if(!act)act=aiSimple(e,p);
+      if(act.t=="p")break;
+      if(act.t=="g"||act.t=="c"){if(act.ix.length>1)await Promise.all(act.ix.map(i=>shoot(e,p,i)));else await shoot(e,p,act.ix[0]);B.busy=true}
+      else if(act.t=="b"){await barrage(e,p);B.busy=true}
+      else if(act.t=="m"){const dir=Math.sign(act.x-e.x),nn_=Math.abs(act.x-e.x);if(!(dir&&move(e,p,dir,nn_,(e.j||0)>0&&nn_==e.j&&nn_!=e.s)))break;await sleep(e.jp?1000:700)}
+      else if(act.t=="d"){await droneOn(e)}else if(act.t=="dd"){await droneOff(e)}else if(act.t=="o"){await ovdOn(e)}else if(act.t=="s"){await stompOn(e)}else if(act.t=="k"){await gasOn(e)}
+      B.busy=true;
+    }
   }
   while((B.mb||0)>0&&!B.over)await sleep(80);
   B.busy=false;if(!B.over)endTurn();
