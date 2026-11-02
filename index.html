@@ -2208,6 +2208,30 @@ function clanMonInit(root){
   const loop=()=>{setTimeout(async()=>{if(!document.body.contains(root))return;await burst();loop()},rnd(2200,5200))};
   show(Math.floor(Math.random()*CLG.length));cur=cur;loop();
 }
+/* Arena cockpit: small jets cross the sky far behind the stadium, now and then (drawn in #afl: above the stadium picture, behind the cockpit frame) */
+function arnJets(){
+  const JET='data:image/svg+xml;base64,'+btoa('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 40"><path d="M99 20L72 17.5L52 3L37 3L45 16L17 15L9 9L4 9L8 20L4 31L9 31L17 25L45 24L37 37L52 37L72 22.5Z" fill="#3b2a22"/><path d="M40 18.5L72 18L90 20L72 22L40 21.5Z" fill="#7a5640" opacity=".6"/><circle cx="2.5" cy="20" r="2.6" fill="#ffc070"/></svg>');
+  const rnd=(a,b)=>a+Math.random()*(b-a);
+  const spawn=()=>{
+    const fl=document.getElementById("afl"),arn=document.getElementById("arn");
+    if(!fl||!arn||arn.classList.contains("hide")||document.hidden||S.gq>0)return;
+    const W=fl.clientWidth,H=fl.clientHeight;if(!W)return;
+    const dir=Math.random()<.5?1:-1,n=Math.random()<.35?2+Math.floor(Math.random()*2):1,w=W*rnd(.026,.04),y0=H*rnd(.17,.31),dur=rnd(6500,10000),spread=w*rnd(.9,1.6);
+    for(let k=0;k<n;k++){
+      const el=document.createElement("div"),h=w*.4,off=k?[0,spread,-spread*.8][k]:0,dy=k?[0,h*1.6,-h*1.3][k]:0;
+      el.style.cssText="position:absolute;left:0;top:"+(y0+dy).toFixed(1)+"px;width:"+w.toFixed(1)+"px;height:"+h.toFixed(1)+"px;opacity:.78;will-change:transform;pointer-events:none;filter:blur(.35px)";
+      const tr=document.createElement("i");tr.style.cssText="position:absolute;right:92%;top:48%;width:"+(w*rnd(7,12)).toFixed(0)+"px;height:2px;border-radius:2px;opacity:.55;transform:none;mix-blend-mode:normal;animation:none;background:linear-gradient(to left,rgba(255,250,235,.8),rgba(255,250,235,0))";
+      const im=document.createElement("img");im.alt="";im.src=JET;im.style.cssText="position:absolute;inset:0;width:100%;height:100%;display:block";
+      el.appendChild(tr);el.appendChild(im);fl.appendChild(el);
+      const x0=dir>0?-w*14:W+w*14,x1=dir>0?W+w*3:-w*3,fx=dir>0?"":"scaleX(-1)";
+      const a=el.animate([{transform:"translate3d("+(x0+off*dir*-1).toFixed(0)+"px,0,0) "+fx},{transform:"translate3d("+(x1+off*dir*-1).toFixed(0)+"px,"+(-H*rnd(.01,.05)).toFixed(0)+"px,0) "+fx}],{duration:dur,easing:"linear",fill:"forwards"});
+      a.onfinish=()=>el.remove();
+    }
+  };
+  const loop=()=>setTimeout(()=>{try{spawn()}catch(e){}loop()},rnd(4000,9000));
+  setTimeout(()=>{try{spawn()}catch(e){}},2500);loop();
+}
+arnJets();
 function arnLay(){{const gb=document.getElementById("gband"),a0=document.getElementById("arn");if(gb&&a0)a0.style.setProperty("--gh",Math.round(gb.getBoundingClientRect().height)+"px")}arnInit();arnPerf();const st=document.getElementById("astg");if(!st||!ARD||!st.clientWidth)return;const k=st.clientWidth/ARW;
   ARD.forEach((sc,i)=>{const q=ARQ[i].map(p=>[p[0]*k,p[1]*k]);sc.style.transform=arnHomog(1000,parseFloat(sc.style.height),q)});
   st.querySelectorAll(".ico .tx").forEach(tx=>{const kk=tx.parentNode.dataset.k,[rx,ry]=ARI[kk];tx.style.transform=arnHomog(800,583,ARQ[({rank:6,single:2})[kk]??3].map(p=>[(p[0]-rx)*k,(p[1]-ry)*k]))})}
