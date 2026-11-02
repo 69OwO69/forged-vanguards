@@ -2170,7 +2170,7 @@ function arnPanel(){const c=ARD&&ARD[4],pn=c&&c.querySelector(".pn");if(!pn)retu
     const lab=isP?"PARTNER":st=="on"?"ONLINE":st=="game"?"IN MATCH":"OFFLINE";
     const btn=isP?'<button data-pf="rm">REMOVE</button>':pend?'<button data-pf="inv:'+i+'">PENDING</button>':'<button data-pf="inv:'+i+'"'+(st=="on"&&!ARPT?"":" disabled")+'>INVITE</button>';
     return '<div class="fr"><span class="nm">'+n+'</span><span class="st'+(st=="on"||isP?" on":"")+'">'+lab+'</span>'+btn+'</div>'}).join("");
-  pn.innerHTML='<h3><span>INVITE A FRIEND</span><span>2V2</span></h3>'+rows+'<div class="nt">LEADER FIGHTS FIRST - WHEN YOU FALL YOUR PARTNER DROPS IN</div><div class="ft"><button data-pf="back">BACK</button><button data-pf="go">'+(ARPT?"START QUEUE":"PLAY SOLO")+'</button></div>'}
+  pn.innerHTML='<h3><span>INVITE A FRIEND</span><span>2V2</span></h3>'+rows+'<div class="nt">LEADER FIGHTS FIRST - WHEN YOU FALL YOUR PARTNER DROPS IN</div><div class="ft">'+(ARPT?'<button data-pf="leave">LEAVE</button><button data-pf="go">START QUEUE</button>':'<button data-pf="back">BACK</button>')+'</div>'}
 function arnQueue(q){if(!ARD)return;const c=ARD[4];
   if(q=="cancel"||ARQM==q){ARQT++;ARQM=null;c.classList.remove("inq");arnBn();toast("Queue cancelled");return}
   if(q=="2v2"){ARFS={};c.classList.add("inf");arnPanel();return}
@@ -2178,7 +2178,7 @@ function arnQueue(q){if(!ARD)return;const c=ARD[4];
 function arnPF(a){if(!ARD)return;const c=ARD[4];
   if(a=="back"){c.classList.remove("inf");ARFS={};return}
   if(a=="go"){ARQM="2v2";c.classList.remove("inf");c.classList.add("inq");arnBn();toast(ARPT?"Searching for a 2v2 match with "+ARPT+"...":"Searching for a 2v2 match (solo)...");const tk=++ARQT;setTimeout(()=>{if(ARQT==tk&&ARQM=="2v2")arnFound()},3000);return}
-  if(a=="rm"){ARPT=null;arnPanel();arnBn();return}
+  if(a=="rm"||a=="leave"){ARPT=null;arnPanel();arnBn();if(a=="leave")toast("You left the party");return}
   if(a.startsWith("inv:")){const n=ARFR[+a.slice(4)][0];
     if(ARFS[n]=="p"){delete ARFS[n];arnPanel();return}
     ARFS[n]="p";arnPanel();toast("Invite sent to "+n);
