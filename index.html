@@ -1939,7 +1939,7 @@ function mythShards(W,H){
   const paint=(root,img)=>{const cs=root.querySelectorAll(".s3 .shd canvas"),sx=img.width/W,sy=img.height/H;sh.forEach((q,i)=>{const c=cs[i];if(!c)return;const k=c.width/q.bw,g=c.getContext("2d");g.beginPath();q.pts.forEach((pt,n)=>g[n?"lineTo":"moveTo"]((pt[0]-q.x0)*k,(pt[1]-q.y0)*k));g.closePath();g.save();g.clip();g.drawImage(img,q.x0*sx,q.y0*sy,q.bw*sx,q.bh*sy,0,0,c.width,c.height);g.lineJoin="round";g.strokeStyle="rgba(0,0,0,.55)";g.lineWidth=5*k;g.stroke();g.strokeStyle="rgba(255,190,150,.16)";g.lineWidth=1.5*k;g.stroke();g.restore()})};
   return{html,paint,chains,verts:vs.filter(v=>dc(v)>R*.25),n:sh.length}}
 function mythScene(g,done){
-  if(MYTHB)return done();MYTHB=1;
+  if(MYTHB)return done();MYTHB=1;const TOP=g.t>=0&&g.t<=4?g.t:4;
   const C=["#98a1ac","#3b82f6","#b05cf0","#ffb020","#ff4a3a"],NM=["COMMON","RARE","EPIC","LEGENDARY","MYTHIC"],T=[];let st=0,idle=0,fin=0,ember=0,arcs=0,zig=0,hudT=0;
   const rgb=h=>{const n=parseInt(h.slice(1),16);return[n>>16,n>>8&255,n&255].join(",")};
   const ty=g.k=="w"?(g.it.drone?"Drone":g.it.side?"Side Weapon":"Top Weapon"):g.k=="t"?"Torso":g.k=="l"?"Legs":"Module";
@@ -1952,8 +1952,8 @@ function mythScene(g,done){
   <div class="mc"><div class="rail"></div>${MYTHSG("a",34,12)}${MYTHSG("b",34,12)}${MYTHSG("c",22,9)}${MYTHGEAR()}</div></div>
   <div class="s3"><div class="core"></div>${SH.html}${ART.sl.map(([x,y])=>`<div class="lampb" style="left:${(x*100).toFixed(1)}%;top:${(y*100).toFixed(1)}%"></div>`).join("")}</div>
   <div class="s2"><div class="dr2 t"></div><div class="dr2 b"></div><div class="fx"><i></i></div></div>
-  <div class="tr"></div><div class="rv"><div class="sq"></div><div class="sqt">MYTHIC</div></div><div class="mbg"></div><div class="beam"></div><div class="plat"></div><div class="mray"></div><div class="mwv"></div>
-  <div class="mst"><div class="tl"><div class="cd c0 in${g.sh?" shy":""}"><div><div class="cbk">?</div><div class="cf"><div class="cim">${ICO(g.k,g.it,g.sh)}</div><b>${NM[4]}</b><span>${g.it.n}</span><em class="ty">${ty}</em></div></div></div></div></div><div class="mnm"></div></div>
+  <div class="tr"></div><div class="rv"><div class="sq"></div><div class="sqt">${NM[TOP]}</div></div><div class="mbg"></div><div class="beam"></div><div class="plat"></div><div class="mray"></div><div class="mwv"></div>
+  <div class="mst"><div class="tl"><div class="cd c0 in${g.sh?" shy":""}"><div><div class="cbk">?</div><div class="cf"><div class="cim">${ICO(g.k,g.it,g.sh)}</div><b>${NM[TOP]}</b><span>${g.it.n}</span><em class="ty">${ty}</em></div></div></div></div></div><div class="mnm"></div></div>
   <canvas class="fxc"></canvas><div class="ov"></div><div class="mhint"></div><div class="mfl"></div><button class="mskip">SKIP &#9656;</button>`;
   if(S.mls||S.gq>0||/OPR\//.test(navigator.userAgent)||document.getElementById("cfs").classList.contains("lite"))el.classList.add("mlite");
   document.body.appendChild(el);{const im=new Image();im.onload=()=>SH.paint(el,im);im.src=ART.s3}
@@ -1965,32 +1965,32 @@ function mythScene(g,done){
   const end=()=>{if(fin)return;fin=1;document.body.classList.remove("mython");T.forEach(clearTimeout);[idle,ember,arcs,zig,hudT].forEach(clearInterval);FX.stop();el.classList.remove("on");setTimeout(()=>{el.remove();MYTHB=0},380);done()};
   const setC=i=>{el.style.setProperty("--c",C[i]);el.style.setProperty("--cr",rgb(C[i]))};
   const boom=i=>playBuf("tierboom",1,Math.pow(1.2,i),1.5)/* deep sub boom, +20% pitch per rarity step */;
-  const tierPod=i=>{setC(i);pop(tr,NM[i]);flash(.3+i*.06,.35);boom(i);FX.ring(GX(),GY(),.7,rgb(C[i]),GR()*1.6,4);FX.spark(GX(),GY(),18+i*6,{c:rgb(C[i]),s0:160,s1:560});FX.flare(GX(),GY(),GR()*(.8+i*.25),.55,rgb(C[i]))};
-  const tierCard=i=>{setC(i);cd.className="cd c"+i+" in"+(g.sh&&i==4?" shy":"");flash(.5+i*.08,.35);boom(i);FX.ring(W()/2,H()*.57,.8,rgb(C[i]),VM()*.5,4);FX.spark(W()/2,H()*.57,14+i*5,{c:rgb(C[i]),s0:200,s1:600})};
+  const tierPod=i=>{setC(i);pop(tr,NM[i]);flash(.3+i*.06,.35);boom(i);FX.spark(GX(),GY(),18+i*6,{c:rgb(C[i]),s0:160,s1:560});FX.flare(GX(),GY(),GR()*(.8+i*.25),.55,rgb(C[i]))};
+  const tierCard=i=>{setC(i);cd.className="cd c"+i+" in"+(g.sh&&i==TOP?" shy":"");flash(.5+i*.08,.35);boom(i);FX.spark(W()/2,H()*.57,14+i*5,{c:rgb(C[i]),s0:200,s1:600})};
   const seamBurst=(n=1)=>{for(let k=0;k<n;k++){FX.spark(rnd(0,W()),H()*.5,10,{dir:rnd(-.6,.6)+(Math.random()<.5?0:Math.PI),spread:.9,s0:120,s1:700});}};
   const launch=()=>{if(st!=1)return;st=2;clearInterval(idle);hint.classList.remove("on");
     cls("go","fast");playBuf("scifi",.9,.8);playBuf("scifi",.5,1.3);syn(80,2.7,"sawtooth",.11,0,900);noi(2.7,.12,300,4200,0,2);
     arcs=setInterval(()=>{const a=rnd(0,6.283),r=GR()*.98;FX.bolt([[GX()+Math.cos(a)*r,GY()+Math.sin(a)*r],[GX()+Math.cos(a+rnd(-.5,.5))*r*.45,GY()+Math.sin(a+rnd(-.5,.5))*r*.45],[GX()+rnd(-8,8),GY()+rnd(-8,8)]],{dur:.14,w:1.8,j:14,br:.5,gl:el.style.getPropertyValue("--cr")||"150,200,255"})},120);
-    for(let i=0;i<5;i++){at(250+i*480,()=>{tierPod(i);playBuf("scifi",.4,.9+i*.12)})}
+    for(let i=0;i<=TOP;i++){at(250+i*480,()=>{tierPod(i);playBuf("scifi",.4,.9+i*.12)})}
     at(2750,()=>{clearInterval(arcs);cls("opn","arr");flash(.8,.6);playBuf("scifi",1,.8);syn(1760,.9,"triangle",.14);syn(110,.8,"sine",.4,0,60);FX.flare(GX(),GY(),GR()*2.2,1.1,"255,120,80");FX.ring(GX(),GY(),1,"255,110,70",VM()*.9,6);FX.spark(GX(),GY(),60,{c:"255,150,80",s0:200,s1:900})});
     at(3050,()=>{cls("zm");playBuf("scifi",1);noi(1.2,.25,400,5000,0,1.5);syn(120,1.1,"sawtooth",.1,0,1200)});
-    at(4050,()=>{flash(1,.7);tr.style.opacity=0;tr.classList.remove("pop");cls("s2on","shk");setC(4);syn(48,1.4,"sine",.7,0,24);noi(1.2,.3,2500,200,0,.8);FX.flare(W()/2,H()/2,VM()*.6,1.4,"255,200,120");seamBurst(3)});
+    at(4050,()=>{flash(1,.7);tr.style.opacity=0;tr.classList.remove("pop");cls("s2on","shk");setC(TOP);syn(48,1.4,"sine",.7,0,24);noi(1.2,.3,2500,200,0,.8);FX.flare(W()/2,H()/2,VM()*.6,1.4,"255,200,120");seamBurst(3)});
     at(3650,()=>{playBuf("dclose",1.05,1);playBuf("dclose2",.9,1)});
     at(4600,()=>{cls("s2op");playBuf("dopen",.8,1);noi(1.4,.35,1200,150,0,.7,"lowpass");syn(50,1.4,"sawtooth",.1,0,90);FX.steam(W()*.1,H()*.5,6,{vx:200,ry:40});FX.steam(W()*.9,H()*.5,6,{vx:-200,ry:40});for(let k=0;k<4;k++)at(k*160,()=>seamBurst(2))});
     at(4900,()=>{cls("ckg")});
     at(5700,()=>{cls("lt");for(let k=0;k<6;k++)noi(.12,.2,3500+k*400,6000,k*.18,2,"highpass");syn(400,1.2,"sawtooth",.06,0,2400);
-      zig=setInterval(()=>{for(let k=0;k<3;k++){const ch=SH.chains[Math.random()*SH.chains.length|0];FX.bolt(sc(ch),{dur:.16,w:2.2,j:12,br:.3,gl:rgb(C[4])});if(Math.random()<.5){const p=ch[Math.random()*ch.length|0];FX.spark(p[0]*W()/WC,p[1]*H()/HC,5,{s0:80,s1:360,c:"255,210,170"})}}},105)});
+      zig=setInterval(()=>{for(let k=0;k<3;k++){const ch=SH.chains[Math.random()*SH.chains.length|0];FX.bolt(sc(ch),{dur:.16,w:2.2,j:12,br:.3,gl:rgb(C[TOP])});if(Math.random()<.5){const p=ch[Math.random()*ch.length|0];FX.spark(p[0]*W()/WC,p[1]*H()/HC,5,{s0:80,s1:360,c:"255,210,170"})}}},105)});
     at(6300,()=>{st=3;hint.textContent="TAP TO OPEN";hint.classList.add("on")})};
   const brk=()=>{if(st!=3)return;st=4;playBuf("bass",1,1);hint.classList.remove("on");$q(".mskip").style.display="none";clearInterval(zig);
-    cls("bk");zig=setInterval(()=>{for(let k=0;k<4;k++)FX.bolt(sc(SH.chains[Math.random()*SH.chains.length|0]),{dur:.2,w:3.2,j:12,br:.35,gl:rgb(C[4])});const v=SH.verts[Math.random()*SH.verts.length|0];if(v)FX.spark(v.x*W()/WC,v.y*H()/HC,8,{s0:100,s1:600,c:"255,230,200"})},90);
+    cls("bk");zig=setInterval(()=>{for(let k=0;k<4;k++)FX.bolt(sc(SH.chains[Math.random()*SH.chains.length|0]),{dur:.2,w:3.2,j:12,br:.35,gl:rgb(C[TOP])});const v=SH.verts[Math.random()*SH.verts.length|0];if(v)FX.spark(v.x*W()/WC,v.y*H()/HC,8,{s0:100,s1:600,c:"255,230,200"})},90);
     flash(.7,.4);for(let k=0;k<8;k++)noi(.1,.28,3000,7000,k*.07,2,"highpass");syn(300,.7,"sawtooth",.12,0,3000);
     at(450,()=>{clearInterval(zig);cls("s3op","shk");flash(1,.9);playBuf("blast",1);playBuf("scifi",.8);noi(1.4,.45,3500,180,0,.7);syn(45,1.5,"sine",.8,0,22);FX.flare(W()/2,H()/2,VM()*.9,1.3,"255,230,190");FX.ring(W()/2,H()/2,1.1,"255,255,255",VM()*1.1,7);FX.spark(W()/2,H()/2,110,{s0:300,s1:1500,c:"255,200,140"});SH.verts.forEach(v=>FX.spark(v.x*W()/WC,v.y*H()/HC,3,{dir:Math.atan2(v.y-HC/2,v.x-WC/2),spread:.55,s0:300,s1:1300,c:"255,190,120"}));FX.steam(W()*.04,H()*.06,4,{vx:200,vy:120,ry:30});FX.steam(W()*.96,H()*.06,4,{vx:-200,vy:120,ry:30});FX.steam(W()*.04,H()*.94,4,{vx:200,vy:-120,ry:30});FX.steam(W()*.96,H()*.94,4,{vx:-200,vy:-120,ry:30})});
     at(640,()=>{flash(.5,.6);FX.ring(W()/2,H()/2,1.2,"255,160,90",VM()*1.3,6);FX.flare(W()/2,H()/2,VM()*.7,1,"255,170,110")});
     at(1150,()=>{cls("rvb","rvd");flash(.6,.5)});
     at(1750,()=>{cls("cdon");playBuf("scifi",.6,1.2);ember=setInterval(()=>FX.ember(W()/2+(Math.random()<.5?-1:1)*rnd(VM()*.26,VM()*.5),H()*.9,2,{c:"255,110,80"}),110)});
-    for(let i=0;i<5;i++)at(2050+i*330,()=>tierCard(i));
-    at(2050+4*330+60,()=>{cls("mx","shk");playBuf("scifi",1);playBuf("scifi",.5,.6);syn(60,1,"sine",.5,0,30);syn(1976,1.2,"triangle",.14);syn(1480,1.2,"triangle",.12);flash(.95,.8);FX.flare(W()/2,H()*.57,VM()*.5,.9,"255,90,70");FX.ring(W()/2,H()*.57,1.2,"255,90,70",VM()*1.1,8);FX.spark(W()/2,H()*.57,80,{s0:250,s1:1100,c:"255,110,80"})});
-    at(4050,()=>{cd.classList.add("fl");playBuf("scifi",.8);syn(1318,.9,"sine",.14);nm.innerHTML=`${g.sh?"SHINY ":""}MYTHIC<small>${g.it.n.toUpperCase()}</small>`;nm.classList.remove("pop");void nm.offsetWidth;nm.classList.add("pop");FX.spark(W()/2,H()*.57,50,{s0:100,s1:500,c:"255,200,160"})});
+    for(let i=0;i<=TOP;i++)at(2050+i*330,()=>tierCard(i));
+    at(2050+TOP*330+60,()=>{cls("mx","shk");playBuf("scifi",1);playBuf("scifi",.5,.6);syn(60,1,"sine",.5,0,30);syn(1976,1.2,"triangle",.14);syn(1480,1.2,"triangle",.12);flash(.95,.8);FX.flare(W()/2,H()*.57,VM()*.5,.9,"255,90,70");FX.ring(W()/2,H()*.57,1.2,"255,90,70",VM()*1.1,8);FX.spark(W()/2,H()*.57,80,{s0:250,s1:1100,c:"255,110,80"})});
+    at(4050,()=>{cd.classList.add("fl");playBuf("scifi",.8);syn(1318,.9,"sine",.14);nm.innerHTML=`${g.sh?"SHINY ":""}${NM[TOP].toUpperCase()}<small>${g.it.n.toUpperCase()}</small>`;nm.classList.remove("pop");void nm.offsetWidth;nm.classList.add("pop");FX.spark(W()/2,H()*.57,50,{s0:100,s1:500,c:"255,200,160"})});
     at(5250,()=>{st=5;hint.textContent="TAP TO CONTINUE";hint.classList.add("on")})};
   el.onclick=e=>{if(e.target.closest(".mskip"))return end();if(st==1)launch();else if(st==3)brk();else if(st==5)end()};
   el.onpointermove=e=>{if(!el.classList.contains("cdon"))return;const x=e.clientX/W()-.5,y=e.clientY/H()-.5;mst.style.transform=`rotateY(${(x*18).toFixed(1)}deg) rotateX(${(-y*14).toFixed(1)}deg)`};
@@ -2052,7 +2052,7 @@ function openBox(i,b){const bx=BOX[+i];if(/[?&]mythtest/.test(location.search))b
       setTimeout(()=>{c.style.transition="transform .8s cubic-bezier(.2,.85,.3,1),opacity .25s";c.style.opacity="1";c.style.transform="none";playBuf("cfire",got.length>10?.5:.8,.9+Math.random()*.2)},n*ST)});
     setTimeout(()=>{cr.style.transition="transform 1s cubic-bezier(.5,0,.8,.4)";cr.classList.add("dn");sfx(160,.5,"sawtooth")},got.length*ST+800);
     setTimeout(()=>{CBUSY=0;if(!document.querySelector("#cfs .cd:not(.fl)"))$("cok").classList.remove("hide")},got.length*ST+700)};
-  const mg=got.find(g=>g.t==4&&g.sh)||got.find(g=>g.t==4);
+  const mg=got.find(g=>g.t==4&&g.sh)||got.find(g=>g.t==4)||got.filter(g=>g.sh||g.it.mythic).sort((a,b)=>b.t-a.t)[0];
   if(mg&&!S.nomyth)setTimeout(()=>mythScene(mg,()=>setTimeout(fire,420)),2600);else setTimeout(fire,4000)};
 $("cfs").onclick=e=>{const c=e.target.closest(".cd");if(c&&!c.classList.contains("fl")&&document.querySelectorAll("#cfs .cd").length>10){const all=[...document.querySelectorAll("#cfs .cd:not(.fl)")];playBuf("cfire",.7,1);all.forEach((x,n)=>setTimeout(()=>{x.classList.add("fl");if(x.classList.contains("c4"))playBuf("cvflip",1);else if(x.classList.contains("c3"))playBuf("lflip",.9)},n*70));setTimeout(()=>$("cok").classList.remove("hide"),all.length*70+700);return}
   if(c&&!c.classList.contains("fl")){c.classList.add("fl");const g=+c.dataset.n;if(c.classList.contains("c4"))playBuf("cvflip",1);else if(c.classList.contains("c3"))playBuf("lflip",.9);else{playBuf("cfire",.8,.9+Math.random()*.2);sfx(500+(c.classList.contains("top")?300:0),.3,"triangle")}const o=$("cok");if(!document.querySelector("#cfs .cd:not(.fl)"))setTimeout(()=>o.classList.remove("hide"),700);return}
