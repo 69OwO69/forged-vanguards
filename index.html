@@ -2444,7 +2444,10 @@ function draw(){hudUpdate();
        if(f.tot){g.font=16*MK+"px ACE,sans-serif";g.fillStyle=FLCOL.yellow;g.fillText("TOTAL",0,-sz*.7)}
        const sp=flSprite(raw,flCol(f),sz);g.drawImage(sp.c,-sp.w/2,-sp.h/2,sp.w,sp.h);
        g.restore()});g.restore();
+  if(B.egg&&B.egg.tr)eggTear(g,c,cw,ch);
 }
+function eggTear(g,c,cw,ch){
+  g.save();g.setTransform(1,0,0,1,0,0);for(const q of B.egg.tr.sl){const y=Math.floor(q.y*ch),h=Math.max(2,Math.floor(q.h*ch)),dx=Math.round(q.dx*cw/innerWidth);try{g.drawImage(c,0,y,cw,h,dx,y,cw,h)}catch(e){}g.fillStyle="rgba(0,0,0,.55)";g.fillRect(dx>0?0:cw+dx,y,Math.abs(dx),h)}g.restore()}
 const wdesc=w=>`${DTX(w.dr||[w.dmg,w.dmg],w.shots||1)} dmg · ${w.en} en${w.am?" · "+w.am+" ammo":""}${w.ra?" · "+w.ra+" rocket":""} · +${w.ht||0} heat · range ${w.min}-${w.max}`;
 function chargeUI(p,mine){const sel=B.ch.sel,spent=sel.reduce((a,i)=>a+p.weps[i].en,0);
   const h=`<div style="flex:1 0 100%;font-weight:700;text-align:center;color:#ffb02e">CHARGE: pick 2 or more guns (${sel.length} selected)</div>`;
@@ -3724,7 +3727,9 @@ function eggExit(){
   setTimeout(()=>{fl.style.opacity=0;setTimeout(()=>fl.remove(),300)},120)},280)}
 /* called every frame from draw(): draws the "?" and fades the static in only when you are within 5 tiles */
 function eggFx(dd){
- const Z=B.egg,now=performance.now(),k=Math.max(0,Math.min(1,1-dd/12)),L=HUDR.hudL;
+ const Z=B.egg,now=performance.now(),k=Math.max(0,Math.min(1,1-dd/12)),L=HUDR.hudL;Z.k=k;
+ if(!Z.sh&&k>0&&Math.random()<.0012+.014*k*k)Z.sh={end:now+60+Math.random()*100};if(Z.sh&&now>Z.sh.end)Z.sh=null;
+ if(!Z.tr&&k>0&&Math.random()<.004+.05*k*k){const n=3+(Math.random()*4|0),sl=[];for(let i=0;i<n;i++)sl.push({y:Math.random(),h:.02+Math.random()*.09,dx:(Math.random()-.5)*(60+120*k)});Z.tr={end:now+90+Math.random()*150,sl}}if(Z.tr&&now>Z.tr.end)Z.tr=null;
  /* the ambience cuts out for a moment just before the static starts, and now and then after that */
  if(dd<10.8&&!Z.dip1){Z.dip1=1;Z.dipU=now+1600}
  if(k>0&&now>(Z.dipN||0)){if(Z.dipN)Z.dipU=now+500+Math.random()*900;Z.dipN=now+9000+Math.random()*14000}
@@ -3738,6 +3743,8 @@ function eggFx(dd){
  if(Z.cf&&now>Z.cf.until)Z.cf=null}
 function eggEnt(g,m){
  const dd=m.x-B.p.vx,ex_=px(m.x);eggFx(dd);
+ if(B.egg.sh){const p_=B.p,ox=px(p_.vx)-150,oy=GY;g.save();g.globalAlpha=.5;try{g.filter="brightness(.35)"}catch(x){}g.translate(ox,oy);g.scale(MK,MK);g.translate(-ox,-oy);try{drawMech(g,ox,oy,1,p_,0)}catch(x){}g.restore();p_.wx=px(p_.vx)}
+ if(B.egg.nc&&dd<8){const Z=B.egg,k2=Math.min(1,(8-dd)/6),x0=px(B.p.vx);g.save();for(let i=0;i<7;i++){if(Math.random()>.45*k2)continue;const w=40+Math.random()*190,x=x0-420+Math.random()*(ex_-x0+520),y=GY+4+Math.random()*48,h=2+Math.random()*9;if(Math.random()<.5){g.globalAlpha=.9;g.fillStyle="#000";g.fillRect(x,y,w,h)}else{g.globalAlpha=Math.min(1,.5+Math.random()*.5);g.drawImage(Z.nc,Math.random()*60,Math.random()*100,Math.min(60,w),Math.min(20,h*2),x,y,w,h)}}g.restore()}
  if(B.egg.mus&&B.egg.mus.st){const k=Math.max(0,Math.min(1,1-dd/10)),v=.1*Math.pow(k,1.5);B.egg.mus.st.g.gain.setTargetAtTime(B.egg.out?0:v,AC.currentTime,.12)}
  if(dd<9){const al=Math.min(1,(9-dd)/3),nw=performance.now(),Z=B.egg;
   if(!Z.nc){Z.nc=document.createElement("canvas");Z.nc.width=Z.nc.height=128;Z.nx=Z.nc.getContext("2d");Z.nd=Z.nx.createImageData(128,128);Z.gl=[];Z.gt=0}
