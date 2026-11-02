@@ -1530,10 +1530,9 @@ function fzRender(tu){
     L=`<div class="fzh2">FUSING</div><div class="fzq">${queue.join("")||`<div class="fzs2" style="padding:10px;width:100%">${capd&&mkUp()?`Max level! Pick 2 more ${it.n} copies to fuse into <b style="color:#ffd24a">${K[FZ.k][evoN(FZ.k,FZ.i)].n}</b> (${cnt}/2). Level resets.`:capd?"Max level reached.":"Click items in the inventory to add them here as fuse power."}</div>`}</div><button class="fzb" data-fcl="1" style="margin-top:auto">Back</button>`;
     M=`<div class="fzrow">${ARROW}<div class="fzsl rt rt${RI(k,i)} ${cp.s?"shn":""}" data-slot="1" title="Click to remove">${ICO(k,it,cp.s,lcol)}${l0>=1?`<b class="clv">${lvBadge(l0)}</b>`:""}</div></div>
     <div class="fzn" style="color:${RAR(it.cost)};margin-top:2vh;text-align:center">${it.n}</div><div class="fzs2" style="text-align:center">${TN[r]} · ${k=="t"?"Torso":k=="l"?"Legs":k=="w"?"Gun":"Module"}${EQU(FZ.u)?" · Equipped":""}</div>
-    <div class="fzst"><div class="fzinfo"><div class="fzlv" style="justify-content:center">Level ${l0}${l1>l0?` <i>&rarr;</i> <b style="color:#9fe870">${l1}</b>`:""} <span class="fzs2">/ ${CAPL[r]}</span> ${lvBadge(l1>l0?l1:l0)}</div>${swh}${rows}</div>
-    <div class="fzs2" style="text-align:center;line-height:1.6;margin-bottom:6px">${capd?"":`Level ${l0+1} costs <b style="color:#ffd24a">${(cumP(r,l0+1)-cumP(r,l0)).toLocaleString()}</b> XP &middot; <b style="color:#9fe870">${Math.max(0,cumP(r,l0+1)-xp).toLocaleString()}</b> to go`}</div>
-    <div class="fzxb" id="fzbar"><i id="fzbi" style="width:${capd?"100%":pl(inLv)}"></i><u id="fzbu" style="left:${capd?"100%":pl(inLv)};width:${capd?0:pl(gl)}"></u><span id="fzbt">${capd?"MAX LEVEL":Math.round(inLv).toLocaleString()+" / "+seg.toLocaleString()}${gain&&!capd?` <b>+${gain.toLocaleString()}</b>`:""}</span></div>
-    <div class="fzlb2"><span id="fzla">Lv ${l0}</span><span id="fzlbn">${capd?"":(gain>room?`<b style="color:#9fe870">+${l1-l0} level${l1-l0>1?"s":""}</b> &middot; `:"")+"Lv "+(l0+1)+" · "+room.toLocaleString()+" more needed"}</span></div>
+    <div class="fzst"><div class="fzinfo"><div class="fzlv" style="justify-content:center">Level ${l0}${l1>l0?` <i>&rarr;</i> <b style="color:#9fe870">${l1}</b>`:""} <span class="fzs2">/ ${CAPL[r]}</span> ${lvBadge(l1>l0?l1:l0)}</div>${rows}</div>
+        <div class="fzxb" id="fzbar"><i id="fzbi" style="width:${capd?"100%":pl(inLv)}"></i><u id="fzbu" style="left:${capd?"100%":pl(inLv)};width:${capd?0:pl(gl)}"></u><span id="fzbt">${capd?"MAX LEVEL":Math.round(inLv).toLocaleString()+" / "+seg.toLocaleString()}${gain&&!capd?` <b>+${gain.toLocaleString()}</b>`:""}</span></div>
+    <div class="fzlb2"><span></span><span id="fzlbn">${capd?"":(gain>room?`<b style="color:#9fe870">+${l1-l0} level${l1-l0>1?"s":""}</b> &middot; `:"")+"Lv "+(l0+1)+" · "+room.toLocaleString()+" more needed"}</span></div>
     <div class="fzs2" style="text-align:center;line-height:1.5">${waste?`<span style="color:#ffb02e">${waste.toLocaleString()} power wasted (past max)</span>`:""}</div>
     <div style="display:flex;gap:10px;margin-top:10px;align-items:center;justify-content:center">${cnt?`<button class="fzb" data-fclr="1">Clear</button>`:""}<button class="fzgo" data-fgo="1" ${mkUp()?(cnt==2?"":"disabled"):(cnt&&!capd?"":"disabled")}>${mkUp()?"EVOLVE TO "+K[FZ.k][evoN(FZ.k,FZ.i)].n.toUpperCase():"UPGRADE"}</button></div></div>`}
   else{L=`<div class="fzh2">FUSING</div><div class="fzs2" style="margin-top:8px">Pick the item you want to upgrade from the inventory, or drag it into the box. Every copy has its own level.</div><button class="fzb" data-fcl="1" style="margin-top:auto">Back</button>`;
@@ -1549,7 +1548,7 @@ function fzPaint(fx){const bi=$("fzbi");if(!bi||!FZ||FZ.k==null)return;const r=R
   const c0=cumP(r,L),mx=L>=CAPL[r],sg=mx?1:Math.max(1,cumP(r,L+1)-c0),f=mx?100:Math.max(0,Math.min(100,100*(dv-c0)/sg));
   bi.style.transition="none";bi.style.width=f+"%";const bu=$("fzbu");if(bu)bu.style.width="0";
   $("fzbt").innerHTML=mx?"MAX LEVEL":Math.round(dv-c0).toLocaleString()+" / "+sg.toLocaleString()+(FZ.gn&&!FZ.run?` <b>+${FZ.gn.toLocaleString()}</b>`:"");
-  $("fzla").textContent="Lv "+L;$("fzlbn").textContent=mx?"":"Lv "+(L+1)+" · "+Math.max(0,Math.ceil(sg-(dv-c0))).toLocaleString()+" more needed";
+  $("fzlbn").textContent=mx?"":"Lv "+(L+1)+" · "+Math.max(0,Math.ceil(sg-(dv-c0))).toLocaleString()+" more needed";
   if(FZ.dl!=null&&L>FZ.dl&&fx!==0){const bar=$("fzbar");bar.classList.remove("up");void bar.offsetWidth;bar.classList.add("up");bar.classList.add("fl");setTimeout(()=>bar&&bar.classList.remove("fl"),90);const n=performance.now();if(!FZ.ls||n-FZ.ls>70){FZ.ls=n;try{playBuf("money",.25,1+Math.min(.5,(L-(FZ.l0||0))*.01))}catch(e){}}}
   if(FZ.dl==null)FZ.l0=L;FZ.dl=L}
 function fzTick(t){if(!FZ||FZ.k==null||!$("fzbi")){if(FZ)FZ.lp=0;return}
@@ -1562,7 +1561,7 @@ function fzTick(t){if(!FZ||FZ.k==null||!$("fzbi")){if(FZ)FZ.lp=0;return}
   requestAnimationFrame(fzTick)}
 function fzRunAnim(x0,x1,r){return new Promise(res=>{const la=lvOfP(r,x0),lb=lvOfP(r,x1),n=lb-la;FZ.run={x0,x1,t0:performance.now(),T:Math.max(500,Math.min(2200,500+n*35)),xa:n>10?cumP(r,lb-10):x0,done:res};FZ.dv=x0;FZ.dl=null;FZ.gn=0;FZ.lastp=null;if(!FZ.lp){FZ.lp=1;FZ.lt=performance.now();requestAnimationFrame(fzTick)}})}
 async function fzAnim(x0,x1,r,pv){
-  const tk=FZ.tk=(FZ.tk||0)+1,bi=$("fzbi"),bu=$("fzbu"),bt=$("fzbt"),lA=$("fzla"),lB=$("fzlbn"),bar=$("fzbar");if(!bi||!bar)return;bu.style.width="0";
+  const tk=FZ.tk=(FZ.tk||0)+1,bi=$("fzbi"),bu=$("fzbu"),bt=$("fzbt"),lA=$("fzla")||document.createElement("i"),lB=$("fzlbn"),bar=$("fzbar");if(!bi||!bar)return;bu.style.width="0";
   const la=lvOfP(r,x0),lb=lvOfP(r,x1),n=lb-la+1,dur=Math.max(60,Math.min(450,(pv?1300:2200)/n-(pv?130:50))),ok=()=>FZ&&FZ.tk==tk&&$("fzbi")===bi,nxt=L=>L+1>=CAPL[r]?"MAX":"Next: "+(cumP(r,L+2)-cumP(r,L+1)).toLocaleString()+" XP needed";
   for(let L=la;L<=lb;L++){const c0=cumP(r,L),c1=L>=CAPL[r]?MAXP[r]:cumP(r,L+1),sg=Math.max(1,c1-c0),from=L==la?Math.max(0,x0-c0):0,to=L==lb?Math.min(sg,x1-c0):sg;
     lA.textContent="Lv "+L;lB.textContent=L>=CAPL[r]?"":"Lv "+(L+1)+" · "+Math.max(0,sg-to).toLocaleString()+" more needed";if(L>la){lA.classList.remove("sl");lB.classList.remove("sl");void lA.offsetWidth;lA.classList.add("sl");lB.classList.add("sl")}
