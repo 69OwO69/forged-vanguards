@@ -234,7 +234,7 @@ body.fs main{padding:0;max-width:none}
 #battle .htx{position:absolute;z-index:50;display:flex;align-items:center;justify-content:center;color:#fff;font:700 3cqw/1 "Chakra Petch",system-ui,sans-serif;text-shadow:0 0 3px #000,0 1px 2px #000,1px 0 2px #000,-1px 0 2px #000;white-space:nowrap}
 #battle .htx:empty{display:none}#battle .hbar.en+.htx,#battle .hbar.ht+.htx,#battle .hbar.am+.htx,#battle .hbar.ra+.htx{font-size:2.6cqw}
 #battle .hic{position:absolute;z-index:50;object-fit:contain;border-radius:0}
-#battle .hrn{position:absolute;z-index:50;display:flex;align-items:center;justify-content:center;font:900 3.5cqw/1 "Chakra Petch",system-ui,sans-serif;text-shadow:0 0 3px #000,0 1px 2px #000,1px 0 2px #000,-1px 0 2px #000;white-space:nowrap}#battle .hrn.sm{font-size:2.6cqw}#battle .hrn.e{color:#22b8ff}#battle .hrn.f{color:#ff3b2a}#battle .hrn.p{color:#ffc21a}#battle .hrn.neg{filter:brightness(.8)}#battle .hri.tr,#battle .hri.tl{padding:0!important;z-index:51}#battle .hri.tr{filter:brightness(2.2) contrast(1.1)}#battle .hri.tr{display:none}#battle .hri.tl.on{filter:none}#battle .hri.tl.off{filter:grayscale(1) brightness(.65)}#battle .hri{position:absolute;z-index:50;object-fit:contain;border-radius:0;padding:3px;box-sizing:border-box}#battle .hri.rsi{background:linear-gradient(#05070a,#05070a) 50% 50%/96% 96% no-repeat}
+#battle .hrn{position:absolute;z-index:50;display:flex;align-items:center;justify-content:center;font:900 3.5cqw/1 "Chakra Petch",system-ui,sans-serif;text-shadow:0 0 3px #000,0 1px 2px #000,1px 0 2px #000,-1px 0 2px #000;white-space:nowrap}#battle .hrn.sm{font-size:2.6cqw}#battle .hrn.e{color:#22b8ff}#battle .hrn.f{color:#ff3b2a}#battle .hrn.p{color:#ffc21a}#battle .hrn.neg{filter:brightness(.8)}#battle .hri.tr,#battle .hri.tl{padding:0!important;z-index:51}#battle .hri.tr{filter:brightness(2.2) contrast(1.1)}#battle .hri.tr{display:none}#battle .hri.tl.on{filter:none}#battle .hri.tl.off{filter:grayscale(1) brightness(.65)}#battle .hri{position:absolute;z-index:50;object-fit:contain;border-radius:0;padding:3px;box-sizing:border-box}#battle .hri.rsi{padding:0;background:linear-gradient(#05070a,#05070a) 50% 50%/100% 100% no-repeat}
 /* battle HUD = APK BMScreenBattleInterfaceTop (800x135 design grid, full width) */
 #battle #hudL{left:50%;right:auto;top:0;transform:translateX(-50%);width:100vw;aspect-ratio:800/135;z-index:5;pointer-events:none}#battle #hudR{display:none}
 #battle #hudL img.hz{position:absolute;height:auto;max-width:none;display:block}#battle #hudL img.hz.bk{z-index:1}#battle #hudL img.hz.fr{z-index:40}#battle #hudL img.hz.ck{z-index:41}#battle #hudL .hcd{position:absolute;z-index:42;pointer-events:none}
@@ -1093,8 +1093,8 @@ const HZ={"bk": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vc
  const P=(e,[x,y,w,hh])=>{e.style.left=(x/800*100)+"%";e.style.top=(y/135*100)+"%";e.style.width=(w/800*100)+"%";e.style.height=(hh/135*100)+"%";return e};
  const IMG=(src,cls,r)=>{const im=new Image();im.src=src;im.className=cls;im.alt="";P(im,r);h.appendChild(im);return im};
  const G={hp:[[74.6,28.5,212.5,26.1],[512.2,28.5,212.5,26.1]],en:[[25.45,59.5,77.7,17.9],[696.2,59.5,77.7,17.9]],ht:[[25.5,82.3,77.7,17.1],[696.25,82.3,77.7,17.1]],am:[[126.5,59.55,78.8,17.5],[594.5,59.55,78.8,17.5]],ra:[[126.75,82.05,77.7,17.5],[594.75,82.3,77.7,17.5]]},
-  GI={en:[[2.8,58.45,20,20],[776.8,58.7,20,20]],ht:[[2.8,80.65,20,20],[776.8,80.9,20,20]],am:[[104.55,58.45,20,20],[675.3,58.45,20,20]],ra:[[104.55,80.65,20,20],[675.55,80.9,20,20]]},
-  RI_=[[[215.55,81.9,17,17],[243.55,81.9,17,17],[271.05,81.9,17,17]],[[511.8,81.9,17,17],[539.8,81.9,17,17],[567.3,81.9,17,17]]],
+  GI={en:[[5.4,61.9,14.2,13.95],[779.9,61.9,13.95,13.95]],ht:[[5.4,84.15,14.2,13.95],[779.9,84.15,13.95,14.2]],am:[[104.55,58.45,20,20],[675.3,58.45,20,20]],ra:[[104.55,80.65,20,20],[675.55,80.9,20,20]]},
+  RI_=[[[215.9,82.95,16.3,16.3],[243.9,82.95,16.3,16.3],[271.4,82.95,16.3,16.3]],[[512.15,82.95,16.3,16.3],[540.15,82.95,16.3,16.3],[567.65,82.95,16.3,16.3]]],
   RN=[[[204.25,59.1,38.9,20],[231.75,59.1,38.9,20],[259.25,59.1,38.9,20]],[[500.75,59.1,38.9,20],[528.25,59.1,38.9,20],[555.75,59.1,38.9,20]]],
   RK_=[["p","f","e"],["e","f","p"]],APX=[[11.5,33.5,55.5],[788.5,766.5,744.5]];
  IMG(HZ.bk,"hz bk",[0,0,800,135]);
@@ -2430,7 +2430,7 @@ function controls(){
     const cb=(k,ic,t)=>T(img(CBI[ic]),t,`data-cat="${k}"`,false);
     bar=cb("m","move","Movement")+cb("g","guns","Weapons")+cb("s","spec","Specials")+cb("k","kits","Kits")+
       T(img(CBI.spk),`Stomp · ${STP.dmg[0]}-${STP.dmg[1]} dmg · pushes ${STP.push} · range ${STP.rg} · ${STP.en} en${wkOK?" · also drops a Twin Walker (once per battle)":""}`,'data-a="stompA"',!stOK,idle&&p.en<STP.en?["en"]:idle&&!wkOK&&!E.some(o=>Math.abs(o.x-p.x)<=STP.rg)?["rg"]:null)+
-      T(img(CBI.stomp),p.heat>0?`Cooldown · uses your turn · vents up to ${p.cool} heat (now ${p.heat}/${p.hc})`:"Cooldown · already cool",'data-a="cool"',!(idle&&p.heat>0),idle&&p.heat<=0?["gen"]:null);
+      T(img(CBI.stomp),p.heat>0?`Cooldown · shut engine down · uses 1 action · cools ${Math.min(p.heat,p.cool)} heat (now ${p.heat}/${p.hc})`:"Cooldown · already cool",'data-a="cool"',!(idle&&p.heat>0),idle&&p.heat<=0?["gen"]:null);
   }else{
     lbl=CATN[cat];let it="";const bkBtn=T(iz(CBX.back,1.3),"Back",'data-back="1"',false);
     if(cat=="m"){
@@ -3029,7 +3029,7 @@ $("ctl").onclick=async e=>{
     controls();autoEnd();
   }else if(b.dataset.a=="bar"){p.did=true;await barrage(p,B.e);autoEnd()}else if(b.dataset.a=="drone"){await droneOn(p);autoEnd()}else if(b.dataset.a=="droneoff"){await droneOff(p);autoEnd()}else if(b.dataset.a=="stompA"){await stompHit(p);autoEnd()}else if(b.dataset.a=="stomp"){await stompOn(p);autoEnd()}else if(b.dataset.a=="gas"){await gasOn(p);autoEnd()}else if(b.dataset.a=="ovd"){await ovdOn(p);autoEnd()}
   else if(b.dataset.f!=null){p.did=true;await shoot(p,B.e,+b.dataset.f);autoEnd()}
-  else if(b.dataset.a=="cool"){const amt=Math.min(p.heat,p.cool);if(amt<=0)return;B.busy=true;p.did=true;p.heat-=amt;B.fl.push({x:px(p.vx!=null?p.vx:p.x),y:GY-170,t:"-"+amt,c:"yellow",l:70});say("Cooling down.");controls();try{playBuf("tick",.9,.7)}catch(e){}await sleep(900);B.busy=false;await endTurn()}else if(b.dataset.a=="sur"){B.busy=true;controls();if(B.t2)B.t2.p.length=0;p.hp=0;await kill(p);finish(false)}
+  else if(b.dataset.a=="cool"){const amt=Math.min(p.heat,p.cool);if(amt<=0)return;B.busy=true;p.did=true;p.heat-=amt;B.fl.push({x:px(p.vx!=null?p.vx:p.x),y:GY-170,t:"-"+amt,c:"orange",l:70});say("Engine shut down. Cooling.");controls();try{playBuf("tick",.9,.7)}catch(e){}await sleep(900);B.busy=false;await endTurn()}else if(b.dataset.a=="sur"){B.busy=true;controls();if(B.t2)B.t2.p.length=0;p.hp=0;await kill(p);finish(false)}
 };
 /* the turn passes by itself once your move is used up, or you have fired and have nothing left that can fire */
 async function autoEnd(){const p=B.p,tn=B.nturn||0;let g=0;while((B.busy||Math.abs(p.vx-p.x)>.05)&&!B.over&&B.turn=="p"&&g++<60)await sleep(80);
@@ -3492,8 +3492,10 @@ async function endTurn(){
   if(next!=cu){const c=B[cu];c.en=Math.min(c.en+c.enMax,c.enCap||c.enMax*2)}/* energy regen lands at the END of a mech's own turn, so draining it on yours leaves it empty for its whole turn */
   B.turn=next;B.ch=null;if(next!=cu){m.used=[];B.clk=30}m.did=false;
   if((B.rk||[]).length){B.busy=true;controls();const dd=await rocketTick();B.busy=false;if(dd||B.over)return}
-  /* heat never drains by itself. Only when a turn begins over the heat cap does the engine cool (by its cooling value); if it is still over the cap after that, the mech shuts down and loses the whole turn. */
-  if(next!=cu&&m.heat>m.hc){m.heat=Math.max(0,m.heat-m.cool);if(m.heat>m.hc){B.tl[next]=1;B.fl.push({x:px(m.x),y:GY-130,t:"OVERHEAT",l:80});shutSnd();say((next=="p"?"You overheat":"Enemy overheats")+" and shut down. The turn is lost.");B.busy=true;controls();await sleep(1100);B.busy=false;return endTurn()}else B.fl.push({x:px(m.x),y:GY-130,t:"COOLED",l:60})}
+  /* APK rule (BMScreenBattle.startNewAction): cooling is heat removed PER ACTION POINT. Heat never drains by itself; when a turn begins over the heat cap the engine is shut down: if one point of cooling gets it back under the cap the shutdown costs 1 action point (cools cool x1), otherwise it eats the whole turn (2 action points, cools cool x2). The cooled amount floats up in orange. */
+  if(next!=cu&&m.heat>m.hc){const one=m.heat-m.cool<=m.hc,ap=one?1:2,amt=Math.min(m.heat,m.cool*ap),mx=px(m.vx!=null?m.vx:m.x);m.heat-=amt;B.fl.push({x:mx,y:GY-130,t:one?"OVERHEAT":"SHUTDOWN!",l:80});if(amt>0)B.fl.push({x:mx,y:GY-170,t:"-"+amt,c:"orange",l:70});shutSnd();B.busy=true;controls();
+    if(one){B.tl[next]=Math.max(1,B.tl[next]-1);say((next=="p"?"Your":"Enemy")+" engine overheats and shuts down. One action lost.");await sleep(1100);B.busy=false}
+    else{B.tl[next]=1;say((next=="p"?"You overheat":"Enemy overheats")+" and shut down. The turn is lost.");await sleep(1100);B.busy=false;return endTurn()}}
   controls();
   if(next=="e"){say(next==cu?"Enemy takes a second turn.":"Enemy turn.");await ai()}else say(next==cu?"Your second turn.":"Your turn.");
 }
