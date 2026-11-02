@@ -1068,6 +1068,7 @@ img,canvas,svg{-webkit-user-drag:none}
  <div class="rw"><span>Effects volume</span><input type="range" id="vs2" min="0" max="100" step="1" style="width:150px;accent-color:#ffb02e"></div>
  <div class="rw"><span>Graphics</span><select id="gq" style="padding:6px 8px;background:#121c2a;color:#e6eefb;border:1px solid #3a5070;border-radius:6px"><option value="0">Auto (recommended)</option><option value="2">Performance</option><option value="3">Lowest</option></select></div>
  <div class="rw"><span>Show FPS in battle</span><button class="nb" id="sf" style="padding:6px 14px"></button></div>
+ <div class="rw"><span>Enemy designs <small id="edn"></small></span><span><button class="nb" id="edi" style="padding:6px 12px">Import</button> <button class="nb" id="edc" style="padding:6px 12px">Clear</button></span></div>
  <small>More settings coming soon.</small><button class="nb" id="sc">Close</button></div></div>
 <div id="toast" class="hide"></div>
 <section id="battle" class="hide fsx">
@@ -2285,13 +2286,31 @@ function foremanMech(){
     m=mechOf(7,3,[],1,true,S.sel.w)
   }finally{S.sel=JSON.parse(bs);S.xs=JSON.parse(bx)}
   return m}
+/* ---------- enemy designs: built in the Enemy Builder page, pasted in Settings > Enemy designs ----------
+   one design = {t:{id,lv,sh},l:{id,lv,sh},w:{"0".."6":{id,lv,sh}},mul}  (slots: 0-1 top, 2-3 left, 4-5 right, 6 drone). mul = APK-style difficulty multiplier. */
+function mulMech(m,k){const R=v=>Math.max(1,Math.round(v*k));m.hp=m.max=R(m.max);m.enMax=R(m.enMax);m.en=m.enMax;m.enCap=R(m.enCap);m.hc=R(m.hc);m.cool=R(m.cool);m.weps=m.weps.map(w=>({...w,dmg:R(w.dmg),hd:w.hd?R(w.hd):w.hd,dr:w.dr&&w.dr.map(R),heal:w.heal&&R(w.heal),ed:w.ed?R(w.ed):w.ed}))}
+function specMech(sp){
+  const bs=JSON.stringify(S.sel),bx=JSON.stringify(S.xs),bt=S.tf;let m;
+  try{
+    S.tf={};let u=900000;
+    const mk=(k,it)=>{if(!it||it.id==null||!K[k][it.id])return null;const c={u:++u,x:cumP(RI(k,it.id),Math.max(1,+it.lv||1))};if(it.sh)c.s=1;S.xs[k]=S.xs[k]||{};(S.xs[k][it.id]=S.xs[k][it.id]||[]).push(c);return c.u};
+    const tu=mk("t",sp.t),lu=mk("l",sp.l),w=[null,null,null,null,null,null,null],wu=[null,null,null,null,null,null,null];
+    for(let si=0;si<7;si++){const it=sp.w&&sp.w[si];if(it&&it.id!=null&&W[it.id]){w[si]=it.id;wu[si]=mk("w",it)}}
+    const tid=sp.t&&K.t[sp.t.id]?sp.t.id:null,lid=sp.l&&K.l[sp.l.id]?sp.l.id:null;
+    S.sel={t:tid,tu,l:lid,lu,w,wu,m:null,mu:null,mx:[],mxu:[]};
+    m=mechOf(tid,lid,[],1,true,w)
+  }finally{S.sel=JSON.parse(bs);S.xs=JSON.parse(bx);S.tf=bt}
+  if(sp.mul>0&&sp.mul!=1)mulMech(m,+sp.mul);
+  return m}
+function designFor(mi){const d=S.designs&&mi&&S.designs[mi.id];return d&&(d.t||d.l||d.w)?d:null}
+function importDesigns(txt){let j;try{j=JSON.parse(txt)}catch(e){return toast("That isn't valid JSON")}const d=j&&j.designs?j.designs:j;if(!d||typeof d!="object")return toast("No designs found");S.designs=S.designs||{};let n=0;for(const k in d){if(d[k]&&typeof d[k]=="object"){S.designs[k]=d[k];n++}}save();toast("Imported "+n+" enemy design"+(n==1?"":"s"))}
 function fbMech(){if(FBM)return JSON.parse(JSON.stringify(FBM));if(!S.fb){S.fb=JSON.parse(JSON.stringify(S.sel));save()}const cur=S.sel;S.sel=JSON.parse(JSON.stringify(S.fb));let m;try{m=myMech()}finally{S.sel=cur}return m}
 function botMech(){if(!S.bot){S.bot=JSON.parse(JSON.stringify(S.sel));save()}const cur=S.sel,sb=JSON.parse(JSON.stringify(S.bot));sb.w=(sb.w||[]).slice();sb.w[0]=null;sb.w[1]=null;S.sel=sb;let m;try{m=myMech()}finally{S.sel=cur}return m}
 function startBattle0(mi){
   try{$("ctl").parentNode.classList.add("dn")}catch(e){}
   const rnd=n=>Math.floor(Math.random()*n),tier=S.wins;
   const ws=[];const pool=W.map((_,i)=>i).filter(i=>i<=2+tier&&!W[i].side&&!W[i].drone&&!W[i].mythic);while(ws.length<3)ws.push(pool[rnd(pool.length)]);
-  const p=myMech(),e=mi?(mi.fixed?foremanMech():mechOf(mi.t,mi.l,mi.w,mi.mul)):botMech();
+  const p=myMech(),e=mi?(designFor(mi)?specMech(designFor(mi)):mi.fixed?foremanMech():mechOf(mi.t,mi.l,mi.w,mi.mul)):botMech();
   if(mi&&mi.swarm)setupSwarm(e);e.c="#d9604f";p.x=0;e.x=MAXT;p.vx=0;e.vx=MAXT;if(p.weps.some(w=>w.drone))p.dp=0;if(e.weps.some(w=>w.drone))e.dp=0;
   B={mi,p,e,turn:"p",tl:{p:1,e:2},busy:false,over:false,proj:null,zin:true,cz:1,cx:427.5,projs:[],debris:[],sparks:[],boom:[],fl:[],mines:[],lobs:[],rk:[],rkup:[],rkdn:[],rkm:[],mb:0,hit:{p:0,e:0}};
   document.body.classList.remove("fs");document.body.style.overflow="hidden";{const bi=rnd(6),gd=GR[PAIR[bi]];$("bgl").style.backgroundImage="url("+BGS[bi]+")";B.bgd=BGD[bi];B.bgk="";$("gnd").src=gd.u;$("gndl").src=gd.u;$("gndr").src=gd.u;$("gnd").style.bottom="0";B.foot=gd.f;B.gb=gd.u?gd.b:0;B.go=null;B.gld=!gd.u;{const gn_=$("gnd"),B_=B,fin_=()=>{if(B===B_){B_.gld=true;B_.go=null}};gn_.onload=fin_;if(gd.u&&gn_.decode)gn_.decode().then(fin_,fin_)}B.gx=.031;Q.t0=performance.now();Q.acc=0;Q.n=0;Q.last=0;$("zoomb").classList.remove("out")}$("hangar").classList.add("hide");$("battle").classList.remove("hide");$("over").classList.add("hide");
@@ -2898,7 +2917,7 @@ document.addEventListener("pointerdown",()=>lobbyOn());
 try{if(!S.gj7){S.gj7=1;addI("t",7,true);save();if(typeof head=="function")setTimeout(()=>{try{head()}catch(_){}},0)}}catch(e){console.error("grant",e)}
 (function(){const lab=()=>{$("sm").textContent=S.mute?"Off":"On";$("sx").textContent=S.nosfx?"Off":"On";};
  const gear=()=>$("gear").classList.toggle("hide",$("hangar").classList.contains("hide"));setInterval(gear,300);
- $("gear").onclick=()=>{lab();$("set").classList.remove("hide")};$("sc").onclick=()=>$("set").classList.add("hide");$("set").onclick=e=>{if(e.target.id=="set")$("set").classList.add("hide")};
+ $("gear").onclick=()=>{lab();{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("set").onclick=e=>{if(e.target.id=="set")$("set").classList.add("hide")};
  $("sm").onclick=()=>{S.mute=!S.mute;save();S.mute?(stopMusic(),lobbyOff()):lobbyOn();lab()};$("sx").onclick=()=>{S.nosfx=!S.nosfx;save();lab();if(!S.nosfx)playBuf("click")};gear()})();
 
 $("mu").onclick=()=>{S.mute=!S.mute;save();S.mute?(stopMusic(),$("mu").textContent="Music: off"):startMusic()};
