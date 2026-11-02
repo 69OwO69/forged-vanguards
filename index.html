@@ -2087,7 +2087,7 @@ $("gal").innerHTML=GAL;$("zbtn").innerHTML=ICO_OUT;
 $("gal").addEventListener("click",e=>{const g=e.target.closest(".pl");if(!g)return;const i=+g.dataset.p;if(i==0)return setView("planet");galInfo(i)});
 $("zbtn").addEventListener("pointerdown",e=>e.stopPropagation());$("zbtn").addEventListener("click",()=>setView(cview=="gal"?"planet":"gal"));
 const cpos={x:0,y:0,f:null,t:null,pend:true};
-function cApply(){const vp=$("map"),w=vp.clientWidth,h=vp.clientHeight;if(!w||!h)return;if(cpos.pend&&cpos.t){cpos.x=w/2-cpos.t[0];cpos.y=h/2-cpos.t[1];cpos.pend=false}cpos.x=Math.min(w,Math.max(-CM.w,cpos.x));cpos.y=Math.min(h,Math.max(-CM.h,cpos.y));$("mapw").style.transform=`translate(${cpos.x}px,${cpos.y}px)`}
+function cApply(){const vp=$("map"),w=vp.clientWidth,h=vp.clientHeight;if(!w||!h)return;if(cpos.pend&&cpos.t){cpos.x=w/2-cpos.t[0];cpos.y=h/2-cpos.t[1];cpos.pend=false}cpos.x=Math.min(w,Math.max(-CM.w,cpos.x));cpos.y=Math.min(h,Math.max(-CM.h,cpos.y));$("mapw").style.transform=`translate(${cpos.x}px,${cpos.y}px)`;{const eg=$("egg");if(eg){eg.style.left=(CM.w+w-86)+"px";eg.style.top=(CM.h+h-86)+"px"}}}
 (()=>{const vp=$("map");let st=null,drag=false,sup=false;
 vp.addEventListener("pointerdown",e=>{if(e.button!==0||cview!="planet")return;st={x:e.clientX,y:e.clientY,px:cpos.x,py:cpos.y,id:e.pointerId};drag=false});
 vp.addEventListener("pointermove",e=>{if(!st||e.pointerId!==st.id)return;const dx=e.clientX-st.x,dy=e.clientY-st.y;if(!drag&&Math.hypot(dx,dy)>6){drag=true;vp.classList.add("drag");if(sm!=null){sm=null;camp()}try{vp.setPointerCapture(e.pointerId)}catch(_){}}if(drag){cpos.x=st.px+dx;cpos.y=st.py+dy;cpos.pend=false;cApply()}});
