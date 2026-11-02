@@ -3760,7 +3760,7 @@ function eggFx(dd){
   if(now>Z.mi.end){if(Z.mi.kind==0)document.querySelectorAll("#ctl .bkb[data-fk]").forEach(b=>{b.classList.remove("dis");delete b.dataset.fk});else try{bkErr(null)}catch(x){}Z.mi=null}}
  /* the ambience briefly plays backwards */
  if(Z.mus&&k>0&&!Z.revU&&!Z.rev&&now>(Z.revN||(Z.revN=now+14000+Math.random()*12000))&&now>(Z.dipU||0)){Z.rev=1;Z.revN=now+22000+Math.random()*25000;
-  try{const sb=EGGB&&EGGB[0];if(sb){const sr=sb.sampleRate,len=Math.floor(sr*(1.6+Math.random()*.8)),off=Math.floor(Math.random()*(sb.length-len-1)),buf=AC.createBuffer(1,len,sr),d=buf.getChannelData(0),src=sb.getChannelData(0);for(let i=0;i<len;i++)d[i]=src[off+len-1-i];const bs=AC.createBufferSource(),gg=AC.createGain();bs.buffer=buf;gg.gain.value=0;gg.gain.linearRampToValueAtTime(.3,AC.currentTime+.15);gg.gain.setValueAtTime(.3,AC.currentTime+len/sr-.35);gg.gain.linearRampToValueAtTime(0,AC.currentTime+len/sr);bs.connect(gg);gg.connect(AC.destination);bs.start();Z.revU=now+len/sr*1000}}catch(x){}
+  try{const sb=EGGB&&EGGB[0];if(sb){const sr=sb.sampleRate,len=Math.floor(sr*(1.6+Math.random()*.8)),off=Math.floor(Math.random()*(sb.length-len-1)),buf=AC.createBuffer(1,len,sr),d=buf.getChannelData(0),src=sb.getChannelData(0);for(let i=0;i<len;i++)d[i]=src[off+len-1-i];const bs=AC.createBufferSource(),gg=AC.createGain();bs.buffer=buf;gg.gain.value=0;gg.gain.linearRampToValueAtTime(.3,AC.currentTime+.15);gg.gain.setValueAtTime(.3,AC.currentTime+len/sr-.35);gg.gain.linearRampToValueAtTime(0,AC.currentTime+len/sr);bs.connect(gg);gg.connect(AC.destination);bs.start();Z.revU=now+len/sr*1000}}catch(x){console.error("rev",x)}
   Z.rev=0;if(!Z.revU)Z.revU=0}
  if(Z.revU&&now>Z.revU)Z.revU=0}
 function eggEnt(g,m){
