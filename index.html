@@ -219,16 +219,12 @@ body #camp #mi{margin-top:auto;align-self:center;width:min(760px,92%);min-height
 .fsx .bot .nav .nb:last-child::before{background-image:var(--cap);transform:scaleX(-1)}
 .fsx .bot .nav .nb:first-child:hover::before,.fsx .bot .nav .nb:first-child.sel::before{background-image:var(--caph)}
 .fsx .bot .nav .nb:last-child:hover::before,.fsx .bot .nav .nb:last-child.sel::before{background-image:var(--caph)}
-/* desktop: bigger bar, Arena and Profile sit in the left/right wings, the other four stay in the middle */
-@media(min-width:861px){.fsx .bot{--bh:clamp(96px,20vh,216px);height:var(--bh)}
-.fsx .bot .nav{max-width:none;width:calc(var(--bh)*4.44);grid-template-columns:repeat(4,1fr)}
-.fsx .bot .nav .nb{font-size:calc(var(--bh)*.1)}
-.fsx .bot .nav .nb:nth-child(1),.fsx .bot .nav .nb:nth-child(6){position:absolute;width:calc(var(--bh)*.96);top:calc(50% + var(--bh)*.05);transform:translateY(-50%)}
-.fsx .bot .nav .nb:nth-child(1){left:calc(60px + (100vw - 120px)*.0694 - var(--bh)*.48)}.fsx .bot .nav .nb:nth-child(6){right:calc(60px + (100vw - 120px)*.0694 - var(--bh)*.48)}
+/* desktop: Arena and Profile sit out in the left/right wings (bigger); the other four stay where they were */
+@media(min-width:861px){.fsx .bot .nav .nb:nth-child(2){grid-column:2}.fsx .bot .nav .nb:nth-child(3){grid-column:3}.fsx .bot .nav .nb:nth-child(4){grid-column:4}.fsx .bot .nav .nb:nth-child(5){grid-column:5}
+.fsx .bot .nav .nb:nth-child(1),.fsx .bot .nav .nb:nth-child(6){--ww:min(calc(clamp(84px,17vh,150px)*1.5),calc((100vw - 120px)*.14));position:absolute;width:var(--ww);top:calc(50% + 4px);transform:translateY(-50%);font-size:calc(var(--ww)*.1);--c:calc(60px + (100vw - 120px)*.072 - var(--ww)/2)}
+.fsx .bot .nav .nb:nth-child(1){left:var(--c)}.fsx .bot .nav .nb:nth-child(6){right:var(--c)}
 .fsx .bot .nav .nb:nth-child(1)::before,.fsx .bot .nav .nb:nth-child(6)::before{background-image:var(--rect);transform:none}
-.fsx .bot .nav .nb:nth-child(1):hover::before,.fsx .bot .nav .nb:nth-child(6):hover::before,.fsx .bot .nav .nb:nth-child(1).sel::before,.fsx .bot .nav .nb:nth-child(6).sel::before{background-image:var(--recth)}
-.fsx .bot .nav .nb:nth-child(2)::before{background-image:var(--cap);transform:none}.fsx .bot .nav .nb:nth-child(5)::before{background-image:var(--cap);transform:scaleX(-1)}
-.fsx .bot .nav .nb:nth-child(2):hover::before,.fsx .bot .nav .nb:nth-child(2).sel::before,.fsx .bot .nav .nb:nth-child(5):hover::before,.fsx .bot .nav .nb:nth-child(5).sel::before{background-image:var(--caph)}}
+.fsx .bot .nav .nb:nth-child(1):hover::before,.fsx .bot .nav .nb:nth-child(6):hover::before,.fsx .bot .nav .nb:nth-child(1).sel::before,.fsx .bot .nav .nb:nth-child(6).sel::before{background-image:var(--recth)}}
 @media(max-width:860px){.fsx .bot .nav .nb:first-child::before,.fsx .bot .nav .nb:last-child::before{background-image:var(--rect);transform:none}.fsx .bot .nav .nb:first-child:hover::before,.fsx .bot .nav .nb:last-child:hover::before{background-image:var(--recth)}}
 
 body.fs main{padding:0;max-width:none}
