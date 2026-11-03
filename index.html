@@ -219,12 +219,10 @@ body #camp #mi{margin-top:auto;align-self:center;width:min(760px,92%);min-height
 .fsx .bot .nav .nb:last-child::before{background-image:var(--cap);transform:scaleX(-1)}
 .fsx .bot .nav .nb:first-child:hover::before,.fsx .bot .nav .nb:first-child.sel::before{background-image:var(--caph)}
 .fsx .bot .nav .nb:last-child:hover::before,.fsx .bot .nav .nb:last-child.sel::before{background-image:var(--caph)}
-/* desktop: Arena and Profile sit out in the left/right wings (bigger); the other four stay where they were */
-@media(min-width:861px){.fsx .bot .nav .nb:nth-child(2){grid-column:2}.fsx .bot .nav .nb:nth-child(3){grid-column:3}.fsx .bot .nav .nb:nth-child(4){grid-column:4}.fsx .bot .nav .nb:nth-child(5){grid-column:5}
-.fsx .bot .nav .nb:nth-child(1),.fsx .bot .nav .nb:nth-child(6){--ww:min(calc(clamp(84px,17vh,150px)*1.5),calc((100vw - 120px)*.14));position:absolute;width:var(--ww);top:calc(50% + 4px);transform:translateY(-50%);font-size:calc(var(--ww)*.1);--c:calc(60px + (100vw - 120px)*.072 - var(--ww)/2)}
-.fsx .bot .nav .nb:nth-child(1){left:var(--c)}.fsx .bot .nav .nb:nth-child(6){right:var(--c)}
-.fsx .bot .nav .nb:nth-child(1)::before,.fsx .bot .nav .nb:nth-child(6)::before{background-image:var(--rect);transform:none}
-.fsx .bot .nav .nb:nth-child(1):hover::before,.fsx .bot .nav .nb:nth-child(6):hover::before,.fsx .bot .nav .nb:nth-child(1).sel::before,.fsx .bot .nav .nb:nth-child(6).sel::before{background-image:var(--recth)}}
+/* desktop: bigger bar + buttons spread across the whole bottom; Arena/Profile keep their angled end-cap look at the far left/right */
+@media(min-width:861px){.fsx .bot{--bh:clamp(96px,21vh,230px);height:var(--bh)}
+.fsx .bot .nav{max-width:none;width:min(calc(100vw - 2*clamp(64px,4.5vw,90px)),calc(var(--bh)*7.55))}
+.fsx .bot .nav .nb{font-size:calc(var(--bh)*.1)}}
 @media(max-width:860px){.fsx .bot .nav .nb:first-child::before,.fsx .bot .nav .nb:last-child::before{background-image:var(--rect);transform:none}.fsx .bot .nav .nb:first-child:hover::before,.fsx .bot .nav .nb:last-child:hover::before{background-image:var(--recth)}}
 
 body.fs main{padding:0;max-width:none}
