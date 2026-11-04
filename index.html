@@ -3259,7 +3259,7 @@ function scyDraw(g){if(!B)return;const nw=performance.now();for(const m of [B.p,
   if(S_.ph=="throw"){const k=Math.min(1,t/S_.dur),e=bk(k),e0=1-Math.pow(1-k,3);Ph=lp(SCY_AH,PT,e);Ph[1]-=34*Math.sin(Math.PI*e0)+10*Math.sin(Math.PI*2*e0)*(1-k);th=thf*e0-.7*Math.sin(Math.PI*e0)+.4*Math.sin(k*Math.PI*3)*(1-k)*(1-k);sag=-60*Math.pow(1-e0,.8)*Math.sin(Math.PI*Math.min(1,e0*1.5+.1))-6*Math.sin(Math.PI*k);wave=16*Math.pow(1-e0,1.2)+3*Math.sin(Math.PI*k);ghost=1-e0*.6}
   else if(S_.ph=="hold"){Ph=[PT[0]+Math.sin(t*.05)*4*Math.exp(-t/110),PT[1]+Math.cos(t*.06)*3*Math.exp(-t/110)];th=thf+Math.sin(t*.034)*.42*Math.exp(-t/150);sag=-12*Math.exp(-t/70)*Math.cos(t*.05);wave=11*Math.exp(-t/80)}
   else if(S_.ph=="pull"){const q=Math.min(1,t/430);Ph=PT;th=thf+Math.sin(t*.03)*.12*(1-q)*Math.exp(-t/200);sag=16*Math.exp(-t/110)*Math.cos(t*.032)+3*Math.sin(t*.02)*(1-q);wave=3.5*Math.exp(-t/200)+.8}
-  else{const k=Math.min(1,t/S_.dur),e=Math.pow(k,2.6);if(!S_.pst)S_.pst=PT.slice();Ph=lp(S_.pst,SCY_AH,e);const dx_=SCY_AH[0]-S_.pst[0],dy_=SCY_AH[1]-S_.pst[1],ln_=Math.hypot(dx_,dy_)||1,sw=Math.sin(Math.PI*2*e)*16*(1-e*.5);Ph[0]+=-dy_/ln_*sw;Ph[1]+=dx_/ln_*sw;Ph[1]-=22*Math.sin(Math.PI*e);th=thf*(1-e)-.9*Math.sin(Math.PI*e)+.35*Math.sin(Math.PI*2.2*e)*(1-e);sag=34*Math.sin(Math.PI*e)*(1-.4*e);wave=13*Math.sin(Math.PI*Math.min(1,e*1.3))*(1-e*.6);ghost=Math.sin(Math.PI*Math.min(1,e*1.15))*(1-e*e)}
+  else{const k=Math.min(1,t/S_.dur),e=Math.pow(k,1.05);if(!S_.pst)S_.pst=PT.slice();Ph=lp(S_.pst,SCY_AH,e);const dx_=SCY_AH[0]-S_.pst[0],dy_=SCY_AH[1]-S_.pst[1],ln_=Math.hypot(dx_,dy_)||1,sw=Math.sin(Math.PI*e)*4*(1-e);Ph[0]+=-dy_/ln_*sw;Ph[1]+=dx_/ln_*sw;Ph[1]-=5*Math.sin(Math.PI*e);th=thf*(1-e)-.25*Math.sin(Math.PI*e)+.12*Math.sin(Math.PI*2.2*e)*(1-e);sag=7*Math.sin(Math.PI*e)*(1-e);wave=3.5*Math.sin(Math.PI*Math.min(1,e*1.3))*(1-e*.6);ghost=Math.sin(Math.PI*Math.min(1,e*1.15))*(1-e*e)}
   g.save();g.setTransform(A);g.globalAlpha=1;g.globalCompositeOperation="source-over";
   scyChain(g,SCY_MO,Ph,sag,wave,nw);
   const hd=r.hd;
@@ -3268,13 +3268,12 @@ function scyDraw(g){if(!B)return;const nw=performance.now();for(const m of [B.p,
   g.restore()}}
 function scyPull(a,b,w){const sg=Math.sign(b.x-a.x),amt=-w.pull*sg;let t=Math.max(0,Math.min(MAXT,b.x+amt));if(sg>0&&t<=a.x)t=a.x+1;if(sg<0&&t>=a.x)t=a.x-1;{const dd=Math.sign(t-b.x);if(dd){const bl=[B.p,B.e,...(B.sms||[])].filter(o=>o&&o!==b&&!o.dead&&!o.gone);let q=b.x;while(q!=t){const nx=q+dd;if(bl.some(o=>o.x==nx))break;q=nx}t=q}}if(t!=b.x){const ox0=b.x;b.x=t;b.ps={a:b.vx!=null?b.vx:ox0,b:t,t0:performance.now(),dur:Math.min(850,320+55*Math.abs(t-ox0))};mineCheck(b,ox0,t,true);0}}
 async function chainAnim(a,i,b,w,onHit){
-  const D1=Math.min(560,380+70*Math.abs(b.x-a.x)),D2=190,D3=480,D4=480;
+  const D1=Math.min(560,380+70*Math.abs(b.x-a.x)),D2=190,D3=0,D4=520;
   try{a.scy={i,tb:b,ph:"throw",t0:performance.now(),dur:D1};
     sfx(280,.14,"sawtooth");playBuf("scyS",.5,1.7);
     {const t0=performance.now();let nx=0;while(performance.now()-t0<D1){if(performance.now()>nx){sfx(1500+Math.random()*900,.04,"square");nx=performance.now()+48}await sleep(16)}}
     a.scy.ph="hold";a.scy.t0=performance.now();onHit();await sleep(D2);
-    a.scy.ph="pull";a.scy.t0=performance.now();scyPull(a,b,w);{const t0=performance.now();let nx=0;while(performance.now()-t0<D3){if(performance.now()>nx){sfx(900+Math.random()*500,.05,"square");nx=performance.now()+42}await sleep(16)}}
-    a.scy.ph="back";a.scy.t0=performance.now();a.scy.dur=D4;a.scy.pst=null;{const t0=performance.now();let nx=0;while(performance.now()-t0<D4){if(performance.now()>nx){sfx(1300+Math.random()*800,.045,"square");nx=performance.now()+40}await sleep(16)}}
+    a.scy.ph="back";a.scy.t0=performance.now();a.scy.dur=D4;a.scy.pst=null;scyPull(a,b,w);{const t0=performance.now();let nx=0;while(performance.now()-t0<D4){if(performance.now()>nx){sfx(1100+Math.random()*700,.05,"square");nx=performance.now()+40}await sleep(16)}}
     playBuf("swhit",.6,1.6);sfx(950,.2,"square");B.shake=Math.max(B.shake||0,8)}
   finally{a.scy=null}}
 
