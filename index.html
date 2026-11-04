@@ -3268,7 +3268,7 @@ function scyDraw(g){if(!B)return;const nw=performance.now();for(const m of [B.p,
   g.restore()}}
 function scyPull(a,b,w){const sg=Math.sign(b.x-a.x),amt=-w.pull*sg;let t=Math.max(0,Math.min(MAXT,b.x+amt));if(sg>0&&t<=a.x)t=a.x+1;if(sg<0&&t>=a.x)t=a.x-1;{const dd=Math.sign(t-b.x);if(dd){const bl=[B.p,B.e,...(B.sms||[])].filter(o=>o&&o!==b&&!o.dead&&!o.gone);let q=b.x;while(q!=t){const nx=q+dd;if(bl.some(o=>o.x==nx))break;q=nx}t=q}}if(t!=b.x){const ox0=b.x;b.x=t;b.ps={a:b.vx!=null?b.vx:ox0,b:t,t0:performance.now(),dur:Math.min(850,320+55*Math.abs(t-ox0))};mineCheck(b,ox0,t,true);0}}
 async function chainAnim(a,i,b,w,onHit){
-  const D1=Math.min(560,380+70*Math.abs(b.x-a.x)),D2=190,D3=0,D4=280;
+  const D1=Math.min(300,190+40*Math.abs(b.x-a.x)),D2=190,D3=0,D4=280;
   try{a.scy={i,tb:b,ph:"throw",t0:performance.now(),dur:D1};
     sfx(280,.14,"sawtooth");playBuf("scyS",.5,1.7);
     {const t0=performance.now();let nx=0;while(performance.now()-t0<D1){if(performance.now()>nx){sfx(1500+Math.random()*900,.04,"square");nx=performance.now()+48}await sleep(16)}}
