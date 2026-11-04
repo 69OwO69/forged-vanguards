@@ -3255,10 +3255,11 @@ function scyDraw(g){if(!B)return;const nw=performance.now();for(const m of [B.p,
   const tp=B0.transformPoint(new DOMPoint(px(S_.tb.vx),GY-78)),T=(q=>[q.x,q.y])(Ai.transformPoint(tp)),R=(v,a)=>[v[0]*Math.cos(a)-v[1]*Math.sin(a),v[0]*Math.sin(a)+v[1]*Math.cos(a)];
   const thf=.45,off=R([SCY_CT[0]-SCY_AH[0],SCY_CT[1]-SCY_AH[1]],thf),PT=[T[0]-off[0],T[1]-off[1]],t=nw-S_.t0,lp=(a,b,k)=>[a[0]+(b[0]-a[0])*k,a[1]+(b[1]-a[1])*k];
   let Ph,th,sag=0,wave=0,ghost=0;
-  if(S_.ph=="throw"){const k=Math.min(1,t/S_.dur),e=1-Math.pow(1-k,3);Ph=lp(SCY_AH,PT,e);Ph[1]-=30*Math.sin(Math.PI*e);th=thf-Math.PI*5*(1-e)*(1-e*.3);sag=-60*Math.pow(1-e,.8)*Math.sin(Math.PI*Math.min(1,e*1.5+.1))-6*Math.sin(Math.PI*k);wave=16*Math.pow(1-e,1.2)+3*Math.sin(Math.PI*k);ghost=1-e*.6}
-  else if(S_.ph=="hold"){Ph=PT;th=thf+Math.sin(t*.09)*.05*Math.exp(-t/90);sag=-12*Math.exp(-t/70)*Math.cos(t*.05);wave=11*Math.exp(-t/80)}
-  else if(S_.ph=="pull"){const q=Math.min(1,t/430);Ph=PT;th=thf+Math.sin(t*.03)*.03*(1-q);sag=16*Math.exp(-t/110)*Math.cos(t*.032)+3*Math.sin(t*.02)*(1-q);wave=3.5*Math.exp(-t/200)+.8}
-  else{const k=Math.min(1,t/S_.dur),e=k*k*k*(k*(6*k-15)+10);if(!S_.pst)S_.pst=PT.slice();Ph=lp(S_.pst,SCY_AH,e);Ph[1]-=22*Math.sin(Math.PI*e);th=thf*(1-e)-Math.PI*3*e;sag=34*Math.sin(Math.PI*e)*(1-.4*e);wave=13*Math.sin(Math.PI*Math.min(1,e*1.3))*(1-e*.6);ghost=Math.sin(Math.PI*e)}
+  const bk=k=>{const c=1.35,u=k-1;return 1+(c+1)*u*u*u+c*u*u};
+  if(S_.ph=="throw"){const k=Math.min(1,t/S_.dur),e=bk(k),e0=1-Math.pow(1-k,3);Ph=lp(SCY_AH,PT,e);Ph[1]-=34*Math.sin(Math.PI*e0)+10*Math.sin(Math.PI*2*e0)*(1-k);th=thf-Math.PI*4.5*Math.pow(1-e0,1.3)+.5*Math.sin(k*Math.PI*3)*(1-k)*(1-k);sag=-60*Math.pow(1-e0,.8)*Math.sin(Math.PI*Math.min(1,e0*1.5+.1))-6*Math.sin(Math.PI*k);wave=16*Math.pow(1-e0,1.2)+3*Math.sin(Math.PI*k);ghost=1-e0*.6}
+  else if(S_.ph=="hold"){Ph=[PT[0]+Math.sin(t*.05)*4*Math.exp(-t/110),PT[1]+Math.cos(t*.06)*3*Math.exp(-t/110)];th=thf+Math.sin(t*.034)*.42*Math.exp(-t/150);sag=-12*Math.exp(-t/70)*Math.cos(t*.05);wave=11*Math.exp(-t/80)}
+  else if(S_.ph=="pull"){const q=Math.min(1,t/430);Ph=PT;th=thf+Math.sin(t*.03)*.12*(1-q)*Math.exp(-t/200);sag=16*Math.exp(-t/110)*Math.cos(t*.032)+3*Math.sin(t*.02)*(1-q);wave=3.5*Math.exp(-t/200)+.8}
+  else{const k=Math.min(1,t/S_.dur),e=k*k*k*(k*(6*k-15)+10);if(!S_.pst)S_.pst=PT.slice();Ph=lp(S_.pst,SCY_AH,e);const dx_=SCY_AH[0]-S_.pst[0],dy_=SCY_AH[1]-S_.pst[1],ln_=Math.hypot(dx_,dy_)||1,sw=Math.sin(Math.PI*2*e)*16*(1-e*.5);Ph[0]+=-dy_/ln_*sw;Ph[1]+=dx_/ln_*sw;Ph[1]-=22*Math.sin(Math.PI*e);th=thf*(1-e)-Math.PI*3*e+.55*Math.sin(Math.PI*2.2*e)*(1-e);sag=34*Math.sin(Math.PI*e)*(1-.4*e);wave=13*Math.sin(Math.PI*Math.min(1,e*1.3))*(1-e*.6);ghost=Math.sin(Math.PI*e)}
   g.save();g.setTransform(A);
   scyChain(g,SCY_MO,Ph,sag,wave,nw);
   const hd=r.hd;
