@@ -3209,7 +3209,7 @@ try{if(!S.gj7){S.gj7=1;addI("t",7,true);save();if(typeof head=="function")setTim
  $("gear").onclick=()=>{lab();{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("set").onclick=e=>{if(e.target.id=="set")$("set").classList.add("hide")};
  $("sm").onclick=()=>{S.mute=!S.mute;save();S.mute?(stopMusic(),lobbyOff()):lobbyOn();lab()};$("sx").onclick=()=>{S.nosfx=!S.nosfx;save();lab();if(!S.nosfx)playBuf("click")};gear()})();
 
-$("mu").onclick=()=>{S.mute=!S.mute;save();S.mute?(stopMusic(),$("mu").textContent="Music: off"):startMusic()};
+$("mu").onclick=()=>{S.mute=!S.mute;save();if(S.mute){stopMusic();$("mu").textContent="Music: off"}else{$("mu").textContent="Music: on";const inB=B&&!$("battle").classList.contains("hide");if(inB)startMusic();else{stopMusic();if(typeof lobbyOn=="function")lobbyOn();else startMusic()}}};
 const legal=(a,b,i)=>{const w=a.weps[i],d=Math.abs(a.x-b.x);return !B.over&&!w.drone&&!a.used[i]&&a.en>=w.en&&(a.am||0)>=(w.am||0)&&(a.ra||0)>=(w.ra||0)&&d>=w.min&&d<=w.max};
 const BAR={en:0,ht:12,dmg:3,stag:32},swordIdx=m=>m.weps.map((w,i)=>w.melee?i:-1).filter(i=>i>=0),
 canBar=(a,b)=>{const sw=swordIdx(a);return !B.over&&sw.length>=4&&sw.slice(0,4).every(i=>legal(a,b,i))&&a.en>=BAR.en};
