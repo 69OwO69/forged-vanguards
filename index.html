@@ -3986,6 +3986,8 @@ function aiApk(e,p){
 function aiSimple(e,p){const d=dist();let best=-1;const val=w=>(w.shots||1)*(w.dr?(w.dr[0]+w.dr[1])/2:w.dmg);e.weps.forEach((w,i)=>{if(legal(e,p,i)&&e.heat+(w.ht||0)<e.hc&&(best<0||val(w)>val(e.weps[best])))best=i});
   if(best>=0)return{t:"g",ix:[best]};const st=e.weps.reduce((a,w)=>val(w)>val(a)?w:a,e.weps[0]),pref=Math.round((st.min+st.max)/2);
   if(d!=pref){const dir=(d>pref?1:-1)*(e.x>p.x?-1:1);return{t:"m",x:e.x+dir*Math.min(e.s,Math.abs(d-pref))}}return{t:"p"}}
+/* there is no skip-turn any more: a bot with nothing useful to do uses the cooldown action, same as the player */
+async function botCool(m){if(B.over||m.dead)return;const amt=Math.min(m.heat,m.cool);m.did=true;m.heat-=amt;if(amt>0)B.fl.push({x:px(m.vx!=null?m.vx:m.x),y:GY-170,t:"-"+amt,c:"orange",l:70});say("Enemy engine shut down. Cooling.");shutFx(m);m.sdKeep=1;m.shutT=1;controls();await sleep(1500)}
 async function ai(){
   const e=B.e,p=B.p;B.busy=true;controls();if(e.swarm)return swarmAI();
   if(!B.over){
@@ -3995,10 +3997,10 @@ async function ai(){
       await sleep(330+Math.random()*660);if(B.over)break;
       let act=null;try{act=aiApk(e,p)}catch(err){try{console.error(err)}catch(_){}}
       if(!act){try{act=aiPlan(e,p)}catch(err){}}if(!act)act=aiSimple(e,p);
-      if(act.t=="p")break;
+      if(act.t=="p"){await botCool(e);break}
       if(act.t=="g"||act.t=="c"){if(act.ix.length>1)await Promise.all(act.ix.map(i=>shoot(e,p,i)));else await shoot(e,p,act.ix[0]);B.busy=true}
       else if(act.t=="b"){await barrage(e,p);B.busy=true}
-      else if(act.t=="m"){const dir=Math.sign(act.x-e.x),nn_=Math.abs(act.x-e.x);if(!(dir&&move(e,p,dir,nn_,(e.j||0)>0&&nn_==e.j&&nn_!=e.s)))break;await sleep(e.jp?1500:700)}
+      else if(act.t=="m"){const dir=Math.sign(act.x-e.x),nn_=Math.abs(act.x-e.x);if(!(dir&&move(e,p,dir,nn_,(e.j||0)>0&&nn_==e.j&&nn_!=e.s))){await botCool(e);break}await sleep(e.jp?1500:700)}
       else if(act.t=="d"){await droneOn(e)}else if(act.t=="dd"){await droneOff(e)}else if(act.t=="o"){await ovdOn(e)}else if(act.t=="s"){await stompOn(e)}else if(act.t=="k"){await gasOn(e)}
       B.busy=true;
     }
