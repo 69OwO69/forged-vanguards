@@ -3221,7 +3221,6 @@ async function slamAnim(a,i,onHit){
   /* short charge: blade creeps a little higher while it trembles, sparks gather in */
   a.glw=a.glw||[];const t0=performance.now(),D=1380,dr=fdir(a),cx=px(a.vx)+dr*70,cy=GY-150;playBuf("chgE",1);
   for(;;){const k=Math.min(1,(performance.now()-t0)/D);a.glw[i]=Math.min(1,k*1.6)*1.4;a.aim[i]=1.35+.28*k+(Math.random()-.5)*.05*k;a.trl[i].push({a:a.aim[i],t:performance.now()});
-    if(Math.random()<.7){const an=Math.random()*Math.PI*2,r=40+Math.random()*30;B.sparks.push({x:cx+Math.cos(an)*r,y:cy+Math.sin(an)*r,vx:-Math.cos(an)*(2+3*k),vy:-Math.sin(an)*(2+3*k),z:5+Math.random()*3,l:10+Math.random()*8|0,L:18})}
     B.shake=Math.max(B.shake||0,2+4*k);if(k>=1)break;await sleep(16)}
   sfx(620,.2,"sawtooth");sfx(310,.16,"square");
   await swRec(a,i,a.aim[i],-1.25,52);B.shake=Math.max(B.shake||0,12);onHit();a.glw[i]=1.4;const g0=performance.now();(async()=>{for(;;){const q=(performance.now()-g0)/500;a.glw[i]=Math.max(0,1.4*(1-q));if(q>=1)return;await sleep(16)}})();await swRec(a,i,-1.25,0,420)}
