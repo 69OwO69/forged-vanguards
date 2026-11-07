@@ -3746,8 +3746,8 @@ const HKI={},HKX=-4,HKY=-58,HKS=.572;
 function hkImg(k){let e=HKI[k];if(!e){e=HKI[k]=new Image();e.src=HKART[k].u}return e.complete&&e.naturalWidth?e:null}
 function drawHook(g,m,x,y){const h=m.hk;if(!h||m._dm)return;g.save();g.translate(x,y);g.scale(HKS,HKS);
   const di=(k,sx)=>{const im=hkImg(k);if(!im)return;const vb=HKART[k].vb;g.drawImage(im,vb[0]*sx,vb[1],vb[2]*sx,vb[3])};
-  if(h.len>0){const L=h.len/HKS;di("rope",L/1436);g.save();g.translate(L,0);di(h.open?"open":"closed",1);g.restore()}
-  g.save();g.scale(h.sc,1);di("body",1);g.restore();g.restore()}
+  g.save();g.scale(h.sc,1);di("body",1);g.restore();
+  if(h.len>0){const L=h.len/HKS;di("rope",L/1436);g.save();g.translate(L,0);di(h.open?"open":"closed",1);g.restore()}g.restore()}
 const hkOK=(a,o)=>{const w=a.hkI!=null&&W[a.hkI];if(!w||!B||B.over||a.did)return false;const d=Math.abs(o.x-a.x);return(a.hkUsed||0)<(w.uses||1)&&a.en>=w.en&&d>=w.min};
 async function hookFire(a){
   const o=a==B.p?B.e:B.p;if(B.busy||!hkOK(a,o))return;const w=W[a.hkI],d=Math.abs(o.x-a.x),dir=fdir(a);
