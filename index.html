@@ -1261,29 +1261,29 @@ const T=[{n:"Scout Core",hp:120,en:5,hc:40,cool:8,cap:1000,cost:0,c:"#4fa3a5"},{
 const L=[{n:"Stilts",hp:20,w:25,s:1,cost:0},{n:"Treads",hp:40,w:25,s:2,cost:200},{n:"Piston Legs",mythic:1,hp:110,w:25,s:1,j:2,cost:1500,c:"#ff2a2a"},{n:"Hellfire Treads",mythic:1,hp:130,w:25,s:3,cost:2000,c:"#ff2a2a"}];
 const W=[
 {n:"Repulser",ty:"phys",shots:2,pushS:{1:8},gap:400,snd:"fire",dmg:12,en:1,ht:0,min:1,max:6,w:25,cost:0,c:"#ffd27a",arc:0},
-{n:"Mortar",msh:1,ty:"phys",aimUp:.42,rcv:2.6,durR:[1000,2500],snd:"grenade",hsnd:"boom",dmg:50,en:4,ht:12,min:4,max:12,w:25,cost:400,c:"#ffb02e",arc:60},
+{n:"Mortar",gone:1,msh:1,ty:"phys",aimUp:.42,rcv:2.6,durR:[1000,2500],snd:"grenade",hsnd:"boom",dmg:50,en:4,ht:12,min:4,max:12,w:25,cost:400,c:"#ffb02e",arc:60},
 {n:"Twin Minigun",mfl:[[125,21],[142,21],[125,46],[142,46]],ty:"phys",shots:30,gap:150,snd:"mg",dr:[1,2],dmg:2,en:3,ht:9,min:1,max:5,w:25,cost:250,c:"#ffe27a",arc:0},
-{n:"Bullet Gun Mk1",ty:"phys",shots:1,snd:"bullet",hsnd:"ghit",hs:7,dr:[9,9],dmg:9,en:0,ht:1,min:1,max:2,w:25,cost:0,c:"#ffcf70",arc:0},
-{n:"Bullet Gun Mk2",ty:"phys",shots:2,gap:300,snd:"bullet",hsnd:"ghit",hs:7,dr:[5,8],dmg:7,en:0,ht:2,min:1,max:2,w:25,cost:200,c:"#ffcf70",arc:0},
-{n:"Bullet Gun Mk3",ty:"phys",shots:3,gap:300,snd:"bullet",hsnd:"ghit",hs:7,dr:[6,9],dmg:8,en:0,ht:3,min:1,max:2,w:25,cost:350,c:"#ffcf70",arc:0},
+{n:"Bullet Gun Mk1",side:1,ty:"phys",shots:1,snd:"bullet",hsnd:"ghit",hs:7,dr:[9,9],dmg:9,en:0,ht:1,min:1,max:2,w:25,cost:0,c:"#ffcf70",arc:0},
+{n:"Bullet Gun Mk2",side:1,ty:"phys",shots:2,gap:300,snd:"bullet",hsnd:"ghit",hs:7,dr:[5,8],dmg:7,en:0,ht:2,min:1,max:2,w:25,cost:200,c:"#ffcf70",arc:0},
+{n:"Bullet Gun Mk3",side:1,ty:"phys",shots:3,gap:300,snd:"bullet",hsnd:"ghit",hs:7,dr:[6,9],dmg:8,en:0,ht:3,min:1,max:2,w:25,cost:350,c:"#ffcf70",arc:0},
 {n:"Flame Thrower Mk1",ty:"fire",shots:3,gap:450,snd:"flame",sndMax:1.7,fx:1,dur:700,hitAt:.45,dr:[3,9],dmg:6,hd:8,hdr:[1,8],en:2,ht:3,min:1,max:3,w:25,cost:200,c:"#ff8a2a",arc:0},
 {n:"Arm Blade",ty:"phys",melee:1,side:1,bdup:1,hsnd:"swhit",rnd:.1,hs:14,dr:[12,17],dmg:14,en:0,ht:1,min:1,max:2,w:25,cost:100,c:"#ffb43a",arc:0},
 {n:"Pellet Drone",ty:"phys",drone:1,shots:12,dr:[1,4],dmg:2,en:0,ht:0,min:1,max:12,w:25,cost:200,c:"#ffb43a",arc:0},
 {n:"Rotary Minigun",mythic:1,smoke:1,mfs:1.35,mfl:[[151.5,27.5],[149.3,32.8],[144.0,35.0],[138.7,32.8],[136.5,27.5],[138.7,22.2],[144.0,20.0],[149.3,22.2]],ty:"phys",shots:50,snd:"rmg",sv:.6,hitSnd:"sawhit",chg:550,gapMs:57,dr:[1,2],dmg:2,en:4,ht:12,min:1,max:4,w:25,cost:1500,c:"#ff5a3a",arc:0},
  {n:"Mine Launcher",mythic:1,mine:1,ty:"phys",shots:1,dr:[77,145],dmg:110,en:0,ht:0,min:1,max:12,w:25,cost:1500,c:"#8a9099",arc:0,sndL:"grenade"},
- {n:"Saw Arm",mythic:1,side:1,saw:1,mid:1,ty:"phys",shots:20,dr:[2,7],dmg:5,en:3,ht:8,min:1,max:2,w:25,cost:1500,c:"#ff9a2e",arc:0},
- {n:"Big Rocket Launcher",mythic:1,rocket:1,ty:"phys",shots:1,dr:[225,378],dmg:300,en:5,ht:15,min:1,max:12,w:25,cost:1500,c:"#ff6a3a",arc:0},
+ {n:"Saw Arm",gone:1,mythic:1,side:1,saw:1,mid:1,ty:"phys",shots:20,dr:[2,7],dmg:5,en:3,ht:8,min:1,max:2,w:25,cost:1500,c:"#ff9a2e",arc:0},
+ {n:"Big Rocket Launcher",side:1,mythic:1,rocket:1,ty:"phys",shots:1,dr:[225,378],dmg:300,en:5,ht:15,min:1,max:12,w:25,cost:1500,c:"#ff6a3a",arc:0},
  {n:"Energy Gun",ty:"energy",bolt:1,shots:6,gap:300,hsnd:"elec",rnd:.1,hs:5,ed:1,edLast:1,dr:[5,9],dmg:7,en:3,ht:6,min:1,max:6,w:25,cost:220,c:"#6fd0ff",arc:0},
  {n:"Siphon Drone MK1",mythic:1,ty:"phys",drone:1,siphon:1,dr:[15,15],dmg:15,heal:15,en:0,ht:0,min:1,max:12,w:25,cost:1500,c:"#34d058",arc:0},
  {n:"Siphon Drone MK2",mythic:1,ty:"phys",drone:1,siphon:1,dr:[25,25],dmg:25,heal:25,en:0,ht:0,min:1,max:12,w:25,cost:1500,c:"#34d058",arc:0},
  {n:"Rocket Launcher Mk1",ty:"phys",rkp:1,shots:4,gap:190,hs:4,dr:[2,3],dmg:3,hd:1,en:2,ht:3,min:1,max:8,w:25,cost:100,c:"#ff6a3a",arc:0},
  {n:"Rocket Launcher Mk2",ty:"phys",rkp:1,shots:8,gap:120,hs:4,dr:[2,4],dmg:3,hd:1,hdr:[1,2],hde:2,en:3,ht:6,min:1,max:8,w:25,cost:200,c:"#ff6a3a",arc:0},
  {n:"Rocket Launcher Mk3",ty:"phys",rkp:1,rkv:1,shots:12,waves:2,hs:4,dr:[1,5],dmg:3,hd:2,hdFrom:6,en:5,ht:10,min:1,max:10,w:25,cost:350,c:"#ff6a3a",arc:0},
- {n:"Shotgun",mythic:1,shotgun:1,mfl:[[184,14.5],[184,29.5]],mfs:3,mfd:130,smoke:1,ty:"phys",shots:4,gap:0,snd:"sgn",snd2:"sgn2",hsnd:"ghit",hs:9,dur:110,dr:[1,32],dmg:17,en:3,ht:6,min:1,max:3,w:25,cost:1500,c:"#ffb43a",arc:0},
+ {n:"Shotgun",side:1,mythic:1,shotgun:1,mfl:[[184,14.5],[184,29.5]],mfs:3,mfd:130,smoke:1,ty:"phys",shots:4,gap:0,snd:"sgn",snd2:"sgn2",hsnd:"ghit",hs:9,dur:110,dr:[1,32],dmg:17,en:3,ht:6,min:1,max:3,w:25,cost:1500,c:"#ffb43a",arc:0},
 {n:"Arc Drone",ty:"energy",drone:1,lz:{n:1,tk:1,dur:380,sfx:"laser1"},shots:1,dr:[33,37],dmg:35,en:0,ht:0,min:1,max:12,w:25,cost:350,c:"#4aa8ff",arc:0},
 {n:"Twin Arc Drone",ty:"energy",drone:1,lz:{n:2,tk:1,dur:380,gap:260,sfx:"laser1"},shots:2,dr:[28,32],dmg:30,en:0,ht:0,min:1,max:12,w:25,cost:800,c:"#4aa8ff",arc:0},
 {n:"Storm Lance Drone",mythic:1,ty:"energy",drone:1,lz:{n:1,tk:9,dur:1700,charge:1100,big:1},shots:9,dr:[9,11],dmg:10,en:0,ht:0,min:1,max:12,w:25,cost:1500,c:"#4aa8ff",arc:0},
-{n:"Hellstorm Gatling",mythic:1,smoke:1,mfs:1.2,mfl:[[143.0,34.7],[136.1,41.2],[149.4,41.3],[139.1,49.9],[147.0,50.0],[167.0,34.7],[160.1,41.2],[173.4,41.3],[163.1,49.9],[171.0,50.0],[143.0,67.7],[136.1,74.2],[149.4,74.3],[139.1,82.9],[147.0,83.0],[167.0,67.7],[160.1,74.2],[173.4,74.3],[163.1,82.9],[171.0,83.0]],ty:"phys",shots:150,snd:"mgx",sv:.6,hitSnd:"sawhit",chg:450,gapMs:17,dr:[1,2],dmg:2,en:6,ht:20,min:1,max:4,w:25,cost:1500,c:"#ff5a3a",arc:0},
+{n:"Hellstorm Gatling",gone:1,mythic:1,smoke:1,mfs:1.2,mfl:[[143.0,34.7],[136.1,41.2],[149.4,41.3],[139.1,49.9],[147.0,50.0],[167.0,34.7],[160.1,41.2],[173.4,41.3],[163.1,49.9],[171.0,50.0],[143.0,67.7],[136.1,74.2],[149.4,74.3],[139.1,82.9],[147.0,83.0],[167.0,67.7],[160.1,74.2],[173.4,74.3],[163.1,82.9],[171.0,83.0]],ty:"phys",shots:150,snd:"mgx",sv:.6,hitSnd:"sawhit",chg:450,gapMs:17,dr:[1,2],dmg:2,en:6,ht:20,min:1,max:4,w:25,cost:1500,c:"#ff5a3a",arc:0},
  {n:"Mass Deflector",mythic:1,melee:1,side:1,charge:1,slam:1,ty:"phys",hsnd:"swhit",hs:14,dr:[66,106],dmg:86,push:5,brk:{p:3},en:20,ht:10,min:1,max:1,w:56,cost:1500,c:"#ffb43a",arc:0},
  {n:"Sparks",mythic:1,melee:1,side:1,charge:1,zap:1,ty:"energy",hsnd:"swhit",hs:14,dr:[48,68],dmg:58,ed:52,push:1,brk:{e:3},en:24,ht:0,min:1,max:1,w:59,cost:1500,c:"#6fd0ff",arc:0},
  {n:"Meltdown",mythic:1,melee:1,side:1,charge:1,melt:1,ty:"fire",hsnd:"swhit",hs:14,dr:[48,68],dmg:58,hd:52,push:1,brk:{f:3},en:11,ht:18,min:1,max:1,w:58,cost:1500,c:"#ff6a2a",arc:0},
@@ -1293,7 +1293,7 @@ const W=[
 const M=[MALL[0]];/* teleporter only (index 0); the other modules stay out until added back one by one */
 const AUTO=[4,0,2,5,1,3,6],SN=["Top 1","Top 2","Left 1","Left 2","Right 1","Right 2","Drone"],okS=(i,si)=>{const w=W[i];if(!w)return true;if(w.drone)return si==6;if(si==6)return false;return !(w.side&&si<2)},SIDEMSG="That doesn't fit this slot. Arm Blades: Left/Right slots only. Drones: the Drone slot only.";let SSEL=null;
 const $=id=>document.getElementById(id);
-let S={camp:[],lv:{},bi:{},rating:1000,loads:[],cr:100,wins:0,own:{t:[0],l:[0],w:[0,1],m:[]},sel:{t:0,l:0,w:[null,null,null,null,0,null],m:null}};
+let S={camp:[],lv:{},bi:{},rating:1000,loads:[],cr:100,wins:0,own:{t:[0],l:[0],w:[0,3],m:[]},sel:{t:0,l:0,w:[null,null,null,null,0,null],m:null}};
 try{const r=localStorage.getItem("mechfoundry");if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
 const save=()=>{try{localStorage.setItem("mechfoundry",JSON.stringify(S))}catch(e){}};
 const NOT={n:"No torso",hp:0,en:0,hc:0,cool:0,cap:0,c:"#4b5668"},CAPO=n=>n.t==null?1e9:T[n.t].cap;
@@ -1660,6 +1660,10 @@ if(!S.mmig2){S.mmig2=1;const mp=x=>x===3?0:null,cl=o=>{if(!o)return;const n={};f
 if(!S.rmcu){S.rmcu=1;const cl=(k,len)=>{S.own[k]=(S.own[k]||[]).filter(x=>x<len);for(const x in (S.xs[k]||{}))if(+x>=len)delete S.xs[k][x]};cl("t",T.length);cl("l",L.length);cl("m",M.length);const q=S.sel;if(q.t!=null&&q.t>=T.length){q.t=0;q.tu=null}if(q.l!=null&&q.l>=L.length){q.l=0;q.lu=null}if(q.m!=null&&q.m>=M.length){q.m=null;q.mu=null}if(q.mx){q.mx=q.mx.filter(x=>x<M.length)}(S.loads||[]).forEach(l=>{if(!l)return;if(l.t!=null&&l.t>=T.length)l.t=0;if(l.l!=null&&l.l>=L.length)l.l=0;if(l.m!=null&&l.m>=M.length)l.m=null;if(l.mx)l.mx=l.mx.filter(x=>x<M.length)});save()}
 if(!S.mclr){S.mclr=1;S.own.m=[];S.xs.m={};S.up.m={};S.cn.m={};{const q=S.sel;q.m=null;q.mu=null;q.mx=[];q.mxu=[]}(S.loads||[]).forEach(l=>{if(!l)return;l.m=null;l.mu=null;l.mx=[];l.mxu=[]});save()}
 if(!S.mtpr){S.mtpr=1;S.own.m=S.own.m||[];S.xs.m=S.xs.m||{};if(!S.own.m.includes(0)){addI("m",0,false);addI("m",0,true)}{const q=S.sel;q.mx=q.mx||[];q.mxu=q.mxu||[];const c=(S.xs.m[0]||[]).find(z=>!z.s);if(c&&q.mx[7]==null){q.mx[7]=0;q.mxu[7]=c.u}}save()}
+if(!S.rgn){S.rgn=1;const G=[1,11,23];for(const g of G){S.own.w=(S.own.w||[]).filter(x=>x!==g);for(const o of [S.xs.w,S.up.w,S.cn.w])if(o)delete o[g]}
+ const cl=q=>{if(!q||!q.w)return;q.w=q.w.map(x=>G.includes(x)?null:x);q.wu=[];for(const si of[0,1]){const x=q.w[si];if(x!=null&&W[x]&&W[x].side){q.w[si]=null;const f=[2,3,4,5].find(j=>q.w[j]==null);if(f!=null)q.w[f]=x}}};
+ cl(S.sel);(S.loads||[]).forEach(cl);cl(S.bot);const D=S.designs||{};for(const k in D){const d=D[k];if(d&&Array.isArray(d.w))d.w=d.w.map(x=>x===1?16:G.includes(x)?null:x)}
+ if(!S.own.w.length)S.own.w=[0,3];save()}
 function fixU(sel){sel.wu=sel.wu||[null,null,null,null,null,null,null];
   sel.mx=sel.mx||[];sel.mxu=sel.mxu||[];while(sel.mx.length<8)sel.mx.push(null);while(sel.mxu.length<8)sel.mxu.push(null);
   {const isT=id=>id!=null&&M[id]&&M[id].tp;if(isT(sel.m)){if(sel.mx[7]==null){sel.mx[7]=sel.m;sel.mxu[7]=sel.mu}sel.m=null;sel.mu=null}
@@ -2181,7 +2185,7 @@ let SHT=0;const CARTIC="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy
 const DPR=[1200,400,8000,2500,800],DTK=[1,1,0,0,0];
 const dayId=()=>Math.floor(Date.now()/864e5);
 function dailyPicks(d){let a=(d*2654435761+12345)>>>0;const rnd=()=>{a=(a+0x6D2B79F5)>>>0;let t=a;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296};
-  const out=[];for(let t=4;t>=0;t--){const pool=[];for(const k in K)K[k].forEach((it,i)=>{if(tier(it.cost)==t)pool.push([k,i])});if(pool.length){const [k,i]=pool[Math.floor(rnd()*pool.length)];out.push({t,k,i,p:DPR[4-t],tk:DTK[4-t]})}}return out}
+  const out=[];for(let t=4;t>=0;t--){const pool=[];for(const k in K)K[k].forEach((it,i)=>{if(!it.gone&&tier(it.cost)==t)pool.push([k,i])});if(pool.length){const [k,i]=pool[Math.floor(rnd()*pool.length)];out.push({t,k,i,p:DPR[4-t],tk:DTK[4-t]})}}return out}
 const dailyLeft=()=>{const m=864e5-Date.now()%864e5,h=Math.floor(m/36e5),mi=Math.floor(m/6e4)%60,se=Math.floor(m/1e3)%60;return[h,mi,se].map(v=>String(v).padStart(2,"0")).join(":")};
 const dailyBought=()=>{const d=dayId();if(!S.dsp||S.dsp.d!=d)S.dsp={d,b:[]};return S.dsp.b};
 const dailyHTML=()=>{const d=dayId(),bt=dailyBought(),DC=["#6b7686","#2f8fff","#b05cff","#ff9a2e","#ff2a2a"];
@@ -2215,7 +2219,7 @@ function openBox(i,b){const bx=BOX[+i];if(/[?&]mythtest/.test(location.search))b
   $("cfs").innerHTML=`<div id="cfw"><img src="${CFRAME}" alt=""><div id="cscr" class="${bx.c||""}" style="--m:url(${CRI.b})">${crateHTML(bx.c)}<div id="cres"></div></div><button class="nb cbtn hide" id="cok">COLLECT</button></div>`;$("cfs").classList.remove("hide");$("store").classList.add("cfo");void $("cfs").offsetWidth;$("cfs").classList.add("on");{const cf=$("cfs");cf.classList.toggle("lite",S.gq>0||/OPR\//.test(navigator.userAgent));/* slow machine? measure the frame rate while the crate opens and switch the heavy effects off */setTimeout(()=>{let n=0,l=0,sum=0;(function f(t){if(cf.classList.contains("hide"))return;if(l)sum+=t-l;l=t;if(++n>=36){if(sum/35>40)cf.classList.add("lite");return}requestAnimationFrame(f)})(performance.now())},1200)}
   const cr=$("crate");{const r=b.getBoundingClientRect(),c=cr.getBoundingClientRect();cr.style.transition="none";cr.style.transform=`translate(${r.left+r.width/2-(c.left+c.width/2)}px,${r.top+r.height/2-(c.top+c.height/2)}px) translateY(60%) scale(${Math.max(.12,r.width/c.width)})`;cr.style.opacity=".85";void cr.offsetWidth;cr.style.transition="transform .9s cubic-bezier(.2,.85,.25,1),opacity .4s";cr.style.transform="translateY(60%)";cr.style.opacity="1";playBuf("equip",.45)}
   S.bxc=(S.bxc||0)+1;const force=false,got=[];for(let n=0;n<(bx.k||3);n++){let r=Math.random()*100,t=0;for(;t<bx.w.length-1&&r>=bx.w[t];t++)r-=bx.w[t];
-    let pool=[];for(let d=0;d<5&&!pool.length;d++)for(const tt of (d?[t-d,t+d]:[t])){if(tt<0||tt>4||pool.length)continue;for(const k in K)K[k].forEach((it,i)=>{if(tier(it.cost)==tt)pool.push([k,i])});if(pool.length)t=tt}
+    let pool=[];for(let d=0;d<5&&!pool.length;d++)for(const tt of (d?[t-d,t+d]:[t])){if(tt<0||tt>4||pool.length)continue;for(const k in K)K[k].forEach((it,i)=>{if(!it.gone&&tier(it.cost)==tt)pool.push([k,i])});if(pool.length)t=tt}
     const [k,i]=force&&n==0?(q_=>[q_[0],+q_[1]])([...SHN][Math.floor(Math.random()*SHN.size)].split(":")):pool[Math.floor(Math.random()*pool.length)],it=K[k][i],dup=S.own[k].includes(i);if(force&&n==0)t=tier(it.cost);
     const sh=force&&n==0||canSh(k,i)&&Math.random()<SHP;addI(k,i,sh);got.push({k,it,t,dup,sh})}
   const GL=["#98a1ac","#3b82f6","#b05cf0","#ffb020","#ff7878"],top=Math.max(...got.map(g=>g.t));
@@ -2241,23 +2245,23 @@ const MIS=[
 {id:2,n:"Dust Road",t:0,l:1,w:[0,0],mul:.9,r:160},
 {id:3,n:"Ridge Patrol",t:0,l:0,w:[0,2],mul:1,r:200},
 {id:5,n:"Cooling Station",t:0,l:1,w:[2,2,0],mul:1.1,r:260},
-{id:6,n:"Thermal Run",t:0,l:1,w:[2,1,0],mul:1.2,r:300},
-{id:7,n:"Siege Line",t:0,l:0,w:[1,2,0],mul:1.3,r:350},
+{id:6,n:"Thermal Run",t:0,l:1,w:[2,16,0],mul:1.2,r:300},
+{id:7,n:"Siege Line",t:0,l:0,w:[16,2,0],mul:1.3,r:350},
 {id:4,n:"Foreman Brute",t:7,l:3,w:[null,null,9,19,9,19,15],mul:1,r:400,u:1,boss:1,fixed:1,arm:1},
-{id:9,n:"Hook Alley",t:0,l:1,w:[1,1,0],mul:1.5,r:420},
-{id:10,n:"Ion Storm",t:0,l:1,w:[2,1,2],mul:1.6,r:480},
-{id:25,n:"Relay Tower",t:0,l:1,w:[1,1,2],mul:1.7,r:520},
-{id:26,n:"Scrap Cathedral",t:0,l:1,w:[1,2,2],mul:1.8,r:540},
-{id:11,n:"Gatling Fortress",t:0,l:0,w:[2,2,1],mul:1.9,r:560},
+{id:9,n:"Hook Alley",t:0,l:1,w:[16,16,0],mul:1.5,r:420},
+{id:10,n:"Ion Storm",t:0,l:1,w:[2,16,2],mul:1.6,r:480},
+{id:25,n:"Relay Tower",t:0,l:1,w:[16,16,2],mul:1.7,r:520},
+{id:26,n:"Scrap Cathedral",t:0,l:1,w:[16,2,2],mul:1.8,r:540},
+{id:11,n:"Gatling Fortress",t:0,l:0,w:[2,2,16],mul:1.9,r:560},
 {id:13,n:"Rust Canyon",t:0,l:1,w:[3,2,0],mul:2.0,r:600},
-{id:8,n:"Overlord Prime",t:0,l:1,w:[1,2,2],mul:2.2,r:800,boss:1},
+{id:8,n:"Overlord Prime",t:0,l:1,w:[16,2,2],mul:2.2,r:800,boss:1},
 {id:14,n:"Slag Crossing",t:0,l:1,w:[3,6,2],mul:2.1,r:650},
-{id:15,n:"Pressure Gate",t:0,l:1,w:[4,2,1],mul:2.2,r:720},
+{id:15,n:"Pressure Gate",t:0,l:1,w:[4,2,16],mul:2.2,r:720},
 {id:27,n:"Ashfall Depot",t:0,l:1,w:[3,3,2],mul:2.25,r:760},
 {id:17,n:"Voltage Yard",t:0,l:1,w:[13,3,2],mul:2.3,r:800},
-{id:28,n:"Magnet Pass",t:0,l:1,w:[13,3,1],mul:2.35,r:840},
-{id:18,n:"Blackout Ridge",t:0,l:1,w:[13,4,1],mul:2.4,r:880},
-{id:12,n:"The Architect",t:0,l:1,w:[1,1,2],mul:2.7,r:1500,boss:1},
+{id:28,n:"Magnet Pass",t:0,l:1,w:[13,3,16],mul:2.35,r:840},
+{id:18,n:"Blackout Ridge",t:0,l:1,w:[13,4,16],mul:2.4,r:880},
+{id:12,n:"The Architect",t:0,l:1,w:[16,16,2],mul:2.7,r:1500,boss:1},
 {id:19,n:"Crossfire Bay",t:0,l:1,w:[5,4,2],mul:2.5,r:960},
 {id:29,n:"Kiln Row",t:0,l:1,w:[4,6,2],mul:2.55,r:1000},
 {id:16,n:"Warden Titan",t:0,l:1,w:[4,4,6],mul:2.6,r:1800},
@@ -2541,7 +2545,7 @@ function botMech(){if(!S.bot){S.bot=JSON.parse(JSON.stringify(S.sel));save()}con
 function startBattle0(mi){
   try{$("ctl").parentNode.classList.add("dn")}catch(e){}
   const rnd=n=>Math.floor(Math.random()*n),tier=S.wins;
-  const ws=[];const pool=W.map((_,i)=>i).filter(i=>i<=2+tier&&!W[i].side&&!W[i].drone&&!W[i].mythic);while(ws.length<3)ws.push(pool[rnd(pool.length)]);
+  const ws=[];const pool=W.map((_,i)=>i).filter(i=>i<=2+tier&&!W[i].side&&!W[i].gone&&!W[i].drone&&!W[i].mythic);while(ws.length<3)ws.push(pool[rnd(pool.length)]);
   const p=myMech(),e=mi?(designFor(mi)?specMech(designFor(mi)):mi.fixed?foremanMech():mechOf(mi.t,mi.l,mi.w,mi.mul)):botMech();
   if(mi&&mi.swarm)setupSwarm(e);e.c="#d9604f";{const mid=Math.random()<.5,pl=mid?4:3,el=mid?5:6;p.x=pl;e.x=el;p.vx=pl;e.vx=el}if(p.weps.some(w=>w.drone))p.dp=0;if(e.weps.some(w=>w.drone))e.dp=0;
   if(!e.swarm){p.en=p.enCap||p.en;e.en=e.enCap||e.en}/* energy starts at the max capacity */
