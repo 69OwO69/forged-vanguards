@@ -1609,7 +1609,7 @@ function drawParts(g,m,tm){
     g.restore()};
   const MID=wi=>(W[m.wids[wi]]||{}).mid;
   if(m.sawIn){const a=m.sawIn,sp0=a.sawPos;if(sp0&&a.wx!=null){const e2=art("w",sp0.id);if(e2){g.save();g.translate(((a.wx+a.sdir*sp0.x*(a._ms||1)-m.wx)*m.sdir)/(m._ms||1),(sp0.y*(a._ms||1)+(a.wy-m.wy))/(m._ms||1));g.scale(a.sdir*m.sdir,1);sp(g,e2,0,0,e2.h,sp0.rot);g.restore()}}}
-  if(m.hk&&!m._dm){const q1_=slotPos(2),q2_=slotPos(3);m._hka=[(q1_[0]+q2_[0])/2+8,(q1_[1]+q2_[1])/2-5+sw];drawHook(g,m,m._hka[0],m._hka[1],0)}
+  if(m.hk&&!m._dm){const q1_=slotPos(2),q2_=slotPos(3);m._hka=[(q1_[0]+q2_[0])/2+8,(q1_[1]+q2_[1])/2-5+sw];drawHook(g,m,m._hka[0],m._hka[1])}
   m.wids.forEach((_,wi)=>{if(MID(wi))return;if(m.wsl[wi]==3)gun(wi,true);else if(m.wsl[wi]==1)gun(wi,false,true);else if(m.wsl[wi]==6){if(m.dp!=null&&m.dp<.5)gun(wi,true,true);else gun(wi,false)}});
   m.wids.forEach((_,wi)=>{if(!MID(wi)&&m.wsl[wi]==2)gun(wi,true)});
   if(le&&le.three&&m._dm!=2){g.save();g.translate(m.kbx||0,0);if("filter" in g)g.filter="brightness(.8) "+(m.gf||"");sp(g,le.bk,tx0+tw*.98,-1.5,le.bk.h);g.restore()}if(!(le&&le.over)){g.save();g.translate(m.kbx||0,0);legs(true);g.restore()}if(le&&le.two){g.save();g.translate(m.kbx||0,0);legs(false);g.restore()}
@@ -1622,7 +1622,6 @@ function drawParts(g,m,tm){
   m.wids.forEach((_,wi)=>{if(!MID(wi)&&m.wsl[wi]>=4&&m.wsl[wi]!=5&&m.wsl[wi]!=4&&m.wsl[wi]!=6)gun(wi,false)});
   m.wids.forEach((_,wi)=>{if(m.wsl[wi]==0)gun(wi,false)});
   m.wids.forEach((_,wi)=>{if(!MID(wi)&&m.wsl[wi]==4)gun(wi,false)});
-  if(m.hk&&!m._dm&&m._hka)drawHook(g,m,m._hka[0],m._hka[1],1);
 }
 const GC1=document.createElement("canvas"),GC2=document.createElement("canvas");GC1.width=GC2.width=OW/4;GC1.height=GC2.height=OH/4;
 /* centre a battle mech's legs on its tile: wide or off-centre leg art (treads etc.) no longer pushes the build forward of the tile */
@@ -3747,8 +3746,8 @@ const HKI={},HKX=-4,HKY=-58,HKS=.458;
 function hkImg(k){let e=HKI[k];if(!e){e=HKI[k]=new Image();e.src=HKART[k].u}return e.complete&&e.naturalWidth?e:null}
 function drawHook(g,m,x,y,part){const h=m.hk;if(!h||m._dm)return;g.save();g.translate(x,y);g.scale(HKS,HKS);
   const di=(k,sx)=>{const im=hkImg(k);if(!im)return;const vb=HKART[k].vb;g.drawImage(im,vb[0]*sx,vb[1],vb[2]*sx,vb[3])};
-  if(!part){g.save();g.scale(h.sc,1);di("body",1);g.restore()}
-  if(part&&h.len>0){const L=h.len/HKS;di("rope",L/1436);g.save();g.translate(L,0);di(h.open?"open":"closed",1);g.restore()}g.restore()}
+  if(h.len>0){const L=h.len/HKS;di("rope",L/1436);g.save();g.translate(L,0);di(h.open?"open":"closed",1);g.restore()}
+  g.save();g.scale(h.sc,1);di("body",1);g.restore();g.restore()}
 const hkOK=(a,o)=>{const w=a.hkI!=null&&W[a.hkI];if(!w||!B||B.over||a.did)return false;const d=Math.abs(o.x-a.x);return(a.hkUsed||0)<(w.uses||1)&&a.en>=w.en&&d>=Math.max(2,w.min)};
 async function hookFire(a){
   const o=a==B.p?B.e:B.p;if(B.busy||!hkOK(a,o))return;const w=W[a.hkI],d=Math.abs(o.x-a.x),dir=fdir(a);
