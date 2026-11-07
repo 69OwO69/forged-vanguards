@@ -3763,7 +3763,7 @@ async function hookFire(a){
     B.fl.push({x:px(o.vx!=null?o.vx:o.x),y:GY-160,t:"-"+dmg,l:60});say((a==B.p?"You":"Enemy")+" hooked for "+dmg+(w.hd?" (+"+w.hd+" heat)":"")+".");
     if(o.hp<=0)dead=o;else if(d>1){
       const sg=Math.sign(o.x-a.x)||dir,ox0=o.x;let tt=a.x+sg;const bl=[B.p,B.e,...(B.sms||[])].filter(q=>q&&q!==o&&!q.dead&&!q.gone);while(tt!=ox0&&bl.some(q=>q.x==tt))tt+=sg;
-      if(tt!=ox0){o.x=tt;const dur=Math.max(300,Math.abs(ox0-tt)*TS/.833);o.ps={a:o.vx!=null?o.vx:ox0,b:tt,t0:performance.now(),dur};mineCheck(o,ox0,tt,true);
+      if(tt!=ox0){o.x=tt;const dur=Math.max(300,Math.abs(ox0-tt)*TS/.583);o.ps={a:o.vx!=null?o.vx:ox0,b:tt,t0:performance.now(),dur};mineCheck(o,ox0,tt,true);
         const t0=performance.now();await anim(dur+60,()=>{const dv=Math.abs(px(o.vx)-px(a.vx));h.len=Math.max(0,(dv-.7*TS)/MK)})}}}
   h.len=0;await anim(333,k=>{h.sc=1-.8*k});a.hk=null;await sleep(200);
   if(dead){B.busy=true;controls();await kill(dead);finish(dead==B.e);return}
