@@ -3296,7 +3296,7 @@ try{if(!S.gj7){S.gj7=1;addI("t",7,true);save();if(typeof head=="function")setTim
 (function(){const lab=()=>{$("sm").textContent=S.mute?"Off":"On";$("sx").textContent=S.nosfx?"Off":"On";};
  const gear=()=>$("gear").classList.toggle("hide",$("hangar").classList.contains("hide"));setInterval(gear,300);
  $("gear").onclick=()=>{lab();{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("set").onclick=e=>{if(e.target.id=="set")$("set").classList.add("hide")};
- $("sm").onclick=()=>{S.mute=!S.mute;save();S.mute?(stopMusic(),lobbyOff()):lobbyOn();lab()};$("sx").onclick=()=>{S.nosfx=!S.nosfx;save();lab();if(!S.nosfx)playBuf("click")};gear()})();
+ $("sm").onclick=()=>{S.mute=!S.mute;save();const inB=B&&!$("battle").classList.contains("hide");S.mute?(stopMusic(),lobbyOff()):inB?startMusic():lobbyOn();lab()};$("sx").onclick=()=>{S.nosfx=!S.nosfx;save();lab();if(!S.nosfx)playBuf("click")};gear()})();
 
 $("mu").onclick=()=>{S.mute=!S.mute;save();if(S.mute){stopMusic();$("mu").textContent="Music: off"}else{$("mu").textContent="Music: on";const inB=B&&!$("battle").classList.contains("hide");if(inB)startMusic();else{stopMusic();if(typeof lobbyOn=="function")lobbyOn();else startMusic()}}};
 const legal=(a,b,i)=>{const w=a.weps[i],d=Math.abs(a.x-b.x);return !B.over&&!w.drone&&!a.used[i]&&a.en>=w.en&&(a.am||0)>=(w.am||0)&&(a.ra||0)>=(w.ra||0)&&d>=w.min&&d<=w.max};
@@ -3763,7 +3763,7 @@ async function hookFire(a){
     B.fl.push({x:px(o.vx!=null?o.vx:o.x),y:GY-160,t:"-"+dmg,l:60});say((a==B.p?"You":"Enemy")+" hooked for "+dmg+(w.hd?" (+"+w.hd+" heat)":"")+".");
     if(o.hp<=0)dead=o;else if(d>1){
       const sg=Math.sign(o.x-a.x)||dir,ox0=o.x;let tt=a.x+sg;const bl=[B.p,B.e,...(B.sms||[])].filter(q=>q&&q!==o&&!q.dead&&!q.gone);while(tt!=ox0&&bl.some(q=>q.x==tt))tt+=sg;
-      if(tt!=ox0){o.x=tt;const dur=Math.max(300,Math.abs(ox0-tt)*TS/1.25);o.ps={a:o.vx!=null?o.vx:ox0,b:tt,t0:performance.now(),dur};mineCheck(o,ox0,tt,true);
+      if(tt!=ox0){o.x=tt;const dur=Math.max(300,Math.abs(ox0-tt)*TS/.833);o.ps={a:o.vx!=null?o.vx:ox0,b:tt,t0:performance.now(),dur};mineCheck(o,ox0,tt,true);
         const t0=performance.now();await anim(dur+60,()=>{const dv=Math.abs(px(o.vx)-px(a.vx));h.len=Math.max(0,(dv-.7*TS)/MK)})}}}
   h.len=0;await anim(333,k=>{h.sc=1-.8*k});a.hk=null;await sleep(200);
   if(dead){B.busy=true;controls();await kill(dead);finish(dead==B.e);return}
