@@ -1025,7 +1025,9 @@ img,canvas,svg{-webkit-user-drag:none}
 #ctl .bkb .bu{left:calc(var(--u)*-.05);top:calc(var(--u)*-.05);width:calc(var(--u)*75.05);height:calc(var(--u)*75.05)}
 #ctl .bkb .bd{display:none;left:calc(var(--u)*-.05);top:calc(var(--u)*-.05);width:calc(var(--u)*75.05);height:calc(var(--u)*70.05)}
 #ctl .bkb .bp{left:calc(var(--u)*2.5);top:0;width:calc(var(--u)*70);height:calc(var(--u)*70);display:flex;align-items:center;justify-content:center}
-#ctl .bkb .bp img,#ctl .bkb .bp svg,#ctl .bkb .bp canvas{position:static;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain}
+#ctl .bkb .bp .wic{display:flex;width:100%;height:100%;align-items:center;justify-content:center}
+.bkb .bp .wic img{max-width:90%;max-height:90%}
+.bkb .bp img,#ctl .bkb .bp svg,#ctl .bkb .bp canvas{position:static;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain}
 #ctl .bkb .bo{display:none;left:calc(var(--u)*2.5);top:0;width:calc(var(--u)*70);height:calc(var(--u)*70)}
 #ctl .bkb .bx{left:calc(var(--u)*5);top:calc(var(--u)*2.5);width:calc(var(--u)*70);height:calc(var(--u)*67.5)}
 #ctl .bkb .bv{left:calc(var(--u)*2.5);top:0;width:calc(var(--u)*70);height:calc(var(--u)*70)}
@@ -2733,7 +2735,7 @@ function controls(){
       else it=wL()+wR();
     }else if(cat=="g"&&!B.ch){
       it=p.weps.map((w,i)=>{if(w.drone)return"";const id=p.wids[i],tx=`${w.n} · ${w.rocket?"rocket · lands in 4 turns · "+w.dr.join("-")+" dmg":w.rkp?DTX(w.dr,w.shots,"rockets")+" dmg":w.mine?"2 mines · "+w.dr.join("-")+" dmg each":DTX(w.dr||[w.dmg,w.dmg],w.shots||1)+" dmg"}${w.hd?" · "+(w.hdr?w.hdr.join("-"):w.hd)+" heat dmg":""}${w.push?" · push "+w.push:""}${w.pushS?" · 2nd shot pushes "+w.pushS[1]:""}${w.pull?" · pull "+w.pull:""}${w.ed?" · drains "+w.ed+" energy":""}${w.rd?" · -"+w.rd+"% armor":""}${w.cd?" · -"+w.cd+" cooling":""} · ${w.en} en${w.am?" · "+w.am+" ammo":""}${w.ra?" · "+w.ra+" rocket":""} · +${w.ht} heat · range ${w.min}-${w.max}`;
-        return T(W[id]?ICO("w",W[id],!!(p.wshn&&p.wshn[i])):"",tx,`data-f="${i}"`,!(mine&&legal(p,B.e,i)),wy(p,i,mine,d))}).join("");
+        return T(W[id]?`<span class="wic">${ICO("w",W[id],!!(p.wshn&&p.wshn[i]))}</span>`:"",tx,`data-f="${i}"`,!(mine&&legal(p,B.e,i)),wy(p,i,mine,d))}).join("");
     }else if(cat=="s"&&!B.ch){
       const sp=[];
       if(p.buff){if(p.ovT>0)sp.push(T(img(CBX.chg),`Overdrive · +20% damage · ${p.ovT} of 3 turns left`,"",true,null,[1]));else if(!p.ovUsed)sp.push(T(img(CBX.chg),"Overdrive · +20% damage for your next 3 turns · 3 en · once per battle",'data-a="ovd"',!(idle&&p.en>=3),p.en<3?["en"]:null,[0]));else sp.push(T(img(CBX.chg),"Overdrive · used this battle","",true,null,[1]))}
@@ -2942,13 +2944,16 @@ window.btRe=function(){if(lx<0||!B)return;const el=document.elementFromPoint(lx,
       if(it.ed)row(SVGI.bolt("#2fa7ff"),Math.max(1,SB(Math.round(it.ed*sc*(S.tf[i]?1.3:1)))),"Energy Damage","#2fa7ff");
       if(it.cd)row(SVGI.snow(),it.cd,"Cooling Damage","#8fe0ff");
       if(it.heal)row(HP20,"+"+Math.max(1,SB(Math.round(it.heal*sc))),"Healing");
-      if(it.push)row(SVGI.push(),it.push,"Knockback");if(it.pull)row(SVGI.push(),it.pull,"Pull");
-      row(SVGI.range(),it.min==it.max?it.min:it.min+" - "+it.max,"Range");
+      if(it.push)row(SVGI.push(),it.push,"Knockback");if(it.pull)row(SVGI.push(),it.pull,"Pull");if(it.hook)row(SVGI.push(),"To you","Reels the enemy in");
+      {const bk=it.brk||{};for(const [kk,nn] of [["p","Physical"],["f","Explosive"],["e","Electric"]])if(bk[kk]>0)row(SVGI.shield(1),"-"+bk[kk],nn+" guard break",ORG)}
+      for(const [kk,nn,cc,sg] of [["mec","Max energy","#46d46a",1],["mhc","Max heat",ORG,1],["mer","Energy regen / round","#46d46a",1],["mcl","Cooling / round","#8fe0ff",1],["mhp","Max hit points","#fff",1]])if(it[kk]){const v=it[kk];row(kk=="mec"||kk=="mer"?SVGI.bolt("#46d46a"):kk=="mhc"?SVGI.flame():kk=="mcl"?SVGI.snow():HP20,(v>0?"+":"")+v,nn,v<0?"#ff4a4a":cc)}
+      if(it.uses)row(SVGI.chev("#fff"),it.uses,"Use"+(it.uses>1?"s":"")+" per battle");
+      row(SVGI.range(),it.hook?"Unlimited":it.min==it.max?it.min:it.min+" - "+it.max,"Range");
       G();row(SVGI.bolt("#46d46a"),it.en||0,"Energy consumption","#46d46a");row(SVGI.flame(),SB(it.ht||0),"Heat generation",ORG)}
     else{const q=v=>Math.round((v||0)*sc);
-      if(k=="t"){const te_=SB(q(it.en)),th_=SB(q(it.hc)),tc_=SB(q(it.cool));row(HP20,SB(q(it.hp)),"Hit points");row(SVGI.bolt("#46d46a"),te_*2,"Max Energy","#46d46a");row(`<svg viewBox="0 0 32 32"><g fill="none" stroke="#46d46a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M16 27V6M8 14l8-8 8 8"/></g></svg>`,"+"+te_,"Energy regen / round","#46d46a");row(SVGI.flame(),th_,"Max Heat",ORG);row(SVGI.snow(),"-"+tc_,"Cooling / round","#8fe0ff");if(it.res)row(SVGI.shield(),it.res+"%","Armor",ORG)}
-      else if(k=="l"){if(it.hp)row(HP20,"+"+SB(q(it.hp)),"Hit points");row(SVGI.chev("#fff"),it.s,"Tile"+(it.s>1?"s":"")+" per move")}
-      else{if(it.hp)row(HP20,"+"+q(it.hp),"Hit points");if(it.en)row(SVGI.bolt("#46d46a"),"+"+q(it.en),"Energy per turn","#46d46a");if(it.hc)row(SVGI.flame(),"+"+q(it.hc),"Heat capacity",ORG);if(it.cool)row(SVGI.snow(),"+"+q(it.cool),"Cooling per turn","#8fe0ff");if(it.res)row(SVGI.shield(),"+"+q(it.res)+"%","Armor",ORG);if(it.ec)row(SVGI.bolt("#46d46a"),"+"+q(it.ec),"Energy capacity","#46d46a");for(const [kk,nn] of [["rp","Physical"],["rf","Fire"],["re","Energy"]])if(it[kk])row(SVGI.shield(),"+"+q(it[kk]),nn+" resistance","#7fd68a");if(it.am)row(SVGI.range(),"+"+q(it.am),"Bullet storage");if(it.ra)row(SVGI.range(),"+"+q(it.ra),"Rocket storage")}}
+      if(k=="t"){const te_=SB(q(it.en)),th_=SB(q(it.hc)),tc_=SB(q(it.cool));row(HP20,SB(q(it.hp)),"Hit points");row(SVGI.bolt("#46d46a"),te_*2,"Max Energy","#46d46a");row(`<svg viewBox="0 0 32 32"><g fill="none" stroke="#46d46a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M16 27V6M8 14l8-8 8 8"/></g></svg>`,"+"+te_,"Energy regen / round","#46d46a");row(SVGI.flame(),th_,"Max Heat",ORG);row(SVGI.snow(),"-"+tc_,"Cooling / round","#8fe0ff");if(it.res)row(SVGI.shield(),it.res+"%","Armor",ORG);if(it.stomp)row(SVGI.chev("#fff"),"Stomp","Ability: shockwave + Twin Walker");if(it.gas)row(SVGI.flame(),"Toxic Gas","Ability: once per battle");if(it.buff)row(SVGI.bolt("#46d46a"),"Overdrive","Ability: +20% damage")}
+      else if(k=="l"){if(it.hp)row(HP20,"+"+SB(q(it.hp)),"Hit points");row(SVGI.chev("#fff"),it.s,"Tile"+(it.s>1?"s":"")+" per move");if(it.j)row(SVGI.chev("#fff"),it.j,"Tile"+(it.j>1?"s":"")+" per jump")}
+      else{if(it.hp)row(HP20,"+"+q(it.hp),"Hit points");if(it.en)row(SVGI.bolt("#46d46a"),"+"+q(it.en),"Energy per turn","#46d46a");if(it.hc)row(SVGI.flame(),"+"+q(it.hc),"Heat capacity",ORG);if(it.cool)row(SVGI.snow(),"+"+q(it.cool),"Cooling per turn","#8fe0ff");if(it.res)row(SVGI.shield(),"+"+q(it.res)+"%","Armor",ORG);if(it.ec)row(SVGI.bolt("#46d46a"),"+"+q(it.ec),"Energy capacity","#46d46a");for(const [kk,nn] of [["rp","Physical"],["rf","Fire"],["re","Energy"]])if(it[kk])row(SVGI.shield(),"+"+q(it[kk]),nn+" resistance","#7fd68a");if(it.am)row(SVGI.range(),"+"+q(it.am),"Bullet storage");if(it.ra)row(SVGI.range(),"+"+q(it.ra),"Rocket storage");if(it.tp)row(SVGI.chev("#fff"),it.tp,"Teleport use"+(it.tp>1?"s":"")+" per battle")}}
     return R}
   /* vertical list like the APK's item info: name, weight, power level, rarity, props, then consumption (upgrade screen shows a -> b) */
   function inv(k,i,u,lv2){const it=K[k][i],own=S.own[k].includes(i),lv=own?(u?LVU(k,i,u):LVK(k,i)):1,sh=own&&u&&isSh(k,i,u),r=RI(k,i),xp=own?instX(k,i,u):0,cap=CAPL[r],nx=lv>=cap?null:cumP(r,lv+1),A=ivRows(k,i,u,lv),Bn=lv2!=null&&lv2!=lv?ivRows(k,i,u,lv2):null;
