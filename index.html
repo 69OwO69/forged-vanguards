@@ -1869,11 +1869,12 @@ function work(){
   
   $("wtp").innerHTML=`<i><img alt="" src="${WSI.i_eye}"></i><i class="kg"><img alt="kg" src="${WSI.i_kg}"></i><b class="${t&&wt>t.cap?"bad":""}">${wt.toLocaleString()} / ${t?t.cap.toLocaleString():"-"}</b>`;
   $("wnav").innerHTML=[["camp","singlePlayer","Campaign"],["arena","multiPlayer","Arena"],["work","hanger","Workshop"],["store","shop","Shop"],["menu","community","Menu"],["prof","profile","Profile"]].map(([g,ic,tt])=>`<button data-go="${g}" class="${g=="work"?"on":""}" title="${tt}"><img src="${WSI["i_"+ic]}" alt=""></button>`).join("");
-  const SEC=[["t","t","Torso","torso"],["l","l","Legs","leg"],["w","top","Top guns","topWeapon"],["w","side","Side guns","sideWeapon"],["w","drone","Drones","drone"],["w","hook","Hooks","harpoon"],["m","m","Mods","module"],["m","tp","Teleporters","teleport"]];
-  const rowsOf=([k,sec])=>K[k].flatMap((it,i)=>((k=="w"&&(it.hook?"hook":it.drone?"drone":it.side?"side":"top")!=sec)||(k=="m"&&(it.tp?"tp":"m")!=sec))?[]:S.own[k].includes(i)?XS(k,i).filter(c=>!(k=="w"?(s.wu||[]).includes(c.u):k=="m"?[s.mu].concat(s.mxu||[]).includes(c.u):s[k+"u"]===c.u)).map(c=>[it,i,c]):[[it,i,null]]).filter(([it,i])=>S.own[k].includes(i)).sort((a,b)=>SORTS[FL.sort](a,b)||(b[2]?b[2].x:0)-(a[2]?a[2].x:0));
+  const SEC=[["t","t","Torso","torso"],["l","l","Legs","leg"],["w","top","Top guns","topWeapon"],["w","side","Side guns","sideWeapon"],["w","drone","Drones","drone"],["m","m","Mods","module"],["m","tp","Teleporters","teleport"]];
+  const rowsOf0=([k,sec])=>K[k].flatMap((it,i)=>((k=="w"&&(it.hook?"hook":it.drone?"drone":it.side?"side":"top")!=sec)||(k=="m"&&(it.tp?"tp":"m")!=sec))?[]:S.own[k].includes(i)?XS(k,i).filter(c=>!(k=="w"?(s.wu||[]).includes(c.u):k=="m"?[s.mu].concat(s.mxu||[]).includes(c.u):s[k+"u"]===c.u)).map(c=>[it,i,c]):[[it,i,null]]).filter(([it,i])=>S.own[k].includes(i)).sort((a,b)=>SORTS[FL.sort](a,b)||(b[2]?b[2].x:0)-(a[2]?a[2].x:0));
+  const rowsOf=sc=>{let r=rowsOf0(sc).map(x=>[x[0],x[1],x[2],sc[0]]);if(sc[1]=="m")r=r.concat(rowsOf0(["w","hook"]).map(x=>[x[0],x[1],x[2],"w"]));return r};
   const SR=SEC.map(sc=>({sc,rows:rowsOf(sc)}));if(!SR.some(x=>x.sc[1]==WCAT))WCAT="t";
   const cur=SR.find(x=>x.sc[1]==WCAT),k=cur.sc[0],PER=15,np=Math.max(1,Math.ceil(cur.rows.length/PER));WPG=Math.max(0,Math.min(WPG,np-1));
-  const ist=window._wc===WCAT?$("inv").scrollTop:0;window._wc=WCAT;$("inv").innerHTML=cur.rows.map(([it,i,c])=>{const own=!!c,eq=c?(k=="w"?(s.wu||[]).includes(c.u):k=="m"?[s.mu].concat(s.mxu||[]).includes(c.u):s[k+"u"]===c.u):false;return `<button class="tile rt rt${RI(k,i)} ${own?"":"lock"} ${eq?"eq":""} ${c&&c.s?"shn":""}" style="--rc:${RAR(it.cost)}" title="${it.n}" data-k="${k}" data-i="${i}" ${c?`data-cu="${c.u}"`:""}>${ICO(k,it,c&&c.s,c?lvOfP(RI(k,i),c.x):0)}${own&&lvOfP(RI(k,i),c.x)>=1?`<b class="clv">${lvBadge(lvOfP(RI(k,i),c.x))}</b>`:""}</button>`}).join("")||'<div class="empt">Nothing here.</div>';$("inv").scrollTop=ist;isbSync();
+  const ist=window._wc===WCAT?$("inv").scrollTop:0;window._wc=WCAT;$("inv").innerHTML=cur.rows.map(([it,i,c,k])=>{const own=!!c,eq=c?(k=="w"?(s.wu||[]).includes(c.u):k=="m"?[s.mu].concat(s.mxu||[]).includes(c.u):s[k+"u"]===c.u):false;return `<button class="tile rt rt${RI(k,i)} ${own?"":"lock"} ${eq?"eq":""} ${c&&c.s?"shn":""}" style="--rc:${RAR(it.cost)}" title="${it.n}" data-k="${k}" data-i="${i}" ${c?`data-cu="${c.u}"`:""}>${ICO(k,it,c&&c.s,c?lvOfP(RI(k,i),c.x):0)}${own&&lvOfP(RI(k,i),c.x)>=1?`<b class="clv">${lvBadge(lvOfP(RI(k,i),c.x))}</b>`:""}</button>`}).join("")||'<div class="empt">Nothing here.</div>';$("inv").scrollTop=ist;isbSync();
   $("cats").innerHTML=SR.map(x=>`<button class="cat ${x.sc[1]==WCAT?"on":""}" data-cat="${x.sc[1]}" title="${x.sc[2]}"><img src="${WSI["c_"+x.sc[3]]}" alt=""><b>${x.rows.filter(r=>r[2]).length}</b></button>`).join("");
   $("tabs").innerHTML="";
   pvDraw();
@@ -1925,7 +1926,7 @@ $("work").onclick=e=>{const b=e.target.closest("button");if(!b)return;const d=b.
   if(d.cat){WCAT=d.cat;WPG=0;work();return}if(d.pg){WPG+=+d.pg;work();return}
   if(d.tab||d.s){tab=d.tab||d.s;WCAT=tab=="w"?"side":tab;WPG=0;work();return}
   if(d.mv!=null)return mvSwitch(+d.mv);
-  if(d.ws!=null){const si=+d.ws;tab="w";if(SSEL===si&&S.sel.w[si]!=null)S.sel.w[si]=null;else SSEL=si;WCAT=si==7?"hook":si==6?"drone":si<2?"top":"side";WPG=0;work();return}
+  if(d.ws!=null){const si=+d.ws;tab="w";if(SSEL===si&&S.sel.w[si]!=null)S.sel.w[si]=null;else SSEL=si;WCAT=si==7?"m":si==6?"drone":si<2?"top":"side";WPG=0;work();return}
   if(d.u!=null){S.sel.w[+d.u]=null;return work()}
   if(d.um){const q=+d.um-1;if(q==0){S.sel.m=null;S.sel.mu=null}else{S.sel.mx[q-1]=null;S.sel.mxu[q-1]=null}return work()}
   if(d.sv!=null){S.loads[+d.sv]=JSON.parse(JSON.stringify(S.sel));toast("Saved to slot "+(+d.sv+1));return work()}
@@ -2740,7 +2741,7 @@ function controls(){
       if(p.tp>(p.tpUsed||0))sp.push(B.tpSel?T(iz("data:image/svg+xml;base64,"+btoa(SLI.tp),.88),"Cancel Teleport · click a green tile to teleport, or cancel",'data-a="tpc"',false):T(iz("data:image/svg+xml;base64,"+btoa(SLI.tp),.88),"Teleporter · teleport to any open tile, even behind the enemy · 1 use per battle",'data-a="tp"',!idle,null,Array.from({length:Math.min(4,p.tp)},(_,j)=>j<(p.tpUsed||0)?1:0)));
       if(p.tp>0&&!(p.tp>(p.tpUsed||0)))sp.push(T(iz("data:image/svg+xml;base64,"+btoa(SLI.tp),.88),"Teleporter · used this battle","",true,null,Array.from({length:Math.min(4,p.tp)},()=>1)));
       if(p.weps.some(w=>w.drone))sp.push(p.don?T(iz(CBX.drone,1.22),"Deactivate Drone · calls the drone back behind your mech (uses your turn)",'data-a="droneoff"',!idle,null,null,"d"):T(iz(CBX.drone,1.22),"Activate Drone · flies out from behind your mech, then acts at the end of each turn",'data-a="drone"',!idle,null,null,"a"));
-      if(p.hkI!=null&&W[p.hkI]){const hw=W[p.hkI],hu=hw.uses||1,hd_=Math.abs(B.e.x-p.x),hy=(p.hkUsed||0),hok=idle&&hkOK(p,B.e);sp.push(T(iz(CBX.hook,1.22),`${hw.n} · ${hw.dr[0]==hw.dr[1]?hw.dr[0]:hw.dr[0]+"-"+hw.dr[1]} ${hw.ty} dmg${hw.hd?" · +"+hw.hd+" heat dmg":""}${hw.ed?" · drains "+hw.ed+" energy":""} · pulls the enemy next to you · range ${hw.min}-${hw.max} · ${hw.en} en${hw.ht?" · +"+hw.ht+" heat":""} · ${hu} use${hu>1?"s":""} per battle`,'data-a="hook"',!hok,idle?(hy>=hu?["gen"]:p.en<hw.en?["en"]:(hd_<hw.min||hd_>hw.max)?["rg"]:null):null,Array.from({length:Math.min(4,hu)},(_,j)=>j<hy?1:0)))}
+      if(p.hkI!=null&&W[p.hkI]){const hw=W[p.hkI],hu=hw.uses||1,hd_=Math.abs(B.e.x-p.x),hy=(p.hkUsed||0),hok=idle&&hkOK(p,B.e);sp.push(T(iz(CBX.hook,1.22),`${hw.n} · ${hw.dr[0]==hw.dr[1]?hw.dr[0]:hw.dr[0]+"-"+hw.dr[1]} ${hw.ty} dmg${hw.hd?" · +"+hw.hd+" heat dmg":""}${hw.ed?" · drains "+hw.ed+" energy":""} · pulls the enemy next to you · unlimited range · ${hw.en} en${hw.ht?" · +"+hw.ht+" heat":""} · ${hu} use${hu>1?"s":""} per battle`,'data-a="hook"',!hok,idle?(hy>=hu?["gen"]:p.en<hw.en?["en"]:(hd_<hw.min)?["rg"]:null):null,Array.from({length:Math.min(4,hu)},(_,j)=>j<hy?1:0)))}
       if(swordIdx(p).length>=4)sp.push(T(img(CBX.ch4),`Barrage · 36 swings · ${BAR.dmg} dmg each · +${BAR.ht} heat · range 1-2`,'data-a="bar"',!(idle&&canBar(p,B.e))));
       it=sp.join("")||"";if(!it)lbl="Specials · none equipped";
     }else if(cat=="k"){lbl="Kits · none yet (coming soon)"}
@@ -3741,13 +3742,13 @@ function drawHook(g,m,x,y,dir){const h=m.hk;if(!h)return;g.save();g.translate(x+
   const di=(k,sx)=>{const im=hkImg(k);if(!im)return;const vb=HKART[k].vb;g.drawImage(im,vb[0]*sx,vb[1],vb[2]*sx,vb[3])};
   if(h.len>0){const L=h.len/HKS;di("rope",L/1436);g.save();g.translate(L,0);di(h.open?"open":"closed",1);g.restore()}
   g.save();g.scale(h.sc,1);di("body",1);g.restore();g.restore()}
-const hkOK=(a,o)=>{const w=a.hkI!=null&&W[a.hkI];if(!w||!B||B.over||a.did)return false;const d=Math.abs(o.x-a.x);return(a.hkUsed||0)<(w.uses||1)&&a.en>=w.en&&d>=w.min&&d<=w.max};
+const hkOK=(a,o)=>{const w=a.hkI!=null&&W[a.hkI];if(!w||!B||B.over||a.did)return false;const d=Math.abs(o.x-a.x);return(a.hkUsed||0)<(w.uses||1)&&a.en>=w.en&&d>=w.min};
 async function hookFire(a){
   const o=a==B.p?B.e:B.p;if(B.busy||!hkOK(a,o))return;const w=W[a.hkI],d=Math.abs(o.x-a.x),dir=fdir(a);
   B.busy=true;a.did=true;a.en-=w.en;a.heat+=w.ht||0;a.hkUsed=(a.hkUsed||0)+1;controls();say((a==B.p?"You":"Enemy")+" fired the "+w.n+"!");
-  const h=a.hk={sc:.2,len:0,open:true};playBuf("dopen",.6,1.3);
+  const h=a.hk={sc:.2,len:0,open:true};
   await anim(133,k=>{h.sc=.2+.8*k});h.sc=1;
-  const fd=(d-.7)*TS;playBuf("rkpf",.5,1.2);await anim(Math.max(60,fd/3.6),k=>{h.len=fd*k/MK});h.len=fd/MK;
+  const fd=(d-.7)*TS;playBuf("bullet",1);await anim(Math.max(60,fd/3.6),k=>{h.len=fd*k/MK});h.len=fd/MK;
   await sleep(167);
   let dead=null;
   if(!B.over&&!o.dead){
