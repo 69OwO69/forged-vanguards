@@ -1609,7 +1609,7 @@ function drawParts(g,m,tm){
     g.restore()};
   const MID=wi=>(W[m.wids[wi]]||{}).mid;
   if(m.sawIn){const a=m.sawIn,sp0=a.sawPos;if(sp0&&a.wx!=null){const e2=art("w",sp0.id);if(e2){g.save();g.translate(((a.wx+a.sdir*sp0.x*(a._ms||1)-m.wx)*m.sdir)/(m._ms||1),(sp0.y*(a._ms||1)+(a.wy-m.wy))/(m._ms||1));g.scale(a.sdir*m.sdir,1);sp(g,e2,0,0,e2.h,sp0.rot);g.restore()}}}
-  if(m.hk&&!m._dm){const q1_=slotPos(1),q2_=slotPos(2);drawHook(g,m,(q1_[0]+q2_[0])/2+8,(q1_[1]+q2_[1])/2-7+sw)}
+  if(m.hk&&!m._dm){const q1_=slotPos(2),q2_=slotPos(3);drawHook(g,m,(q1_[0]+q2_[0])/2+8,(q1_[1]+q2_[1])/2-5+sw)}
   m.wids.forEach((_,wi)=>{if(MID(wi))return;if(m.wsl[wi]==3)gun(wi,true);else if(m.wsl[wi]==1)gun(wi,false,true);else if(m.wsl[wi]==6){if(m.dp!=null&&m.dp<.5)gun(wi,true,true);else gun(wi,false)}});
   m.wids.forEach((_,wi)=>{if(!MID(wi)&&m.wsl[wi]==2)gun(wi,true)});
   if(le&&le.three&&m._dm!=2){g.save();g.translate(m.kbx||0,0);if("filter" in g)g.filter="brightness(.8) "+(m.gf||"");sp(g,le.bk,tx0+tw*.98,-1.5,le.bk.h);g.restore()}if(!(le&&le.over)){g.save();g.translate(m.kbx||0,0);legs(true);g.restore()}if(le&&le.two){g.save();g.translate(m.kbx||0,0);legs(false);g.restore()}
@@ -2744,7 +2744,7 @@ function controls(){
       if(p.tp>(p.tpUsed||0))sp.push(B.tpSel?T(iz("data:image/svg+xml;base64,"+btoa(SLI.tp),.88),"Cancel Teleport · click a green tile to teleport, or cancel",'data-a="tpc"',false):T(iz("data:image/svg+xml;base64,"+btoa(SLI.tp),.88),"Teleporter · teleport to any open tile, even behind the enemy · 1 use per battle",'data-a="tp"',!idle,null,Array.from({length:Math.min(4,p.tp)},(_,j)=>j<(p.tpUsed||0)?1:0)));
       if(p.tp>0&&!(p.tp>(p.tpUsed||0)))sp.push(T(iz("data:image/svg+xml;base64,"+btoa(SLI.tp),.88),"Teleporter · used this battle","",true,null,Array.from({length:Math.min(4,p.tp)},()=>1)));
       if(p.weps.some(w=>w.drone))sp.push(p.don?T(iz(CBX.drone,1.22),"Deactivate Drone · calls the drone back behind your mech (uses your turn)",'data-a="droneoff"',!idle,null,null,"d"):T(iz(CBX.drone,1.22),"Activate Drone · flies out from behind your mech, then acts at the end of each turn",'data-a="drone"',!idle,null,null,"a"));
-      if(p.hkI!=null&&W[p.hkI]){const hw=W[p.hkI],hu=hw.uses||1,hd_=Math.abs(B.e.x-p.x),hy=(p.hkUsed||0),hok=idle&&hkOK(p,B.e);sp.push(T(iz(CBX.hook,1.22),`${hw.n} · ${hw.dr[0]==hw.dr[1]?hw.dr[0]:hw.dr[0]+"-"+hw.dr[1]} ${hw.ty} dmg${hw.hd?" · +"+hw.hd+" heat dmg":""}${hw.ed?" · drains "+hw.ed+" energy":""} · pulls the enemy next to you · unlimited range · ${hw.en} en${hw.ht?" · +"+hw.ht+" heat":""} · ${hu} use${hu>1?"s":""} per battle`,'data-a="hook"',!hok,idle?(hy>=hu?["gen"]:p.en<hw.en?["en"]:(hd_<hw.min)?["rg"]:null):null,Array.from({length:Math.min(4,hu)},(_,j)=>j<hy?1:0)))}
+      if(p.hkI!=null&&W[p.hkI]){const hw=W[p.hkI],hu=hw.uses||1,hd_=Math.abs(B.e.x-p.x),hy=(p.hkUsed||0),hok=idle&&hkOK(p,B.e);sp.push(T(iz(CBX.hook,1.22),`${hw.n} · ${hw.dr[0]==hw.dr[1]?hw.dr[0]:hw.dr[0]+"-"+hw.dr[1]} ${hw.ty} dmg${hw.hd?" · +"+hw.hd+" heat dmg":""}${hw.ed?" · drains "+hw.ed+" energy":""} · pulls the enemy next to you · unlimited range (not when adjacent) · ${hw.en} en${hw.ht?" · +"+hw.ht+" heat":""} · ${hu} use${hu>1?"s":""} per battle`,'data-a="hook"',!hok,idle?(hy>=hu?["gen"]:p.en<hw.en?["en"]:(hd_<Math.max(2,hw.min))?["rg"]:null):null,Array.from({length:Math.min(4,hu)},(_,j)=>j<hy?1:0)))}
       if(swordIdx(p).length>=4)sp.push(T(img(CBX.ch4),`Barrage · 36 swings · ${BAR.dmg} dmg each · +${BAR.ht} heat · range 1-2`,'data-a="bar"',!(idle&&canBar(p,B.e))));
       it=sp.join("")||"";if(!it)lbl="Specials · none equipped";
     }else if(cat=="k"){lbl="Kits · none yet (coming soon)"}
@@ -3742,20 +3742,19 @@ async function stompOn(a){
 }
 
 /* ---------- Hook / harpoon: the body unfolds on the shoulder, the rope shoots at 60px a frame, the head bites, the enemy gets reeled in at 50px a frame ---------- */
-const HKI={},HKX=-4,HKY=-58,HKS=.572;
+const HKI={},HKX=-4,HKY=-58,HKS=.458;
 function hkImg(k){let e=HKI[k];if(!e){e=HKI[k]=new Image();e.src=HKART[k].u}return e.complete&&e.naturalWidth?e:null}
 function drawHook(g,m,x,y){const h=m.hk;if(!h||m._dm)return;g.save();g.translate(x,y);g.scale(HKS,HKS);
   const di=(k,sx)=>{const im=hkImg(k);if(!im)return;const vb=HKART[k].vb;g.drawImage(im,vb[0]*sx,vb[1],vb[2]*sx,vb[3])};
   g.save();g.scale(h.sc,1);di("body",1);g.restore();
   if(h.len>0){const L=h.len/HKS;di("rope",L/1436);g.save();g.translate(L,0);di(h.open?"open":"closed",1);g.restore()}g.restore()}
-const hkOK=(a,o)=>{const w=a.hkI!=null&&W[a.hkI];if(!w||!B||B.over||a.did)return false;const d=Math.abs(o.x-a.x);return(a.hkUsed||0)<(w.uses||1)&&a.en>=w.en&&d>=w.min};
+const hkOK=(a,o)=>{const w=a.hkI!=null&&W[a.hkI];if(!w||!B||B.over||a.did)return false;const d=Math.abs(o.x-a.x);return(a.hkUsed||0)<(w.uses||1)&&a.en>=w.en&&d>=Math.max(2,w.min)};
 async function hookFire(a){
   const o=a==B.p?B.e:B.p;if(B.busy||!hkOK(a,o))return;const w=W[a.hkI],d=Math.abs(o.x-a.x),dir=fdir(a);
   B.busy=true;a.did=true;a.en-=w.en;a.heat+=w.ht||0;a.hkUsed=(a.hkUsed||0)+1;controls();say((a==B.p?"You":"Enemy")+" fired the "+w.n+"!");
   const h=a.hk={sc:.2,len:0,open:true};
   await anim(333,k=>{h.sc=.2+.8*k});h.sc=1;
   const fd=(d-.7)*TS;playBuf("bullet",1);await anim(Math.max(150,fd/1.8),k=>{h.len=fd*k/MK});h.len=fd/MK;
-  await sleep(333);
   let dead=null;
   if(!B.over&&!o.dead){
     h.open=false;const raw=w.dr[0]+Math.floor(Math.random()*(w.dr[1]-w.dr[0]+1)),dmg=RDM(a,o,w,raw,true);
@@ -3764,7 +3763,7 @@ async function hookFire(a){
     B.fl.push({x:px(o.vx!=null?o.vx:o.x),y:GY-160,t:"-"+dmg,l:60});say((a==B.p?"You":"Enemy")+" hooked for "+dmg+(w.hd?" (+"+w.hd+" heat)":"")+".");
     if(o.hp<=0)dead=o;else if(d>1){
       const sg=Math.sign(o.x-a.x)||dir,ox0=o.x;let tt=a.x+sg;const bl=[B.p,B.e,...(B.sms||[])].filter(q=>q&&q!==o&&!q.dead&&!q.gone);while(tt!=ox0&&bl.some(q=>q.x==tt))tt+=sg;
-      if(tt!=ox0){o.x=tt;const dur=Math.max(300,Math.abs(ox0-tt)*TS/1.5);o.ps={a:o.vx!=null?o.vx:ox0,b:tt,t0:performance.now(),dur};mineCheck(o,ox0,tt,true);
+      if(tt!=ox0){o.x=tt;const dur=Math.max(300,Math.abs(ox0-tt)*TS/1.25);o.ps={a:o.vx!=null?o.vx:ox0,b:tt,t0:performance.now(),dur};mineCheck(o,ox0,tt,true);
         const t0=performance.now();await anim(dur+60,()=>{const dv=Math.abs(px(o.vx)-px(a.vx));h.len=Math.max(0,(dv-.7*TS)/MK)})}}}
   h.len=0;await anim(333,k=>{h.sc=1-.8*k});a.hk=null;await sleep(200);
   if(dead){B.busy=true;controls();await kill(dead);finish(dead==B.e);return}
