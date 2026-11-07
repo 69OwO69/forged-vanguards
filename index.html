@@ -2611,7 +2611,7 @@ function draw(){hudUpdate();
     const m=B[k];if(m.dead)continue;if(B.egg&&k=="e"){eggEnt(g,m);continue}const sx_=B.sep?B.sep[k]||0:0;B.hit[k]=Math.max(0,B.hit[k]-.04);{const d=m.x-m.vx,ad=Math.abs(d);if(m.swarm){m.vx=ad<.004?m.x:m.vx+d*Math.min(1,.045*cdt)}else if(m.jp&&ad>1e-4&&m.jp.b==m.x){const kk=Math.max(0,Math.min(1,(t0-m.jp.t0)/m.jp.dur));m.vx=m.jp.a+(m.jp.b-m.jp.a)*kk;m.fw=Math.sign(d)*fdir(m);if(kk>=1){m.vx=m.x;m.jp=null;m.bmpT=t0;B.shake=Math.max(B.shake||0,14);playBuf("foot",.8,.7)}}else if(ad>1e-4){m.jp=null;if(m.ps&&m.ps.b!=m.x)m.ps=null;let v;if(m.ps){const kk=Math.min(1,(t0-m.ps.t0)/m.ps.dur),nx=m.ps.a+(m.ps.b-m.ps.a)*(1-Math.pow(1-kk,3));v=Math.min(ad,Math.abs(nx-m.vx));if(kk>=1)m.ps=null}else{v=Math.min(ad,.03*.75*Math.max(1,ad/2)*cdt);if(limpHP(m)&&(((m.wph||0)/(2*Math.PI))%1+1)%1>=.5)v*=.5}const vA=m.ps?.056*cdt:v/.75;m.vx+=Math.sign(d)*v;m.wph=(m.wph||0)+vA*2*Math.PI*Math.sign(d)*fdir(m);m.wd=(m.wd||0)+vA*2*Math.PI;m.fw=Math.sign(d)*fdir(m);const sn=Math.floor(m.wd/Math.PI);if(sn!=m.sn){if(m.sn!=null&&!(limpOn(m)&&sn%2==0)&&(!m.ps||t0-(m.lfs||0)>140)){playBuf("foot",.6,.93+Math.random()*.14);m.lfs=t0}m.sn=sn}}else m.vx=m.x;m.mvb=(m.mvb||0)+((ad>1e-4&&!m.jp?1:0)-(m.mvb||0))*Math.min(1,.2*cdt);if(ad<=1e-4&&m.mvb<.02){m.mvb=0}}m.rc=m.rc.map(v=>Math.max(0,v-.05));
     let dy=0;if(m.jp){const kk=Math.max(0,Math.min(1,(t0-m.jp.t0)/m.jp.dur));{const f_=Math.min(kk*30,30-kk*30);dy-=2.4*.7*(15.5*f_-f_*f_/2)}}if(m.drop){const dd=t0-m.drop.t0;if(dd<0)continue;const kk=Math.min(1,dd/m.drop.dur);dy=-900*(1-kk*kk);if(kk>=1&&!m.drop.landed){m.drop.landed=1;B.shake=24;const ex=px(m.x);GFX(ex,true);GFX(ex+22,true);GFX(ex-22,false);playBuf("blast",.55,1.2)}if(kk>=1){const rk=(dd-m.drop.dur)/1600;if(rk<1)B.shake=Math.max(B.shake,24*Math.pow(1-rk,1.6))}if(kk>=1&&dd>m.drop.dur+1700)m.drop=null}
     if(m.swarm){drawSwarm(g,m);continue}
-    const hh=B.hit[k],tt=performance.now(),MS=MK;if(B.tpfx&&B.tpfx.sv&&B.tpfx.m==m)sdvGhosts(g,B.tpfx,MS);m._ms=MS;if(MS!=1){g.save();const ox_=px(sdvVx(m))+sx_,oy_=GY+dy;g.translate(ox_,oy_);g.scale(MS,MS);g.translate(-ox_,-oy_)}GWT=g.getTransform();GWO=B.gas&&B.gas.own;const ta_=tpAlpha(m);if(ta_>.02){if(ta_<1){g.save();g.globalAlpha=ta_}drawMech(g,px(sdvVx(m))+sx_+(hh>0?Math.sin(tt*.07)*hh*2.5:0),GY+dy-(hh>0?Math.abs(Math.sin(tt*.045))*hh*.8:0),fdirV(m),m,hh);if(m.hk)drawHook(g,m,px(sdvVx(m))+sx_,GY+dy,fdirV(m));if(ta_<1)g.restore()}
+    const hh=B.hit[k],tt=performance.now(),MS=MK;if(B.tpfx&&B.tpfx.sv&&B.tpfx.m==m)sdvGhosts(g,B.tpfx,MS);m._ms=MS;if(MS!=1){g.save();const ox_=px(sdvVx(m))+sx_,oy_=GY+dy;g.translate(ox_,oy_);g.scale(MS,MS);g.translate(-ox_,-oy_)}GWT=g.getTransform();GWO=B.gas&&B.gas.own;const ta_=tpAlpha(m);if(ta_>.02){if(ta_<1){g.save();g.globalAlpha=ta_}if(m.hk)drawHook(g,m,px(sdvVx(m))+sx_,GY+dy,fdirV(m));drawMech(g,px(sdvVx(m))+sx_+(hh>0?Math.sin(tt*.07)*hh*2.5:0),GY+dy-(hh>0?Math.abs(Math.sin(tt*.045))*hh*.8:0),fdirV(m),m,hh);if(ta_<1)g.restore()}
     if(MS!=1){g.restore();if(m.muz)for(const i in m.muz){const q=m.muz[i];if(q)m.muz[i]=[q[0]*MS,q[1]*MS,(q[2]||0)*MS]}if(m.dmz)m.dmz=m.dmz.map(z=>z&&{m:[z.m[0]*MS,z.m[1]*MS],f:z.f.map(q=>[q[0]*MS,q[1]*MS]),s:z.s.map(q=>[q[0]*MS,q[1]*MS])});if(m.tbx)m.tbx=m.tbx.map(v=>v*MS);if(m.gb)m.gb=m.gb.map(b=>b&&b.map(v=>v*MS))}
   }
   drawTP(g);
@@ -3747,9 +3747,9 @@ async function hookFire(a){
   const o=a==B.p?B.e:B.p;if(B.busy||!hkOK(a,o))return;const w=W[a.hkI],d=Math.abs(o.x-a.x),dir=fdir(a);
   B.busy=true;a.did=true;a.en-=w.en;a.heat+=w.ht||0;a.hkUsed=(a.hkUsed||0)+1;controls();say((a==B.p?"You":"Enemy")+" fired the "+w.n+"!");
   const h=a.hk={sc:.2,len:0,open:true};
-  await anim(133,k=>{h.sc=.2+.8*k});h.sc=1;
-  const fd=(d-.7)*TS;playBuf("bullet",1);await anim(Math.max(60,fd/3.6),k=>{h.len=fd*k/MK});h.len=fd/MK;
-  await sleep(167);
+  await anim(333,k=>{h.sc=.2+.8*k});h.sc=1;
+  const fd=(d-.7)*TS;playBuf("bullet",1);await anim(Math.max(150,fd/1.8),k=>{h.len=fd*k/MK});h.len=fd/MK;
+  await sleep(333);
   let dead=null;
   if(!B.over&&!o.dead){
     h.open=false;const raw=w.dr[0]+Math.floor(Math.random()*(w.dr[1]-w.dr[0]+1)),dmg=RDM(a,o,w,raw,true);
@@ -3758,9 +3758,9 @@ async function hookFire(a){
     B.fl.push({x:px(o.vx!=null?o.vx:o.x),y:GY-160,t:"-"+dmg,l:60});say((a==B.p?"You":"Enemy")+" hooked for "+dmg+(w.hd?" (+"+w.hd+" heat)":"")+".");
     if(o.hp<=0)dead=o;else if(d>1){
       const sg=Math.sign(o.x-a.x)||dir,ox0=o.x;let tt=a.x+sg;const bl=[B.p,B.e,...(B.sms||[])].filter(q=>q&&q!==o&&!q.dead&&!q.gone);while(tt!=ox0&&bl.some(q=>q.x==tt))tt+=sg;
-      if(tt!=ox0){o.x=tt;const dur=Math.max(220,Math.abs(ox0-tt)*TS/3);o.ps={a:o.vx!=null?o.vx:ox0,b:tt,t0:performance.now(),dur};mineCheck(o,ox0,tt,true);
+      if(tt!=ox0){o.x=tt;const dur=Math.max(300,Math.abs(ox0-tt)*TS/1.5);o.ps={a:o.vx!=null?o.vx:ox0,b:tt,t0:performance.now(),dur};mineCheck(o,ox0,tt,true);
         const t0=performance.now();await anim(dur+60,()=>{const dv=Math.abs(px(o.vx)-px(a.vx));h.len=Math.max(0,(dv-.7*TS)/MK)})}}}
-  h.len=0;await anim(133,k=>{h.sc=1-.8*k});a.hk=null;await sleep(200);
+  h.len=0;await anim(333,k=>{h.sc=1-.8*k});a.hk=null;await sleep(200);
   if(dead){B.busy=true;controls();await kill(dead);finish(dead==B.e);return}
   B.busy=false;controls();
 }
