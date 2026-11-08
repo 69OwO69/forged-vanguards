@@ -5,6 +5,6 @@
 - Before starting any NEW piece of work, ask the owner 3 questions (AskUserQuestion). Small tweaks to something just discussed can skip it.
 - New items are granted to the owner's account automatically (no box farming) and are included in the output file.
 - **Every new item (torsos, legs, guns, weapons – everything except modules and similar) must change colour when upgraded.** That means the item needs its real paint layer (`mcColor` from the APK sprite) added to `LVMASK` under the key `k+index` (e.g. `"w73"`), rendered to the same pixel size as the item art. Verify with `lvArt` for several levels before shipping.
-- Item stats come from the APK: `damageBase` is the level 1 value and `damageBase+damageAddon` is the max-level value, so give such items an `up` factor (addon/base) instead of relying on the generic +40%.
+- Item stats come from the APK: a weapon's damage is a random roll from `damageBase` to `damageBase+damageAddon` (the card shows "68 (+35)" = 68-103), so set `dr` to that min-max range (per shot: divide by the shot count). Do not treat the addon as an upgrade bonus.
 - After each change: commit, push to `main`, copy `index.html` to `/mnt/user-data/outputs/mech-foundry.html`, and tell the owner to hard refresh.
 - Commit messages end with `Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>` and the `Claude-Session:` line.
