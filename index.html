@@ -1746,8 +1746,8 @@ const fzStats=(k,i,lv,sh)=>{const f=1+UBk(k,i,lv),it=K[k][i],o=[],rd=v=>{const r
   else if(k=="l"&&it.hp)o.push(["HP",rd(it.hp)]);
   else if(k=="m"){for(const [key,lab,sf] of [["hp","HP",""],["en","Energy / turn",""],["res","Armor","%"],["cool","Cooling",""],["hc","Heat cap",""],["ec","Energy capacity",""],["rp","Physical resist",""],["rf","Fire resist",""],["re","Energy resist",""],["am","Bullet storage",""],["ra","Rocket storage",""]])if(it[key])o.push([lab,rd(it[key])+sf]);if(it.tp)o.push(["Ability","Teleport · 1 use"])}
   return o};
-const EVO={"w:3":4,"w:4":5,"w:16":17,"w:17":18,"t:1":2,"t:2":3,"t:4":5,"t:5":6,"t:8":9,"t:9":7},evoN=(k,i)=>EVO[k+":"+i],mkUp=()=>{if(!FZ||evoN(FZ.k,FZ.i)==null)return false;const c=copyOf(FZ.k,FZ.i,FZ.u);return !!c&&c.x>=MAXP[RI(FZ.k,FZ.i)]},
-fzOK=(k,i,u)=>FZ&&u!==FZ.u&&!EQU(u)&&!(K[k][i].cost==0&&CN(k,i)==1)&&(!mkUp()||(k==FZ.k&&i==FZ.i)),fzY=(k,i,u)=>Math.round((FUSEP[RI(k,i)]+Math.round(KEEP*instX(k,i,u)))*(isSh(k,i,u)?1.4:1));
+const EVO={"w:3":4,"w:4":5,"w:16":17,"w:17":18,"t:1":2,"t:2":3,"t:4":5,"t:5":6,"t:8":9,"t:9":7},evoN=(k,i)=>EVO[k+":"+i],evNeed=()=>FZ?RI(FZ.k,FZ.i)+2:2,mkUp=()=>{if(!FZ||evoN(FZ.k,FZ.i)==null)return false;const c=copyOf(FZ.k,FZ.i,FZ.u);return !!c&&c.x>=MAXP[RI(FZ.k,FZ.i)]},
+fzOK=(k,i,u)=>FZ&&u!==FZ.u&&!EQU(u)&&!(K[k][i].cost==0&&CN(k,i)==1)&&(!mkUp()||RI(k,i)==RI(FZ.k,FZ.i)),fzY=(k,i,u)=>Math.round((FUSEP[RI(k,i)]+Math.round(KEEP*instX(k,i,u)))*(isSh(k,i,u)?1.4:1));
 function fzRender(tu){
   if(!FZ){$("fz").classList.add("hide");return}
   const sc=$("fzr")?$("fzr").scrollTop:0,has=FZ.k!=null,k=FZ.k,i=FZ.i;FZ.ix=FZ.ix||{};
@@ -1764,14 +1764,14 @@ function fzRender(tu){
     const r=RI(k,i),it=K[k][i],xp=cp.x,nx=Math.min(MAXP[r],xp+gain),waste=Math.max(0,xp+gain-MAXP[r]),l0=lvOfP(r,xp),l1=lvOfP(r,nx),capd=xp>=MAXP[r];
     FZ.pv=gain>0&&!capd?[xp,nx,r]:null;const cl=cumP(r,l0),nl=capd?MAXP[r]:cumP(r,l0+1),seg=Math.max(1,nl-cl),inLv=Math.max(0,xp-cl),room=capd?0:seg-inLv,gl=Math.min(room,gain),pl=v=>(100*v/seg).toFixed(2)+"%",pc=v=>(100*v/MAXP[r]).toFixed(2)+"%",st0=fzStats(k,i,l0,cp.s),st1=fzStats(k,i,l1,cp.s),lcol=l1>l0?l1:l0,cc=!cp.s&&k!="m"&&LVMASK[k+i]?[lvColId(l0),lvColId(l1)]:null,sw=c_=>`<span class="lvsw${c_?"":" st"}" style="${c_?"background:"+LVCOL[c_]:""}" title="${c_?"Upgrade colour":"Stock paint"}"></span>`,swh=cc?`<div class="fzcol">Colour ${sw(cc[0])}${cc[1]!==cc[0]?` <i>&rarr;</i> ${sw(cc[1])}<b>new colour</b>`:""}</div>`:"";
     const rows=st0.length?st0.map((x,n)=>`<div class="fzrw"><span>${x[0]}</span><span>${x[1]}${l1>l0?` <i>&rarr;</i> <b>${st1[n][1]}</b>`:""}</span></div>`).join(""):`<div class="fzs2">No stat bonus for this item type yet.</div>`;
-    L=`<div class="fzh2">FUSING</div><div class="fzq">${queue.join("")||`<div class="fzs2" style="padding:10px;width:100%">${capd&&mkUp()?`Max level! Pick 2 more ${it.n} copies to fuse into <b style="color:#ffd24a">${K[FZ.k][evoN(FZ.k,FZ.i)].n}</b> (${cnt}/2). Level resets.`:capd?"Max level reached.":"Click items in the inventory to add them here as fuse power."}</div>`}</div><button class="fzb" data-fcl="1" style="margin-top:auto">Back</button>`;
+    L=`<div class="fzh2">FUSING</div><div class="fzq">${queue.join("")||`<div class="fzs2" style="padding:10px;width:100%">${capd&&mkUp()?`Max level! Pick ${evNeed()} ${TN[RI(FZ.k,FZ.i)].toLowerCase()} items (any kind) to fuse into <b style="color:#ffd24a">${K[FZ.k][evoN(FZ.k,FZ.i)].n}</b> (${cnt}/${evNeed()}). Level resets.`:capd?"Max level reached.":"Click items in the inventory to add them here as fuse power."}</div>`}</div><button class="fzb" data-fcl="1" style="margin-top:auto">Back</button>`;
     M=`<div class="fzrow">${ARROW}<div class="fzsl rt rt${RI(k,i)} ${cp.s?"shn":""}" data-slot="1" title="Click to remove">${ICO(k,it,cp.s,lcol)}${l0>=1?`<b class="clv">${lvBadge(l0)}</b>`:""}</div></div>
     <div class="fzn" style="color:${RAR(it.cost)};margin-top:calc(var(--vh,1vh)*2);text-align:center">${it.n}</div><div class="fzs2" style="text-align:center">${TN[r]} · ${k=="t"?"Torso":k=="l"?"Legs":k=="w"?"Gun":"Module"}${EQU(FZ.u)?" · Equipped":""}</div>
     <div class="fzst"><div class="fzinfo"><div class="fzlv" style="justify-content:center">Level ${l0}${l1>l0?` <i>&rarr;</i> <b style="color:#9fe870">${l1}</b>`:""} <span class="fzs2">/ ${CAPL[r]}</span> ${lvBadge(l1>l0?l1:l0)}</div>${rows}</div>
         <div class="fzxb" id="fzbar"><i id="fzbi" style="width:${capd?"100%":pl(inLv)}"></i><u id="fzbu" style="left:${capd?"100%":pl(inLv)};width:${capd?0:pl(gl)}"></u><span id="fzbt">${capd?"MAX LEVEL":Math.round(inLv).toLocaleString()+" / "+seg.toLocaleString()}${gain&&!capd?` <b>+${gain.toLocaleString()}</b>`:""}</span></div>
     <div class="fzlb2"><span></span><span id="fzlbn">${capd?"":(gain>room?`<b style="color:#9fe870">+${l1-l0} level${l1-l0>1?"s":""}</b> &middot; `:"")+"Lv "+(l0+1)+" · "+room.toLocaleString()+" more needed"}</span></div>
     <div class="fzs2" style="text-align:center;line-height:1.5">${waste?`<span style="color:#ffb02e">${waste.toLocaleString()} power wasted (past max)</span>`:""}</div>
-    <div style="display:flex;gap:10px;margin-top:10px;align-items:center;justify-content:center">${cnt?`<button class="fzb" data-fclr="1">Clear</button>`:""}<button class="fzgo" data-fgo="1" ${mkUp()?(cnt==2?"":"disabled"):(cnt&&!capd?"":"disabled")}>${mkUp()?"EVOLVE TO "+K[FZ.k][evoN(FZ.k,FZ.i)].n.toUpperCase():"UPGRADE"}</button></div></div>`}
+    <div style="display:flex;gap:10px;margin-top:10px;align-items:center;justify-content:center">${cnt?`<button class="fzb" data-fclr="1">Clear</button>`:""}<button class="fzgo" data-fgo="1" ${mkUp()?(cnt==evNeed()?"":"disabled"):(cnt&&!capd?"":"disabled")}>${mkUp()?"EVOLVE TO "+K[FZ.k][evoN(FZ.k,FZ.i)].n.toUpperCase():"UPGRADE"}</button></div></div>`}
   else{L=`<div class="fzh2">FUSING</div><div class="fzs2" style="margin-top:8px">Pick the item you want to upgrade from the inventory, or drag it into the box. Every copy has its own level.</div><button class="fzb" data-fcl="1" style="margin-top:auto">Back</button>`;
     M=`<div class="fzrow">${ARROW}<div class="fzsl" data-slot="1"></div></div><div class="fzst"><div class="fzxb"></div><div style="display:flex;justify-content:center;margin-top:10px"><button class="fzgo" disabled>UPGRADE</button></div></div>`}
   if(fast){const oi=document.querySelector("#fzm .fzsl img");$("fzl").innerHTML=L;$("fzm").innerHTML=`<div class="fzttl">UPGRADE ITEMS</div>${M}`;{const ni=document.querySelector("#fzm .fzsl img");if(oi&&ni){const want=ni.getAttribute("src"),old=oi.getAttribute("src");if(want!==old){ni.setAttribute("src",old);swapSrc(ni,want)}}}const g=document.querySelector('#fzr .fzg .fzt[data-fa$=":'+tu+'"]');if(g)g.classList.toggle("gone",!!FZ.ix[tu])}
@@ -1808,7 +1808,7 @@ async function fzAnim(x0,x1,r,pv){
     else if(to>=sg&&L<CAPL[r]){lB.textContent="Level "+(L+1)+"! "+nxt(L);bar.classList.add("fl");await sleep(150);if(!ok())return;bar.classList.remove("fl")}}}
 async function fzDo(){
   if(FZ.busy)return;
-  if(mkUp()){const fk=FZ.k,ids=Object.keys(FZ.ix).map(Number).filter(u=>fzOK(fk,FZ.i,u));if(ids.length!=2)return;const i=FZ.i,ou=FZ.u,osh=!!(copyOf(fk,i,ou)||{}).s;
+  if(mkUp()){const fk=FZ.k,ids=Object.keys(FZ.ix).map(Number).filter(u=>fzOK(fk,FZ.i,u));if(ids.length!=evNeed())return;const i=FZ.i,ou=FZ.u,osh=!!(copyOf(fk,i,ou)||{}).s;
     S.xs[fk][i]=XS(fk,i).filter(c=>c.u!==ou&&!ids.includes(c.u));
     if(!S.xs[fk][i].length){S.own[fk]=S.own[fk].filter(x=>x!==i);delete S.xs[fk][i]}
     const ni=evoN(fk,i),nc={u:++S.uid,x:0};if(osh||canSh(fk,ni)&&Math.random()<SHP)nc.s=1;
@@ -1949,7 +1949,7 @@ $("fz").onclick=e=>{if(!FZ||FZ.busy)return;const b=e.target.closest("button"),t=
   if(sl&&FZ.k!=null){FZ.k=null;FZ.u=null;FZ.ix={};return fzRender()}
   if(t)fzPick(t.dataset.fa)};
 function fzPick(q){const [kk,ii,uu]=q.split(":"),i=+ii,u=+uu;if(FZ.k==null){playBuf("grab");playBuf("equip",.35);FZ.k=kk;FZ.i=i;FZ.u=u;FZ.ix={};return fzRender()}
-  if(u===FZ.u)return;if(mkUp()&&!FZ.ix[u]&&Object.keys(FZ.ix).length>=2){toast("Only 2 more copies are needed.");return}if(!fzOK(kk,i,u)){toast(K[kk][i].cost==0&&CN(kk,i)==1?"Starter items can't be fused.":EQU(u)?"That item is equipped.":"Can't fuse that.");return}
+  if(u===FZ.u)return;if(mkUp()&&!FZ.ix[u]&&Object.keys(FZ.ix).length>=evNeed()){toast("Only "+evNeed()+" "+TN[RI(FZ.k,FZ.i)].toLowerCase()+" items are needed.");return}if(!fzOK(kk,i,u)){toast(K[kk][i].cost==0&&CN(kk,i)==1?"Starter items can't be fused.":EQU(u)?"That item is equipped.":"Can't fuse that.");return}
   playBuf(FZ.ix[u]?"grab":"equip",.5);if(FZ.ix[u])delete FZ.ix[u];else FZ.ix[u]=1;fzRender(u)}
 $("fz").addEventListener("dragstart",e=>{const t=e.target.closest&&e.target.closest(".fzt");if(t){playBuf("grab");e.dataTransfer.setData("text/plain",t.dataset.fa);e.dataTransfer.effectAllowed="move"}});
 $("fz").addEventListener("dragover",e=>{if(e.target.closest&&e.target.closest("[data-slot]"))e.preventDefault()});
