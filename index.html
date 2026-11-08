@@ -3941,9 +3941,9 @@ function drawMechGlow(g,x,y,dir,m,hh){
     for(let q=7;q>=0;q--){const a=ph-q*.12,sn=Math.sin(a);if((sn<0)!=back)continue;const sc=(.5+.14*sn)*(1-q*.07),al=gs*(1-q*.13)*(q?.55:1);
       g.globalAlpha=al;const w=70*sc;g.drawImage(im,x+Math.cos(a)*rx-w/2,cy+sn*ry+Math.sin(a*.5)*10-w/2,w,w)}g.restore()};
   orb(true);drawMech(g,x,y,dir,m,hh);orb(false)}
-function shdAuto(m){if(!m||!m.shdOn||!m.shd||!m.shd[0])return;const s=m.shd[0];if(s.h>0?m.heat>=m.hc:m.en<=0){m.shdOn=false;if(m==B.p){toast(s.h>0?"Engine overheated - shield turned off":"Energy depleted - shield turned off");try{playBuf("scifi",.3,.7)}catch(_){}}}}
+function shdAuto(m){if(!m||!m.shdOn||!m.shd||!m.shd[0])return;const s=m.shd[0];if(s.e>0&&m.en<=0){m.shdOn=false;if(m==B.p){toast("Energy depleted - shield turned off");try{playBuf("scifi",.3,.7)}catch(_){}}}}
 function shdToggle(a){if(!a||!a.shd||!a.shd.length||B.over||B.busy||B.turn!="p")return;const s=a.shd[0];
-  if(!a.shdOn){if(s.h>0?a.heat>=a.hc:a.en<=0){toast(s.h>0?"Engine overheated - can't activate the shield":"No energy - can't activate the shield");return}a.shdOn=true;say("Shield activated.");try{playBuf("scifi",.35,1.4)}catch(_){}controls();endTurn();return}
+  if(!a.shdOn){if(s.e>0&&a.en<=0){toast("No energy - can't activate the shield");return}if(s.h>0&&a.heat>a.hc){toast("Engine overheated - can't activate the shield");return}a.shdOn=true;say("Shield activated.");try{playBuf("scifi",.35,1.4)}catch(_){}controls();endTurn();return}
   else{a.shdOn=false;say("Shield deactivated.");try{playBuf("scifi",.3,.8)}catch(_){}}controls()}
 const RDM=(a,b,w,raw,last,st)=>{let d=RDM0(a,b,w,raw,last,st);if(!b||!b.shdOn||!b.shd||!b.shd.length||d<=0)return d;const s=b.shd[0],ab=Math.floor(d*s.p/100),need=Math.ceil(ab/s.b);
   /* every hit on a shielded mech plays the absorb effect (APK takeDamage -> createShield: front piece, top piece for artillery; blue = energy, red = heat) */
@@ -4206,7 +4206,7 @@ async function endTurn(){
   B.turn=next;B.ch=null;if(next!=cu){m.used=[];B.clk=30}m.did=false;m.sdKeep=0;m.shutT=0;
   if((B.rk||[]).length){B.busy=true;controls();const dd=await rocketTick();B.busy=false;if(dd||B.over)return}
   /* APK rule (BMScreenBattle.startNewAction): cooling is heat removed PER ACTION POINT. Heat never drains by itself; when a turn begins over the heat cap the engine is shut down: if one point of cooling gets it back under the cap the shutdown costs 1 action point (cools cool x1), otherwise it eats the whole turn (2 action points, cools cool x2). The cooled amount floats up in orange. */
-  if(next!=cu&&m.heat>m.hc){const one=m.heat-m.cool<=m.hc,ap=one?1:2,amt=Math.min(m.heat,m.cool*ap),mx=px(m.vx!=null?m.vx:m.x);m.heat-=amt;if(amt>0)B.fl.push({x:mx,y:GY-170,t:"-"+amt,c:"orange",l:70});shutFx(m);m.sdKeep=0;m.shutT=1;B.busy=true;controls();
+  if(next!=cu&&m.heat>m.hc){const one=m.heat-m.cool<=m.hc,ap=one?1:2,amt=Math.min(m.heat,m.cool*ap),mx=px(m.vx!=null?m.vx:m.x);m.heat-=amt;if(amt>0)B.fl.push({x:mx,y:GY-170,t:"-"+amt,c:"orange",l:70});shutFx(m);m.sdKeep=0;m.shutT=1;if(m.shdOn&&m.shd&&m.shd[0]&&m.shd[0].h>0){m.shdOn=false;if(m==B.p){toast("Engine overheated - shield turned off");try{playBuf("scifi",.3,.7)}catch(_){}}}B.busy=true;controls();
     if(one){B.tl[next]=Math.max(1,B.tl[next]-1);say((next=="p"?"Your":"Enemy")+" engine overheats and shuts down. One action lost.");await sleep(1500);B.busy=false}
     else{B.tl[next]=1;say((next=="p"?"You overheat":"Enemy overheats")+" and shut down. The turn is lost.");await sleep(1500);B.busy=false;return endTurn()}}
   controls();
