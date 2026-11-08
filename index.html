@@ -2928,7 +2928,7 @@ const T1=mkb("bt1","l"),T2=mkb("bt2","r");let hideT=0,sig1="",sig2="";
 const u=v=>`calc(var(--kt)*${(+v).toFixed(2)})`;
 const f=t=>`<span style="color:${t[0]}">${t[1]}</span>`;
 function fill(T,frame,rows){
-  const g=T.querySelector(".btg"),R=T.querySelector(".btr"),N=rows.filter(r=>r.k!="uses").length;let h="",ri=0;
+  const g=T.querySelector(".btg"),R=T.querySelector(".btr"),N=rows.length>6?rows.length-1:rows.length;let h="",ri=0;
   rows.forEach((r,i)=>{const n=N-ri;
     if(r.k=="uses"){for(let p=1;p<=5;p++){if(p>r.max)break;const used=p<=r.used;h+=`<img class="btp" src="${BTP[used?1:0]}" style="left:${u(65.5-23*(p-1)+OX-10)};top:${u(18.1+OY-10)}" alt="">`}return}
     ri++;if(r.ic)h+=`<img class="bti2" src="${BTI[r.ic]}" style="left:${u(-75.8+OX)};top:${u(ICY(n)+OY)}" alt="">`;
@@ -2981,7 +2981,7 @@ function rowsShd(m){const s=m.shd&&m.shd[0];if(!s)return null;const A=[];if(s.e)
 function rowsCool(m){const c=Math.max(0,Math.min(m.heat||0,m.cool||0));return{A:[{ic:"heatCooling",tx:`<span style="color:${ENG}">-${c}</span>`}],D:[]}}
 /* mine = the hovering owner is the player: left box = attacker (green, tab left), right box = defender (red, tab right); the enemy's weapon swaps them */
 function show(own,r){
-  clearTimeout(hideT);const N=x=>Math.max(1,Math.min(6,x.filter(q=>q.k!="uses").length));
+  clearTimeout(hideT);const N=x=>Math.max(1,Math.min(6,x.length>6?x.length-1:x.length));
   if(!r||(!r.A.length&&!r.D.length)){hide();return}
   if(own=="p"){put(T1,2*N(r.A)-1,r.A);put(T2,11+2*N(r.D),r.D)}
   else{put(T1,12+2*N(r.D),r.D);put(T2,2*N(r.A),r.A)}}
@@ -3943,9 +3943,9 @@ function drawMechGlow(g,x,y,dir,m,hh){
     for(let q=7;q>=0;q--){const a=ph-q*.12,sn=Math.sin(a);if((sn<0)!=back)continue;const sc=(.5+.14*sn)*(1-q*.07),al=gs*(1-q*.13)*(q?.55:1);
       g.globalAlpha=al;const w=70*sc;g.drawImage(im,x+Math.cos(a)*rx-w/2,cy+sn*ry+Math.sin(a*.5)*10-w/2,w,w)}g.restore()};
   orb(true);drawMech(g,x,y,dir,m,hh);orb(false)}
-function shdAuto(m){if(!m||!m.shdOn||!m.shd||!m.shd[0])return;const s=m.shd[0];if(s.e>0&&m.en<=0){m.shdOn=false;if(m==B.p){toast("Energy depleted - shield turned off");try{playBuf("shdoff",.9)}catch(_){}}}}
+function shdAuto(m){if(!m||!m.shdOn||!m.shd||!m.shd[0])return;const s=m.shd[0];const nE=s.e>0&&m.en<=0,hot=s.h>0&&m.heat>=m.hc;if(nE||hot){m.shdOn=false;if(m==B.p){toast(nE?"Energy depleted - shield turned off":"Engine overheated - shield turned off");try{playBuf("shdoff",.9)}catch(_){}}}}
 function shdToggle(a){if(!a||!a.shd||!a.shd.length||B.over||B.busy||B.turn!="p")return;const s=a.shd[0];
-  if(!a.shdOn){if(s.e>0&&a.en<=0){toast("No energy - can't activate the shield");return}if(s.h>0&&a.heat>a.hc){toast("Engine overheated - can't activate the shield");return}a.shdOn=true;say("Shield activated.");try{playBuf("shdon",.9)}catch(_){}controls();endTurn();return}
+  if(!a.shdOn){if(s.e>0&&a.en<=0){toast("No energy - can't activate the shield");return}if(s.h>0&&a.heat>=a.hc){toast("Engine overheated - can't activate the shield");return}a.shdOn=true;say("Shield activated.");try{playBuf("shdon",.9)}catch(_){}controls();endTurn();return}
   else{a.shdOn=false;say("Shield deactivated.");try{playBuf("shdoff",.9)}catch(_){}}controls()}
 const RDM=(a,b,w,raw,last,st)=>{let d=RDM0(a,b,w,raw,last,st);if(!b||!b.shdOn||!b.shd||!b.shd.length||d<=0)return d;const s=b.shd[0],ab=Math.floor(d*s.p/100),need=Math.ceil(ab/s.b);
   /* every hit on a shielded mech plays the absorb effect (APK takeDamage -> createShield: front piece, top piece for artillery; blue = energy, red = heat) */
