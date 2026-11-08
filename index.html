@@ -3884,7 +3884,7 @@ async function gasTick(){
   return false;
 }
 async function summonVolley(a,b){
-  if(a.shutT)return;const sms=(B.sms||[]).filter(s=>s.own==a&&!s.gone);if(!sms.length||B.over||a.dead||b.dead)return;
+  if(a.shutT&&!a.sdKeep)return;const sms=(B.sms||[]).filter(s=>s.own==a&&!s.gone);if(!sms.length||B.over||a.dead||b.dead)return;
   B.busy=true;controls();
   for(const sm of sms){if(B.over||b.dead||b.hp<=0)break;
     const mx=Math.max(...sm.weps.map(w=>w.max)),d=Math.abs(sm.x-b.x);
@@ -3900,7 +3900,7 @@ async function droneOff(a){if(!a.don||B.over)return;B.busy=true;a.don=false;a.di
 async function droneOn(a){if(a.don||B.over)return;B.busy=true;a.don=true;a.did=true;controls();playBuf("drone",.9);say("Drone activated!");await anim(650,k=>{a.dp=k});a.dp=1;B.busy=false;controls()}
 async function droneTot(act,b){let n0;do{n0=act.n;await sleep(300)}while(act.n!=n0&&!B.over);if(B.act===act){B.act=null;if(act.n>1&&act.sum>0&&!B.over){B.fl.push({x:px(b.vx!=null?b.vx:b.x),y:GY-210,t:"-"+act.sum,l:100,tot:1});try{playBuf("rank",1)}catch(e){}await sleep(500)}}}
 async function droneVolley(a,b){
-  if(!a.don||a.shutT)return;
+  if(!a.don||(a.shutT&&!a.sdKeep))return;
   const ds=a.weps.map((w,i)=>w.drone?i:-1).filter(i=>i>=0);if(!ds.length||B.over||a.dead||b.dead)return;
   {const sb=interceptT(a,b,{});if(sb)b=sb}
   B.busy=true;controls();const dr=fdir(a);const act=B.act={n:0,sum:0,d:1};
