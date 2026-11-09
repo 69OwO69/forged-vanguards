@@ -1767,7 +1767,7 @@ function preview(){
 }
 
 /* ---------- hangar ---------- */
-const K={t:T,l:L,w:W,m:M},TN=["Common","Rare","Epic","Legendary","Mythic","Secret"],tier=c=>c<=150?0:c<=250?1:c<=400?2:c<1000?3:c<9000?4:5,RAR=c=>["#6b7686","#2f8fff","#b05cff","#ff9a2e","#ff2a2a","#2bd957"][tier(c)];
+const K={t:T,l:L,w:W,m:M};M.forEach(m=>{if(m&&(m.am||m.ra)){m.nou=1;m.up=0}}),TN=["Common","Rare","Epic","Legendary","Mythic","Secret"],tier=c=>c<=150?0:c<=250?1:c<=400?2:c<1000?3:c<9000?4:5,RAR=c=>["#6b7686","#2f8fff","#b05cff","#ff9a2e","#ff2a2a","#2bd957"][tier(c)];
 /* ---------- upgrade + fuse ---------- */
 const CAPL=[10,20,30,40,50,50],MAXP=[10000,50000,171600,398020,500000,500000],FUSEP=[400,1760,3500,7400,18150,18150],KEEP=.3,UPG=.03,UBk=(k,i,lv)=>{const r=RI(k,i);const q=K[k]&&K[k][i];return (q&&q.up!=null?q.up:.3)*(Math.max(1,lv)-1)/(CAPL[r]-1)};
 const RI=(k,i)=>tier(K[k][i].cost),cumP=(r,L)=>L<=1?0:L>=CAPL[r]?MAXP[r]:Math.round(MAXP[r]*Math.pow((L-1)/(CAPL[r]-1),1.5)),lvOfP=(r,x)=>{let L=1;while(L<CAPL[r]&&x>=cumP(r,L+1))L++;return L};
@@ -1848,8 +1848,8 @@ function fzRender(tu){
   const all=[];for(const kk in K)S.own[kk].forEach(ii=>XS(kk,ii).forEach(c=>all.push([kk,ii,c])));
   all.sort((a,b)=>RI(b[0],b[1])-RI(a[0],a[1])||K[b[0]].length-K[a[0]].length||a[1]-b[1]||b[2].x-a[2].x);
   let gain=0,cnt=0;if(has)for(const [kk,ii,c] of all)if(FZ.ix[c.u]&&fzOK(kk,ii,c.u)){gain+=fzY(kk,ii,c.u);cnt++}
-  const mk=(kk,ii,c)=>{const it=K[kk][ii],tg=has&&c.u===FZ.u,ok=has&&fzOK(kk,ii,c.u),off=has&&!tg&&!ok,lv=lvOfP(RI(kk,ii),c.x);
-    const eqd=EQU(c.u);return `<div class="fzt rt rt${RI(kk,ii)} ${off?"off":""} ${tg?"tg":""} ${eqd?"eq":""} ${c.s?"shn":""}" data-fa="${kk}:${ii}:${c.u}" draggable="${!has||ok}">${ICO(kk,it,c.s,lv)}${lv>=1?`<b class="clv">${lvBadge(lv)}</b>`:""}${ok&&!mkUp()?`<b class="q3">+${fzY(kk,ii,c.u).toLocaleString()}</b>`:""}${ok&&c.x&&!mkUp()?`<b class="q5">upgraded</b>`:""}</div>`};
+  const mk=(kk,ii,c)=>{const it=K[kk][ii],tg=has&&c.u===FZ.u,ok=has&&fzOK(kk,ii,c.u),off=(has&&!tg&&!ok)||(!has&&!!it.nou),lv=lvOfP(RI(kk,ii),c.x);
+    const eqd=EQU(c.u);return `<div class="fzt rt rt${RI(kk,ii)} ${off?"off":""} ${tg?"tg":""} ${eqd?"eq":""} ${c.s?"shn":""}" data-fa="${kk}:${ii}:${c.u}" draggable="${!has||ok}">${ICO(kk,it,c.s,lv)}${lv>=1&&!it.nou?`<b class="clv">${lvBadge(lv)}</b>`:""}${ok&&!mkUp()?`<b class="q3">+${fzY(kk,ii,c.u).toLocaleString()}</b>`:""}${ok&&c.x&&!mkUp()?`<b class="q5">upgraded</b>`:""}</div>`};
   let L="",M="",tiles=[],queue=[];
   for(const [kk,ii,c] of all){const sel=has&&FZ.ix[c.u]&&fzOK(kk,ii,c.u);if(sel)queue.push(mk(kk,ii,c));else if(!fast)tiles.push(mk(kk,ii,c))}
   if(has){
@@ -1982,7 +1982,7 @@ function mvSwitch(dr){S.mechs=S.mechs||[null,null,null];S.mechs[S.mi||0]=JSON.pa
 function mvLoad(dr){const ix=(S.loads||[]).map((l,i)=>l?i:-1).filter(i=>i>=0);if(!ix.length)return toast("No saved mechs yet");let p=ix.indexOf(S._ldi);p=p<0?(dr>0?0:ix.length-1):(p+dr+ix.length)%ix.length;S._ldi=ix[p];S.sel=fixU(JSON.parse(JSON.stringify(S.loads[S._ldi])));work()}
 function work(){
   head();const s=S.sel,t=s.t==null?null:T[s.t],wt=weight();$("ld").innerHTML="";$("sts").innerHTML=`${HPI} ${myMech().max} · Armor ${myMech().res}% · Energy ${myMech().enMax}/turn (cap ${myMech().enCap}) ${(()=>{const r=myMech().rs;return r.p||r.f||r.e?"· Resist "+r.p+"/"+r.f+"/"+r.e+" ":""})()}${(()=>{const m=myMech();return m.am||m.ra?"· Ammo "+m.am+"/"+m.ra+" ":""})()}· Heat cap ${myMech().hc}, cooling ${myMech().cool} · ${s.l==null?0:L[s.l].s} tile/step`;
-  const LB=(k,i,u)=>{const _l=LVU(k,i,u);return _l>=1?`<b class="clv">${lvBadge(_l)}</b>`:""};
+  const LB=(k,i,u)=>{const _l=LVU(k,i,u);return _l>=1&&!K[k][i].nou?`<b class="clv">${lvBadge(_l)}</b>`:""};
   const sl=(k,it,d,cap)=>{const sh=isSh(k,K[k].indexOf(it),s[d+"u"]);return `<button class="slot rt rt${tier(it.cost)} ${tab==d?"on":""} ${sh?"shn":""}" data-s="${d}" style="--rc:${RAR(it.cost)}">${ICO(k,it,sh,LVU(k,K[k].indexOf(it),s[d+"u"]))}<em>${cap}</em>${LB(k,K[k].indexOf(it),s[d+"u"])}</button>`};
   const wsb=si=>{const id=s.w[si];return `<button class="slot ${id!=null?"rt rt"+tier(W[id].cost):""} ${SSEL===si?"on":""} ${id!=null&&isSh("w",id,s.wu&&s.wu[si])?"shn":""}" data-ws="${si}" ${id!=null?`style="--rc:${RAR(W[id].cost)}"`:`title="${SN[si]}"`}>${id!=null?ICO("w",W[id],isSh("w",id,s.wu&&s.wu[si]),LVU("w",id,s.wu&&s.wu[si])):sli(SLW[si][0],SLW[si][1])}<em>${SN[si]}</em>${id!=null?LB("w",id,s.wu&&s.wu[si]):""}</button>`};
   const msb=q=>{const id=q==0?s.m:s.mx[q-1];return id!=null?`<button class="slot rt rt${tier(M[id].cost)} ${isSh("m",id,q==0?s.mu:(s.mxu||[])[q-1])?"shn":""}" data-um="${q+1}" style="--rc:${RAR(M[id].cost)}">${ICO("m",M[id],isSh("m",id,q==0?s.mu:(s.mxu||[])[q-1]))}<em>${q==9?"Shield":q==8?"Teleport":"Module"}</em>${LB("m",id,q==0?s.mu:(s.mxu||[])[q-1])}</button>`:`<button class="slot ${tab==(q==9?"sh":q==8?"tp":"m")?"on":""}" data-s="${q==9?"sh":q==8?"tp":"m"}">${sli(q==9?"shd":q==8?"tp":"mod")}<em>${q==9?"Shield":q==8?"Teleport":"Module"}</em></button>`},
@@ -2043,12 +2043,12 @@ $("fz").onclick=e=>{if(!FZ||FZ.busy)return;const b=e.target.closest("button"),t=
   if(b&&b.dataset.fm){const q=b.dataset.fm;FZ.sel[q]=Math.max(0,(FZ.sel[q]||0)-1);return fzRender()}
   if(sl&&FZ.k!=null){FZ.k=null;FZ.u=null;FZ.ix={};return fzRender()}
   if(t)fzPick(t.dataset.fa)};
-function fzPick(q){const [kk,ii,uu]=q.split(":"),i=+ii,u=+uu;if(FZ.k==null){playBuf("grab");playBuf("equip",.35);FZ.k=kk;FZ.i=i;FZ.u=u;FZ.ix={};return fzRender()}
+function fzPick(q){const [kk,ii,uu]=q.split(":"),i=+ii,u=+uu;if(FZ.k==null){if(K[kk][i].nou){toast("Ammo storage can't be upgraded.");return}playBuf("grab");playBuf("equip",.35);FZ.k=kk;FZ.i=i;FZ.u=u;FZ.ix={};return fzRender()}
   if(u===FZ.u)return;if(mkUp()&&!FZ.ix[u]&&Object.keys(FZ.ix).length>=evNeed()){toast("Only "+evNeed()+" "+TN[RI(FZ.k,FZ.i)].toLowerCase()+" items are needed.");return}if(!fzOK(kk,i,u)){toast(K[kk][i].cost==0&&CN(kk,i)==1?"Starter items can't be fused.":EQU(u)?"That item is equipped.":"Can't fuse that.");return}
   playBuf(FZ.ix[u]?"grab":"equip",.5);if(FZ.ix[u])delete FZ.ix[u];else FZ.ix[u]=1;fzRender(u)}
 $("fz").addEventListener("dragstart",e=>{const t=e.target.closest&&e.target.closest(".fzt");if(t){playBuf("grab");e.dataTransfer.setData("text/plain",t.dataset.fa);e.dataTransfer.effectAllowed="move"}});
 $("fz").addEventListener("dragover",e=>{if(e.target.closest&&e.target.closest("[data-slot]"))e.preventDefault()});
-$("fz").addEventListener("drop",e=>{if(!FZ||FZ.busy||!(e.target.closest&&e.target.closest("[data-slot]")))return;e.preventDefault();const q=e.dataTransfer.getData("text/plain");if(!q)return;const [kk,ii,uu]=q.split(":");playBuf("equip",.35);FZ.k=kk;FZ.i=+ii;FZ.u=+uu;FZ.ix={};fzRender()});
+$("fz").addEventListener("drop",e=>{if(!FZ||FZ.busy||!(e.target.closest&&e.target.closest("[data-slot]")))return;e.preventDefault();const q=e.dataTransfer.getData("text/plain");if(!q)return;const [kk,ii,uu]=q.split(":");if(K[kk][+ii].nou){toast("Ammo storage can't be upgraded.");return}playBuf("equip",.35);FZ.k=kk;FZ.i=+ii;FZ.u=+uu;FZ.ix={};fzRender()});
 $("work").onclick=e=>{const b=e.target.closest("button");if(!b)return;const d=b.dataset;
   if(d.go=="arena")return show("arn");if(d.go)return show(d.go);
   if(d.cat){WCAT=d.cat;WPG=0;work();return}if(d.pg){WPG+=+d.pg;work();return}
@@ -3206,7 +3206,7 @@ if(it.tp){if(it.tpInf)row(`<img src="${BK.pa}" alt="" style="height:1.2em;width:
     const ix=lv>=50?RANKI.length-1:Math.min(RANKI.length-2,Math.floor(lv/2)),wv=k=="w"?(it.w||25):k=="t"?(it.w||25):(it.w||25),wt=k=="w"&&sh?Math.ceil(wv*SHB-1e-9):k=="m"&&wv<0?(own?MW(i,u,lv):wv):wv;
     let h=`<div class="in" style="color:${RAR(it.cost||0)}">${it.n}${sh?` <em class="rbw">SHINY</em>`:""}</div>`;
     h+=row(WI,wt,"Weight");
-    h+=`<div class="ir">${ic(`<img src="${RANKI[ix]}" alt="">`)}<b>Power Level : ${lv>=cap?lv+" (max)":lv}${lv2!=null&&lv2!=lv?` <i style="font-style:normal;color:#9fe870">&rarr; ${lv2}</i>`:""}</b> ${own?`<span>(${Math.round(xp).toLocaleString()} / ${nx==null?"MAX":nx.toLocaleString()})</span>`:""}</div><div class="in2" style="color:${RAR(it.cost||0)}">${TN[tier(it.cost||0)]=="Mythic"?"Mythical":TN[tier(it.cost||0)]} Item</div><div class="ig"></div>`;
+    h+=(it.nou?"":`<div class="ir">${ic(`<img src="${RANKI[ix]}" alt="">`)}<b>Power Level : ${lv>=cap?lv+" (max)":lv}${lv2!=null&&lv2!=lv?` <i style="font-style:normal;color:#9fe870">&rarr; ${lv2}</i>`:""}</b> ${own?`<span>(${Math.round(xp).toLocaleString()} / ${nx==null?"MAX":nx.toLocaleString()})</span>`:""}</div>`)+`<div class="in2" style="color:${RAR(it.cost||0)}">${TN[tier(it.cost||0)]=="Mythic"?"Mythical":TN[tier(it.cost||0)]} Item</div><div class="ig"></div>`;
     A.forEach((c,n)=>{if(!c){h+=`<div class="ig"></div>`;return}const v2=Bn&&Bn[n]&&String(Bn[n][1])!=String(c[1])?Bn[n][1]:null;h+=row(c[0],c[1]+(v2!=null?` <i style="font-style:normal;color:#9fe870">&rarr; ${v2}</i>`:""),c[2],c[3])});
     return {h}}
   const hide=()=>{tip.classList.add("hide");cst.classList.add("hide");IT.classList.add("hide");if(cur){cur=null}};
