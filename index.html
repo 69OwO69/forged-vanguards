@@ -1230,6 +1230,7 @@ button,[role=button],.nb,.bkb{touch-action:manipulation;-webkit-user-select:none
  <div class="rw"><span>Graphics</span><select id="gq" style="padding:6px 8px;background:#121c2a;color:#e6eefb;border:1px solid #3a5070;border-radius:6px"><option value="0">Auto (recommended)</option><option value="2">Performance</option><option value="3">Lowest</option></select></div>
  <div class="rw"><span>Show FPS in battle</span><button class="nb" id="sf" style="padding:6px 14px"></button></div>
  <div class="rw"><span>Enemy designs <small id="edn"></small></span><span><button class="nb" id="edi" style="padding:6px 12px">Import</button> <button class="nb" id="edc" style="padding:6px 12px">Clear</button></span></div>
+ <div class="rw"><span>Evolution tree</span><button class="nb" id="sev" style="padding:6px 14px">Open</button></div>
  <small>More settings coming soon.</small><button class="nb" id="sc">Close</button></div></div>
 <div id="toast" class="hide"></div>
 <section id="battle" class="hide fsx">
@@ -3211,6 +3212,7 @@ if(it.tp){if(it.tpInf)row(`<img src="${BK.pa}" alt="" style="height:1.2em;width:
     return {h}}
   const hide=()=>{tip.classList.add("hide");cst.classList.add("hide");IT.classList.add("hide");if(cur){cur=null}};
   function apShow(o,key,e,up){IT.classList.remove("ap");if(o)IT.innerHTML=o.h;IT.classList.remove("hide");const R=IT.getBoundingClientRect(),tw=R.width,th=R.height;let x=e.clientX+18;if(x+tw>innerWidth-6)x=e.clientX-18-tw;const y=Math.max(6,Math.min(innerHeight-th-6,up?e.clientY-th-14:e.clientY-20));IT.style.left=x+"px";IT.style.top=y+"px"}
+  window.evtCard=(k,i,e)=>apShow(inv(k,i,null),null,e);window.evtHide=hide;
   function mechTip(){const m=myMech(),ic=h=>`<i class="ii">${h}</i>`,row=(h,v,l,c)=>`<div class="ir">${ic(h)}<b${c?` style="color:${c}"`:""}>${v}</b> <span>${l}</span></div>`,up=SVGI.regen();
     let h=`<div class="in">Mech stats</div>`;
     h+=row(HPI.replace("height:1.1em","height:20px"),m.max,"Max hit points","#fff");
@@ -3543,7 +3545,67 @@ document.addEventListener("pointerdown",()=>lobbyOn());
 try{if(!S.gj7){S.gj7=1;addI("t",7,true);save();if(typeof head=="function")setTimeout(()=>{try{head()}catch(_){}},0)}}catch(e){console.error("grant",e)}
 (function(){const lab=()=>{$("sm").textContent=S.mute?"Off":"On";$("sx").textContent=S.nosfx?"Off":"On";};
  const gear=()=>$("gear").classList.toggle("hide",$("hangar").classList.contains("hide"));setInterval(gear,300);
- $("gear").onclick=()=>{lab();{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("set").onclick=e=>{if(e.target.id=="set")$("set").classList.add("hide")};
+ $("gear").onclick=()=>{lab();{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();$("set").onclick=e=>{if(e.target.id=="set")$("set").classList.add("hide")};
+/* ---------- evolution tree (settings): built from EVO, so every item added to EVO shows up automatically ---------- */
+(function(){
+  const CAT={t:"Torso",l:"Legs",w:"Weapon",m:"Module"};let root=null,st=null;
+  const css=document.createElement("style");css.textContent=`
+#evt{position:fixed;inset:0;z-index:150;background:#04060a;display:flex;flex-direction:column;font-family:"Chakra Petch",system-ui,sans-serif;color:#cfd8e6}
+#evt.hide{display:none!important}
+#evt .evh{display:flex;align-items:center;gap:10px;padding:10px 16px;background:#0a0f17;border-bottom:1px solid #1d2a3b;flex:none}
+#evt .evh b{font-size:clamp(16px,1.6vw,22px);letter-spacing:1px;color:#fff;margin-right:auto}
+#evt .evh small{color:#7d8da3;font-size:clamp(11px,1vw,14px)}
+#evt .evh button{background:linear-gradient(#2764b0,#173d73);border:2px solid #4aa3ff;border-radius:8px;color:#fff;font:700 16px/1 inherit;min-width:40px;height:36px;padding:0 12px;cursor:pointer}
+#evt .evv{position:relative;flex:1;min-height:0;overflow:hidden;touch-action:none;cursor:grab;background:radial-gradient(ellipse at 50% 0,#0b121c,#04060a 70%)}
+#evt .evv.dg{cursor:grabbing}
+#evt .evw{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform}
+#evt .evw svg{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
+#evt .evn{position:absolute;width:88px;height:88px;box-sizing:border-box;cursor:pointer;user-select:none}
+#evt .evn img,#evt .evn svg{position:absolute;left:10%;top:10%;width:80%;height:80%;object-fit:contain;pointer-events:none}
+#evt .evn.un img,#evt .evn.un svg{filter:grayscale(.85) brightness(.6)}
+#evt .evn.un::before,#evt .evn.un::after{opacity:.45}
+#evt .evl{position:absolute;left:50%;top:100%;transform:translateX(-50%);width:max-content;max-width:150px;box-sizing:border-box;padding:1px 6px;background:#04060a;margin-top:6px;text-align:center;font-size:14px;line-height:1.15;font-weight:700;color:#e6eefb;text-shadow:0 1px 2px #000;pointer-events:none}
+#evt .evl.un{color:#7d8da3}
+#evt .evc{position:absolute;transform:translateX(-50%);width:150px;text-align:center;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#5d6e86;pointer-events:none}
+#evt .eve{position:absolute;left:50%;transform:translateX(-50%);font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#8da2bd;background:#04060a;padding:1px 6px;border-radius:4px;pointer-events:none;white-space:nowrap}
+#evt .evm{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#7d8da3;font-size:18px;text-align:center;padding:20px}`;
+  document.head.appendChild(css);
+  function chains(){const next={},tg=new Set();for(const key in EVO){const k=key[0],i=+key.slice(2),j=EVO[key];if(!K[k]||!K[k][i]||!K[k][j]||K[k][i].gone||K[k][j].gone)continue;next[key]=k+":"+j;tg.add(k+":"+j)}
+    const out=[];for(const key in next){if(tg.has(key))continue;const ch=[key];let c=key,g=0;while(next[c]&&g++<20){c=next[c];ch.push(c)}if(ch.length>1)out.push(ch)}
+    const ord="tlwm";out.sort((a,b)=>ord.indexOf(a[0][0])-ord.indexOf(b[0][0])||+a[0].slice(2)-+b[0].slice(2));return out}
+  function build(){
+    const vp=root.querySelector(".evv"),w=root.querySelector(".evw");w.innerHTML="";const cs=chains();
+    if(!cs.length){w.innerHTML="";vp.querySelector(".evm")||vp.insertAdjacentHTML("beforeend",`<div class="evm">No evolving items yet.</div>`);return}
+    const m=vp.querySelector(".evm");if(m)m.remove();
+    const PX=190,PY=190,NS=88,top=40;let W=cs.length*PX,H=top+Math.max(...cs.map(c=>c.length))*PY;
+    let svg=`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">`,h="";
+    cs.forEach((ch,ci)=>{const cx=ci*PX+PX/2;h+=`<div class="evc" style="left:${cx}px;top:6px">${CAT[ch[0][0]]}</div>`;
+      ch.forEach((key,ni)=>{const k=key[0],i=+key.slice(2),it=K[k][i],y=top+ni*PY,own=(S.own[k]||[]).includes(i);
+        if(ni){const y0=top+(ni-1)*PY+NS;svg+=`<line x1="${cx}" y1="${y0}" x2="${cx}" y2="${y}" stroke="rgba(200,212,232,.55)" stroke-width="1.5"/><circle cx="${cx}" cy="${y0}" r="3" fill="#cfd8e6"/><circle cx="${cx}" cy="${y}" r="3" fill="#cfd8e6"/>`;
+          h+=`<div class="eve" style="left:${cx}px;top:${y0+(y-y0)*.66-8}px">evolves</div>`}
+        h+=`<div class="evn rt rt${tier(it.cost||0)}${own?"":" un"}" data-k="${k}" data-i="${i}" style="left:${cx-NS/2}px;top:${y}px;--rc:${RAR(it.cost||0)}">${ICO(k,it,false,1)}<div class="evl${own?"":" un"}">${it.n}</div></div>`})});
+    w.innerHTML=svg+"</svg>"+h;st.cw=W;st.ch=H;fit()}
+  function apply(){root.querySelector(".evw").style.transform=`translate(${st.x}px,${st.y}px) scale(${st.s})`}
+  function fit(){const vp=root.querySelector(".evv"),r=vp.getBoundingClientRect(),s=Math.max(.45,Math.min(1,(r.width-40)/st.cw,(r.height-40)/st.ch));st.s=s;st.x=Math.max(20,(r.width-st.cw*s)/2);st.y=Math.max(10,(r.height-st.ch*s)/2);if(st.cw*s>r.width-40)st.x=20;apply()}
+  function zoom(f,cx,cy){const n=Math.max(.25,Math.min(2.5,st.s*f));if(cx==null){const r=root.querySelector(".evv").getBoundingClientRect();cx=r.width/2;cy=r.height/2}st.x=cx-(cx-st.x)*n/st.s;st.y=cy-(cy-st.y)*n/st.s;st.s=n;apply()}
+  function open(){
+    if(!root){root=document.createElement("div");root.id="evt";root.className="hide";
+      root.innerHTML=`<div class="evh"><b>EVOLUTION TREE</b><small>Drag to move · wheel or +/- to zoom · tap an item for its card</small><button data-z="1.25">+</button><button data-z="0.8">&minus;</button><button data-z="fit">Fit</button><button data-z="x">Close</button></div><div class="evv"><div class="evw"></div></div>`;
+      document.body.appendChild(root);st={x:0,y:0,s:1,cw:1,ch:1};const vp=root.querySelector(".evv"),P=new Map();let mv=0,pd=0,last=null;
+      root.querySelector(".evh").onclick=e=>{const b=e.target.closest("button");if(!b)return;const z=b.dataset.z;if(z=="x")close();else if(z=="fit")fit();else zoom(+z)};
+      vp.addEventListener("pointerdown",e=>{P.set(e.pointerId,[e.clientX,e.clientY]);try{vp.setPointerCapture(e.pointerId)}catch(_){}mv=0;vp.classList.add("dg");last=null;if(window.evtHide)evtHide()});
+      vp.addEventListener("pointermove",e=>{if(!P.has(e.pointerId)){const n=e.target.closest&&e.target.closest(".evn");if(n&&e.pointerType=="mouse")evtCard(n.dataset.k,+n.dataset.i,e);else if(e.pointerType=="mouse")evtHide();return}
+        const o=P.get(e.pointerId);if(P.size==2){const ids=[...P.keys()],a=P.get(ids[0]),b=P.get(ids[1]);const d0=Math.hypot(a[0]-b[0],a[1]-b[1]);P.set(e.pointerId,[e.clientX,e.clientY]);const a2=P.get(ids[0]),b2=P.get(ids[1]),d1=Math.hypot(a2[0]-b2[0],a2[1]-b2[1]);const r=vp.getBoundingClientRect();if(d0>0)zoom(d1/d0,(a2[0]+b2[0])/2-r.left,(a2[1]+b2[1])/2-r.top);mv=99;return}
+        const dx=e.clientX-o[0],dy=e.clientY-o[1];P.set(e.pointerId,[e.clientX,e.clientY]);mv+=Math.abs(dx)+Math.abs(dy);if(mv>6){st.x+=dx;st.y+=dy;apply();if(window.evtHide)evtHide()}});
+      const up=e=>{const wasTap=P.has(e.pointerId)&&mv<=6&&P.size==1;P.delete(e.pointerId);vp.classList.remove("dg");if(wasTap){const n=document.elementFromPoint(e.clientX,e.clientY);const nn=n&&n.closest&&n.closest(".evn");if(nn&&e.pointerType!="mouse")evtCard(nn.dataset.k,+nn.dataset.i,e)}};
+      vp.addEventListener("pointerup",up);vp.addEventListener("pointercancel",up);vp.addEventListener("pointerleave",e=>{if(e.pointerType=="mouse"&&window.evtHide)evtHide()});
+      vp.addEventListener("wheel",e=>{e.preventDefault();const r=vp.getBoundingClientRect();zoom(e.deltaY<0?1.12:1/1.12,e.clientX-r.left,e.clientY-r.top)},{passive:false});
+      window.addEventListener("resize",()=>{if(!root.classList.contains("hide"))fit()});
+      document.addEventListener("keydown",e=>{if(e.key=="Escape"&&!root.classList.contains("hide"))close()})}
+    root.classList.remove("hide");build()}
+  function close(){if(root)root.classList.add("hide");if(window.evtHide)evtHide()}
+  window.openEvoTree=open;
+})();
  $("sm").onclick=()=>{S.mute=!S.mute;save();const inB=B&&!$("battle").classList.contains("hide");S.mute?(stopMusic(),lobbyOff()):inB?startMusic():lobbyOn();lab()};$("sx").onclick=()=>{S.nosfx=!S.nosfx;save();lab();if(!S.nosfx)playBuf("click")};gear()})();
 
 $("mu").onclick=()=>{S.mute=!S.mute;save();if(S.mute){stopMusic();$("mu").textContent="Music: off"}else{$("mu").textContent="Music: on";const inB=B&&!$("battle").classList.contains("hide");if(inB)startMusic();else{stopMusic();if(typeof lobbyOn=="function")lobbyOn();else startMusic()}}};

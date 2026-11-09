@@ -8,3 +8,4 @@
 - Item stats come from the APK: a weapon's damage is a random roll from `damageBase` to `damageBase+damageAddon` (the card shows "68 (+35)" = 68-103), so set `dr` to that min-max range (per shot: divide by the shot count). Do not treat the addon as an upgrade bonus.
 - After each change: commit, push to `main`, copy `index.html` to `/mnt/user-data/outputs/mech-foundry.html`, and tell the owner to hard refresh.
 - Commit messages end with `Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>` and the `Claude-Session:` line.
+- **Evolutions:** every item that evolves (Mk1 -> Mk2 -> Mk3, Shredders, torsos, etc.) must be added to the `EVO` table (`"k:index": nextIndex`). The settings > Evolution tree is built from `EVO`, so it picks new chains up automatically.
