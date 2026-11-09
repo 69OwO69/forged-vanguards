@@ -1954,8 +1954,8 @@ function info(k,i,u){const it=K[k][i];let x=`<b>${it.n}</b><br>${desc(k,it)}`;
     if(a.length>1)x+=`<br>All copies: ${a.slice().sort((p,q)=>q.x-p.x).map(q=>"Lv"+lvOfP(r,q.x)).join(", ")}`}
   x+=`<br>Rarity: ${TN[tier(it.cost)]}`;
   $("info").innerHTML=x}
-function resBits(x){const m=x!=null?M[x]:null;return m?(m.rp?1:0)|(m.rf?2:0)|(m.re?4:0):0}
-function cleanRes(o){if(o&&o.sel&&!Array.isArray(o.mx))o=o.sel;if(!o||!Array.isArray(o.mx))return;const sl=[{id:o.m,q:0}].concat(o.mx.slice(0,7).map((id,k)=>({id,q:k+1}))).filter(e=>resBits(e.id));sl.sort((p,q)=>{const f=x=>{const m=M[x.id];return(m.rp||0)+(m.rf||0)+(m.re||0)};return f(q)-f(p)});let used=0;sl.forEach(e=>{const b=resBits(e.id);if(used&b){if(e.q==0){o.m=null;o.mu=null}else{o.mx[e.q-1]=null;if(o.mxu)o.mxu[e.q-1]=null}}else used|=b})}
+function resBits(x){const m=x!=null?M[x]:null;return m?(m.rp?1:0)|(m.rf?2:0)|(m.re?4:0)|(m.w<0?8:0):0}
+function cleanRes(o){if(o&&o.sel&&!Array.isArray(o.mx))o=o.sel;if(!o||!Array.isArray(o.mx))return;const sl=[{id:o.m,q:0}].concat(o.mx.slice(0,7).map((id,k)=>({id,q:k+1}))).filter(e=>resBits(e.id));sl.sort((p,q)=>{const f=x=>{const m=M[x.id];return(m.rp||0)+(m.rf||0)+(m.re||0)+(m.w<0?-m.w:0)};return f(q)-f(p)});let used=0;sl.forEach(e=>{const b=resBits(e.id);if(used&b){if(e.q==0){o.m=null;o.mu=null}else{o.mx[e.q-1]=null;if(o.mxu)o.mxu[e.q-1]=null}}else used|=b})}
 function placeM(n,i,u,eqOnly){const ms=[n.m].concat(n.mx),us=[n.mu].concat(n.mxu),set=(q,id,uu)=>{if(q==0){n.m=id;n.mu=uu}else{n.mx[q-1]=id;n.mxu[q-1]=uu}};
   if(u==null){const fr=XS("m",i).slice().sort((p,q)=>q.x-p.x).find(c=>!us.includes(c.u));if(fr)u=fr.u;else{if(eqOnly)return "No spare copy of that module.";set(ms.lastIndexOf(i),null,null);return ""}}
   else if(us.includes(u)){if(eqOnly)return "";set(us.indexOf(u),null,null);return ""}
