@@ -1709,7 +1709,7 @@ function preview(){
 /* ---------- hangar ---------- */
 const K={t:T,l:L,w:W,m:M},TN=["Common","Rare","Epic","Legendary","Mythic","Secret"],tier=c=>c<=150?0:c<=250?1:c<=400?2:c<1000?3:c<9000?4:5,RAR=c=>["#6b7686","#2f8fff","#b05cff","#ff9a2e","#ff2a2a","#2bd957"][tier(c)];
 /* ---------- upgrade + fuse ---------- */
-const CAPL=[10,20,30,40,50,50],MAXP=[10000,50000,171600,398020,500000,500000],FUSEP=[400,1760,3500,7400,18150,18150],KEEP=.3,UPG=.03,UBk=(k,i,lv)=>{const r=RI(k,i);const q=K[k]&&K[k][i];return (q&&q.up!=null?q.up:.4)*(Math.max(1,lv)-1)/(CAPL[r]-1)};
+const CAPL=[10,20,30,40,50,50],MAXP=[10000,50000,171600,398020,500000,500000],FUSEP=[400,1760,3500,7400,18150,18150],KEEP=.3,UPG=.03,UBk=(k,i,lv)=>{const r=RI(k,i);const q=K[k]&&K[k][i];return (q&&q.up!=null?q.up:.3)*(Math.max(1,lv)-1)/(CAPL[r]-1)};
 const RI=(k,i)=>tier(K[k][i].cost),cumP=(r,L)=>L<=1?0:L>=CAPL[r]?MAXP[r]:Math.round(MAXP[r]*Math.pow((L-1)/(CAPL[r]-1),1.5)),lvOfP=(r,x)=>{let L=1;while(L<CAPL[r]&&x>=cumP(r,L+1))L++;return L};
 if(!S.up){S.up={t:{},l:{},w:{},m:{}};S.cn={t:{},l:{},w:{},m:{}};for(const i in S.cnt)S.cn.w[i]=S.cnt[i];for(const i in S.lv){const lv=S.lv[i],r=tier(W[i].cost);if(lv>1)S.up.w[i]=cumP(r,Math.min(lv,CAPL[r]))}}
 for(const k in K){S.up[k]=S.up[k]||{};S.cn[k]=S.cn[k]||{}}
