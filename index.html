@@ -4372,13 +4372,21 @@ function aiApk(e,p){
   const score=w=>(w.shots||1)*(w.dr?(w.dr[0]+w.dr[1])/2:w.dmg)+2*((w.hd||0)+(w.ed||0)+(w.cd||0))+10*(w.rd||0);
   const top=ix=>{if(!ix.length)return[];let b=-1e9;for(const i of ix)b=Math.max(b,score(W[i]));return ix.filter(i=>score(W[i])>=b-1e-6)};
   const pick=a=>a[Math.floor(Math.random()*a.length)];
+  /* shield: switched on when the bot has nothing better to do this round */
+  const shdOpt=()=>{const s_=e.shd&&e.shd[0];if(s_&&!e.shdOn&&!e.did&&!(s_.e>0&&e.en<=0)&&!(s_.h>0&&e.heat>=e.hc))return{t:"H"};return{t:"p"}};
+  /* teleporter: jump to a tile from where a gun reaches (or right next to the enemy for teleport damage) when nothing can fire from here */
+  if(e.tp>(e.tpUsed||0)&&!e.did&&typeof tpPick=="function"&&tpPick(e)){const here=W.some((w,i)=>gunOK(W[i])&&!e.used[i]&&afford(w)&&heatOK(w)&&inR(w,d));
+    if(!here){const TL=tpPick(e),c=tpTiles(e,"tp").filter(t=>Math.abs(t-px_)>=1&&W.some((w,i)=>gunOK(w)&&!e.used[i]&&afford(w)&&heatOK(w)&&inR(w,Math.abs(t-px_))||(TL.d&&Math.abs(t-px_)==1)));
+      if(c.length&&Math.random()<.8)return{t:"T",x:pick(c)}}}
+  /* leg Stomp: used when the target is in its reach and it hits harder than the best gun that can fire now */
+  {const sp=SP(e);if(!e.did&&SPU(e)&&sp.dmg[1]>0&&d<=sp.rg&&e.en>=sp.en&&e.heat+(sp.hd||0)<=e.hc){const sv=(sp.dmg[0]+sp.dmg[1])/2+2*((sp.hd||0)+(sp.ed||0)),gs=Math.max(0,...W.map((w,i)=>i).filter(i=>gunOK(W[i])&&!e.used[i]&&afford(W[i])&&heatOK(W[i])&&inR(W[i],d)).map(i=>score(W[i])));if(sv>=gs)return{t:"S"}}}
   /* 1. adjacent: fire any gun that can reach, at random */
   if(d==1){const near=W.map((w,i)=>i).filter(i=>gunOK(W[i])&&!e.used[i]&&afford(W[i])&&heatOK(W[i])&&inR(W[i],d));if(near.length)return{t:"g",ix:[pick(near)]}}
   /* 2. the best gun I can pay for (any range), and the best one that is also in range and still unfired */
   const l15=top(W.map((w,i)=>i).filter(i=>gunOK(W[i])&&afford(W[i])));
   let want=-1;
   if(l15.length){const l16=top(W.map((w,i)=>i).filter(i=>gunOK(W[i])&&afford(W[i])&&!e.used[i]&&inR(W[i],d)));want=l16.length?pick(l16):l15[0];
-    if(inR(W[want],d)){if(!e.used[want])return{t:"g",ix:[want]};return{t:"p"}}}/* already fired and still in range: hold position instead of shuffling */
+    if(inR(W[want],d)){if(!e.used[want])return{t:"g",ix:[want]};return shdOpt()}}/* already fired and still in range: hold position instead of shuffling */
   /* 3. reposition so the wanted gun is in range */
   if(canMove(e)){
     const dir0=px_>x?1:-1;
@@ -4391,7 +4399,7 @@ function aiApk(e,p){
       if(x<px_&&Sw>0)for(let k=1;k<=20;k++)if(okDest(x-Sw*k,w)){const h=hop(-1,Math.min(Sw,Math.abs(x-Sw*k-x)),false);if(h)return h;break}}
     /* 4. nothing to shoot or reposition for: close in */
     const adv=x<px_?1:-1;let h=J>0?hop(adv,J,true):null;if(!h&&Sw>0)h=hop(adv,Sw,false);if(!h&&J>0)h=hop(adv,Sw||1,false);if(h)return h}
-  return{t:"p"}}
+  return shdOpt()}
 function aiSimple(e,p){const d=dist();let best=-1;const val=w=>(w.shots||1)*(w.dr?(w.dr[0]+w.dr[1])/2:w.dmg);e.weps.forEach((w,i)=>{if(legal(e,p,i)&&e.heat+(w.ht||0)<e.hc&&(best<0||val(w)>val(e.weps[best])))best=i});
   if(best>=0)return{t:"g",ix:[best]};const st=e.weps.reduce((a,w)=>val(w)>val(a)?w:a,e.weps[0]),pref=Math.round((st.min+st.max)/2);
   if(d!=pref){const dir=(d>pref?1:-1)*(e.x>p.x?-1:1);return{t:"m",x:e.x+dir*Math.min(e.s,Math.abs(d-pref))}}return{t:"p"}}
@@ -4412,7 +4420,7 @@ async function ai(){
       if(act.t=="g"||act.t=="c"){if(act.ix.length>1)await Promise.all(act.ix.map(i=>shoot(e,p,i)));else await shoot(e,p,act.ix[0]);B.busy=true}
       else if(act.t=="b"){await barrage(e,p);B.busy=true}
       else if(act.t=="m"){const dir=Math.sign(act.x-e.x),nn_=Math.abs(act.x-e.x);if(!(dir&&move(e,p,dir,nn_,(e.j||0)>0&&nn_==e.j&&nn_!=e.s))){await botCool(e);break}await sleep(e.jp?1500:700)}
-      else if(act.t=="d"){await droneOn(e)}else if(act.t=="dd"){await droneOff(e)}else if(act.t=="o"){await ovdOn(e)}else if(act.t=="s"){await stompOn(e)}else if(act.t=="k"){await gasOn(e)}
+      else if(act.t=="d"){await droneOn(e)}else if(act.t=="dd"){await droneOff(e)}else if(act.t=="o"){await ovdOn(e)}else if(act.t=="s"){await stompOn(e)}else if(act.t=="S"){B.busy=false;await stompHit(e);B.busy=true}else if(act.t=="T"){B.busy=false;await tpOn(e,act.x);B.busy=true}else if(act.t=="H"){e.shdOn=true;e.did=true;say("Enemy shield activated.");try{playBuf("shdon",.9)}catch(_){}controls();await sleep(600)}else if(act.t=="k"){await gasOn(e)}
       B.busy=true;
     }
   }
