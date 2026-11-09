@@ -1014,6 +1014,14 @@ img,canvas,svg{-webkit-user-drag:none}
 #work .slot.on::after,#work .slot.rt.on::after{box-shadow:none!important;border:0!important;filter:none!important;outline:none!important}#work .slot.on,#work .slot.rt.on{outline:none!important;border-color:inherit}
 #work .slot.rt .clv,#work .tile.rt .clv{right:6.5%!important;bottom:4%!important;width:27.6%!important;height:27.6%!important}
 #fz .fzt.rt .clv,#fz .fzsl.rt .clv{position:absolute!important;display:block!important;left:auto!important;top:auto!important;right:6.5%!important;bottom:4%!important;width:27.6%!important;height:27.6%!important;z-index:3;font-size:0!important;line-height:0}
+/* rarity-coloured background behind items in the inventory and equipped slots (same sprites as the upgrade screen) */
+#work .tile.rt::before,#work .slot.rt::before{background-color:#000!important;background-size:134% 134%!important;background-position:center!important;background-repeat:no-repeat!important}
+#work .tile.rt0::before,#work .slot.rt0::before{background-image:var(--rg0)!important}
+#work .tile.rt1::before,#work .slot.rt1::before{background-image:var(--rg1)!important}
+#work .tile.rt2::before,#work .slot.rt2::before{background-image:var(--rg2)!important}
+#work .tile.rt3::before,#work .slot.rt3::before{background-image:var(--rg3)!important}
+#work .tile.rt4::before,#work .slot.rt4::before{background-image:var(--rg4)!important}
+#work .tile.rt5::before,#work .slot.rt5::before{background-image:var(--rg5)!important}
 #fz .clv .lvb{display:block;width:100%;height:100%}
 #fz .fzt.gone{display:none!important}
 .fzcol{display:flex;align-items:center;justify-content:center;gap:6px;font-size:12px;color:#c9d4e6;margin:2px 0 6px}.fzcol i{color:#9fe870;font-style:normal}.fzcol b{color:#9fe870;font-weight:700;font-size:11px;margin-left:2px}.lvsw{display:inline-block;width:16px;height:16px;border:2px solid #0b1018;outline:1px solid #8fa0b8;border-radius:3px;vertical-align:middle}.lvsw.st{background:repeating-linear-gradient(45deg,#4a5568 0 3px,#2d3748 3px 6px)}
