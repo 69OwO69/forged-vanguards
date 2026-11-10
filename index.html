@@ -3803,7 +3803,7 @@ async function shoot(a,b,i){
 }
 /* Backstabber (APK artilleryDiagonal1, push -1): one rocket per barrel flies up and off the screen, then comes down behind the enemy and hits it in the back; the last hit pulls the enemy 1 tile */
 async function bkVolley(a,b,i,w,hit){
-  const n=w.shots,dr=fdir(a),UP=950,WAIT=2260,DN=750,top=rkTop();B.bkm=B.bkm||[];let pend=0;
+  const n=w.shots,dr=fdir(a),UP=950,WAIT=1260,DN=750,top=rkTop();B.bkm=B.bkm||[];let pend=0;
   for(let s=0;s<n&&!B.over&&!b.dead;s++){
     const mz=a.muz[i+"h"+s]||a.muz[i],xs=px(a.vx)+(mz?dr*mz[0]:0),ys=mz?GY+mz[1]:GY-120,now=performance.now(),bx=px(b.vx!=null?b.vx:b.x),tx=bx+dr*(16+Math.random()*22),ty=GY-35-Math.random()*70;
     const ex=xs+dr*(430+Math.random()*90),dyL=Math.max(60,ys-top),dxL=Math.abs(ex-xs);
