@@ -375,7 +375,9 @@ html body #wx{width:max(var(--gb,66px),min(calc(100vw - var(--wr,0px)),calc(var(
 #dcard .dcx{position:absolute;right:2.5vmin;top:2.5vmin;width:6vmin;height:6vmin;border-radius:1vmin;background:#2a1216;border:.3vmin solid #ff6b6b;color:#fff;font-size:3.4vmin;line-height:5.4vmin;text-align:center;cursor:pointer;z-index:6}
 #dcard .dcw{position:absolute;left:0;right:0;top:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4vmin;z-index:2}
 #dcard .dct2{font-size:4.6vmin;letter-spacing:.3em;color:#ffd35a;text-shadow:0 0 2vmin #000;font-weight:700}
-#dcard .cd.dcc{position:relative;width:36vmin;cursor:pointer;--cc:var(--c);perspective:none}
+#dcard .dcrow{position:relative;display:flex;justify-content:center;align-items:center;gap:1.6vmin;max-width:94vw;--cw:36vmin}
+#dcard .cd.dcc{position:relative;width:var(--cw);cursor:pointer;--cc:var(--c);perspective:none;flex:none}
+#dcard .dcpips{display:flex;align-items:center;gap:1.4vmin;font-size:2.2vmin;letter-spacing:.2em;color:#cfe6ff}#dcard .dcpips i{width:2.6vmin;height:2.6vmin;border-radius:50%;border:.35vmin solid var(--c);background:transparent;transition:background .2s,box-shadow .2s}#dcard .dcpips i.on{background:var(--c);box-shadow:0 0 1.4vmin var(--c)}
 #dcard .dcc.pulse{animation:dcpulse 1.4s ease-in-out infinite}
 @keyframes dcpulse{50%{transform:scale(1.035)}}
 #dcard .dcc.shk{animation:dcshk .4s}@keyframes dcshk{20%{transform:translate(-1.2vmin,.6vmin) rotate(-3deg)}40%{transform:translate(1.2vmin,-.6vmin) rotate(3deg)}60%{transform:translate(-.8vmin,0) rotate(-2deg)}80%{transform:translate(.8vmin,0) rotate(2deg)}}
@@ -2391,17 +2393,25 @@ const dcHTML=()=>{const r=dcReady();return `<button class="sh dcb${r?"":" no"}" 
 function openDailyCard(){
   if(document.getElementById("dcard")||!dcReady())return;
   const rgb=h=>[1,3,5].map(i=>parseInt(h.substr(i,2),16)).join(",");
-  let tier=0,cnt=1,busy=false,used=false,done=false;
+  /* 3 chances per rank: the rank's odds are split so the overall chance of ranking up stays the same */
+  const TRY=3,qOf=p=>1-Math.pow(1-p,1/TRY);
+  let tier=0,cnt=1,left=TRY,busy=false,used=false,done=false,shy=false;
   const el=document.createElement("div");el.id="dcard";
-  el.innerHTML=`<div class="dcbg"></div><div class="dcx" title="Close">×</div><div class="dcw"><div class="dct2">DAILY CARD</div><div class="dcn"></div><div class="cd c0 in dcc pulse"><div><div class="cbk">?</div><div class="cf"></div></div><div class="dcm2">×2</div></div><div class="dch">TAP THE CARD!</div></div><div class="dcr hide"></div><div class="dcfl"></div>`;
+  el.innerHTML=`<div class="dcbg"></div><div class="dcx" title="Close">×</div><div class="dcw"><div class="dct2">DAILY CARD</div><div class="dcn"></div><div class="dcrow"></div><div class="dcpips"></div><div class="dch">TAP THE CARD!</div></div><div class="dcr hide"></div><div class="dcfl"></div>`;
   document.body.appendChild(el);
-  const q=s=>el.querySelector(s),card=q(".dcc"),nm=q(".dcn"),mult=q(".dcm2"),hint=q(".dch"),fl=q(".dcfl");let shy=false;
-  const setC=i=>{el.style.setProperty("--c",DC_COL[i]);el.style.setProperty("--cr",rgb(DC_COL[i]));nm.textContent=(shy?"SHINY ":"")+TN[i].toUpperCase();card.className=card.className.replace(/\bc\d\b/,"c"+i)};
+  const q=s=>el.querySelector(s),row=q(".dcrow"),nm=q(".dcn"),hint=q(".dch"),fl=q(".dcfl"),pips=q(".dcpips");
+  const cards=()=>[...row.querySelectorAll(".dcc")];
+  const pipH=()=>{pips.innerHTML=`<span>CHANCES</span>`+Array.from({length:TRY},(_,k)=>`<i class="${k<left?"on":""}"></i>`).join("")};
+  const shown=()=>Math.min(cnt,8);
+  const draw=(fresh)=>{const n=shown();row.style.setProperty("--cw",(36/(1+(n-1)*.3)).toFixed(1)+"vmin");const have=cards().length;
+    for(let z=have;z<n;z++){row.insertAdjacentHTML("beforeend",`<div class="cd c${tier} in dcc ${shy?"shy":""}" style="--cc:var(--c)"><div><div class="cbk">?</div><div class="cf"></div></div>${shy?SPK():""}</div>`);const c=row.lastElementChild;c.onclick=tap;if(z>0||fresh===false){c.classList.add("up")}else c.classList.add("pulse")}
+    let b=row.querySelector(".dcm2");if(cnt>1){if(!b){row.insertAdjacentHTML("beforeend",'<div class="dcm2"></div>');b=row.lastElementChild}b.textContent="×"+cnt;b.classList.add("on");b.classList.remove("pop");void b.offsetWidth;b.classList.add("pop")}};
+  const setC=i=>{el.style.setProperty("--c",DC_COL[i]);el.style.setProperty("--cr",rgb(DC_COL[i]));nm.textContent=(shy?"SHINY ":"")+TN[i].toUpperCase();cards().forEach(c=>{c.className=c.className.replace(/\bc\d\b/,"c"+i)})};
   const flash=a=>{fl.style.transition="none";fl.style.opacity=a;void fl.offsetWidth;fl.style.transition="opacity .45s";fl.style.opacity=0};
-  const anim=(c)=>{card.classList.remove("pulse","shk","up");void card.offsetWidth;card.classList.add(c)};
+  const anim=c=>cards().forEach((d,z)=>{d.classList.remove("pulse","shk","up");void d.offsetWidth;d.style.animationDelay=(z*60)+"ms";d.classList.add(c)});
   const burst=n=>{for(let k=0;k<n;k++){const p=document.createElement("i");p.className="dcp";const a=Math.random()*6.283,d=18+Math.random()*34;p.style.setProperty("--dx",(Math.cos(a)*d)+"vmin");p.style.setProperty("--dy",(Math.sin(a)*d)+"vmin");q(".dcw").appendChild(p);setTimeout(()=>p.remove(),1050)}};
   q(".dcx").onclick=()=>{if(used)return;el.remove()};
-  setC(0);playBuf("dopen",.6,1.1);
+  setC(0);pipH();draw(true);playBuf("dopen",.6,1.1);
   const finish=()=>{if(el.dataset.fin)return;el.dataset.fin="1";const t=tier,n=cnt;
     const pool=[];for(const k in K)K[k].forEach((it,i)=>{if(it&&!it.gone&&tierOf(it.cost)==t&&(!shy||canSh(k,i)))pool.push([k,i])});
     const got=[];for(let z=0;z<n;z++){if(!pool.length)break;const [k,i]=pool[Math.floor(Math.random()*pool.length)],sh=shy&&canSh(k,i),dup=S.own[k].includes(i);addI(k,i,sh);got.push({k,i,it:K[k][i],sh,dup})}
@@ -2410,14 +2420,16 @@ function openDailyCard(){
     setTimeout(()=>r.querySelectorAll(".cd").forEach((c,z)=>setTimeout(()=>{c.classList.add("fl");if(z<12)playBuf("cturn",.5,1+Math.min(z,8)*.03)},z*120)),450);
     r.classList.remove("hide");el.classList.add("res");playBuf("scifi",.8);syn(1318,.9,"sine",.14);if(t>=3){playBuf("scifi",1);syn(1976,1.2,"triangle",.14);syn(1480,1.2,"triangle",.12)}
     r.querySelector(".dcok").onclick=()=>{playBuf("equip",.5);el.remove();store();head()}};
-  card.onclick=()=>{if(busy||done)return;used=true;busy=true;q(".dcx").style.display="none";hint.textContent="";
+  function tap(){if(busy||done)return;used=true;busy=true;q(".dcx").style.display="none";hint.textContent="";
     playBuf("uitap",.9,1+tier*.08);
-    if(Math.random()<DC_DBL){cnt*=2;mult.textContent="×"+cnt;mult.classList.add("on");mult.classList.remove("pop");void mult.offsetWidth;mult.classList.add("pop");playBuf("scifi",.6,1.4);syn(1318,.5,"sine",.14);burst(10)}
-    if(!shy&&Math.random()<DC_SHY){shy=true;card.classList.add("shy");card.insertAdjacentHTML("beforeend",SPK());setC(tier);flash(.9);playBuf("scifi",1,1.3);playBuf("scifi",.5,1.8);syn(1976,.8,"triangle",.14);syn(2637,.9,"triangle",.12,.12);burst(24)}
-    if(Math.random()<DC_CH[tier]){tier++;setC(tier);anim("up");flash(.3+tier*.12);playBuf("tierboom",1,Math.pow(1.2,tier),1.5);playBuf("scifi",.4,.9+tier*.12);burst(14+tier*6);
+    if(Math.random()<DC_DBL){cnt*=2;draw(false);playBuf("scifi",.6,1.4);syn(1318,.5,"sine",.14);burst(10)}
+    if(!shy&&Math.random()<DC_SHY){shy=true;cards().forEach(c=>{c.classList.add("shy");c.insertAdjacentHTML("beforeend",SPK())});setC(tier);flash(.9);playBuf("scifi",1,1.3);playBuf("scifi",.5,1.8);syn(1976,.8,"triangle",.14);syn(2637,.9,"triangle",.12,.12);burst(24)}
+    left--;
+    if(Math.random()<qOf(DC_CH[tier])){tier++;left=TRY;setC(tier);pipH();anim("up");flash(.3+tier*.12);playBuf("tierboom",1,Math.pow(1.2,tier),1.5);playBuf("scifi",.4,.9+tier*.12);burst(14+tier*6);
       if(tier>=4){done=true;playBuf("scifi",1);playBuf("scifi",.5,.6);syn(60,1,"sine",.5,0,30);syn(1976,1.2,"triangle",.14);syn(1480,1.2,"triangle",.12);flash(.95);hint.textContent="MYTHIC!";setTimeout(finish,1500)}
       else setTimeout(()=>{busy=false;hint.textContent="TAP AGAIN!"},520)}
-    else{done=true;anim("shk");playBuf("dclose",.9,1);setTimeout(finish,1000)}}
+    else if(left>0){pipH();anim("shk");playBuf("dclose",.5,1.2);setTimeout(()=>{busy=false;hint.textContent="TRY AGAIN!"},420)}
+    else{pipH();done=true;anim("shk");playBuf("dclose",.9,1);setTimeout(finish,1000)}}
 }
 
 const boxArt=b=>{const q=b.c=="cv"||b.c=="mx"?CV:CRI,one=`<span class="sw" style="--m:url(${CRI.b})"><div class="mc"><img class="bx m0" src="${q.b}"><div class="mpn"><img class="bx mpl" src="${q.r}"><img class="bx mpr" src="${q.l}"></div><img class="bx mdl" src="${q.d}"></div></span>`;return b.k>10?`<div class="pile">${one.repeat(6)}</div>`:one};
