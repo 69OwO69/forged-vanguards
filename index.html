@@ -1847,7 +1847,7 @@ function fzRender(tu){
   if(!FZ){$("fz").classList.add("hide");return}
   const sc=$("fzr")?$("fzr").scrollTop:0,has=FZ.k!=null,k=FZ.k,i=FZ.i;FZ.ix=FZ.ix||{};
   const fast=tu!=null&&has&&FZ._gk===k+":"+i+":"+FZ.u&&!!document.querySelector("#fzr .fzg .fzt");
-  const all=[];for(const kk in K)S.own[kk].forEach(ii=>XS(kk,ii).forEach(c=>all.push([kk,ii,c])));
+  const all=[];for(const kk in K)S.own[kk].forEach(ii=>{if(K[kk][ii]&&K[kk][ii].nou)return;XS(kk,ii).forEach(c=>all.push([kk,ii,c]))});
   all.sort((a,b)=>RI(b[0],b[1])-RI(a[0],a[1])||K[b[0]].length-K[a[0]].length||a[1]-b[1]||b[2].x-a[2].x);
   let gain=0,cnt=0;if(has)for(const [kk,ii,c] of all)if(FZ.ix[c.u]&&fzOK(kk,ii,c.u)){gain+=fzY(kk,ii,c.u);cnt++}
   const mk=(kk,ii,c)=>{const it=K[kk][ii],tg=has&&c.u===FZ.u,ok=has&&fzOK(kk,ii,c.u),off=(has&&!tg&&!ok)||(!has&&!!it.nou),lv=lvOfP(RI(kk,ii),c.x);
