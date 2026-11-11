@@ -3935,8 +3935,8 @@ async function shoot0(a,b,i){
       if(w.rd&&b.res>0){const l=Math.min(b.res,w.rd);b.res-=l;B.fl.push({x:x1,y:GY-200,t:"-"+l+"%",c:"yellow",l:60})}
       if(w.cd&&b.cool>1){const l=Math.min(b.cool-1,w.cd);b.cool-=l}
       if(w.ed&&(!w.edLast||s==n-1)){const l=Math.min(b.en,w.ed);b.en-=l}
-      if(lastH&&w.hcd&&b.hc>2){const l=Math.min(b.hc-2,w.hcd);b.hc-=l;B.fl.push({x:x1,y:GY-215,t:"-"+l+" max heat",c:"#ff7a3a",l:70})}
-      if(lastH&&w.ecd&&b.enCap>2){const l=Math.min(b.enCap-2,w.ecd);b.enCap-=l;b.en=Math.min(b.en,b.enCap);B.fl.push({x:x1,y:GY-215,t:"-"+l+" max energy",c:"#2fa7ff",l:70})}
+      if(lastH&&w.hcd&&b.hc>2){const l=Math.min(b.hc-2,w.hcd);b.hc-=l}
+      if(lastH&&w.ecd&&b.enCap>2){const l=Math.min(b.enCap-2,w.ecd);b.enCap-=l;b.en=Math.min(b.en,b.enCap)}
       const pv=w.pushS?(w.pushS[s]||0):(w.push||0);if((pv||w.pull)&&!a._scyHold){const sg=Math.sign(b.x-a.x),amt=(pv||-w.pull)*sg;let t=Math.max(0,Math.min(MAXT,b.x+amt));if(sg>0&&t<=a.x)t=a.x+1;if(sg<0&&t>=a.x)t=a.x-1;{const dd=Math.sign(t-b.x);if(dd){const bl=[B.p,B.e,...(B.sms||[])].filter(o=>o&&o!==b&&!o.dead&&!o.gone);let q=b.x;while(q!=t){const nx=q+dd;if(bl.some(o=>o.x==nx))break;q=nx}t=q}}if(t!=b.x){const ox0=b.x;b.x=t;b.ps={a:b.vx!=null?b.vx:ox0,b:t,t0:performance.now(),dur:Math.min(850,320+55*Math.abs(t-ox0))};mineCheck(b,ox0,t,true);0}}}
     if(b.hp<=0)dead=true};
   if(w.saw){await sawStab(a,b,i,w);B.busy=--B.nb>0;if(b.hp<=0){if(b.dead)return;await kill(b);return finish(b==B.e)}controls();return}
