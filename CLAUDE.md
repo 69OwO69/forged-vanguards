@@ -11,3 +11,4 @@
 - **Evolutions:** every item that evolves (Mk1 -> Mk2 -> Mk3, Shredders, torsos, etc.) must be added to the `EVO` table (`"k:index": nextIndex`). The settings > Evolution tree is built from `EVO`, so it picks new chains up automatically.
 - **Guard break:** APK weapons carry `resist1/2/3` = guard break against physical/fire(explosive)/energy. Every new weapon with a non-zero value must get `brk:{p|f|e:N}` (resist1→p, resist2→f, resist3→e). It is applied on the last hit by `RBRK` and shown on the card. Check this against the APK data for every new item.
 - **Get-hit sounds:** every gun/drone hit must call `gotHit()` (plays one of `hitA/hitB/hitC` at random, on every hit, no chance roll). Do this for every new weapon.
+- **Shiny art slots:** a shiny item's art lives at `ART[k][index+1000]` (never `+100`, which collides with real items once W passes 100). Always give a new weapon the `uses` value from the item data (legacy/APK) and enforce it.
