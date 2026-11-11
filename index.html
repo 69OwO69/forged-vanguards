@@ -3871,7 +3871,7 @@ async function shoot0(a,b,i){
     const raw=PL[Math.min(hn,n-1)],lastH=++hn>=n,dmg=RDM(a,b,w,raw,lastH,RS);
     if(B.act)B.act.tb=b;b.hp=Math.max(0,b.hp-dmg);tot+=dmg;if(!b.summon)B.hit[b==B.p?"p":"e"]=rapid?.4:.9;b.flT=performance.now();b.flA=rapid?.4:1;
     if(w.hd&&(!w.hde||s%w.hde==w.hde-1)&&(!w.hdFrom||s>=w.hdFrom)){const hv=w.hdr?w.hdr[0]+Math.floor(Math.random()*(w.hdr[1]-w.hdr[0]+1)):w.hd;b.heat+=hv}
-    if(rapid){if(w.hitSnd)playBuf(w.hitSnd,.35,.9+Math.random()*.2);B.shake=3;B.fl.push({x:x1+(Math.random()-.5)*70,y:GY-150-Math.random()*40,t:"-"+dmg,l:40})}else{B.fl.push({x:x1+((w.rkp||w.wipe)?(Math.random()-.5)*40:w.shotgun?(s%4-1.5)*46:0),y:GY-160-((w.rkp||w.wipe)?(s%4)*16+Math.random()*10:w.shotgun?(s>>2)*28:s*16),t:"-"+dmg,l:60});w.rkp||w.wipe||(w.shotgun&&s>0)?0:w.hsnd?playBuf(w.hsnd,1,w.rnd?1+(Math.random()*2-1)*w.rnd:1):sfx(110,.25,"sawtooth");B.shake=w.hs||(w.hsnd?18:12);
+    if(rapid){if(w.hitSnd)playBuf(w.hitSnd,.35,.9+Math.random()*.2);B.shake=3;B.fl.push({x:x1+(Math.random()-.5)*70,y:GY-150-Math.random()*40,t:"-"+dmg,l:40})}else{B.fl.push({x:x1+((w.rkp||w.wipe)?(Math.random()-.5)*40:w.shotgun?(s%4-1.5)*46:0),y:GY-160-((w.rkp||w.wipe)?(s%4)*16+Math.random()*10:w.shotgun?(s>>2)*28:s*16),t:"-"+dmg,l:60});w.rkp||w.wipe||(w.shotgun&&s>0)?0:w.hsnd?playBuf(w.hsnd,1,w.rnd?1+(Math.random()*2-1)*w.rnd:1):sfx(110,.25,"sawtooth");B.shake=(w.wipe||w.nova)?B.shake:w.hs||(w.hsnd?18:12);
       if(!w.rkp&&!w.wipe&&!w.shotgun)say((a==B.p?"You":"Enemy")+" hit with "+w.n+(n>1?" (shot "+(s+1)+"/"+n+")":"")+" for "+dmg+(w.hd?" (+"+(w.hdr?"1-8":w.hd)+" heat)":"")+".")}
     if(!dead&&b.hp>0){
       RBRK(b,w,lastH,x1);
@@ -4527,7 +4527,7 @@ async function novaVolley(a,b,i,w,hit){
   say(nm+" "+w.n+" fires!");
   for(let r=0;r<3;r++){a.aim[i]=-angTo();await sleep(16)}
   const[tx,ty]=tg(),[mx_,my_]=mzW(),dl=Math.hypot(tx-mx_,ty-my_)||1,ex=mx_+(tx-mx_)/dl*3000,ey=my_+(ty-my_)/dl*3000,bm={nv:"beam",a,i,t0:performance.now(),dur:1100,c:cc,dir:dr,tx,ty,ex,ey};B.nvx.push(bm);
-  a.rc[i]=1.5;playBuf("nvf2",.9);B.shake=Math.max(B.shake||0,5);
+  a.rc[i]=1.5;playBuf("nvf2",.9);B.shake=Math.max(B.shake||0,18);
   if(!B.over&&!b.dead){hit(0,tx);playBuf("nvg",.9);for(let q=0;q<12;q++)B.sparks.push({x:tx,y:ty+(Math.random()-.5)*30,vx:-dr*(1+Math.random()*4),vy:-1-Math.random()*4,z:5+Math.random()*4,l:14+Math.random()*12|0,L:26})}
   await sleep(1100);B.nvx=B.nvx.filter(q=>q!==bm);
   {const t0=performance.now(),f=a.aim[i]||0,D=320;for(;;){const k=Math.min(1,(performance.now()-t0)/D);a.aim[i]=f*(1-k);if(k>=1)break;await sleep(16)}}
@@ -4539,10 +4539,10 @@ async function wipeVolley(a,b,i,w,hit){
   const mzW=s=>{const q=a.muz&&(a.muz[i+"h"+(s%nb)]||a.muz[i])||[0,-60];return[px(a.vx)+dr*q[0],GY+q[1]]};
   for(let s=0;s<n&&!B.over&&b.hp>0;s++){
     const[x0,y0]=mzW(s),tb=b.tbx,bx=px(b.vx!=null?b.vx:b.x),cx=tb?bx+fdir(b)*(tb[0]+tb[2]/2):bx,cy=tb?GY+tb[1]+tb[3]/2:GY-85,x1=cx+(Math.random()-.5)*24,y1=cy+(Math.random()-.5)*34,dur=240+Math.random()*30;
-    a.rc[i]=1.2;playBuf("wof",n>2?.5:.7,.95+Math.random()*.1);
+    a.rc[i]=1.2;B.shake=Math.max(B.shake||0,12);playBuf("wof",n>2?.5:.7,.95+Math.random()*.1);
     B.projs.push({glow:1,x0,y:y0,t0:performance.now(),dur:150,c:DKC.bullet,dir:dr,s:1});
     const pr={x0,x1,y:y0,y1,t0:performance.now(),dur,dir:dr,pimg:"wipe",s:1.1,c:DKC.bullet};B.projs.push(pr);
-    setTimeout(()=>{B.projs=B.projs.filter(q=>q!==pr);done++;if(B.over||b.dead)return;hit(s,x1);B.shake=Math.max(B.shake||0,3);
+    setTimeout(()=>{B.projs=B.projs.filter(q=>q!==pr);done++;if(B.over||b.dead)return;hit(s,x1);
       B.projs.push({glow:1,x0:x1,y:y1,t0:performance.now(),dur:200,c:DKC.bullet,dir:dr,s:1.2});
       for(let q=0;q<4;q++)B.sparks.push({x:x1,y:y1,vx:-dr*(1+Math.random()*3),vy:-1-Math.random()*3,z:4+Math.random()*3,l:10+Math.random()*10|0,L:20})},dur);
     if(s<n-1)await sleep(w.gap||200)}
