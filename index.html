@@ -4567,15 +4567,15 @@ async function orbVolley(a,b,i,w,hit){
   const dr=fdir(a),nm=a==B.p?"Your":"Enemy",ok=w.orb;B.projs=B.projs||[];a.aim=a.aim||[];
   const q0=a.muz&&a.muz[i]||[0,-60],mx=px(a.vx)+dr*q0[0],my=GY+q0[1],lx=px(a.vx)+dr*(w.min||3)*TS,ly=GY-16*MK/1.76,bx=px(b.vx!=null?b.vx:b.x),ex=bx+dr*100,tb=b.tbx,cy=tb?GY+tb[1]+tb[3]/2:GY-85;
   say(nm+" "+w.n+" fires!");
-  {const t0=performance.now(),f=a.aim[i]||0,tg=-Math.atan2(ly-my-60,(lx-mx)*dr),D=300;for(;;){const k=Math.min(1,(performance.now()-t0)/D);a.aim[i]=f+(tg-f)*k*k*(3-2*k);if(k>=1)break;await sleep(16)}}
+  {const t0=performance.now(),f=a.aim[i]||0,tg=.5,D=380;for(;;){const k=Math.min(1,(performance.now()-t0)/D);a.aim[i]=f+(tg-f)*k*k*(3-2*k);if(k>=1)break;await sleep(16)}}
   a.rc[i]=1.3;B.shake=Math.max(B.shake||0,10);playBuf("wof",.8,.95);
   B.projs.push({glow:1,x0:mx,y:my,t0:performance.now(),dur:160,c:ok=="O"?"255,170,60":ok=="R"?"255,70,50":"70,170,255",dir:dr,s:1.1});
   const o={ob:1,ok,x:mx,y:my,dir:dr,sl:0,s:1.7,t0:performance.now(),dur:1e9};B.projs.push(o);
-  const FL=560,t0=performance.now();
-  for(;;){const k=Math.min(1,(performance.now()-t0)/FL);o.x=mx+(lx-mx)*k;o.y=my+(ly-my)*k*k-Math.sin(k*Math.PI)*70;if(k>=1||B.over)break;await sleep(16)}
+  const FL=1150,t0=performance.now();
+  for(;;){const k=Math.min(1,(performance.now()-t0)/FL);o.x=mx+(lx-mx)*k;o.y=my+(ly-my)*k*k-Math.sin(k*Math.PI)*150;if(k>=1||B.over)break;await sleep(16)}
   o.sl=1;o.x=lx;o.y=ly;for(let q=0;q<5;q++)B.sparks.push({x:lx,y:ly,vx:-dr*(1+Math.random()*2),vy:-.5-Math.random()*2,z:3+Math.random()*3,l:10+Math.random()*8|0,L:18});
   a.aim[i]=a.aim[i];
-  const SP=.72,t1=performance.now(),dist=Math.max(0,(ex-lx)*dr);
+  const SP=.38,t1=performance.now(),dist=Math.max(0,(ex-lx)*dr);
   for(;dist>0;){const d=(performance.now()-t1)*SP;o.x=lx+dr*Math.min(dist,d);o.y=ly;if(Math.random()<.45)B.sparks.push({x:o.x-dr*8,y:ly+4,vx:-dr*(.5+Math.random()*1.5),vy:-.3-Math.random()*1.2,z:2+Math.random()*2,l:8+Math.random()*6|0,L:14});if(d>=dist||B.over)break;await sleep(16)}
   B.projs=B.projs.filter(q=>q!==o);
   if(B.over)return;
