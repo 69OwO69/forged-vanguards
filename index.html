@@ -3952,7 +3952,7 @@ async function fanVolley(a,b,i,w,hit){
 async function rkVolley(a,b,i,w,hit){
   if(w.bks)return bkVolley(a,b,i,w,hit);
   if(w.big){const dr=fdir(a),mz=a.muz[i],xs=px(a.vx)+(mz?dr*mz[0]:0),ys=mz?GY+mz[1]:GY-60,tb=b.tbx,bx=px(b.vx!=null?b.vx:b.x),tx=tb?bx+fdir(b)*(tb[0]+tb[2]/2):bx,ty=tb?GY+tb[1]+tb[3]/2:GY-85,dur=780;B.rkm=B.rkm||[];
-    a.rc[i]=1.6;B.shake=Math.max(B.shake||0,8);playBuf("rkp3",1);B.rkm.push({x0:xs,y0:ys,x1:tx,y1:ty,t0:performance.now(),dur,amp:0,fr:1,ph:0,sc:3.6});
+    a.rc[i]=1.6;B.shake=Math.max(B.shake||0,8);playBuf("rkfire2",1);B.rkm.push({x0:xs,y0:ys,x1:tx,y1:ty,t0:performance.now(),dur,amp:0,fr:1,ph:0,sc:2.4});
     await sleep(dur);if(B.over)return;B.boom.push({x:tx,y:ty,t0:performance.now(),s:1.25});playBuf("blast",1,1);B.shake=Math.max(B.shake||0,20);for(let q=0;q<14;q++)B.sparks.push({x:tx,y:ty+(Math.random()-.5)*30,vx:(Math.random()-.5)*8,vy:-1-Math.random()*6,z:5+Math.random()*5,l:14+Math.random()*14|0,L:28});
     if(!b.dead)hit(0,tx);await sleep(520);return}
   const n=w.shots,dr=fdir(a),x1=px(b.x),waves=w.waves||1,per=n/waves|0;B.rkm=B.rkm||[];let s=0,last=0,pend=0;
