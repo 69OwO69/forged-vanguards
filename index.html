@@ -3827,7 +3827,7 @@ async function rkVolley(a,b,i,w,hit){
     a.rc[i]=1.3;if(!w.rkv)playBuf(w.mbat?"bkfire":"rkpf",w.mbat?.7:.55,.93+Math.random()*.14);
     pend++;setTimeout(()=>{pend--;B.boom.push({x:tx,y:ty,t0:performance.now(),s:.28});playBuf("small",.6,1+Math.random()*.3);hit(s,tx)},dur)};
   for(let v=0;v<waves;v++){
-    if(w.rkv)w.mbat?(playBuf("bkfire",.8,1),playBuf("mbfire",.9,1)):playBuf("rkp3",1);
+    if(w.rkv)playBuf("rkp3",1);
     for(let q=0;q<per;q++,s++){if(w.rkv)fire(s);else{fire(s);if(q<per-1)await sleep(w.gap)}}
     if(w.rkv&&v<waves-1){while(pend>0)await sleep(30);await sleep(250)}}
   while(pend>0)await sleep(40);await sleep(300)}
