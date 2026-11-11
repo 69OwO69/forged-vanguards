@@ -3768,7 +3768,7 @@ try{if(!S.gj7){S.gj7=1;addI("t",7,true);save();if(typeof head=="function")setTim
  $("sm").onclick=()=>{S.mute=!S.mute;save();const inB=B&&!$("battle").classList.contains("hide");S.mute?(stopMusic(),lobbyOff()):inB?startMusic():lobbyOn();lab()};$("sx").onclick=()=>{S.nosfx=!S.nosfx;save();lab();if(!S.nosfx)playBuf("click")};gear()})();
 
 $("mu").onclick=()=>{S.mute=!S.mute;save();if(S.mute){stopMusic();$("mu").textContent="Music: off"}else{$("mu").textContent="Music: on";const inB=B&&!$("battle").classList.contains("hide");if(inB)startMusic();else{stopMusic();if(typeof lobbyOn=="function")lobbyOn();else startMusic()}}};
-const legal=(a,b,i)=>{const w=a.weps[i],d=Math.abs(a.x-b.x);return !B.over&&!w.drone&&!a.used[i]&&!(w.uses&&!w.hook&&!w.chrg&&((a.wuse&&a.wuse[i])||0)>=w.uses)&&a.en>=w.en&&(a.am||0)>=(w.am||0)&&(a.ra||0)>=(w.ra||0)&&d>=w.min&&d<=w.max};
+const legal=(a,b,i)=>{const w=a.weps[i],d=Math.abs(a.x-b.x);return !B.over&&!a.dead&&a.hp>0&&!b.dead&&!w.drone&&!a.used[i]&&!(w.uses&&!w.hook&&!w.chrg&&((a.wuse&&a.wuse[i])||0)>=w.uses)&&a.en>=w.en&&(a.am||0)>=(w.am||0)&&(a.ra||0)>=(w.ra||0)&&d>=w.min&&d<=w.max};
 const BAR={en:0,ht:12,dmg:3,stag:32},swordIdx=m=>m.weps.map((w,i)=>w.melee?i:-1).filter(i=>i>=0),
 canBar=(a,b)=>{const sw=swordIdx(a);return !B.over&&sw.length>=4&&sw.slice(0,4).every(i=>legal(a,b,i))&&a.en>=BAR.en};
 async function tween(a,i,f,t,D){const t0=performance.now();for(;;){const k=Math.min(1,(performance.now()-t0)/D);a.aim[i]=f+(t-f)*k;if(k>=1)return;await sleep(16)}}
@@ -3849,9 +3849,9 @@ async function barrage(a,b){
     b.hp-=dmg;tot+=dmg;hits++;B.hit[side]=.6;B.shake=Math.max(B.shake||0,big?18:3+4*rp);B.fl.push({x:x1+(Math.random()-.5)*90,y:GY-130-Math.random()*70,t:"-"+dmg,l:50});
     playBuf("swhit",big?1:.4+.35*rp,(big?1.15:.85+.3*rp)*(.95+Math.random()*.1));for(let k=0;k<(big?3:2);k++)B.sparks.push({x:x1-(a==B.p?30:-30),y:GY-90-Math.random()*40,vx:(Math.random()-.5)*5,vy:-1-Math.random()*3,z:7+Math.random()*5,l:25+Math.random()*20|0,L:45})};
   B.bx=0;say((a==B.p?"You unleash":"Enemy unleashes")+" BARRAGE!");
-  const jobs=[];for(let s=0;s<BAR.stag&&!B.over&&b.hp>0;s++){const t=s/(BAR.stag-1),e=Math.pow(t,.8);jobs.push(swingAnim(a,sw[s%4],()=>hitB(false,t),.85-.5*e));await sleep(270-215*e)}
+  const jobs=[];for(let s=0;s<BAR.stag&&!B.over&&b.hp>0&&!a.dead&&a.hp>0;s++){const t=s/(BAR.stag-1),e=Math.pow(t,.8);jobs.push(swingAnim(a,sw[s%4],()=>hitB(false,t),.85-.5*e));await sleep(270-215*e)}
   await Promise.all(jobs);
-  if(!B.over&&b.hp>0){say("All blades rise...");sfx(110,.7,"sawtooth");sfx(220,.7,"triangle");await Promise.all(sw.map(i=>swUp(a,i,.9)));sfx(330,.5,"triangle");await sleep(650);say("All blades swing together!");await Promise.all(sw.map(i=>swDown(a,i,()=>hitB(true),.45)))}
+  if(!B.over&&b.hp>0&&!a.dead&&a.hp>0){say("All blades rise...");sfx(110,.7,"sawtooth");sfx(220,.7,"triangle");await Promise.all(sw.map(i=>swUp(a,i,.9)));sfx(330,.5,"triangle");await sleep(650);say("All blades swing together!");await Promise.all(sw.map(i=>swDown(a,i,()=>hitB(true),.45)))}
   await sleep(250);say((a==B.p?"Your":"Enemy")+" Barrage landed "+hits+" hits for "+tot+" total.");
   B.busy=--B.nb>0;if(b.hp<=0){if(b.dead)return;await kill(b);return finish(b==B.e)}controls()}
 async function shoot(a,b,i){
@@ -4458,7 +4458,7 @@ async function sawStab(a,b,i,w){
   say((a==B.p?"You raise":"Enemy raises")+" the "+w.n+"...");sfx(150,.14,"sawtooth");await swUp(a,i,1);await sleep(45);
   sfx(620,.16,"sawtooth");sfx(310,.12,"square");await swRec(a,i,1.35,.5,75);
   {const t0=performance.now(),D=90;while(performance.now()-t0<D){const k=(performance.now()-t0)/D;a.stb[i]=T*k;a.aim[i]=.5;await sleep(16)}a.aim[i]=.5;a.stb[i]=0;B.shake=Math.max(B.shake||0,10)}
-  const RS={c:0,d:0},PL=RSI(RS,RPL(w,w.shots||10));for(let s=0;s<(w.shots||10)&&!B.over&&b.hp>0;s++){
+  const RS={c:0,d:0},PL=RSI(RS,RPL(w,w.shots||10));for(let s=0;s<(w.shots||10)&&!B.over&&b.hp>0&&!a.dead&&a.hp>0;s++){
     a.stb[i]=0;a.aim[i]=.5+(s%2?-.05:.04);
     const raw=PL[Math.min(s,PL.length-1)],lastS=s>=(w.shots||10)-1,dmg=RDM(a,b,w,raw,lastS,RS);RBRK(b,w,lastS,x1);
     b.hp=Math.max(0,b.hp-dmg);tot+=dmg;hits++;B.hit[side]=.7;B.shake=Math.max(B.shake||0,4);playBuf("sawhit",.9,.9+Math.random()*.2);
@@ -4513,7 +4513,7 @@ async function beamFire(a,b,i,w){
   const L=w.lz,dr=fdir(a),foe=b==B.p?"p":"e",nm=a==B.p?"Your":"Enemy";a.lzg=a.lzg||[];B.lzs=B.lzs||[];let tot=0;const RS={c:0,d:0},PL=RSI(RS,RPL(w,(L.n||1)*(L.tk||1)));
   if(L.charge){say(nm+" "+w.n+" is charging...");const G=a.lzg[i]={ch:0};beamSnd("charge",L.charge);const t0=performance.now();while(performance.now()-t0<L.charge&&!B.over){G.ch=(performance.now()-t0)/L.charge;await sleep(16)}G.ch=1;if(B.over){a.lzg[i]=null;return}}
   say(nm+" "+w.n+" fires!");
-  for(let n=0;n<(L.n||1)&&!B.over&&b.hp>0;n++){
+  for(let n=0;n<(L.n||1)&&!B.over&&b.hp>0&&!a.dead&&a.hp>0;n++){
     a.lzg[i]={ch:0,fire:performance.now()+L.dur,lens:n};a.rc[i]=1.4;
     const tx=px(b.vx!=null?b.vx:b.x)-dr*(6+Math.random()*10),ty=GY-95-Math.random()*20,T0=performance.now(),mk=(k,wd,sweep)=>{const q={a,i,dir:dr,k,tx,ty,wd:wd*MK,t0:T0,dur:L.dur,sweep};B.lzs.push(q);return q};
     const qs=[mk("m",L.big?6.5:3.2,L.big?1.5:0)];if(L.big){qs.push(mk("s0",1.8,-1.5));qs.push(mk("s1",1.8,1.5))}
@@ -4557,7 +4557,7 @@ async function novaVolley(a,b,i,w,hit){
 async function wipeVolley(a,b,i,w,hit){
   const dr=fdir(a),n=w.shots||1,nb=w.nb||1,nm=a==B.p?"Your":"Enemy";let done=0,fired=0;B.projs=B.projs||[];say(nm+" "+w.n+" fires!");
   const mzW=s=>{const q=a.muz&&(a.muz[i+"h"+(s%nb)]||a.muz[i])||[0,-60];return[px(a.vx)+dr*q[0],GY+q[1]]};
-  for(let s=0;s<n&&!B.over&&b.hp>0;s++){
+  for(let s=0;s<n&&!B.over&&b.hp>0&&!a.dead&&a.hp>0;s++){
     fired++;const[x0,y0]=mzW(s),tb=b.tbx,bx=px(b.vx!=null?b.vx:b.x),cx=tb?bx+fdir(b)*(tb[0]+tb[2]/2):bx,cy=tb?GY+tb[1]+tb[3]/2:GY-85,x1=cx+(Math.random()-.5)*24,y1=cy+(Math.random()-.5)*34,dur=240+Math.random()*30;
     a.rc[i]=1.2;B.shake=Math.max(B.shake||0,12);playBuf("wof",n>2?.5:.7,.95+Math.random()*.1);
     B.projs.push({glow:1,x0,y:y0,t0:performance.now(),dur:150,c:DKC.bullet,dir:dr,s:1});
@@ -4595,7 +4595,7 @@ async function projFire(a,b,i,w){
   if(ch){say(nm+" "+w.n+" is charging...");const[x0,y0]=pt(0),o={orb:1,x0,y:y0,t0:performance.now(),dur:1333,c:rgb,dir:dr};B.projs.push(o);playBuf(DKS[w.dk],.9);await sleep(1333);B.projs=B.projs.filter(q=>q!==o);if(B.over||b.dead)return}
   else say(nm+" "+w.n+" fires!");
   let done=0,fired=0;const fin=new Promise(r=>{if(!n)r()});
-  for(let k=0;k<n&&!B.over&&b.hp>0;k++){fired++;
+  for(let k=0;k<n&&!B.over&&b.hp>0&&!a.dead&&a.hp>0;k++){fired++;
     const[x0,y0]=pt(k),x1=px(b.vx!=null?b.vx:b.x)-dr*(14+Math.random()*16),y1=GY-40-Math.random()*95,dur=ch?330:240+Math.random()*40;
     a.rc[i]=1.2;if(!ch)playBuf(DKS[w.dk],n>1?.45:.8,.95+Math.random()*.1);
     B.projs.push({glow:1,x0,y:y0,t0:performance.now(),dur:150,c:rgb,dir:dr,s:ch?1.8:1});
@@ -4815,7 +4815,7 @@ async function ai(){
     {const sg=[e.hp,p.hp,e.x,p.x].join("|");B.stall=B.lastSig===sg?(B.stall||0)+1:0;B.lastSig=sg}
     /* the APK bot waits 20-59 frames before every action; one action per round, then the round ends (same pacing as before) */
     for(let n=0;n<1&&!B.over;n++){
-      await sleep(330+Math.random()*660);if(B.over)break;
+      await sleep(330+Math.random()*660);if(B.over||e.dead||e.hp<=0||p.dead)break;
       if(e.chI!=null&&chOK(e,p)&&Math.random()<.5){await chargeFire(e);B.busy=true;continue}
       if(e.hkI!=null&&hkOK(e,p)&&Math.random()<.6){await hookFire(e);B.busy=true;continue}
       let act=null;try{act=aiApk(e,p)}catch(err){try{console.error(err)}catch(_){}}
