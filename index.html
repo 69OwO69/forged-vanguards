@@ -4577,7 +4577,7 @@ async function orbVolley(a,b,i,w,hit){
   B.projs.push({glow:1,x0:mx,y:my,t0:performance.now(),dur:160,c:ok=="O"?"255,170,60":ok=="R"?"255,70,50":"70,170,255",dir:dr,s:1.1});
   const o={ob:1,ok,x:mx,y:my,dir:dr,sl:0,s:1.7,t0:performance.now(),dur:1e9};B.projs.push(o);
   const FL=1150,t0=performance.now();
-  for(;;){const k=Math.min(1,(performance.now()-t0)/FL);o.x=mx+(lx-mx)*k;o.y=my+(ly-my)*k*k-Math.sin(k*Math.PI)*150;if(k>=1||B.over)break;await sleep(16)}
+  for(;;){const k=Math.min(1,(performance.now()-t0)/FL);o.x=mx+(lx-mx)*k;o.y=my+(ly-my)*k*k;if(k>=1||B.over)break;await sleep(16)}
   o.sl=1;o.x=lx;o.y=ly;for(let q=0;q<5;q++)B.sparks.push({x:lx,y:ly,vx:-dr*(1+Math.random()*2),vy:-.5-Math.random()*2,z:3+Math.random()*3,l:10+Math.random()*8|0,L:18});
   a.aim[i]=a.aim[i];
   const SP=.38,t1=performance.now(),dist=Math.max(0,(ex-lx)*dr);
