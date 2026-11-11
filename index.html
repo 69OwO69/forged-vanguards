@@ -3971,10 +3971,9 @@ async function fanVolley(a,b,i,w,hit){
   await sleep(300)}
 async function rkVolley(a,b,i,w,hit){
   if(w.bks)return bkVolley(a,b,i,w,hit);
-  if(w.big){const dr=fdir(a),mz=a.muz[i],xs=px(a.vx)+(mz?dr*mz[0]:0),ys=mz?GY+mz[1]:GY-60,tb=b.tbx,bx=px(b.vx!=null?b.vx:b.x),tx=tb?bx+fdir(b)*(tb[0]+tb[2]/2):bx,ty=tb?GY+tb[1]+tb[3]/2:GY-85,dur=1150;B.rkm=B.rkm||[];
-    a.rc[i]=1.6;B.shake=Math.max(B.shake||0,8);playBuf("rkfire2",1);B.rkm.push({x0:xs,y0:ys,x1:tx,y1:ty,t0:performance.now(),dur,amp:0,fr:1,ph:0,sc:1.84,ms:1});
-    setTimeout(()=>{if(B.over)return;B.boom.push({x:xs+dr*30,y:ys,t0:performance.now(),s:.35});for(let q=0;q<10;q++)B.sparks.push({x:xs+dr*20,y:ys+(Math.random()-.5)*8,vx:-dr*(1+Math.random()*4),vy:(Math.random()-.5)*2,z:4+Math.random()*4,l:12+Math.random()*10|0,L:22})},dur*.3);
-    await sleep(dur);if(B.over)return;B.boom.push({x:tx,y:ty,t0:performance.now(),s:1.25});playBuf("blast",1,1);B.shake=Math.max(B.shake||0,20);for(let q=0;q<14;q++)B.sparks.push({x:tx,y:ty+(Math.random()-.5)*30,vx:(Math.random()-.5)*8,vy:-1-Math.random()*6,z:5+Math.random()*5,l:14+Math.random()*14|0,L:28});
+  if(w.big){const dr=fdir(a),mz=a.muz[i],xs=px(a.vx)+(mz?dr*mz[0]:0),ys=mz?GY+mz[1]:GY-60,tb=b.tbx,bx=px(b.vx!=null?b.vx:b.x),tx=tb?bx+fdir(b)*(tb[0]+tb[2]/2):bx,ty=tb?GY+tb[1]+tb[3]/2:GY-85,dur=980;B.rkm=B.rkm||[];
+    a.rc[i]=1.6;B.shake=Math.max(B.shake||0,8);playBuf("rkfire2",1);B.rkm.push({x0:xs,y0:ys,x1:tx,y1:ty,t0:performance.now(),dur,amp:0,fr:1,ph:0,sc:1.84,ez:2.1});
+await sleep(dur);if(B.over)return;B.boom.push({x:tx,y:ty,t0:performance.now(),s:1.25});playBuf("blast",1,1);B.shake=Math.max(B.shake||0,20);for(let q=0;q<14;q++)B.sparks.push({x:tx,y:ty+(Math.random()-.5)*30,vx:(Math.random()-.5)*8,vy:-1-Math.random()*6,z:5+Math.random()*5,l:14+Math.random()*14|0,L:28});
     if(!b.dead)hit(0,tx);await sleep(520);return}
   const n=w.shots,dr=fdir(a),x1=px(b.x),waves=w.waves||1,per=n/waves|0;B.rkm=B.rkm||[];let s=0,last=0,pend=0;
   const fire=(s)=>{const mh=w.mbat&&a.muz[i+"h"+s%w.nb],mz=mh||a.muz[i],xs=px(a.vx)+(mz?dr*mz[0]:0),ys=mz?GY+mz[1]+(w.rkv?(Math.random()*2-1):(s%2?1:-1))*(mz[2]||0):GY-60,tx=x1+(Math.random()-.5)*44,ty=GY-25-Math.random()*65,dur=w.rst?520+Math.random()*80:w.rkv?780+Math.random()*240:800+Math.random()*80;
