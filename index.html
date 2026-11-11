@@ -2912,7 +2912,8 @@ function draw(){hudUpdate();
   B.scrap=(B.scrap||[]).filter(q=>now-q.t0<q.life);for(const q of B.scrap){const dt=.45*fd,sc=q.tg*MK/Math.max(1,Math.max(q.im.naturalWidth,q.im.naturalHeight)),w=q.im.naturalWidth*sc,h=q.im.naturalHeight*sc;q.vy+=.35*dt*.9;q.x+=q.vx*dt;q.y+=q.vy*dt;q.r+=q.vr*dt;const gy=GY-Math.min(w,h)*.4;if(q.y>=gy){q.y=gy;if(q.vy>1.6)q.vy*=-.38;else q.vy=0;q.vx*=Math.pow(.9,fd);q.vr*=Math.pow(.88,fd)}if(!q.im.complete||!w)continue;const k=(now-q.t0)/q.life;g.save();g.globalAlpha=k>.75?Math.max(0,(1-k)/.25):1;g.translate(q.x,q.y);g.rotate(q.r);g.drawImage(q.im,-w/2,-h/2,w,h);g.restore()}
   B.swv=(B.swv||[]).filter(q=>now-q.t0<q.dur);for(const q of B.swv){const k=(now-q.t0)/q.dur,x=q.x0+(q.x1-q.x0)*(1-Math.pow(1-k,2)),h=64*MK*(.75+.45*Math.min(1,k*3)),w=h*1.6;g.save();g.globalAlpha=k<.1?k/.1:Math.max(0,Math.min(1,(1-k)/.45));g.translate(x,GY-h*.34);g.scale(q.dir,1);if(SHWI.complete)g.drawImage(SHWI,-w*.55,-h/2,w,h);g.restore()}
   B.hfx=B.hfx.filter(q=>now-q.t0<210);for(const q of B.hfx){const fi=HFX[Math.min(2,Math.floor((now-q.t0)/70))],z=103*q.z*.3*MK;if(fi.complete)g.drawImage(fi,q.x-z/2,q.y-z/2,z,z)}
-  for(const p of B.projs){const k=Math.min(1,(performance.now()-p.t0)/(p.dur||380));if(p.orb||p.glow){const R=(p.orb?(3+k*13):(4+11*(1-k)))*(p.s||1)*MK,op=g.globalCompositeOperation;g.save();g.globalCompositeOperation="lighter";const gr=g.createRadialGradient(p.x0,p.y,0,p.x0,p.y,R);gr.addColorStop(0,"rgba(255,255,255,"+(p.orb?.5+k*.5:1-k*.4)+")");gr.addColorStop(.35,"rgba("+p.c+","+(p.orb?.8:.9*(1-k))+")");gr.addColorStop(1,"rgba("+p.c+",0)");g.fillStyle=gr;g.beginPath();g.arc(p.x0,p.y,R,0,7);g.fill();g.restore();g.globalCompositeOperation=op;continue}if(p.pimg){const im=PRJI[p.pimg];if(im&&im.complete&&im.naturalWidth){const x=p.x0+(p.x1-p.x0)*k,yy=p.y+(p.y1-p.y)*k,gw=im.naturalWidth/2*.3057*1.3*(p.s||1)*MK,gh=gw*im.naturalHeight/im.naturalWidth;g.save();g.translate(x,yy);g.rotate(Math.atan2(p.y1-p.y,p.x1-p.x0));g.drawImage(im,-gw/2,-gh/2,gw,gh);g.restore()}continue}if(p.fx){const fi=FLM[Math.min(FLM.length-1,Math.floor(k*FLM.length))],sc=Math.max(1.1,Math.min(2.3,Math.abs(p.x1-p.x0)/90));if(fi&&fi.complete){g.save();g.translate(p.x0,p.y);g.scale(p.dir,1);g.drawImage(fi,-14*sc*MK,-82*sc*MK,129*sc*MK,129*sc*MK);g.restore()}continue}if(p.msh){const gi=GRN[p.gty=="fire"?"fire":p.gty=="energy"?"energy":"phys"];if(gi&&gi.complete&&gi.naturalWidth){const x=p.x0+(p.x1-p.x0)*k,yy=p.y+(p.y1!=null?(p.y1-p.y)*k:0)-Math.sin(k*Math.PI)*p.arc,dxv=p.x1-p.x0,dyv=(p.y1!=null?p.y1-p.y:0)-Math.cos(k*Math.PI)*Math.PI*p.arc;g.save();g.translate(x,yy);g.rotate(Math.atan2(dyv,dxv));if(dxv<0)g.scale(1,-1);const gw=22*MK;g.drawImage(gi,-gw/2,-gw*gi.naturalHeight/gi.naturalWidth/2,gw,gw*gi.naturalHeight/gi.naturalWidth);g.restore();continue}}if(p.msh&&MSH.complete&&MSH.naturalWidth){const x=p.x0+(p.x1-p.x0)*k,yy=p.y+(p.y1!=null?(p.y1-p.y)*k:0)-Math.sin(k*Math.PI)*p.arc,dxv=p.x1-p.x0,dyv=(p.y1!=null?p.y1-p.y:0)-Math.cos(k*Math.PI)*Math.PI*p.arc;g.save();g.translate(x,yy);g.rotate(Math.atan2(dyv,dxv));if(dxv<0)g.scale(1,-1);g.drawImage(MSH,-10*MK,-4.9*MK,20*MK,9.7*MK);g.restore();continue}g.fillStyle=p.c;g.beginPath();g.arc(p.x0+(p.x1-p.x0)*k,p.y+(p.y1!=null?(p.y1-p.y)*k:0)-Math.sin(k*Math.PI)*p.arc,(p.rapid?3:6)*MK,0,7);g.fill()}
+  if(B.projs.some(p=>p.glow&&performance.now()-p.t0>=(p.dur||380)))B.projs=B.projs.filter(p=>!p.glow||performance.now()-p.t0<(p.dur||380));
+for(const p of B.projs){const k=Math.min(1,(performance.now()-p.t0)/(p.dur||380));if(p.orb||p.glow){const R=(p.orb?(3+k*13):(4+11*(1-k)))*(p.s||1)*MK,op=g.globalCompositeOperation;g.save();g.globalCompositeOperation="lighter";const gr=g.createRadialGradient(p.x0,p.y,0,p.x0,p.y,R);gr.addColorStop(0,"rgba(255,255,255,"+(p.orb?.5+k*.5:1-k*.4)+")");gr.addColorStop(.35,"rgba("+p.c+","+(p.orb?.8:.9*(1-k))+")");gr.addColorStop(1,"rgba("+p.c+",0)");g.fillStyle=gr;g.beginPath();g.arc(p.x0,p.y,R,0,7);g.fill();g.restore();g.globalCompositeOperation=op;continue}if(p.pimg){const im=PRJI[p.pimg];if(im&&im.complete&&im.naturalWidth){const x=p.x0+(p.x1-p.x0)*k,yy=p.y+(p.y1-p.y)*k,gw=im.naturalWidth/2*.3057*1.3*(p.s||1)*MK,gh=gw*im.naturalHeight/im.naturalWidth;g.save();g.translate(x,yy);g.rotate(Math.atan2(p.y1-p.y,p.x1-p.x0));g.drawImage(im,-gw/2,-gh/2,gw,gh);g.restore()}continue}if(p.fx){const fi=FLM[Math.min(FLM.length-1,Math.floor(k*FLM.length))],sc=Math.max(1.1,Math.min(2.3,Math.abs(p.x1-p.x0)/90));if(fi&&fi.complete){g.save();g.translate(p.x0,p.y);g.scale(p.dir,1);g.drawImage(fi,-14*sc*MK,-82*sc*MK,129*sc*MK,129*sc*MK);g.restore()}continue}if(p.msh){const gi=GRN[p.gty=="fire"?"fire":p.gty=="energy"?"energy":"phys"];if(gi&&gi.complete&&gi.naturalWidth){const x=p.x0+(p.x1-p.x0)*k,yy=p.y+(p.y1!=null?(p.y1-p.y)*k:0)-Math.sin(k*Math.PI)*p.arc,dxv=p.x1-p.x0,dyv=(p.y1!=null?p.y1-p.y:0)-Math.cos(k*Math.PI)*Math.PI*p.arc;g.save();g.translate(x,yy);g.rotate(Math.atan2(dyv,dxv));if(dxv<0)g.scale(1,-1);const gw=22*MK;g.drawImage(gi,-gw/2,-gw*gi.naturalHeight/gi.naturalWidth/2,gw,gw*gi.naturalHeight/gi.naturalWidth);g.restore();continue}}if(p.msh&&MSH.complete&&MSH.naturalWidth){const x=p.x0+(p.x1-p.x0)*k,yy=p.y+(p.y1!=null?(p.y1-p.y)*k:0)-Math.sin(k*Math.PI)*p.arc,dxv=p.x1-p.x0,dyv=(p.y1!=null?p.y1-p.y:0)-Math.cos(k*Math.PI)*Math.PI*p.arc;g.save();g.translate(x,yy);g.rotate(Math.atan2(dyv,dxv));if(dxv<0)g.scale(1,-1);g.drawImage(MSH,-10*MK,-4.9*MK,20*MK,9.7*MK);g.restore();continue}g.fillStyle=p.c;g.beginPath();g.arc(p.x0+(p.x1-p.x0)*k,p.y+(p.y1!=null?(p.y1-p.y)*k:0)-Math.sin(k*Math.PI)*p.arc,(p.rapid?3:6)*MK,0,7);g.fill()}
   const fdt=Math.min(12,Math.max(0,(t0-(B.ftm||t0))/16.667));B.ftm=t0;B.fl=B.fl.filter(f=>f.l>0);B.fl.forEach(f=>{f.l-=fdt;
        /* flying numbers, like the original BMFlyingNumber: American Captain Eternal, rises 8px/frame slowing x0.9, holds, then shrinks x0.7 per frame */
        if(/^[-+]\d+%?$/.test(f.t)){const l0=f.l0||(f.l0=(f.l=Math.max(f.l,120))+fdt),fr=Math.max(0,l0-f.l)/2,ps=flPose(fr);if(!ps.vis)return;
@@ -4535,10 +4536,10 @@ async function novaVolley(a,b,i,w,hit){
 }
 
 async function wipeVolley(a,b,i,w,hit){
-  const dr=fdir(a),n=w.shots||1,nb=w.nb||1,nm=a==B.p?"Your":"Enemy";let done=0;B.projs=B.projs||[];say(nm+" "+w.n+" fires!");
+  const dr=fdir(a),n=w.shots||1,nb=w.nb||1,nm=a==B.p?"Your":"Enemy";let done=0,fired=0;B.projs=B.projs||[];say(nm+" "+w.n+" fires!");
   const mzW=s=>{const q=a.muz&&(a.muz[i+"h"+(s%nb)]||a.muz[i])||[0,-60];return[px(a.vx)+dr*q[0],GY+q[1]]};
   for(let s=0;s<n&&!B.over&&b.hp>0;s++){
-    const[x0,y0]=mzW(s),tb=b.tbx,bx=px(b.vx!=null?b.vx:b.x),cx=tb?bx+fdir(b)*(tb[0]+tb[2]/2):bx,cy=tb?GY+tb[1]+tb[3]/2:GY-85,x1=cx+(Math.random()-.5)*24,y1=cy+(Math.random()-.5)*34,dur=240+Math.random()*30;
+    fired++;const[x0,y0]=mzW(s),tb=b.tbx,bx=px(b.vx!=null?b.vx:b.x),cx=tb?bx+fdir(b)*(tb[0]+tb[2]/2):bx,cy=tb?GY+tb[1]+tb[3]/2:GY-85,x1=cx+(Math.random()-.5)*24,y1=cy+(Math.random()-.5)*34,dur=240+Math.random()*30;
     a.rc[i]=1.2;B.shake=Math.max(B.shake||0,12);playBuf("wof",n>2?.5:.7,.95+Math.random()*.1);
     B.projs.push({glow:1,x0,y:y0,t0:performance.now(),dur:150,c:DKC.bullet,dir:dr,s:1});
     const pr={x0,x1,y:y0,y1,t0:performance.now(),dur,dir:dr,pimg:"wipe",s:1.1,c:DKC.bullet};B.projs.push(pr);
@@ -4546,15 +4547,15 @@ async function wipeVolley(a,b,i,w,hit){
       B.projs.push({glow:1,x0:x1,y:y1,t0:performance.now(),dur:200,c:DKC.bullet,dir:dr,s:1.2});
       for(let q=0;q<4;q++)B.sparks.push({x:x1,y:y1,vx:-dr*(1+Math.random()*3),vy:-1-Math.random()*3,z:4+Math.random()*3,l:10+Math.random()*10|0,L:20})},dur);
     if(s<n-1)await sleep(w.gap||200)}
-  await sleep(260);while(done<n&&!B.over)await sleep(40);await sleep(150);
+  await sleep(260);while(done<fired&&!B.over)await sleep(40);await sleep(150);
 }
 async function projFire(a,b,i,w){
   const dr=fdir(a),foe=b==B.p?"p":"e",nm=a==B.p?"Your":"Enemy",ch=/ch$/.test(w.dk),pj=DKP[w.dk],rgb=DKC[pj],n=w.shots||1,RS={c:0,d:0},PL=RSI(RS,RPL(w,n));let tot=0;
   const pt=k=>{const q=(k%2&&a.muz[i+"b"])||a.muz[i]||[0,-60];return[px(a.vx)+dr*q[0],GY+q[1]]};
   if(ch){say(nm+" "+w.n+" is charging...");const[x0,y0]=pt(0),o={orb:1,x0,y:y0,t0:performance.now(),dur:1333,c:rgb,dir:dr};B.projs.push(o);playBuf(DKS[w.dk],.9);await sleep(1333);B.projs=B.projs.filter(q=>q!==o);if(B.over||b.dead)return}
   else say(nm+" "+w.n+" fires!");
-  let done=0;const fin=new Promise(r=>{if(!n)r()});
-  for(let k=0;k<n&&!B.over&&b.hp>0;k++){
+  let done=0,fired=0;const fin=new Promise(r=>{if(!n)r()});
+  for(let k=0;k<n&&!B.over&&b.hp>0;k++){fired++;
     const[x0,y0]=pt(k),x1=px(b.vx!=null?b.vx:b.x)-dr*(14+Math.random()*16),y1=GY-40-Math.random()*95,dur=ch?330:240+Math.random()*40;
     a.rc[i]=1.2;if(!ch)playBuf(DKS[w.dk],n>1?.45:.8,.95+Math.random()*.1);
     B.projs.push({glow:1,x0,y:y0,t0:performance.now(),dur:150,c:rgb,dir:dr,s:ch?1.8:1});
@@ -4565,7 +4566,7 @@ async function projFire(a,b,i,w){
       B.projs.push({glow:1,x0:x1,y:y1,t0:performance.now(),dur:220,c:rgb,dir:dr,s:ch?2.2:1.3});
       for(let q=0;q<(ch?9:4);q++)B.sparks.push({x:x1,y:y1,vx:-dr*(1+Math.random()*3),vy:-1-Math.random()*3,z:5+Math.random()*4,l:12+Math.random()*10|0,L:22})},dur);
     await sleep(n>1?120:dur)}
-  await sleep(ch||n==1?dur0(w):260);while(done<n&&!B.over)await sleep(40);
+  await sleep(ch||n==1?dur0(w):260);while(done<fired&&!B.over)await sleep(40);
   if(tot&&n>1)say(nm+" "+w.n+" hits for "+tot+" total.");
   await sleep(200);
 }
