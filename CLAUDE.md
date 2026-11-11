@@ -10,4 +10,4 @@
 - Commit messages end with `Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>` and the `Claude-Session:` line.
 - **Evolutions:** every item that evolves (Mk1 -> Mk2 -> Mk3, Shredders, torsos, etc.) must be added to the `EVO` table (`"k:index": nextIndex`). The settings > Evolution tree is built from `EVO`, so it picks new chains up automatically.
 - **Guard break:** APK weapons carry `resist1/2/3` = guard break against physical/fire(explosive)/energy. Every new weapon with a non-zero value must get `brk:{p|f|e:N}` (resist1→p, resist2→f, resist3→e). It is applied on the last hit by `RBRK` and shown on the card. Check this against the APK data for every new item.
-- **Get-hit sounds:** every gun/drone hit must call `gotHit(multi)` (plays one of `hitA/hitB/hitC` at random). Single-hit weapons always play it; weapons that land more than one hit only play it with a 30% chance per hit. Do this for every new weapon.
+- **Get-hit sounds:** every gun/drone hit must call `gotHit()` (plays one of `hitA/hitB/hitC` at random, on every hit, no chance roll). Do this for every new weapon.
