@@ -3271,7 +3271,7 @@ function off(T){T.classList.remove("on");T._s=""}
 const rng=(a,b)=>a==b?""+a:a+" - "+b;
 const TYI={phys:"physical",fire:"explosive",heat:"explosive",energy:"electric"};
 /* owner m fires weapon wi at target t -> {A: attacker rows (costs), D: defender rows (effects)} */
-function rowsW(m,t,wi){return rowsWw(m,t,m.weps[wi])}
+function rowsW(m,t,wi){const w=m.weps[wi];return rowsWw(m,t,w,w&&w.uses&&!w.hook&&!w.chrg?{used:(m.wuse&&m.wuse[wi])||0,max:Math.min(5,w.uses)}:null)}
 function rowsWw(m,t,w,uses){
   if(!w)return null;const A=[],D=[],ty=TYI[w.ty]||"physical",n=w.shots||1,tr=Math.max(0,Math.min(4,tier(w.cost||0))),lv=Math.max(1,Math.min(16,w.lv||1));
   if(uses&&uses.max>0)A.push({k:"uses",used:uses.used,max:uses.max});
