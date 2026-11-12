@@ -1958,7 +1958,7 @@ let FZ=null;
 const fzTile=(k,i,extra)=>`<div class="ft" style="border-color:${RAR(K[k][i].cost)}">${ICO(k,K[k][i])}<i>${K[k][i].n.split(" ")[0]}</i>${extra||""}</div>`;
 const ARROW='<svg viewBox="0 0 110 74" class="fzar"><path d="M0 24h62V0l48 37-48 37V50H0z" fill="#fff"/></svg>';
 const fzStats=(k,i,lv,sh)=>{const f=1+UBk(k,i,lv),it=K[k][i],o=[],rd=v=>{const r=Math.round(v*f);return sh?SHV(r):r};
-  if(k=="w"&&it.nodmg){}else if(k=="w"){const rg=it.dr?it.dr.map(v=>it.tr?Math.max(1,rd(v*(it.shots||1)))/(it.shots||1):Math.max(1,rd(v))):[rd(it.dmg*.9),rd(it.dmg*1.1)];o.push(["Damage",DTX(rg,it.shots||1)]);if(it.heal)o.push([HPI+" Healing",rd(it.heal)]);
+  if(k=="w"&&it.nodmg){}else if(k=="w"){const rg=it.dr?it.dr.map(v=>(it.tr||((it.shots||1)>1&&it.dr.some(x=>x%1)))?Math.max(1,rd(v*(it.shots||1)))/(it.shots||1):Math.max(1,rd(v))):[rd(it.dmg*.9),rd(it.dmg*1.1)];o.push(["Damage",DTX(rg,it.shots||1)]);if(it.heal)o.push([HPI+" Healing",rd(it.heal)]);
     if(it.hd){const h=it.hdr?it.hdr.map(v=>Math.max(1,rd(v))):[rd(it.hd)];o.push(["Heat damage",h[0]==h[h.length-1]?h[0]:h[0]+"-"+h[h.length-1]])}
     if(it.ed)o.push(["Energy damage",Math.max(1,rd(it.ed))]);if(it.hcd)o.push(["Heat capacity damage",it.hcd]);if(it.ecd)o.push(["Energy capacity damage",it.ecd])}
   else if(k=="t"){o.push(["HP",rd(it.hp)]);if(it.en)o.push(["Energy / turn",rd(it.en)]);if(it.hc)o.push(["Heat cap",rd(it.hc)]);if(it.cool)o.push(["Cooling",rd(it.cool)])}
