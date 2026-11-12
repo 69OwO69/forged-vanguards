@@ -4065,7 +4065,7 @@ async function fanVolley(a,b,i,w,hit){
 async function rbVolley(a,b,i,w,hit){
   const n=w.shots,dr=fdir(a),EJ=w.ejd||200,UP=950,WAIT=1260,DN=750,top=rkTop();B.bkm=B.bkm||[];let pend=0;
   for(let s=0;s<n&&!B.over&&!b.dead&&!a.dead;s++){
-    const mz=a.muz[i],xs=px(a.vx)+(mz?dr*mz[0]:0),ys=mz?GY+mz[1]:GY-120,now=performance.now(),bx=px(b.vx!=null?b.vx:b.x),tx=bx+dr*(16+Math.random()*22),ty=GY-35-Math.random()*70;
+    const mz=a.muz[i],xs=px(a.vx)+(mz?dr*mz[0]:0),ys=mz?GY+mz[1]:GY-120,now=performance.now(),bx=px(b.vx!=null?b.vx:b.x),tx=bx-dr*(6+Math.random()*26),ty=GY-35-Math.random()*70;
     const ex0=xs+dr*(26+Math.random()*26),ey0=ys-(16+Math.random()*16),ex=ex0+dr*(110+Math.random()*70),dyL=Math.max(60,ey0-top),dxL=Math.abs(ex-ex0);
     B.bkm.push({x0:xs,y0:ys,x1:ex0,y1:ey0,cx:(xs+ex0)/2,cy:ys-(ys-ey0)*1.3,t0:now,dur:EJ});
     B.bkm.push({x0:ex0,y0:ey0,x1:ex,y1:top,cx:ex0+(ex-ex0)*.5,cy:ey0-dyL*.44,t0:now+EJ,dur:UP,up:1});
