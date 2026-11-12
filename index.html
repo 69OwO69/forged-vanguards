@@ -4070,8 +4070,8 @@ async function rbVolley(a,b,i,w,hit){
     B.bkm.push({x0:xs,y0:ys,x1:ex0,y1:ey0,cx:(xs+ex0)/2,cy:ys-(ys-ey0)*1.3,t0:now,dur:EJ});
     B.bkm.push({x0:ex0,y0:ey0,x1:ex,y1:top,cx:ex0+(ex-ex0)*.5,cy:ey0-dyL*.44,t0:now+EJ,dur:UP,up:1});
     B.bkm.push({x0:xd,y0:top,x1:tx,y1:ty,t0:now+EJ+UP+WAIT,dur:DN});
-    a.rc[i]=1.3;playBuf("rbej",.5,.96+Math.random()*.08);
-    setTimeout(()=>{if(!B.over)playBuf("rbig",.45,.96+Math.random()*.08)},EJ);
+    a.rc[i]=1.3;playBuf("rbej",.5,(1+(Math.random()<.5?-1:1)*(.01+Math.random()*.09)));
+    setTimeout(()=>{if(!B.over)playBuf("rbig",.45,(1+(Math.random()<.5?-1:1)*(.01+Math.random()*.09)))},EJ);
     pend++;setTimeout(()=>{pend--;if(B.over)return;B.boom.push({x:tx,y:ty,t0:performance.now(),s:.3});playBuf("small",.6,1+Math.random()*.3);hit(s,tx)},EJ+UP+WAIT+DN);
     if(s<n-1)await sleep(w.gap||60)}
   while(pend>0)await sleep(40);await sleep(300)}
