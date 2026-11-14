@@ -970,8 +970,9 @@ body.cine #hudL,body.cine #hudR,body.cine #ctl,body.cine #zoomb,body.cine .bot,b
 /* lite mode for the box-opening screen: no glow filters, blend modes or endless animations (graphics set to Performance/Lowest, or a slow machine) */
 #cfs.lite .cd .cf .cim img,#cfs.lite .cd .cf .cim svg{filter:none!important}
 #cfs.lite .cd .spk s{filter:none!important}
-#cfs.lite .cd.shy>div,#cfs.lite #cscr.rb,#cfs.lite .cd.top.fl .cf,#cfs.lite .cd.shy .cbk::after,#cfs.lite .rbw{animation:none!important}
-#cfs.lite .cd.shy .cbk::after{display:none}
+#cfs.lite #cscr.rb,#cfs.lite .cd.top.fl .cf,#cfs.lite .rbw{animation:none!important}
+/* lite mode keeps the shiny sweep (it is the only cue a card is shiny), just without the blend mode */
+#cfs.lite .cd.shy .cbk::after{mix-blend-mode:normal;opacity:.8}
 #cfs.lite #crate::before,#cfs.lite #crate::after,#cfs.lite .sw::after{display:none!important}
 /* while a box opens the shop behind the dark overlay is not drawn, so its glows, filters and the big background do not slow the opening down into low-effects mode */
 #store.cfo #shwrap{visibility:hidden}
