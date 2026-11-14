@@ -3051,7 +3051,7 @@ function draw(){hudUpdate();
   B.debris=B.debris.filter(d=>!d.gone);B.boom=B.boom.filter(q=>now-q.t0<760);
   for(const bm of B.boom){const k=(performance.now()-bm.t0)/750;if(k>=1)continue;const z=(60+200*Math.min(1,k*2.4))*(bm.s||1)*MK;g.globalAlpha=Math.max(0,1-k*k);g.drawImage(FX.boom,bm.x-z/2,bm.y-z/2,z,z);g.globalAlpha=1}
   B.stk=(B.stk||[]).filter(q=>now-q.t0<q.dur);for(const q of B.stk){const age=now-q.t0,k=age/q.dur,al=Math.pow(1-k,.6),fr=Math.floor(age/45),rn=(m)=>{let h=Math.sin((q.sd+fr*7.31+m*12.9898)*43758.5453);return h-Math.floor(h)};
-    const N=14,pts=[];for(let z=0;z<=N;z++){const f=z/N,yy=q.top+(q.y-q.top)*f,j=(rn(z)-.5)*70*MK*(z==N?0:1-f*.6);pts.push([q.x+j,yy])}
+    const N=14,pts=[],sx=q.x+q.dx*MK,sy=q.y+q.dy*MK;for(let z=0;z<=N;z++){const f=z/N,j=(rn(z)-.5)*60*MK*(z==N?0:1-f*.6),xx=sx+(q.x-sx)*f,yy=sy+(q.y-sy)*f;pts.push([xx+j,yy+j*.4])}
     g.save();g.globalCompositeOperation="lighter";const R=(150+60*(1-k))*MK,gr=g.createRadialGradient(q.x,q.y,0,q.x,q.y,R);gr.addColorStop(0,"rgba(190,230,255,"+(.85*al)+")");gr.addColorStop(.4,"rgba(70,150,255,"+(.4*al)+")");gr.addColorStop(1,"rgba(20,60,255,0)");g.fillStyle=gr;g.beginPath();g.arc(q.x,q.y,R,0,7);g.fill();
     g.lineJoin="round";for(const [wd,col] of [[30,"rgba(60,140,255,"+(.3*al)+")"],[13,"rgba(150,210,255,"+(.8*al)+")"],[5,"rgba(255,255,255,"+al+")"]]){g.strokeStyle=col;g.lineWidth=wd*MK;g.beginPath();pts.forEach(([x,y],z)=>z?g.lineTo(x,y):g.moveTo(x,y));g.stroke()}
     for(let z=3;z<N-1;z+=4){const [x0,y0]=pts[z];g.strokeStyle="rgba(190,230,255,"+(.7*al)+")";g.lineWidth=2*MK;g.beginPath();g.moveTo(x0,y0);g.lineTo(x0+(rn(z+30)-.5)*110*MK,y0+(rn(z+40)*50+20)*MK);g.stroke()}
@@ -4184,12 +4184,12 @@ async function saVolley(a,b,i,w,hit){
   const n=w.shots,dr=fdir(a),top=rkTop(),STK=1000;B.sam=B.sam||[];B.stk=B.stk||[];let pend=0;
   for(let s=0;s<n&&!B.over&&!b.dead&&!a.dead;s++){
     const hk=n>1&&a.muz[i+"h"+[0,2][s%2]],mz=hk||a.muz[i],xs=px(a.vx)+(mz?dr*mz[0]:0),ys=mz?GY+mz[1]:GY-100,now=performance.now(),bx=px(b.vx!=null?b.vx:b.x),tb=b.tbx;
-    const tx=tb?bx+fdir(b)*(tb[0]+tb[2]*(.3+Math.random()*.4)):bx-dr*20,ty=tb?GY+tb[1]+tb[3]*(.3+Math.random()*.4):GY-70;
-    const apex=Math.max(top+50,Math.min(ys,ty)-230),cx=xs+(tx-xs)*.2,cy=2*apex-.5*(ys+ty),DUR=1100+Math.random()*60;
+    const tx=tb?bx+fdir(b)*(tb[0]+tb[2]*(.04+Math.random()*.1)):bx+dr*20,ty=tb?GY+tb[1]+tb[3]*(.3+Math.random()*.4):GY-70;
+    const apex=Math.max(top+50,Math.min(ys,ty)-240),cx=tx+dr*Math.max(60,(tx-xs)*dr*.28),cy=2*apex-.5*(ys+ty),DUR=1100+Math.random()*60;
     B.sam.push({x0:xs,y0:ys,cx,cy,x1:tx,y1:ty,t0:now,dur:DUR,stk:STK,ang:Math.atan2(ty-cy,tx-cx)});
     a.rc[i]=1.3;playBuf("sal1",.8,1);playBuf("sal2",.7,1+(Math.random()-.5)*.1);
     pend++;setTimeout(()=>{if(!B.over)gotHit()},DUR);
-    setTimeout(()=>{pend--;if(B.over)return;const t1=performance.now();B.boom.push({x:tx,y:ty,t0:t1,s:1.5});B.stk.push({x:tx,y:ty,t0:t1,dur:520,top:top-30,sd:Math.random()*1000});playBuf("small",.9,.8);playBuf("sthd",1,1);B.shake=Math.max(B.shake||0,16);hit(s,tx)},DUR+STK);
+    setTimeout(()=>{pend--;if(B.over)return;const t1=performance.now();B.boom.push({x:tx,y:ty,t0:t1,s:1.5});B.stk.push({x:tx,y:ty,t0:t1,dur:520,dx:dr*Math.max(240,(ty-top+30)*.0+300),dy:-330,sd:Math.random()*1000});playBuf("small",.9,.8);playBuf("sthd",1,1);B.shake=Math.max(B.shake||0,16);hit(s,tx)},DUR+STK);
     if(s<n-1)await sleep(w.gap||600)}
   while(pend>0)await sleep(40);await sleep(300)}
 async function asVolley(a,b,i,w,hit){
