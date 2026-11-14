@@ -5368,7 +5368,7 @@ function vCreate(){const d=ST.fd||(ST.fd={t:RI(0,NF-1),s:RI(0,NS-1),c:RI(0,NC-1)
 function vFlag(){const d=ST.fd;let h=bg("ClanFlag");
   [["Type","t",146,NF],["Shape","s",206,NS],["Color","c",266,NC]].forEach(([n,k,y,N])=>{h+=B("fp"+k,131,y,50,50,"i:arrowLeft")+B("fn"+k,351,y,50,50,"i:arrowRight")+T(181,y+14,170,`${n} ${d[k]+1}/${N}`,"c l20")});
   h+=flag(d,482,178,157,105)+B("fRand",191,346,150,50,"Random")+B("fSave",485,346,150,50,"Save");return h}
-function mechFor(p,i){try{if(p.me)return myMech();const ti=(p.bat+i)%T.length,wl=Object.keys(W).filter(k=>W[k]&&!W[k].drone).slice(0,40),w=[wl[(p.bat+i)%wl.length]|0,wl[(p.bat+i*3+1)%wl.length]|0,null,null,null,null,null];return mechOf(ti,0,[],1,true,w)}catch(e){return null}}
+function mechFor(p,i){try{if(p.me)return myMech();const tl=T.map((x,k)=>x&&!x.gone&&!x.secret&&!x.mythic?k:-1).filter(k=>k>=0),lg=L.map((x,k)=>x&&!x.gone&&!x.secret&&!x.mythic?k:-1).filter(k=>k>=0),ti=tl[(p.bat+i)%tl.length],li=lg[(p.bat*3+i)%lg.length],wl=W.map((x,k)=>x&&!x.gone&&!x.drone&&!x.side&&!x.secret&&!x.mythic?k:-1).filter(k=>k>=0).slice(0,40),w=[wl[(p.bat+i)%wl.length],wl[(p.bat+i*3+1)%wl.length],null,null,null,null,null];return mechOf(ti,li,[],1,true,w)}catch(e){return null}}
 function vInspect(){const p=find(ST.insp)||me(),c=clanOf(p.clan),fr=D.friends.includes(p.id);let h=bg("Inspect");
   h+=badge(rankOf(p.rating),74,39,40)+T(124,44,540,esc(p.name),"","font-size:24px;color:#fff;text-shadow:0 2px 3px #000")+back("back",685,35,50);
   [["mech","i:mech",72,101],["clan","i:clan",156,101],["rep","i:replays",113,183]].forEach(([k,ic,x,y])=>h+=B("it_"+k,x,y,76,76,ic,{c:ST.itab==k?"on":""}));
