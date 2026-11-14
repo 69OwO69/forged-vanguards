@@ -408,6 +408,8 @@ html body #wx{width:max(var(--gb,66px),min(calc(100vw - var(--wr,0px)),calc(var(
 #dcard .dcbt{font-size:12vmin;font-weight:800;letter-spacing:.18em;color:#fff;text-shadow:0 0 3vmin var(--c),0 0 8vmin var(--c),0 .5vmin 0 #000;opacity:0;white-space:nowrap}
 #dcard .dcbt.hit{animation:dcslam2 .5s cubic-bezier(.2,1.4,.4,1) both}
 @keyframes dcslam2{0%{transform:scale(2.6);opacity:0}30%{opacity:1}100%{transform:scale(1);opacity:1}}
+#dcard .rbt{display:inline-block;background:linear-gradient(90deg,#ff5a5a,#ffd24a,#5aff7a,#4ad8ff,#8a6aff,#ff5af0,#ff5a5a);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent!important;-webkit-text-fill-color:transparent;text-shadow:none!important;animation:shs 2s linear infinite;filter:drop-shadow(0 .35vmin 0 #000) drop-shadow(0 0 1.4vmin rgba(255,255,255,.3))}
+#dcard .dcbt.rbt.hit{animation:dcslam2 .5s cubic-bezier(.2,1.4,.4,1) both,shs 2s linear infinite;filter:drop-shadow(0 1vmin 0 #000) drop-shadow(0 0 4vmin rgba(255,255,255,.45))}
 #dcard .dcred{position:absolute;inset:0;z-index:3;pointer-events:none;opacity:0;box-shadow:inset 0 0 14vmin 3vmin rgba(255,24,24,.85)}
 #dcard .dcok{font-size:3.2vmin;letter-spacing:.2em;padding:1.4vmin 6vmin;border-radius:1.2vmin;background:#1f9b45;border:.35vmin solid #5dff8a;color:#fff;cursor:pointer;font-family:inherit;font-weight:700}
 
@@ -2651,7 +2653,7 @@ function openDailyCard(){
   const draw=(fresh)=>{const n=shown();row.style.setProperty("--cw",(39/(1+(n-1)*.2)).toFixed(1)+"vmin");const have=cards().length;
     for(let z=have;z<n;z++){row.insertAdjacentHTML("beforeend",`<div class="cd c${tier} in dcc ${shy?"shy":""}" style="--cc:var(--c)"><div><div class="cbk">?</div><div class="cf"></div></div>${shy?SPK():""}</div>`);const c=row.lastElementChild;if(z>0||fresh===false){c.classList.add("up")}else c.classList.add("pulse")}
     let b=row.querySelector(".dcm2");if(cnt>1){if(!b){row.insertAdjacentHTML("beforeend",'<div class="dcm2"></div>');b=row.lastElementChild}b.textContent="×"+cnt;b.classList.add("on");b.classList.remove("pop");void b.offsetWidth;b.classList.add("pop")}};
-  const setC=i=>{el.style.setProperty("--c",DC_COL[i]);el.style.setProperty("--cr",rgb(DC_COL[i]));nm.textContent=(shy?"SHINY ":"")+TN[i].toUpperCase();cards().forEach(c=>{c.className=c.className.replace(/\bc\d\b/,"c"+i)})};
+  const setC=i=>{el.style.setProperty("--c",DC_COL[i]);el.style.setProperty("--cr",rgb(DC_COL[i]));nm.innerHTML=(shy?'<span class="rbt">SHINY</span> ':"")+TN[i].toUpperCase();cards().forEach(c=>{c.className=c.className.replace(/\bc\d\b/,"c"+i)})};
   const flash=a=>{fl.style.transition="none";fl.style.opacity=a;void fl.offsetWidth;fl.style.transition="opacity .45s";fl.style.opacity=0};
   const anim=c=>cards().forEach((d,z)=>{d.classList.remove("pulse","shk","up");void d.offsetWidth;d.style.animationDelay=(z*60)+"ms";d.classList.add(c)});
   const burst=n=>{for(let k=0;k<n;k++){const p=document.createElement("i");p.className="dcp";const a=Math.random()*6.283,d=18+Math.random()*34;p.style.setProperty("--dx",(Math.cos(a)*d)+"vmin");p.style.setProperty("--dy",(Math.sin(a)*d)+"vmin");q(".dcw").appendChild(p);setTimeout(()=>p.remove(),1050)}};
@@ -2663,7 +2665,7 @@ function openDailyCard(){
     S.dcAt=Date.now();try{save()}catch(e){}
     const TY=g=>g.k=="w"?(g.it.hook?"Hook":g.it.chrg?"Charge":g.it.drone?"Drone":g.it.side?"Side Weapon":"Top Weapon"):g.k=="t"?"Torso":g.k=="l"?"Legs":g.it.kit?"Kit":"Module";
     el.classList.add("flipping");pips.style.display="none";hint.style.display="none";const bx=q(".dcm2");if(bx)bx.style.display="none";
-    nm.textContent=(shy?"SHINY ":"")+TN[t].toUpperCase()+" CARD"+(n>1?" ×"+n:"");
+    nm.innerHTML=(shy?'<span class="rbt">SHINY</span> ':"")+TN[t].toUpperCase()+" CARD"+(n>1?" ×"+n:"");
     cards().forEach((c,z)=>{const g=got[z];if(!g)return;c.classList.remove("pulse","shk","up");c.style.animation="none";c.style.setProperty("--cc",DC_COL[t]);if(g.sh&&!c.classList.contains("shy")){c.classList.add("shy");c.insertAdjacentHTML("beforeend",SPK())}
       c.querySelector(".cf").innerHTML=`<div class="cim">${ICO(g.k,g.it,g.sh)}</div><b style="color:${DC_COL[t]}">${TN[t]}</b><span>${g.it.n}</span><em class="ty">${TY(g)}</em>`;
       setTimeout(()=>{c.classList.add("fl");if(z<12)playBuf("cturn",.5,1+Math.min(z,8)*.03)},450+z*120)});
@@ -2674,7 +2676,7 @@ function openDailyCard(){
   const rise=(i,after,label,pre)=>{cmStop(.15);const b=document.createElement("div");b.className="dcblk";b.innerHTML='<div class="dcbt"></div>';el.appendChild(b);const t=b.firstChild;
     void b.offsetWidth;b.classList.add("on");playBuf("rise",1);
     setTimeout(()=>{if(pre)pre();else{setC(i);pipH()}cards().forEach(c=>c.classList.remove("shk","up","pulse"))},220);
-    setTimeout(()=>{t.textContent=label||TN[i].toUpperCase();t.classList.add("hit");flash(.95);burst(30);syn(60,1,"sine",.5,0,30)},RISE_HIT);
+    setTimeout(()=>{t.textContent=label||TN[i].toUpperCase();if(label=="SHINY")t.classList.add("rbt");t.classList.add("hit");flash(.95);burst(30);syn(60,1,"sine",.5,0,30)},RISE_HIT);
     setTimeout(()=>{b.classList.remove("on");anim("up");setTimeout(()=>b.remove(),450);after();if(tier>=3)cmStart(el)},RISE_HIT+1500)};
   function tap(){if(busy||done)return;used=true;busy=true;q(".dcx").style.display="none";hint.textContent="";
     playBuf("uitap",.9,1+tier*.08);
