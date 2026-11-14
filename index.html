@@ -398,8 +398,8 @@ html body #wx{width:max(var(--gb,66px),min(calc(100vw - var(--wr,0px)),calc(var(
 #dcard .dcl2 .cd{width:clamp(80px,22vmin,220px);--cc:var(--ic);opacity:1;transform:none;perspective:800px;cursor:default}
 #dcard .dcl2.many .cd{width:clamp(60px,13vmin,150px)}
 #dcard .cd.dcc,#dcard .dcl2 .cd{container-type:inline-size}
-#dcard .cd .cf span{white-space:normal;text-align:center;line-height:1.08;font-size:6.4cqw;letter-spacing:.2px;padding:0 1cqw;text-wrap:balance;overflow:hidden;word-break:normal;overflow-wrap:anywhere}
-#dcard .cd .cf em.ty{font-size:6.2cqw}
+#dcard .cd .cf span{white-space:normal;text-align:center;line-height:1.08;font-size:11.5cqw!important;letter-spacing:.2px!important;padding:0 1cqw!important;text-wrap:balance;overflow:hidden;word-break:normal;overflow-wrap:anywhere}
+#dcard .cd .cf em.ty{font-size:10cqw!important}
 #dcard .cd .cf .cim{width:72%;margin-top:42%}
 #dcard .cd .cf .cim img,#dcard .cd .cf .cim svg{image-rendering:auto;filter:drop-shadow(0 .8cqw 1.2cqw #000a)}
 #dcard .cd .cf,#dcard .cd .cbk{image-rendering:auto;-webkit-font-smoothing:antialiased}
@@ -2668,6 +2668,7 @@ function openDailyCard(){
     nm.innerHTML=(shy?'<span class="rbt">SHINY</span> ':"")+TN[t].toUpperCase()+" CARD"+(n>1?" ×"+n:"");
     cards().forEach((c,z)=>{const g=got[z];if(!g)return;c.classList.remove("pulse","shk","up");c.style.animation="none";c.style.setProperty("--cc",DC_COL[t]);if(g.sh&&!c.classList.contains("shy")){c.classList.add("shy");c.insertAdjacentHTML("beforeend",SPK())}
       c.querySelector(".cf").innerHTML=`<div class="cim">${ICO(g.k,g.it,g.sh)}</div><b style="color:${DC_COL[t]}">${TN[t]}</b><span>${g.it.n}</span><em class="ty">${TY(g)}</em>`;
+      {const sp=c.querySelector(".cf span");if(sp){let f=11.5;const z=()=>sp.style.setProperty("font-size",f+"cqw","important");z();while(f>6&&(sp.scrollHeight>sp.clientHeight+1||sp.scrollWidth>sp.clientWidth+1)){f-=.5;z()}}}
       setTimeout(()=>{c.classList.add("fl");if(z<12)playBuf("cturn",.5,1+Math.min(z,8)*.03)},450+z*120)});
     playBuf("scifi",.8);syn(1318,.9,"sine",.14);if(t>=3){playBuf("scifi",1);syn(1976,1.2,"triangle",.14);syn(1480,1.2,"triangle",.12)}
     const ok=document.createElement("button");ok.className="dcok";ok.textContent="COLLECT";ok.style.opacity="0";ok.style.transition="opacity .3s";q(".dcw").appendChild(ok);setTimeout(()=>ok.style.opacity=1,450+got.length*120+500);
