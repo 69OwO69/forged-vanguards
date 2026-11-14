@@ -2571,7 +2571,7 @@ const dailyHTML=()=>{const d=dayId(),bt=dailyBought(),DC=["#6b7686","#2f8fff","#
     return `<button class="sh dl${got?" no":""}" data-daily="${o.t}" style="--dc:${DC[o.t]}"><i class="dtr">${TN[o.t]}</i>${it.n}<div class="ar dla">${ICO(o.k,it,false)}</div>${got?'<div class="pr">SOLD OUT</div>':`<div class="pr${o.tk?" t":""}">${o.p.toLocaleString()} <img src="${o.tk?TKI:RES.coin}"></div>`}${own&&!got?'<em class="dow">Owned</em>':""}</button>`}).join("")};
 let DLT=0;
 /* ---------- daily card (Chaos-Drop style: tap to rank up / double) ---------- */
-const DC_CD=0/* ms between free cards; 0 = no wait while testing (24h = 864e5) */,DC_CH=[.52,.28,.14,.06]/* rank-up odds per rank: Common>Rare 52, Rare>Epic 28, Epic>Legendary 14, Legendary>Mythic 6 */,DC_COL=["#98a1ac","#2f8fff","#b05cff","#ff9a2e","#ff2a2a"],DC_SPL={1:.2,2:.08,4:.02}/* split chance by current card count: 1>2 20%, 2>4 8%, 4>8 2% (otherwise no new cards) */,DC_SHY=.015;
+const DC_CD=0/* ms between free cards; 0 = no wait while testing (24h = 864e5) */,DC_CH=[.52,.28,.14,.06]/* rank-up odds per rank: Common>Rare 52, Rare>Epic 28, Epic>Legendary 14, Legendary>Mythic 6 */,DC_COL=["#98a1ac","#2f8fff","#b05cff","#ff9a2e","#ff2a2a"],DC_SPL=[[1,70],[2,20],[4,8],[8,2]]/* FINAL card count of a run, rolled once: 1 card 70%, 2 cards 20%, 4 cards 8%, 8 cards 2% (taps only reveal the splits) */,DC_SHY=.015;
 const tierOf=c=>tier(c),dcReady=()=>Date.now()-(S.dcAt||0)>=DC_CD,dcWait=()=>{const m=Math.max(0,DC_CD-(Date.now()-(S.dcAt||0))),h=Math.floor(m/36e5),mi=Math.floor(m/6e4)%60,se=Math.floor(m/1e3)%60;return[h,mi,se].map(v=>String(v).padStart(2,"0")).join(":")};
 const dcHTML=()=>{const r=dcReady();return `<button class="sh dcb${r?"":" no"}" data-dcard="1"><div class="dcm">?</div><div class="dcl"><div class="dct">DAILY CARD</div><div class="dcs">Tap the card: every tap can rank it up, and has a 10% chance to double your cards.</div></div><div class="dcf">${r?"FREE":dcWait()}</div></button>`};
 function openDailyCard(){
@@ -2579,7 +2579,7 @@ function openDailyCard(){
   const rgb=h=>[1,3,5].map(i=>parseInt(h.substr(i,2),16)).join(",");
   /* 3 chances per rank: the rank's odds are split so the overall chance of ranking up stays the same */
   const TRY=3,qOf=p=>1-Math.pow(1-p,1/TRY);
-  let tier=0,cnt=1,left=TRY,busy=false,used=false,done=false,shy=false;
+  let goal=1;{let r=Math.random()*100;for(const[m,w]of DC_SPL){goal=m;if(r<w)break;r-=w}}let tier=0,cnt=1,left=TRY,busy=false,used=false,done=false,shy=false;
   const el=document.createElement("div");el.id="dcard";
   el.innerHTML=`<div class="dcbg"></div><div class="dcx" title="Close">×</div><div class="dcw"><div class="dct2">DAILY CARD</div><div class="dcn"></div><div class="dcrow"></div><div class="dcpips"></div><div class="dch">TAP ANYWHERE!</div></div><div class="dcr hide"></div><div class="dcfl"></div>`;
   document.body.appendChild(el);
@@ -2612,7 +2612,7 @@ function openDailyCard(){
   const cut=i=>{const c=document.createElement("div");c.className="dccut";c.innerHTML='<div class="dcray"></div><div class="dcct">'+TN[i].toUpperCase()+'!</div>';el.appendChild(c);playBuf("scifi",1);playBuf("scifi",.5,.6);syn(60,1,"sine",.5,0,30);syn(1976,1.2,"triangle",.14);syn(1480,1.2,"triangle",.12);flash(.95);burst(30);setTimeout(()=>c.remove(),1800)};
   function tap(){if(busy||done)return;used=true;busy=true;q(".dcx").style.display="none";hint.textContent="";
     playBuf("uitap",.9,1+tier*.08);
-    let dbl=false;if(cnt<8&&Math.random()<DC_SPL[cnt]){dbl=true;cnt*=2;draw(false);playBuf("scifi",.6,1.4);syn(1318,.5,"sine",.14);burst(10)}
+    let dbl=false;if(cnt<goal&&(left<=1||Math.random()<.5)){dbl=true;cnt*=2;draw(false);playBuf("scifi",.6,1.4);syn(1318,.5,"sine",.14);burst(10)}
     if(!shy&&Math.random()<DC_SHY){shy=true;cards().forEach(c=>{c.classList.add("shy");c.insertAdjacentHTML("beforeend",SPK())});setC(tier);flash(.9);playBuf("scifi",1,1.3);playBuf("scifi",.5,1.8);syn(1976,.8,"triangle",.14);syn(2637,.9,"triangle",.12,.12);burst(24)}
     if(dbl)left=TRY;else left--;
     if(Math.random()<qOf(DC_CH[tier])){tier++;left=TRY;setC(tier);pipH();anim("up");flash(.3+tier*.12);playBuf("tierboom",1,Math.pow(1.2,tier),1.5);playBuf("scifi",.4,.9+tier*.12);burst(14+tier*6);
