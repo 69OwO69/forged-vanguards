@@ -2994,7 +2994,10 @@ function specMech(sp){
   }finally{S.sel=JSON.parse(bs);S.xs=JSON.parse(bx);S.tf=bt}
   if(sp.mul>0&&sp.mul!=1)mulMech(m,+sp.mul);
   return m}
-function designFor(mi){const d=S.designs&&mi&&S.designs[mi.id];return d&&(d.t||d.l||d.w)?d:null}
+function designFor(mi){const d=S.designs&&mi&&S.designs[mi.id];if(!(d&&(d.t||d.l||d.w)))return null;
+  /* a saved enemy design that still uses a removed item is ignored (the mission falls back to its normal build) */
+  const dead=(k,it)=>it&&it.id!=null&&(!K[k][it.id]||K[k][it.id].gone);
+  if(dead("t",d.t)||dead("l",d.l)||Object.values(d.w||{}).some(it=>dead("w",it)))return null;return d}
 function importDesigns(txt){let j;try{j=JSON.parse(txt)}catch(e){return toast("That isn't valid JSON")}const d=j&&j.designs?j.designs:j;if(!d||typeof d!="object")return toast("No designs found");S.designs=S.designs||{};let n=0;for(const k in d){if(d[k]&&typeof d[k]=="object"){S.designs[k]=d[k];n++}}save();toast("Imported "+n+" enemy design"+(n==1?"":"s"))}
 function fbMech(){if(FBM)return JSON.parse(JSON.stringify(FBM));if(!S.fb){S.fb=JSON.parse(JSON.stringify(S.sel));save()}const cur=S.sel;S.sel=JSON.parse(JSON.stringify(S.fb));let m;try{m=myMech()}finally{S.sel=cur}return m}
 function botMech(){if(!S.bot){S.bot=JSON.parse(JSON.stringify(S.sel));save()}const cur=S.sel,sb=JSON.parse(JSON.stringify(S.bot));sb.w=(sb.w||[]).slice();sb.w[0]=null;sb.w[1]=null;S.sel=sb;let m;try{m=myMech()}finally{S.sel=cur}return m}
