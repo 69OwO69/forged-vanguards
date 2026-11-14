@@ -2630,16 +2630,17 @@ function openDailyCard(){
     const ok=document.createElement("button");ok.className="dcok";ok.textContent="COLLECT";ok.style.opacity="0";ok.style.transition="opacity .3s";q(".dcw").appendChild(ok);setTimeout(()=>ok.style.opacity=1,450+got.length*120+500);
     ok.onclick=e=>{e.stopPropagation();playBuf("equip",.5);el.remove();store();head()}};
   const RISE_HIT=2080;/* ms into the riser where the big hit lands */
-  const rise=(i,after)=>{const b=document.createElement("div");b.className="dcblk";b.innerHTML='<div class="dcbt"></div>';el.appendChild(b);const t=b.firstChild;
+  const rise=(i,after,label,pre)=>{const b=document.createElement("div");b.className="dcblk";b.innerHTML='<div class="dcbt"></div>';el.appendChild(b);const t=b.firstChild;
     void b.offsetWidth;b.classList.add("on");playBuf("rise",1);
-    setTimeout(()=>{setC(i);pipH();cards().forEach(c=>c.classList.remove("shk","up","pulse"))},220);
-    setTimeout(()=>{t.textContent=TN[i].toUpperCase();t.classList.add("hit");flash(.95);burst(30);syn(60,1,"sine",.5,0,30)},RISE_HIT);
+    setTimeout(()=>{if(pre)pre();else{setC(i);pipH()}cards().forEach(c=>c.classList.remove("shk","up","pulse"))},220);
+    setTimeout(()=>{t.textContent=label||TN[i].toUpperCase();t.classList.add("hit");flash(.95);burst(30);syn(60,1,"sine",.5,0,30)},RISE_HIT);
     setTimeout(()=>{b.classList.remove("on");anim("up");setTimeout(()=>b.remove(),450);after()},RISE_HIT+1500)};
   function tap(){if(busy||done)return;used=true;busy=true;q(".dcx").style.display="none";hint.textContent="";
     playBuf("uitap",.9,1+tier*.08);
     let dbl=false;if(cnt<goal&&(left<=1||Math.random()<.5)){dbl=true;cnt*=2;draw(false);playBuf("scifi",.6,1.4);syn(1318,.5,"sine",.14);burst(10)}
-    let sNow=false;if(!shy&&Math.random()<DC_SHY){shy=true;sNow=true;cards().forEach(c=>{c.classList.add("shy");c.insertAdjacentHTML("beforeend",SPK())});setC(tier);flash(.9);playBuf("scifi",1,1.3);playBuf("scifi",.5,1.8);syn(1976,.8,"triangle",.14);syn(2637,.9,"triangle",.12,.12);burst(24)}
+    let sNow=false;if(!shy&&Math.random()<DC_SHY){shy=true;sNow=true}
     if(dbl||sNow)left=TRY;else left--;
+    if(sNow){rise(tier,()=>{busy=false;hint.textContent="TAP AGAIN!"},"SHINY",()=>{cards().forEach(c=>{c.classList.add("shy");c.insertAdjacentHTML("beforeend",SPK())});setC(tier);pipH()});return}
     if(Math.random()<DC_CH[tier]){tier++;left=TRY;
       if(tier>=3)rise(tier,()=>{busy=false;hint.textContent="TAP AGAIN!"});
       else{setC(tier);pipH();anim("up");flash(.3+tier*.12);playBuf("tierboom",1,Math.pow(1.2,tier),1.5);playBuf("scifi",.4,.9+tier*.12);burst(14+tier*6);setTimeout(()=>{busy=false;hint.textContent="TAP AGAIN!"},520)}}
