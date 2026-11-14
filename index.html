@@ -385,7 +385,13 @@ html body #wx{width:max(var(--gb,66px),min(calc(100vw - var(--wr,0px)),calc(var(
 #dcard .dcc.shk{animation:dcshk .4s}@keyframes dcshk{20%{transform:translate(-1.2vmin,.6vmin) rotate(-3deg)}40%{transform:translate(1.2vmin,-.6vmin) rotate(3deg)}60%{transform:translate(-.8vmin,0) rotate(-2deg)}80%{transform:translate(.8vmin,0) rotate(2deg)}}
 #dcard .dcc.up{animation:dcup .55s cubic-bezier(.2,1.6,.4,1)}@keyframes dcup{0%{transform:scale(.7)}60%{transform:scale(1.14)}100%{transform:scale(1)}}
 #dcard .dcn{font-size:4.4vmin;font-weight:700;letter-spacing:.14em;color:#fff;text-shadow:0 0 1.4vmin var(--c),0 .3vmin 0 #000}
-#dcard .dcm2{position:absolute;right:-2.2vmin;top:-2.2vmin;min-width:7vmin;height:7vmin;padding:0 1.2vmin;border-radius:3.5vmin;background:#ffd35a;color:#2b1c00;font-size:3.6vmin;font-weight:800;line-height:7vmin;z-index:3;text-align:center;box-shadow:0 0 2vmin #ffd35a;transform:scale(0);transition:transform .25s cubic-bezier(.2,1.8,.4,1)}#dcard .dcm2.on{transform:scale(1)}
+#dcard .dcm2{position:absolute;right:-2.2vmin;top:-2.2vmin;min-width:7vmin;height:7vmin;padding:0 1.2vmin;border-radius:3.5vmin;background:#ffd35a;color:#2b1c00;font-size:3.6vmin;font-weight:800;line-height:7vmin;z-index:3;text-align:center;box-shadow:0 0 2vmin #ffd35a;transform:scale(0);transition:transform .25s cubic-bezier(.2,1.8,.4,1)}#dcard .dccut{position:absolute;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;pointer-events:none;background:radial-gradient(circle,rgba(0,0,0,.2),rgba(0,0,0,.78));animation:dccut 1.8s both}
+#dcard .dcray{position:absolute;left:50%;top:50%;width:260vmax;height:260vmax;margin:-130vmax 0 0 -130vmax;background:repeating-conic-gradient(rgba(var(--cr),.55) 0 6deg,transparent 6deg 18deg);-webkit-mask:radial-gradient(circle,#000 0,transparent 14%);mask:radial-gradient(circle,#000 0,transparent 14%);animation:dcspin 1.8s linear both}
+#dcard .dcct{position:relative;font-size:11vmin;font-weight:800;letter-spacing:.18em;color:#fff;text-shadow:0 0 3vmin var(--c),0 0 8vmin var(--c),0 .5vmin 0 #000;animation:dcslam 1.8s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes dccut{0%{opacity:0}12%,80%{opacity:1}100%{opacity:0}}
+@keyframes dcspin{from{transform:rotate(0) scale(.4)}to{transform:rotate(50deg) scale(1.2)}}
+@keyframes dcslam{0%{transform:scale(3);opacity:0}25%{transform:scale(1);opacity:1}85%{transform:scale(1.06);opacity:1}100%{transform:scale(1.5);opacity:0}}
+#dcard .dcm2.on{transform:scale(1)}
 #dcard .dcm2.pop{animation:dcpop .5s}@keyframes dcpop{0%{transform:scale(2.2)}100%{transform:scale(1)}}
 #dcard .dch{font-size:3vmin;letter-spacing:.25em;color:#cfe6ff;animation:dcpulse 1.2s ease-in-out infinite;min-height:4vmin}
 #dcard .dcp{position:absolute;left:50%;top:50%;width:1.2vmin;height:1.2vmin;border-radius:50%;background:var(--c);box-shadow:0 0 1.4vmin var(--c);pointer-events:none;animation:dcp 1s ease-out forwards}
@@ -2565,7 +2571,7 @@ const dailyHTML=()=>{const d=dayId(),bt=dailyBought(),DC=["#6b7686","#2f8fff","#
     return `<button class="sh dl${got?" no":""}" data-daily="${o.t}" style="--dc:${DC[o.t]}"><i class="dtr">${TN[o.t]}</i>${it.n}<div class="ar dla">${ICO(o.k,it,false)}</div>${got?'<div class="pr">SOLD OUT</div>':`<div class="pr${o.tk?" t":""}">${o.p.toLocaleString()} <img src="${o.tk?TKI:RES.coin}"></div>`}${own&&!got?'<em class="dow">Owned</em>':""}</button>`}).join("")};
 let DLT=0;
 /* ---------- daily card (Chaos-Drop style: tap to rank up / double) ---------- */
-const DC_CD=0/* ms between free cards; 0 = no wait while testing (24h = 864e5) */,DC_CH=[.8,.4,.1,.05],DC_COL=["#98a1ac","#2f8fff","#b05cff","#ff9a2e","#ff2a2a"],DC_DBL=.1,DC_SHY=.015;
+const DC_CD=0/* ms between free cards; 0 = no wait while testing (24h = 864e5) */,DC_CH=[.52,.28,.14,.06]/* rank-up odds per rank: Common>Rare 52, Rare>Epic 28, Epic>Legendary 14, Legendary>Mythic 6 */,DC_COL=["#98a1ac","#2f8fff","#b05cff","#ff9a2e","#ff2a2a"],DC_SPL=[[1,70],[2,20],[4,8],[8,2]]/* card split roll each tap: x1 70%, x2 20%, x4 8%, x8 2% (count capped at 8) */,DC_SHY=.015;
 const tierOf=c=>tier(c),dcReady=()=>Date.now()-(S.dcAt||0)>=DC_CD,dcWait=()=>{const m=Math.max(0,DC_CD-(Date.now()-(S.dcAt||0))),h=Math.floor(m/36e5),mi=Math.floor(m/6e4)%60,se=Math.floor(m/1e3)%60;return[h,mi,se].map(v=>String(v).padStart(2,"0")).join(":")};
 const dcHTML=()=>{const r=dcReady();return `<button class="sh dcb${r?"":" no"}" data-dcard="1"><div class="dcm">?</div><div class="dcl"><div class="dct">DAILY CARD</div><div class="dcs">Tap the card: every tap can rank it up, and has a 10% chance to double your cards.</div></div><div class="dcf">${r?"FREE":dcWait()}</div></button>`};
 function openDailyCard(){
@@ -2575,37 +2581,44 @@ function openDailyCard(){
   const TRY=3,qOf=p=>1-Math.pow(1-p,1/TRY);
   let tier=0,cnt=1,left=TRY,busy=false,used=false,done=false,shy=false;
   const el=document.createElement("div");el.id="dcard";
-  el.innerHTML=`<div class="dcbg"></div><div class="dcx" title="Close">×</div><div class="dcw"><div class="dct2">DAILY CARD</div><div class="dcn"></div><div class="dcrow"></div><div class="dcpips"></div><div class="dch">TAP THE CARD!</div></div><div class="dcr hide"></div><div class="dcfl"></div>`;
+  el.innerHTML=`<div class="dcbg"></div><div class="dcx" title="Close">×</div><div class="dcw"><div class="dct2">DAILY CARD</div><div class="dcn"></div><div class="dcrow"></div><div class="dcpips"></div><div class="dch">TAP ANYWHERE!</div></div><div class="dcr hide"></div><div class="dcfl"></div>`;
   document.body.appendChild(el);
   const q=s=>el.querySelector(s),row=q(".dcrow"),nm=q(".dcn"),hint=q(".dch"),fl=q(".dcfl"),pips=q(".dcpips");
   const cards=()=>[...row.querySelectorAll(".dcc")];
   const pipH=()=>{pips.innerHTML=`<span>CHANCES</span>`+Array.from({length:TRY},(_,k)=>`<i class="${k<left?"on":""}"></i>`).join("")};
   const shown=()=>Math.min(cnt,8);
   const draw=(fresh)=>{const n=shown();row.style.setProperty("--cw",(36/(1+(n-1)*.3)).toFixed(1)+"vmin");const have=cards().length;
-    for(let z=have;z<n;z++){row.insertAdjacentHTML("beforeend",`<div class="cd c${tier} in dcc ${shy?"shy":""}" style="--cc:var(--c)"><div><div class="cbk">?</div><div class="cf"></div></div>${shy?SPK():""}</div>`);const c=row.lastElementChild;c.onclick=tap;if(z>0||fresh===false){c.classList.add("up")}else c.classList.add("pulse")}
+    for(let z=have;z<n;z++){row.insertAdjacentHTML("beforeend",`<div class="cd c${tier} in dcc ${shy?"shy":""}" style="--cc:var(--c)"><div><div class="cbk">?</div><div class="cf"></div></div>${shy?SPK():""}</div>`);const c=row.lastElementChild;if(z>0||fresh===false){c.classList.add("up")}else c.classList.add("pulse")}
     let b=row.querySelector(".dcm2");if(cnt>1){if(!b){row.insertAdjacentHTML("beforeend",'<div class="dcm2"></div>');b=row.lastElementChild}b.textContent="×"+cnt;b.classList.add("on");b.classList.remove("pop");void b.offsetWidth;b.classList.add("pop")}};
   const setC=i=>{el.style.setProperty("--c",DC_COL[i]);el.style.setProperty("--cr",rgb(DC_COL[i]));nm.textContent=(shy?"SHINY ":"")+TN[i].toUpperCase();cards().forEach(c=>{c.className=c.className.replace(/\bc\d\b/,"c"+i)})};
   const flash=a=>{fl.style.transition="none";fl.style.opacity=a;void fl.offsetWidth;fl.style.transition="opacity .45s";fl.style.opacity=0};
   const anim=c=>cards().forEach((d,z)=>{d.classList.remove("pulse","shk","up");void d.offsetWidth;d.style.animationDelay=(z*60)+"ms";d.classList.add(c)});
   const burst=n=>{for(let k=0;k<n;k++){const p=document.createElement("i");p.className="dcp";const a=Math.random()*6.283,d=18+Math.random()*34;p.style.setProperty("--dx",(Math.cos(a)*d)+"vmin");p.style.setProperty("--dy",(Math.sin(a)*d)+"vmin");q(".dcw").appendChild(p);setTimeout(()=>p.remove(),1050)}};
-  q(".dcx").onclick=()=>{if(used)return;el.remove()};
+  q(".dcx").onclick=e=>{e.stopPropagation();if(used)return;el.remove()};el.addEventListener("click",e=>{if(e.target.closest(".dcx,.dcr"))return;tap()});
   setC(0);pipH();draw(true);playBuf("dopen",.6,1.1);
   const finish=()=>{if(el.dataset.fin)return;el.dataset.fin="1";const t=tier,n=cnt;
     const pool=[];for(const k in K)K[k].forEach((it,i)=>{if(it&&!it.gone&&tierOf(it.cost)==t&&(!shy||canSh(k,i)))pool.push([k,i])});
     const got=[];for(let z=0;z<n;z++){if(!pool.length)break;const [k,i]=pool[Math.floor(Math.random()*pool.length)],sh=shy&&canSh(k,i),dup=S.own[k].includes(i);addI(k,i,sh);got.push({k,i,it:K[k][i],sh,dup})}
     S.dcAt=Date.now();try{save()}catch(e){}
-    const r=q(".dcr"),TY=g=>g.k=="w"?(g.it.hook?"Hook":g.it.chrg?"Charge":g.it.drone?"Drone":g.it.side?"Side Weapon":"Top Weapon"):g.k=="t"?"Torso":g.k=="l"?"Legs":g.it.kit?"Kit":"Module";r.innerHTML=`<div class="dcrh">${shy?"SHINY ":""}${TN[t].toUpperCase()} CARD${n>1?" ×"+n:""}</div><div class="dcl2${got.length>8?" many":""}" style="--ic:${DC_COL[t]}">${got.map((g,z)=>`<div class="cd c${t} in${g.sh?" shy":""}" style="--cc:${DC_COL[t]}"><div><div class="cbk">?</div><div class="cf"><div class="cim">${ICO(g.k,g.it,g.sh)}</div><b style="color:${DC_COL[t]}">${TN[t]}</b><span>${g.it.n}</span><em class="ty">${TY(g)}</em></div></div>${t>=3||g.sh?SPK():""}</div>`).join("")}</div><button class="dcok">COLLECT</button>`;
-    setTimeout(()=>r.querySelectorAll(".cd").forEach((c,z)=>setTimeout(()=>{c.classList.add("fl");if(z<12)playBuf("cturn",.5,1+Math.min(z,8)*.03)},z*120)),450);
-    r.classList.remove("hide");el.classList.add("res");playBuf("scifi",.8);syn(1318,.9,"sine",.14);if(t>=3){playBuf("scifi",1);syn(1976,1.2,"triangle",.14);syn(1480,1.2,"triangle",.12)}
-    r.querySelector(".dcok").onclick=()=>{playBuf("equip",.5);el.remove();store();head()}};
+    const TY=g=>g.k=="w"?(g.it.hook?"Hook":g.it.chrg?"Charge":g.it.drone?"Drone":g.it.side?"Side Weapon":"Top Weapon"):g.k=="t"?"Torso":g.k=="l"?"Legs":g.it.kit?"Kit":"Module";
+    el.classList.add("flipping");pips.style.display="none";hint.style.display="none";const bx=q(".dcm2");if(bx)bx.style.display="none";
+    nm.textContent=(shy?"SHINY ":"")+TN[t].toUpperCase()+" CARD"+(n>1?" ×"+n:"");
+    cards().forEach((c,z)=>{const g=got[z];if(!g)return;c.classList.remove("pulse","shk","up");c.style.animation="none";c.style.setProperty("--cc",DC_COL[t]);if(g.sh&&!c.classList.contains("shy")){c.classList.add("shy");c.insertAdjacentHTML("beforeend",SPK())}
+      c.querySelector(".cf").innerHTML=`<div class="cim">${ICO(g.k,g.it,g.sh)}</div><b style="color:${DC_COL[t]}">${TN[t]}</b><span>${g.it.n}</span><em class="ty">${TY(g)}</em>`;
+      setTimeout(()=>{c.classList.add("fl");if(z<12)playBuf("cturn",.5,1+Math.min(z,8)*.03)},450+z*120)});
+    playBuf("scifi",.8);syn(1318,.9,"sine",.14);if(t>=3){playBuf("scifi",1);syn(1976,1.2,"triangle",.14);syn(1480,1.2,"triangle",.12)}
+    const ok=document.createElement("button");ok.className="dcok";ok.textContent="COLLECT";ok.style.opacity="0";ok.style.transition="opacity .3s";q(".dcw").appendChild(ok);setTimeout(()=>ok.style.opacity=1,450+got.length*120+500);
+    ok.onclick=e=>{e.stopPropagation();playBuf("equip",.5);el.remove();store();head()}};
+  const cut=i=>{const c=document.createElement("div");c.className="dccut";c.innerHTML='<div class="dcray"></div><div class="dcct">'+TN[i].toUpperCase()+'!</div>';el.appendChild(c);playBuf("scifi",1);playBuf("scifi",.5,.6);syn(60,1,"sine",.5,0,30);syn(1976,1.2,"triangle",.14);syn(1480,1.2,"triangle",.12);flash(.95);burst(30);setTimeout(()=>c.remove(),1800)};
   function tap(){if(busy||done)return;used=true;busy=true;q(".dcx").style.display="none";hint.textContent="";
     playBuf("uitap",.9,1+tier*.08);
-    let dbl=false;if(cnt<8&&Math.random()<DC_DBL){dbl=true;cnt*=2;draw(false);playBuf("scifi",.6,1.4);syn(1318,.5,"sine",.14);burst(10)}
+    let dbl=false,mul=1;if(cnt<8){let r=Math.random()*100;for(const[m,w]of DC_SPL){if(r<w){mul=m;break}r-=w}}if(mul>1&&cnt*mul>8)mul=8/cnt;if(mul>1){dbl=true;cnt*=mul;draw(false);playBuf("scifi",.6,1.4);syn(1318,.5,"sine",.14);burst(10)}
     if(!shy&&Math.random()<DC_SHY){shy=true;cards().forEach(c=>{c.classList.add("shy");c.insertAdjacentHTML("beforeend",SPK())});setC(tier);flash(.9);playBuf("scifi",1,1.3);playBuf("scifi",.5,1.8);syn(1976,.8,"triangle",.14);syn(2637,.9,"triangle",.12,.12);burst(24)}
     if(dbl)left=TRY;else left--;
     if(Math.random()<qOf(DC_CH[tier])){tier++;left=TRY;setC(tier);pipH();anim("up");flash(.3+tier*.12);playBuf("tierboom",1,Math.pow(1.2,tier),1.5);playBuf("scifi",.4,.9+tier*.12);burst(14+tier*6);
-      if(tier>=4){done=true;playBuf("scifi",1);playBuf("scifi",.5,.6);syn(60,1,"sine",.5,0,30);syn(1976,1.2,"triangle",.14);syn(1480,1.2,"triangle",.12);flash(.95);hint.textContent="MYTHIC!";setTimeout(finish,1500)}
+      if(tier>=3){cut(tier);setTimeout(()=>{busy=false;hint.textContent="TAP AGAIN!"},1900)}
       else setTimeout(()=>{busy=false;hint.textContent="TAP AGAIN!"},520)}
+    else if(tier>=4&&cnt>=8&&shy){done=true;pipH();setTimeout(finish,700)}
     else if(left>0){pipH();anim("shk");playBuf("dclose",.5,1.2);setTimeout(()=>{busy=false;hint.textContent="TRY AGAIN!"},420)}
     else{pipH();done=true;anim("shk");playBuf("dclose",.9,1);setTimeout(finish,1000)}}
 }
