@@ -1525,7 +1525,7 @@ const W=[
  {n:"Blue Blaster",hid:398,cost:200,ty:"energy",wipe:1,nb:1,shots:2,gap:200,pj:"laser",ps:1,pc:"90,190,255",ss:"dfL1",dr:[19,24.5],dmg:19,ed:15,edLast:1,en:17,ht:0,min:3,max:6,w:35,c:"#46a2ff",arc:0},
  {n:"Blaster",hid:408,cost:200,ty:"phys",wipe:1,nb:1,shots:1,pushS:[1],dr:[40,50],dmg:40,en:0,ht:12,min:4,max:6,w:26,c:"#ffb43a",arc:0},
  {n:"Hard Hitter",hid:409,cost:200,ty:"phys",wipe:1,nb:1,shots:1,chgG:600,chgN:"y",pushS:[1],dr:[32,37],dmg:32,en:0,ht:10,min:4,max:6,w:20,c:"#ffb43a",arc:0},
- {n:"Rocky Balboa",hid:222,cost:200,ty:"fire",rkp:1,rb:1,ejd:900,shots:9,gap:60,nb:1,hs:4,pushS:[0,0,0,0,0,0,0,0,2],dr:[4.2222,4.2222],dmg:4.2222,hd:11,hde:9,en:0,ht:13,min:3,max:6,w:33,c:"#ff6a3a",arc:0},
+ {n:"Rocky Balboa",hid:222,cost:200,ty:"fire",rkp:1,rb:1,rsc:.6,ejd:900,shots:9,gap:60,nb:1,hs:4,pushS:[0,0,0,0,0,0,0,0,2],dr:[4.2222,4.2222],dmg:4.2222,hd:11,hde:9,en:0,ht:13,min:3,max:6,w:33,c:"#ff6a3a",arc:0},
  {n:"Artillery Mark I",hid:522,cost:100,ty:"fire",rkp:1,bks:1,vert:1,shots:6,gap:100,hs:5,dr:[6.6667,7.5],dmg:6.6667,hd:14,hde:6,en:0,ht:15,ra:10,min:4,max:8,w:33,c:"#ff6a3a",arc:0},
  {n:"Fixed point gun",mfn:1,mfl:[[237.9,33.8],[221.0,41.5],[251.5,41.6],[214.9,58.5],[257.1,58.5],[221.0,75.2],[251.4,75.4],[237.9,83.0],[233.8,52.8]],mfs:1.1,hid:669,cost:200,ty:"phys",shots:32,snd:"mg",dr:[1.0625,1.2813],dmg:1.0625,am:10,en:0,ht:1,min:4,max:6,w:23,c:"#ffb43a",arc:0},
  {n:"Divider",hid:170,rhole:2,cost:100,ty:"fire",rkp:1,shots:2,gap:1000,hs:4,pushS:[0,1],dr:[12,14.5],dmg:12,hd:6,hde:2,en:0,ht:9,ra:5,min:3,max:6,w:19,c:"#ff6a3a",arc:0},
@@ -4249,9 +4249,9 @@ async function rbVolley(a,b,i,w,hit){
   for(let s=0;s<n&&!B.over&&!b.dead&&!a.dead;s++){
     const mz=a.muz[i],xs=px(a.vx)+(mz?dr*mz[0]:0),ys=mz?GY+mz[1]:GY-120,now=performance.now(),bx=px(b.vx!=null?b.vx:b.x),tb=b.tbx,tx=tb?bx+fdir(b)*(tb[0]+tb[2]*(.04+Math.random()*.2)):bx-dr*20,ty=tb?GY+tb[1]+tb[3]*(.04+s/Math.max(1,n-1)*.9):GY-35-Math.random()*70;
     const ex0=xs+dr*(80+Math.random()*50),ey0=ys-(20+Math.random()*24),xd=tx-dr*(ty-top)*(.55+Math.random()*.1),ex=dr*(xd-ex0)>60?xd:ex0+dr*60,dyL=Math.max(60,ey0-top);
-    B.bkm.push({x0:xs,y0:ys,x1:ex0,y1:ey0,cx:(xs+ex0)/2,cy:ys-(ys-ey0)*1.3,t0:now,dur:EJ});
-    B.bkm.push({x0:ex0,y0:ey0,x1:ex,y1:top,cx:ex0+(ex-ex0)*.5,cy:ey0-dyL*.44,t0:now+EJ,dur:UP,up:1});
-    B.bkm.push({x0:xd,y0:top,x1:tx,y1:ty,t0:now+EJ+UP+WAIT,dur:DN});
+    B.bkm.push({x0:xs,y0:ys,x1:ex0,y1:ey0,cx:(xs+ex0)/2,cy:ys-(ys-ey0)*1.3,t0:now,dur:EJ,sc:w.rsc||1});
+    B.bkm.push({x0:ex0,y0:ey0,x1:ex,y1:top,cx:ex0+(ex-ex0)*.5,cy:ey0-dyL*.44,t0:now+EJ,dur:UP,up:1,sc:w.rsc||1});
+    B.bkm.push({x0:xd,y0:top,x1:tx,y1:ty,t0:now+EJ+UP+WAIT,dur:DN,sc:w.rsc||1});
     a.rc[i]=1.3;playBuf("rbej",.5,(1+(Math.random()<.5?-1:1)*(.01+Math.random()*.09)));
     setTimeout(()=>{if(!B.over)playBuf("rbig",.45,(1+(Math.random()<.5?-1:1)*(.01+Math.random()*.09)))},EJ);
     pend++;setTimeout(()=>{pend--;if(B.over)return;B.boom.push({x:tx,y:ty,t0:performance.now(),s:.3});playBuf("small",.6,1+Math.random()*.3);hit(s,tx)},EJ+UP+WAIT+DN);
