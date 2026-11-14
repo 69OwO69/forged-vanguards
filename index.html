@@ -2615,7 +2615,7 @@ function openDailyCard(){
     let dbl=false;if(cnt<goal&&(left<=1||Math.random()<.5)){dbl=true;cnt*=2;draw(false);playBuf("scifi",.6,1.4);syn(1318,.5,"sine",.14);burst(10)}
     if(!shy&&Math.random()<DC_SHY){shy=true;cards().forEach(c=>{c.classList.add("shy");c.insertAdjacentHTML("beforeend",SPK())});setC(tier);flash(.9);playBuf("scifi",1,1.3);playBuf("scifi",.5,1.8);syn(1976,.8,"triangle",.14);syn(2637,.9,"triangle",.12,.12);burst(24)}
     if(dbl)left=TRY;else left--;
-    if(Math.random()<qOf(DC_CH[tier])){tier++;left=TRY;setC(tier);pipH();anim("up");flash(.3+tier*.12);playBuf("tierboom",1,Math.pow(1.2,tier),1.5);playBuf("scifi",.4,.9+tier*.12);burst(14+tier*6);
+    if(Math.random()<DC_CH[tier]){tier++;left=TRY;setC(tier);pipH();anim("up");flash(.3+tier*.12);playBuf("tierboom",1,Math.pow(1.2,tier),1.5);playBuf("scifi",.4,.9+tier*.12);burst(14+tier*6);
       if(tier>=3){cut(tier);setTimeout(()=>{busy=false;hint.textContent="TAP AGAIN!"},1900)}
       else setTimeout(()=>{busy=false;hint.textContent="TAP AGAIN!"},520)}
     else if(tier>=4&&cnt>=8&&shy){done=true;pipH();setTimeout(finish,700)}
