@@ -3590,7 +3590,7 @@ let cur=null,lx=-1,ly=-1;
 function nearest(e){const c=B.cam;if(!c)return null;const X=c.cxc+(e.clientX-c.W/2)/(c.sc*c.cz),Y=GY+(e.clientY-c.fy)/(c.sc*c.cz);let best=null,bd=1e9;
   for(const k of["e","p"]){const m=B[k];if(!m||m.dead||m.hp<=0||!m.gb)continue;const dir=fdirV(m),x=dir*(X-px(m.vx)),y=Y-GY;
     for(let wi=0;wi<m.weps.length;wi++){const b=m.gb[wi];if(!b||(m.weps[wi].drone&&!(m.dp==null||m.dp>.3)))continue;const dx=Math.max(b[0]-x,0,x-b[2]),dy=Math.max(b[1]-y,0,y-b[3]),d=Math.hypot(dx,dy);if(d<=bd){bd=d;best={m,wi,k}}}}
-  return best&&bd<=60?best:null}
+  return best&&bd<=12?best:null}
 function pick(e){
   if(!B||B.over||$("battle").classList.contains("hide")||!$("vs").classList.contains("hide")){hide();return}
   const t=e.target,cl=t&&t.closest?t.closest.bind(t):null;
@@ -3604,7 +3604,9 @@ function pick(e){
     if(cl("#ctl [data-a=shd]")){show("p",rowsShd(B.p));return}
     if(cl("#ctl,#over,#zoomb,#gear,#set")){hide();if(B)B.rg=null;return}}
   if(!B.cam){hide();return}
-  const h=nearest(e);if(!h){hide();B.rg=null;return}
+  const h=nearest(e);if(!h){B.rg=null;const c=B.cam,X=c.cxc+(e.clientX-c.W/2)/(c.sc*c.cz),Y=GY+(e.clientY-c.fy)/(c.sc*c.cz);
+    for(const k of["e","p"]){const m=B[k];if(!m||m.dead||m.hp<=0)continue;if(Math.abs(X-px(m.vx))<=40&&Y-GY>=-95&&Y-GY<=4){show(k,rowsStomp(m,k=="p"?B.e:B.p));return}}
+    hide();return}
   B.rg={m:h.m,wi:h.wi};const tg=h.k=="p"?B.e:B.p;show(h.k,rowsW(h.m,tg,h.wi))}
 document.addEventListener("mousemove",e=>{lx=e.clientX;ly=e.clientY;pick(e)});
 document.addEventListener("mouseleave",()=>{hide();if(B)B.rg=null});
