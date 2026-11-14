@@ -3566,8 +3566,8 @@ window.BTT={show,hide,rowsW,rowsStomp,rowsTp,rowsHook,rowsChg,rowsDrone,rowsCool
 /* ---- hover pick ---- */
 let cur=null,lx=-1,ly=-1;
 function nearest(e){const c=B.cam;if(!c)return null;const X=c.cxc+(e.clientX-c.W/2)/(c.sc*c.cz),Y=GY+(e.clientY-c.fy)/(c.sc*c.cz);let best=null,bd=1e9;
-  for(const k of["e","p"]){const m=B[k];if(!m||m.dead||m.hp<=0||!m.gb)continue;const dir=k=="p"?1:-1,x=dir*(X-px(m.vx)),y=Y-GY;
-    for(let wi=0;wi<m.weps.length;wi++){const b=m.gb[wi];if(!b||(m.weps[wi].drone&&!(m.dp==null||m.dp>.3)))continue;const dx=Math.max(b[0]-x,0,x-b[2]),dy=Math.max(b[1]-y,0,y-b[3]),d=Math.hypot(dx,dy);if(d<bd){bd=d;best={m,wi,k}}}}
+  for(const k of["e","p"]){const m=B[k];if(!m||m.dead||m.hp<=0||!m.gb)continue;const dir=fdirV(m),x=dir*(X-px(m.vx)),y=Y-GY;
+    for(let wi=0;wi<m.weps.length;wi++){const b=m.gb[wi];if(!b||(m.weps[wi].drone&&!(m.dp==null||m.dp>.3)))continue;const dx=Math.max(b[0]-x,0,x-b[2]),dy=Math.max(b[1]-y,0,y-b[3]),d=Math.hypot(dx,dy);if(d<=bd){bd=d;best={m,wi,k}}}}
   return best&&bd<=60?best:null}
 function pick(e){
   if(!B||B.over||$("battle").classList.contains("hide")||!$("vs").classList.contains("hide")){hide();return}
