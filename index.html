@@ -973,6 +973,8 @@ body.cine #hudL,body.cine #hudR,body.cine #ctl,body.cine #zoomb,body.cine .bot,b
 #cfs.lite #cscr.rb,#cfs.lite .cd.top.fl .cf,#cfs.lite .rbw{animation:none!important}
 /* lite mode keeps the shiny sweep (it is the only cue a card is shiny), just without the blend mode */
 #cfs.lite .cd.shy .cbk::after{mix-blend-mode:normal;opacity:.8}
+#cfs .cd .cf span{border-width:2px!important}
+#cfs .cd .cf span,#myth .cd .cf span{white-space:normal!important;text-align:center;line-height:1.08!important;overflow:hidden;overflow-wrap:anywhere}
 #cfs.lite #crate::before,#cfs.lite #crate::after,#cfs.lite .sw::after{display:none!important}
 /* while a box opens the shop behind the dark overlay is not drawn, so its glows, filters and the big background do not slow the opening down into low-effects mode */
 #store.cfo #shwrap{visibility:hidden}
@@ -2528,7 +2530,7 @@ function mythScene(g,done){
   <div class="mst"><div class="tl"><div class="cd c0 in${g.sh?" shy":""}"><div><div class="cbk">?</div><div class="cf"><div class="cim">${ICO(g.k,g.it,g.sh)}</div><b>${NM[TOP]}</b><span>${g.it.n}</span><em class="ty">${ty}</em></div></div></div></div></div><div class="mnm"></div></div>
   <canvas class="fxc"></canvas><div class="ov"></div><div class="mhint"></div><div class="mfl"></div><button class="mskip">SKIP &#9656;</button>`;
   if(S.mls||S.gq>0||/OPR\//.test(navigator.userAgent)||document.getElementById("cfs").classList.contains("lite"))el.classList.add("mlite");
-  if(TOP>4)el.classList.add("sec");document.body.appendChild(el);{const im=new Image();im.onload=()=>SH.paint(el,im);im.src=ART.s3}
+  if(TOP>4)el.classList.add("sec");document.body.appendChild(el);fitNames(el);{const im=new Image();im.onload=()=>SH.paint(el,im);im.src=ART.s3}
   const $q=s=>el.querySelector(s),cd=$q(".cd"),nm=$q(".mnm"),tr=$q(".tr"),fl=$q(".mfl"),hint=$q(".mhint"),cls=(...a)=>el.classList.add(...a),FX=mythFX($q(".fxc")),mst=$q(".tl");
   /* watch the frame rate: slow machine -> switch to the light look (and remember it); still very slow -> skip ahead to the cards */
   {let n=0,l=0,sum=0,lvl=el.classList.contains("mlite")?1:0;(function f(t){if(!el.isConnected)return;if(l&&n>8)sum+=t-l;l=t;n++;if(n>=44){const a=sum/35;n=0;sum=0;if(!lvl&&a>24){lvl=1;el.classList.add("mlite");S.mls=1;try{save()}catch(e){}try{FX.fit()}catch(e){}}}requestAnimationFrame(f)})(performance.now())}
@@ -2730,6 +2732,9 @@ $("store").onclick=e=>{const b=e.target.closest("button");if(!b)return;const d=b
     const r=b.getBoundingClientRect();t.style.width=Math.round(r.width)+"px";t.classList.remove("hide");const R=t.getBoundingClientRect();let x=r.left+r.width/2-R.width/2,y=r.bottom+8;if(y+R.height>innerHeight-6)y=r.top-8-R.height;x=Math.max(6,Math.min(innerWidth-R.width-6,x));t.style.left=x+"px";t.style.top=Math.max(6,y)+"px"});
   document.addEventListener("mouseleave",hid);document.addEventListener("click",hid,true)})();
 let SECW=.002;/* chance per card of a Secret item */
+/* shrink item names until they fit their plate (long names wrap to two lines, then get smaller) */
+function fitNames(root){try{root.querySelectorAll(".cd .cf span").forEach(sp=>{sp.style.removeProperty("font-size");let f=parseFloat(getComputedStyle(sp).fontSize)||9,n=0;const z=()=>sp.style.setProperty("font-size",f+"px","important");while(f>4.5&&n++<40&&(sp.scrollHeight>sp.clientHeight+1||sp.scrollWidth>sp.clientWidth+1)){f-=.5;z()}});root.querySelectorAll(".cd .cf em.ty").forEach(em=>{em.style.removeProperty("font-size");let f=parseFloat(getComputedStyle(em).fontSize)||9,n=0;while(f>5&&n++<30&&em.scrollWidth>em.clientWidth+1){f-=.5;em.style.setProperty("font-size",f+"px","important")}})}catch(e){}}
+addEventListener("resize",()=>{const a=document.getElementById("cfs"),m=document.getElementById("myth");if(a&&!a.classList.contains("hide"))fitNames(a);if(m)fitNames(m)});
 function openBox(i,b){const bx=BOX[+i];if(/[?&]mythtest/.test(location.search))bx.w=[0,0,0,0,100];/* test mode: open the site with ?mythtest to make every box pull mythics */CBUSY=1;$("res").innerHTML="";
   $("cfs").innerHTML=`<div id="cfw"><img src="${CFRAME}" alt=""><div id="cscr" class="${bx.c||""}" style="--m:url(${CRI.b})">${crateHTML(bx.c)}<div id="cres"></div></div><button class="nb cbtn hide" id="cok">COLLECT</button></div>`;$("cfs").classList.remove("hide");$("store").classList.add("cfo");void $("cfs").offsetWidth;$("cfs").classList.add("on");{const cf=$("cfs");cf.classList.toggle("lite",S.gq>0||/OPR\//.test(navigator.userAgent));/* slow machine? measure the frame rate while the crate opens and switch the heavy effects off */setTimeout(()=>{let n=0,l=0,sum=0;(function f(t){if(cf.classList.contains("hide"))return;if(l)sum+=t-l;l=t;if(++n>=36){if(sum/35>40)cf.classList.add("lite");return}requestAnimationFrame(f)})(performance.now())},1200)}
   const cr=$("crate");{const r=b.getBoundingClientRect(),c=cr.getBoundingClientRect();cr.style.transition="none";cr.style.transform=`translate(${r.left+r.width/2-(c.left+c.width/2)}px,${r.top+r.height/2-(c.top+c.height/2)}px) translateY(60%) scale(${Math.max(.12,r.width/c.width)})`;cr.style.opacity=".85";void cr.offsetWidth;cr.style.transition="transform .9s cubic-bezier(.2,.85,.25,1),opacity .4s";cr.style.transform="translateY(60%)";cr.style.opacity="1";playBuf("equip",.45)}
@@ -2744,7 +2749,7 @@ function openBox(i,b){const bx=BOX[+i];if(/[?&]mythtest/.test(location.search))b
   const cd=`<div id="cards"${got.length>10?' class="n30"':got.length>3?' class="n5"':""}>`+got.map((g,n)=>`<div class="cd c${g.t}${g.t==top?" top":""}${g.sh?" shy":""}" data-n="${n}" style="--cc:${GL[g.t]}"><div><div class="cbk">?</div><div class="cf"><div class="cim">${ICO(g.k,g.it,g.sh)}</div><b style="color:${GL[g.t]}">${TN[g.t]}</b><span>${g.it.n}</span><em class="ty">${g.k=="w"?(g.it.hook?"Hook":g.it.chrg?"Charge":g.it.drone?"Drone":g.it.side?"Side Weapon":"Top Weapon"):g.k=="t"?"Torso":g.k=="l"?"Legs":g.it.kit?"Kit":"Module"}</em></div></div>${g.t>=3||g.sh?SPK():""}</div>`).join("")+`</div>`;
   setTimeout(()=>{playBuf("cturn",.8);cr.className="t1"},1000);
   setTimeout(()=>{playBuf("cslide",.8);playBuf("dots",.9);cr.className="t1 t2";$("cscr").classList.add("glow");sfx(300+top*120,.6,"triangle")},2000);
-  const fire=()=>{$("cscr").insertAdjacentHTML("beforeend",cd);$("res").innerHTML="";head();
+  const fire=()=>{$("cscr").insertAdjacentHTML("beforeend",cd);fitNames($("cscr"));$("res").innerHTML="";head();
     const cc=cr.getBoundingClientRect(),ox=cc.left+cc.width/2,oy=cc.top+cc.height/2;
     [...document.querySelectorAll("#cfs .cd")].forEach((c,n)=>{c.style.transition="none";c.style.opacity="0";c.style.transform="none";const r=c.getBoundingClientRect();c.style.transform=`translate(${ox-(r.left+r.width/2)}px,${oy-(r.top+r.height/2)}px) scale(.25)`;c.getBoundingClientRect();
       setTimeout(()=>{c.style.transition="transform .8s cubic-bezier(.2,.85,.3,1),opacity .25s";c.style.opacity="1";c.style.transform="none";playBuf("cfire",got.length>10?.5:.8,.9+Math.random()*.2)},n*ST)});
