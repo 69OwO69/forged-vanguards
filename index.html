@@ -1794,6 +1794,7 @@ function drawParts(g,m,tm){
     if(e&&m.dflip&&m.dflip[wi]){const fx_=mx+ox,fy_=my+oy;g.translate(fx_,fy_);g.scale(-1,1);g.translate(-fx_,-fy_)}
     if(e){if(W[id].scythe)scyCap(m,wi,g,e,mx+ox,my+oy,sw*.02+rt);if(!e.brl)sp(g,W[id].scythe?scyEv(m,wi,e):e,mx+ox,my+oy,e.h,sw*.02+rt);if(id==15&&m.wshn&&m.wshn[wi]&&!back)shnShine(g,e,mx+ox,my+oy,sw*.02+rt)}
     if(e&&e.sph)spnDraw(g,e,m,wi,mx+ox,my+oy,sw*.02+rt);
+    if(m.etF&&m.etF[wi]){const ef=m.etF[wi],k=(performance.now()-ef.t0)/ef.dur;if(k>=1)m.etF[wi]=null;else if(k>=0){const fi=FLM[Math.min(FLM.length-1,Math.floor(k*FLM.length))],mzq=m.muz[wi+"h0"]||m.muz[wi];if(fi&&fi.complete&&mzq){g.save();if("filter" in g)g.filter="none";g.translate(mzq[0],mzq[1]);g.rotate(ef.rot||0);g.drawImage(fi,-14*ef.sc*MK,-82*ef.sc*MK,129*ef.sc*MK,129*ef.sc*MK);g.restore()}}}
     if(e&&e.brl)brlDraw(g,e,m,wi,mx+ox,my+oy,sw*.02+rt);
     if(e&&e.hb&&e.hl&&W[id].rhole&&m.hu&&m.hu[wi]&&m.hu[wi].size){const iw=e.img.naturalWidth,ih=e.img.naturalHeight,ww=e.h*iw/ih,k=ww/iw,kh=e.h/ih,hi=e._hl||(e._hl=Object.assign(new Image(),{src:e.hl}));if(hi.complete&&hi.naturalWidth){g.save();g.translate(mx+ox,my+oy);g.rotate(sw*.02+rt);for(const hk of m.hu[wi]){const q=e.hb[hk];if(!q)continue;g.drawImage(hi,q[0],q[1],q[2]-q[0],q[3]-q[1],(q[0]/iw-e.ax)*ww,(q[1]/ih-e.ay)*e.h,(q[2]-q[0])*k,(q[3]-q[1])*kh)}g.restore()}}
     if(e&&m.shn&&m.shn[wi]>.01&&W[id].scythe){if(!window.SCM)window.SCM=Object.assign(new Image(),{src:LVMASK.w28s});if(SCM.complete&&SCM.naturalWidth){const iw=e.img.naturalWidth,ih=e.img.naturalHeight,gw=e.h*iw/ih,al=Math.min(1,m.shn[wi]);g.save();if("filter" in g)g.filter="none";g.translate(mx+ox,my+oy);g.rotate(sw*.02+rt);g.globalCompositeOperation="lighter";g.globalAlpha=al*.85;g.drawImage(SCM,-e.ax*gw,-e.ay*e.h,gw,e.h);const sx=(252/iw-e.ax)*gw,sy=(15/ih-e.ay)*e.h,R=e.h*(.25+.5*al),gr=g.createRadialGradient(sx,sy,0,sx,sy,R);gr.addColorStop(0,"rgba(255,255,255,"+al+")");gr.addColorStop(.3,"rgba(255,235,170,"+al*.6+")");gr.addColorStop(1,"rgba(255,200,80,0)");g.globalAlpha=1;g.fillStyle=gr;g.fillRect(sx-R,sy-R,R*2,R*2);g.strokeStyle="rgba(255,255,255,"+al+")";g.lineWidth=1.4;g.beginPath();g.moveTo(sx-R*1.5,sy);g.lineTo(sx+R*1.5,sy);g.moveTo(sx,sy-R*1.5);g.lineTo(sx,sy+R*1.5);g.stroke();g.restore()}}
@@ -4784,7 +4785,7 @@ async function etVolley(a,b,i,w){
   const ex=px(b.vx!=null?b.vx:b.x),fx=ex-dir*(w.etGap||110)-dir*30,fy=GY+(a.dfx[i]?a.dfx[i][1]+bp[1]:-85)+(w.etDy||14);
   B.efx=B.efx||[];playBuf("flame",.8,1);
   /* the real APK flame animation (same frames as the Overdrive flame), played once */
-  {const fp={x0:ex-dir*105,x1:ex+dir*45,y:GY-60,y1:GY-60,t0:performance.now(),dur:700,fx:1,dir};B.projs.push(fp);setTimeout(()=>{B.projs=B.projs.filter(q=>q!==fp)},720)}
+  await sleep(80);{const mzq=a.muz[i+"h0"]||a.muz[i],mxs=mzq?px(a.vx)+dir*mzq[0]:fx,L=Math.max(60,(ex-mxs)*dir+40);a.etF=a.etF||[];a.etF[i]={t0:performance.now(),dur:700,sc:Math.max(.9,Math.min(2.6,L/(115*MK))),rot:Math.atan2((-60-(mzq?mzq[1]:-85)),L)+(w.etTilt==null?.3:w.etTilt)}}
   await sleep(420);
   if(!B.over&&!b.dead){const dmg=RDM(a,b,w,(w.dr?w.dr[0]:w.dmg),true);b.hp=Math.max(0,b.hp-dmg);if(w.hd)b.heat+=w.hd;if(!b.summon)B.hit[foe]=.7;b.flT=performance.now();b.flA=1;B.shake=Math.max(B.shake||0,6);gotHit(false);B.fl.push({x:ex,y:GY-160,t:"-"+dmg,l:60});
   }
