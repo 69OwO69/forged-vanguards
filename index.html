@@ -3985,13 +3985,15 @@ async function asVolley(a,b,i,w,hit){
   const mz=a.muz[i],xs=px(a.vx)+(mz?dr*mz[0]:0),ys=mz?GY+mz[1]:GY-120,now=performance.now(),bx=px(b.vx!=null?b.vx:b.x),tb=b.tbx;
   const ax=xs+dr*(230+Math.random()*40),ay=ys-(w.asH||150);
   B.bkm.push({x0:xs,y0:ys,x1:ax,y1:ay,cx:xs+dr*60,cy:ay-30,t0:now,dur:UP,up:1,sc:1});
+  /* velocity of the rocket at the moment it splits (ease derivative 1.45 at the end), minis inherit it so nothing stops */
+  const vx0=2*(ax-(xs+dr*60))*1.45/UP,vy0=2*(ay-(ay-30))*1.45/UP;
   a.rc[i]=1.3;playBuf("asl1",.7,1+(Math.random()<.5?-1:1)*(.01+Math.random()*.09));
   await sleep(UP);if(B.over)return;
   playBuf("asl2",.7,1+(Math.random()<.5?-1:1)*(.01+Math.random()*.09));
   const t1=performance.now();
   for(let s=0;s<n;s++){
     const tx=tb?bx+fdir(b)*(tb[0]+tb[2]*(.08+Math.random()*.84)):bx-dr*20,ty=tb?GY+tb[1]+tb[3]*(.08+s/Math.max(1,n-1)*.84):GY-35-Math.random()*70,sp=(s-(n-1)/2)/((n-1)/2||1),dd=DN*(.9+Math.random()*.2);
-    B.bkm.push({x0:ax,y0:ay,x1:tx,y1:ty,cx:ax+dr*(30+Math.random()*40),cy:ay-70-Math.abs(sp)*10+sp*60,t0:t1,dur:dd,sc:.7});
+    B.bkm.push({x0:ax,y0:ay,x1:tx,y1:ty,cx:ax+vx0*dd/2,cy:ay+vy0*dd/2+sp*26,t0:t1,dur:dd,sc:.7});
     pend++;setTimeout(()=>{pend--;if(B.over)return;B.boom.push({x:tx,y:ty,t0:performance.now(),s:.28});playBuf("small",.6,1+Math.random()*.3);hit(s,tx)},dd)}
   while(pend>0)await sleep(40);await sleep(300)}
 /* random hole for each rocket, never the same one twice (until every hole has been used) */
