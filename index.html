@@ -4784,7 +4784,7 @@ async function etVolley(a,b,i,w){
   const ex=px(b.vx!=null?b.vx:b.x),fx=ex-dir*(w.etGap||110)-dir*30,fy=GY+(a.dfx[i]?a.dfx[i][1]+bp[1]:-85)+(w.etDy||14);
   B.efx=B.efx||[];playBuf("flame",.8,1);
   /* the real APK flame animation (same frames as the Overdrive flame), played once */
-  {const fp={x0:fx,x1:ex,y:fy,y1:fy,t0:performance.now(),dur:700,fx:1,dir};B.projs.push(fp);setTimeout(()=>{B.projs=B.projs.filter(q=>q!==fp)},720)}
+  {const fp={x0:ex-dir*105,x1:ex+dir*45,y:GY-60,y1:GY-60,t0:performance.now(),dur:700,fx:1,dir};B.projs.push(fp);setTimeout(()=>{B.projs=B.projs.filter(q=>q!==fp)},720)}
   await sleep(420);
   if(!B.over&&!b.dead){const dmg=RDM(a,b,w,(w.dr?w.dr[0]:w.dmg),true);b.hp=Math.max(0,b.hp-dmg);if(w.hd)b.heat+=w.hd;if(!b.summon)B.hit[foe]=.7;b.flT=performance.now();b.flA=1;B.shake=Math.max(B.shake||0,6);gotHit(false);B.fl.push({x:ex,y:GY-160,t:"-"+dmg,l:60});
   }
