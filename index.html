@@ -2655,7 +2655,7 @@ function openDailyCard(){
   const shown=()=>Math.min(cnt,8);
   const draw=(fresh)=>{const n=shown();row.style.setProperty("--cw",(39/(1+(n-1)*.2)).toFixed(1)+"vmin");const have=cards().length;
     for(let z=have;z<n;z++){row.insertAdjacentHTML("beforeend",`<div class="cd c${tier} in dcc ${shy?"shy":""}" style="--cc:var(--c)"><div><div class="cbk">?</div><div class="cf"></div></div>${shy?SPK():""}</div>`);const c=row.lastElementChild;if(z>0||fresh===false){c.classList.add("up")}else c.classList.add("pulse")}
-    let b=row.querySelector(".dcm2");if(cnt>1){if(!b){row.insertAdjacentHTML("beforeend",'<div class="dcm2"></div>');b=row.lastElementChild}b.textContent="×"+cnt;b.classList.add("on");b.classList.remove("pop");void b.offsetWidth;b.classList.add("pop")}};
+    /* split-count badge (x2/x4/x8) removed */};
   const setC=i=>{el.style.setProperty("--c",DC_COL[i]);el.style.setProperty("--cr",rgb(DC_COL[i]));nm.innerHTML=(shy?'<span class="rbt">SHINY</span> ':"")+TN[i].toUpperCase();cards().forEach(c=>{c.className=c.className.replace(/\bc\d\b/,"c"+i)})};
   const flash=a=>{fl.style.transition="none";fl.style.opacity=a;void fl.offsetWidth;fl.style.transition="opacity .45s";fl.style.opacity=0};
   const anim=c=>cards().forEach((d,z)=>{d.classList.remove("pulse","shk","up");void d.offsetWidth;d.style.animationDelay=(z*60)+"ms";d.classList.add(c)});
