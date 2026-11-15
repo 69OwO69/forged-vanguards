@@ -4659,7 +4659,7 @@ async function projFire(a,b,i,w){
   const pt=k=>{const q=(w.mzs&&a.muz[i+"h"+w.mzs[k%w.mzs.length]])||(k%2&&a.muz[i+"b"])||a.muz[i]||[0,-60];return[px(a.vx)+dr*q[0],GY+q[1]]};
   if(ch||w.cg){const CG=ch?1333:w.cg;say(nm+" "+w.n+(ch?" is charging...":" fires!"));const[x0,y0]=pt(0),o={orb:1,x0,y:y0,t0:performance.now(),dur:CG,c:rgb,dir:dr};if(ch)B.projs.push(o);if(ch)playBuf(DKS[w.dk],.9);await sleep(CG);B.projs=B.projs.filter(q=>q!==o);if(B.over||b.dead)return}
   else say(nm+" "+w.n+" fires!");
-  if(w.ss1)playBuf(w.ss1,.8);
+  if(w.ss1)playBuf(w.ss1,1.04);
   let done=0,fired=0;const fin=new Promise(r=>{if(!n)r()});
   for(let k=0;k<n&&!B.over&&b.hp>0&&!a.dead&&a.hp>0;k++){
     if(w.chEach){B.nvx=B.nvx||[];say(nm+" "+w.n+" is charging...");const co={nv:"ch",a,i,mk:i+"h"+w.mzs[k%w.mzs.length],t0:performance.now(),dur:1500,c:NVC.y,dir:dr,sz:1};B.nvx.push(co);playBuf("nvch",.9);await sleep(1500);B.nvx=B.nvx.filter(z=>z!==co);if(B.over||b.dead||b.hp<=0||a.dead)break}
