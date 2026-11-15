@@ -4585,7 +4585,7 @@ async function droneAS(a,b,i,w){
   await sleep(200);
 }
 async function droneVolley(a,b){
-  if(!a.don||(a.shutT&&!a.sdKeep))return;
+  if(!a.don||(a.shut2&&!a.sdKeep))return;
   const ds=a.weps.map((w,i)=>w.drone?i:-1).filter(i=>i>=0);if(!ds.length||B.over||a.dead||b.dead)return;
   {const sb=interceptT(a,b,{});if(sb)b=sb}
   B.busy=true;controls();const dr=fdir(a);const act=B.act={n:0,sum:0,d:1};
@@ -4872,12 +4872,15 @@ async function endTurn(){
   {const cur=B.turn=="p"?B.p:B.e,oth=B.turn=="p"?B.e:B.p;if((B.tl[B.turn]<=1&&await droneVolley(cur,oth))||B.over)return;if(B.tl[B.turn]<=1&&await summonVolley(cur,oth)||B.over)return;if(await gasTick()||B.over)return;if(cur.ovT>0){cur.ovT--;if(cur.ovT==0)say("Overdrive ended.")}}
   const cu=B.turn,ot=cu=="p"?"e":"p";B.tl[cu]--;const next=B.tl[cu]>0?cu:ot,m=B[next];if(next!=cu&&B.tl[next]<=0)B.tl[next]=2;
   if(next!=cu){const c=B[cu];c.en=Math.min(c.en+c.enMax,c.enCap||c.enMax*2)}/* energy regen lands at the END of a mech's own turn, so draining it on yours leaves it empty for its whole turn */
-  B.turn=next;B.ch=null;if(next!=cu){m.used=[];B.clk=30}m.did=false;m.sdKeep=0;m.shutT=0;
-  if((B.rk||[]).length){B.busy=true;controls();const dd=await rocketTick();B.busy=false;if(dd||B.over)return}
+  B.turn=next;B.ch=null;if(next!=cu){m.used=[];B.clk=30}m.did=false;m.sdKeep=0;m.shutT=0;m.shut2=0;
+  /* the engine is about to shut down: keep the controls locked from the first frame so the action menu never flashes up */
+  const sdNow=next!=cu&&m.heat>m.hc;if(sdNow){B.busy=true;controls()}
+  if((B.rk||[]).length){B.busy=true;controls();const dd=await rocketTick();B.busy=sdNow;if(dd||B.over)return}
   /* APK rule (BMScreenBattle.startNewAction): cooling is heat removed PER ACTION POINT. Heat never drains by itself; when a turn begins over the heat cap the engine is shut down: if one point of cooling gets it back under the cap the shutdown costs 1 action point (cools cool x1), otherwise it eats the whole turn (2 action points, cools cool x2). The cooled amount floats up in orange. */
-  if(next!=cu&&m.heat>m.hc){const one=m.heat-m.cool<=m.hc,ap=one?1:2,amt=Math.min(m.heat,m.cool*ap),mx=px(m.vx!=null?m.vx:m.x);m.heat-=amt;if(amt>0)B.fl.push({x:mx,y:GY-170,t:"-"+amt,c:"orange",l:70});shutFx(m);m.sdKeep=0;m.shutT=1;if(m.shdOn&&m.shd&&m.shd[0]&&m.shd[0].h>0){m.shdOn=false;if(m==B.p){toast("Engine overheated - shield turned off");try{playBuf("shdoff",.9)}catch(_){}}}B.busy=true;controls();
+  if(next!=cu&&m.heat>m.hc){const one=m.heat-m.cool<=m.hc,ap=one?1:2,amt=Math.min(m.heat,m.cool*ap),mx=px(m.vx!=null?m.vx:m.x);m.heat-=amt;if(amt>0)B.fl.push({x:mx,y:GY-170,t:"-"+amt,c:"orange",l:70});shutFx(m);m.sdKeep=0;m.shutT=1;m.shut2=one?0:1;if(m.shdOn&&m.shd&&m.shd[0]&&m.shd[0].h>0){m.shdOn=false;if(m==B.p){toast("Engine overheated - shield turned off");try{playBuf("shdoff",.9)}catch(_){}}}B.busy=true;controls();
     if(one){B.tl[next]=Math.max(1,B.tl[next]-1);say((next=="p"?"Your":"Enemy")+" engine overheats and shuts down. One action lost.");await sleep(1500);B.busy=false}
-    else{B.tl[next]=1;say((next=="p"?"You overheat":"Enemy overheats")+" and shut down. The turn is lost.");await sleep(1500);B.busy=false;return endTurn()}}
+    else{B.tl[next]=1;say((next=="p"?"You overheat":"Enemy overheats")+" and shut down. The turn is lost.");await sleep(1500);B.shutHold=true;return endTurn()}}
+  if(B.shutHold){B.shutHold=false;if(!B.over)B.busy=false}
   controls();
   if(next=="e"&&B.egg){await sleep(250);B.tl.e=1;return endTurn()}if(next=="e"){say(next==cu?"Enemy takes a second turn.":"Enemy turn.");await ai()}else say(next==cu?"Your second turn.":"Your turn.");
 }
