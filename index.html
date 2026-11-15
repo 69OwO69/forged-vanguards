@@ -4662,16 +4662,13 @@ async function ramFly(a,b,i,w){
   const fly=async(tx,ty,D)=>{const f0=a.dfx[i]||[0,0],t0=performance.now();for(;;){const k=Math.min(1,(performance.now()-t0)/D),e=k*k;a.dfx[i]=[f0[0]+(tx-f0[0])*e,f0[1]+(ty-f0[1])*(k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2)];if(k>=1)return;await sleep(16)}};
   say((a==B.p?"Your":"Enemy")+" "+w.n+" rams the enemy!");playBuf("drone",1);
   await fly(d*TS/msOf(a)-24-bp[0],-85-bp[1],560);
-  /* same impact as the mech Charge: blast, sparks, shake, enemy flash and knock-back */
-  {const dmg=RDM(a,b,w,(w.dr?w.dr[0]:w.dmg),true),ox0=b.x;b.hp=Math.max(0,b.hp-dmg);if(!b.summon)B.hit[foe]=.9;b.flT=performance.now();b.flA=1;B.shake=Math.max(B.shake||0,26);
-   playBuf("boom",1);playBuf("foot",1,.7);playBuf("small",.7,.9);gotHit(false);
-   const cx=px(b.vx!=null?b.vx:b.x),cy=GY-95;B.boom=B.boom||[];B.boom.push({x:cx,y:cy,t0:performance.now(),s:.9});
-   for(let k=0;k<14;k++)B.sparks.push({x:cx+(Math.random()-.5)*40,y:cy+(Math.random()-.5)*60,vx:(Math.random()-.5)*10,vy:-1-Math.random()*4,z:5+Math.random()*5,l:20+Math.random()*20|0,L:40});
-   for(let k=0;k<24;k++)B.sparks.push({x:cx,y:cy,vx:(Math.random()<.5?-1:1)*(2+Math.random()*8),vy:-Math.random()*3,z:3+Math.random()*4,l:12+Math.random()*14|0,L:26});
-   B.fl.push({x:cx,y:GY-160,t:"-"+dmg,l:60});
-   if(b.hp>0){const pu=Math.max(1,w.push||1);let t2=Math.max(0,Math.min(MAXT,ox0+dir*pu));const bl2=[B.p,B.e,...(B.sms||[])].filter(q=>q&&q!==b&&!q.dead&&!q.gone);while(t2!=ox0&&bl2.some(q=>q.x==t2))t2-=dir;
-     if(t2!=ox0){b.x=t2;b.ch={a:ox0,b:t2,t0:performance.now(),dur:520,e:"out"}}}
-   await sleep(160);if(b.hp<=0){await fly(0,0,420);a.dfx[i]=null;return}}
+  /* Charge-style impact (blast, sparks, shake, flash) but silent and no knock-back */
+  {const dmg=RDM(a,b,w,(w.dr?w.dr[0]:w.dmg),true);b.hp=Math.max(0,b.hp-dmg);if(!b.summon)B.hit[foe]=.9;b.flT=performance.now();b.flA=1;B.shake=Math.max(B.shake||0,14);
+   gotHit(false);
+   const cx=px(b.vx!=null?b.vx:b.x),cy=GY-95;B.boom=B.boom||[];B.boom.push({x:cx,y:cy,t0:performance.now(),s:.5});
+   for(let k=0;k<8;k++)B.sparks.push({x:cx+(Math.random()-.5)*40,y:cy+(Math.random()-.5)*60,vx:(Math.random()-.5)*10,vy:-1-Math.random()*4,z:5+Math.random()*5,l:20+Math.random()*20|0,L:40});
+      B.fl.push({x:cx,y:GY-160,t:"-"+dmg,l:60});
+      await sleep(160);if(b.hp<=0){await fly(0,0,420);a.dfx[i]=null;return}}
   a.dflip[i]=true;await fly(0,0,560);a.dfx[i]=null;a.dflip[i]=false;
 }
 async function siphonFly(a,b,i,w){
