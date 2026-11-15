@@ -2257,7 +2257,7 @@ let DLT=0;
 /* ---------- daily card (Chaos-Drop style: tap to rank up / double) ---------- */
 const DC_CD=0/* ms between free cards; 0 = no wait while testing (24h = 864e5) */,DC_CH=[.52,.28,.14,.06]/* rank-up odds per rank: Common>Rare 52, Rare>Epic 28, Epic>Legendary 14, Legendary>Mythic 6 */,DC_COL=["#98a1ac","#2f8fff","#b05cff","#ff9a2e","#ff2a2a"],DC_SPL=[[1,70],[2,20],[4,8],[8,2]]/* FINAL card count of a run, rolled once: 1 card 70%, 2 cards 20%, 4 cards 8%, 8 cards 2% (taps only reveal the splits) */,DC_SHY=.015;
 const tierOf=c=>tier(c),dcReady=()=>Date.now()-(S.dcAt||0)>=DC_CD,dcWait=()=>{const m=Math.max(0,DC_CD-(Date.now()-(S.dcAt||0))),h=Math.floor(m/36e5),mi=Math.floor(m/6e4)%60,se=Math.floor(m/1e3)%60;return[h,mi,se].map(v=>String(v).padStart(2,"0")).join(":")};
-const dcHTML=()=>{const r=dcReady();return `<button class="sh dcb${r?"":" no"}" data-dcard="1"><div class="dcm">?</div><div class="dcl"><div class="dct">DAILY CARD</div><div class="dcs">Tap the card: every tap can rank it up, and has a 10% chance to double your cards.</div></div><div class="dcf">${r?"FREE":dcWait()}</div></button>`};
+const dcHTML=()=>{const r=dcReady();return `<button class="sh dcb${r?"":" no"}" data-dcard="1"><div class="dcm">?</div><div class="dcl"><div class="dct">DAILY CARD</div></div><div class="dcf">${r?"FREE":dcWait()}</div></button>`};
 /* ---------- daily card suspense music (Legendary and up): Chance 3 -> 2 -> 1 -> Chances Over ----------
    Chance 3 = 140 bpm, 64-beat loop. Chance 2 = the same music 5% faster (147 bpm), so beat N is the same beat in both.
    Chance 1 = 154 bpm, 72-beat loop; its beat N+7 is Chance 3's beat N (checked against the audio).
