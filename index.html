@@ -4778,7 +4778,7 @@ async function jbVolley(a,b,i,w){
   const co={nv:"ch",a,i,mk:i+"h0",t0:performance.now(),dur:1500,c:NVC.b,dir:dr,sz:1};B.nvx.push(co);playBuf("nvch",.9);await sleep(1500);B.nvx=B.nvx.filter(z=>z!==co);if(B.over||b.dead||b.hp<=0||a.dead)return;
   say(nm+" "+w.n+" fires!");
   const q=a.muz&&a.muz[i+"h0"]||a.muz[i]||[0,-60],x0=px(a.vx)+dr*q[0],y0=GY+q[1],tb=b.tbx,bx=px(b.vx!=null?b.vx:b.x),tx=tb?bx+fdir(b)*(tb[0]+tb[2]/2):bx,ty=tb?GY+tb[1]+tb[3]/2:GY-85,dl=Math.hypot(tx-x0,ty-y0)||1,ex=x0+(tx-x0)/dl*3000,ey=y0+(ty-y0)/dl*3000;
-  const bm={nv:"beam",a,i,mk:i+"h0",t0:performance.now(),dur:1100,c:NVC.b,dir:dr,tx,ty,ex,ey,sz:.8};B.nvx.push(bm);a.rc[i]=1.5;playBuf("nvf2",.9);B.shake=Math.max(B.shake||0,12);
+  const bm={nv:"beam",a,i,mk:i+"h0",t0:performance.now(),dur:1100,c:NVC.b,dir:dr,tx,ty,ex,ey,fw:9.5*MK/1.763};B.nvx.push(bm);a.rc[i]=1.5;playBuf("nvf2",.9);B.shake=Math.max(B.shake||0,12);
   if(!B.over&&!b.dead){const raw=w.dr[0]+Math.floor(Math.random()*(w.dr[1]-w.dr[0]+1)),dmg=RDM(a,b,w,raw,true);b.hp=Math.max(0,b.hp-dmg);if(w.ed){const l=Math.min(b.en,w.ed);b.en-=l}B.hit[foe]=.5;gotHit(false);B.fl.push({x:tx,y:GY-150,t:"-"+dmg,l:50});playBuf("nvg",.7);for(let k=0;k<10;k++)B.sparks.push({x:tx,y:ty+(Math.random()-.5)*30,vx:-dr*(1+Math.random()*4),vy:-1-Math.random()*4,z:5+Math.random()*4,l:14+Math.random()*12|0,L:26})}
   await sleep(1100);B.nvx=B.nvx.filter(z=>z!==bm);
 }
