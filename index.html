@@ -4724,22 +4724,20 @@ const NVC={b:["#d8f2ff","#1aa9ff","#1b5dff"],y:["#fff6c8","#ffd426","#ff9a00"],r
 async function flameVolley(a,b,i,w,hit){
   /* the APK flamethrower (BMEffectManager.flameThrowerHandler), 30 fps ticks: base glow on tick 1, then every 3rd tick until tick 50 one puff on the line (head position) and one random puff between tail and head; each puff plays flame1 stages 1-11 (3 ticks each) */
   const dr=fdir(a),nm=a==B.p?"Your":"Enemy";B.flx=B.flx||[];
-  const q0=a.muz&&a.muz[i]||[0,-60],mx=px(a.vx)+dr*q0[0],my=GY+q0[1],tb=b.tbx,bx=px(b.vx!=null?b.vx:b.x),tx=tb?bx+fdir(b)*(tb[0]+tb[2]/2):bx,D0=Math.max(90,Math.abs(tx-mx)),D=D0*1.8;
+  const q0=a.muz&&a.muz[i]||[0,-60],mx=px(a.vx)+dr*q0[0],my=GY+q0[1],tb=b.tbx,bx=px(b.vx!=null?b.vx:b.x),tx=tb?bx+fdir(b)*(tb[0]+tb[2]/2):bx,D=Math.max(90,Math.abs(tx-mx));
   say(nm+" "+w.n+" fires!");playBuf("flame",.8,1);a.rc[i]=1.2;
-  const L1=15,L2=20,L3=L2+2*L1,t00=performance.now();
-  for(let c=1;c<=L3;c++){
-    const tgt=t00+(c-1)*1000/30;while(performance.now()<tgt)await sleep(4);if(B.over||a.dead)return;
-    if(c==1)B.flx.push({base:1,x:mx,y:my,dir:dr,W:D,hold:L3-15,t0:performance.now(),dur:1800});
-    if(c<L3){
-      const L13=c>L2+L1?(c-(L2+L1))/L1*D:0,L14=c<L1?c/L1*D:D;
-      if(c%3==0){
-        const fl=Math.random()<.5,t0=performance.now();
-        B.flx.push({x:mx+dr*L14,y:my,sc:64+170*L14/D,flip:fl,t0,dur:1500});
-        const x2=mx+dr*(L13+Math.random()*(L14-L13));
-        B.flx.push({x:x2,y:my+Math.random()*10-5,sc:64+170*Math.abs(x2-mx)/D,flip:Math.random()<.5,t0,dur:1500})
-      }
-      if(c==30&&!B.over&&!b.dead){hit(0,tx);B.shake=Math.max(B.shake||0,6)}
-    }
+  const L1=15,L2=20,L3=L2+2*L1,t00=performance.now();let nx=0,k=0,hitDone=false;
+  B.flx.push({base:1,x:mx,y:my,dir:dr,W:D,hold:L3-15,t0:t00,dur:1800});
+  /* same spawn rate as the APK (2 puffs per 3 ticks) but spawned every ~1.5 ticks on the real clock, so the stream is continuous instead of clumped */
+  for(;;){
+    const c=(performance.now()-t00)*.03;if(c>=L3)break;if(B.over||a.dead)return;
+    while(nx<=c&&nx<L3){
+      const cc=Math.max(nx,1),L13=cc>L2+L1?(cc-(L2+L1))/L1*D:0,L14=cc<L1?cc/L1*D:D,t0=performance.now();
+      if(k%2==0)B.flx.push({x:mx+dr*L14,y:my,sc:64+170*L14/D,flip:Math.random()<.5,t0,dur:1500});
+      else{const x2=mx+dr*(L13+Math.random()*(L14-L13));B.flx.push({x:x2,y:my+Math.random()*10-5,sc:64+170*Math.abs(x2-mx)/D,flip:Math.random()<.5,t0,dur:1500})}
+      k++;nx+=1.5}
+    if(!hitDone&&c>=30&&!B.over&&!b.dead){hitDone=true;hit(0,tx);B.shake=Math.max(B.shake||0,6)}
+    await sleep(8)
   }
   await sleep(1300);
 }
