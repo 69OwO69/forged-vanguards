@@ -2842,9 +2842,9 @@ function draw(){hudUpdate();
     g.lineJoin="round";for(const [wd,col] of [[30,"rgba(60,140,255,"+(.3*al)+")"],[13,"rgba(150,210,255,"+(.8*al)+")"],[5,"rgba(255,255,255,"+al+")"]]){g.strokeStyle=col;g.lineWidth=wd*MK;g.beginPath();pts.forEach(([x,y],z)=>z?g.lineTo(x,y):g.moveTo(x,y));g.stroke()}
     for(let z=3;z<N-1;z+=4){const [x0,y0]=pts[z];g.strokeStyle="rgba(190,230,255,"+(.7*al)+")";g.lineWidth=2*MK;g.beginPath();g.moveTo(x0,y0);g.lineTo(x0+(rn(z+30)-.5)*110*MK,y0+(rn(z+40)*50+20)*MK);g.stroke()}
     g.restore()}
-  {B.flx=(B.flx||[]).filter(q=>now<q.t0+q.dur);for(const q of B.flx){const n=Math.floor((now-q.t0)*.03),kk=MK*.62;
-    if(q.base){if(!FLF.complete||!FLF.naturalWidth||n>=45)continue;const pr=n<15?n/15:n<35?1:1-(n-35)/10;g.save();g.globalAlpha=n<35?1:Math.max(0,1-.1*(n-34));g.translate(q.x,q.y);g.scale(q.dir,1);g.drawImage(FLF,-15.5*kk,-15.5*kk,31*kk+pr*q.W,31*kk);g.restore();continue}
-    const cur=Math.floor(n/3);if(cur<1||cur>11)continue;const im=FLI[cur-1];if(!im.complete||!im.naturalWidth)continue;const sc=q.sc/212*kk;g.save();g.translate(q.x,q.y);g.scale(q.flip?-sc:sc,sc);g.drawImage(im,-57,-137,im.naturalWidth/2,im.naturalHeight/2);g.restore()}}
+  {B.flx=(B.flx||[]).filter(q=>now<q.t0+q.dur);for(const q of B.flx){const nf=(now-q.t0)*.03,n=Math.floor(nf),kk=MK*.62;
+    if(q.base){if(!FLF.complete||!FLF.naturalWidth||nf>=q.hold+10)continue;const pr=nf<15?nf/15:nf<q.hold?1:Math.max(0,1-(nf-q.hold)/10);g.save();g.globalAlpha=nf<q.hold?1:Math.max(0,1-.1*(nf-q.hold+1));g.translate(q.x,q.y);g.scale(q.dir,1);g.drawImage(FLF,-15.5*kk,-15.5*kk,31*kk+pr*q.W,31*kk);g.restore();continue}
+    const ps=nf/3,cu=Math.floor(ps),fr=ps-cu,sc=q.sc/212*kk;for(const [st,al] of [[cu,1-fr],[cu+1,fr]]){if(st<1||st>11)continue;const im=FLI[st-1];if(!im.complete||!im.naturalWidth)continue;g.save();g.globalAlpha=al;g.translate(q.x,q.y);g.scale(q.flip?-sc:sc,sc);g.drawImage(im,-57,-137,im.naturalWidth/2,im.naturalHeight/2);g.restore()}}}
   {B.nvx=(B.nvx||[]).filter(q=>now<q.t0+q.dur+60);for(const q of B.nvx){const m_=q.a.muz&&q.a.muz[q.mk||q.i];if(!m_)continue;const x0=px(q.a.vx)+q.dir*m_[0],y0=GY+m_[1],age=now-q.t0,[c1,c2,c3]=q.c;g.save();g.globalCompositeOperation="lighter";
    if(q.nv=="ch"){const k=Math.min(1,age/q.dur),R=(6+k*k*34+Math.sin(age/55)*2*k)*(q.sz||1);for(const [rr,col,al] of [[R*2.4,c3,.35],[R*1.5,c2,.6],[R*.7,c1,.95]]){const gr=g.createRadialGradient(x0,y0,0,x0,y0,rr);gr.addColorStop(0,col);gr.addColorStop(1,"rgba(0,0,0,0)");g.globalAlpha=al*Math.min(1,k*3+.15);g.fillStyle=gr;g.beginPath();g.arc(x0,y0,rr,0,7);g.fill()}
     if(q.spr&&PRJI[q.spr]&&PRJI[q.spr].complete){const z=R*2.6;g.globalAlpha=Math.min(1,k*3+.2);g.drawImage(PRJI[q.spr],x0-z*.42,y0-z*.5,z*.84,z)}
@@ -4724,12 +4724,12 @@ const NVC={b:["#d8f2ff","#1aa9ff","#1b5dff"],y:["#fff6c8","#ffd426","#ff9a00"],r
 async function flameVolley(a,b,i,w,hit){
   /* the APK flamethrower (BMEffectManager.flameThrowerHandler), 30 fps ticks: base glow on tick 1, then every 3rd tick until tick 50 one puff on the line (head position) and one random puff between tail and head; each puff plays flame1 stages 1-11 (3 ticks each) */
   const dr=fdir(a),nm=a==B.p?"Your":"Enemy";B.flx=B.flx||[];
-  const q0=a.muz&&a.muz[i]||[0,-60],mx=px(a.vx)+dr*q0[0],my=GY+q0[1],tb=b.tbx,bx=px(b.vx!=null?b.vx:b.x),tx=tb?bx+fdir(b)*(tb[0]+tb[2]/2):bx,D=Math.max(90,Math.abs(tx-mx));
+  const q0=a.muz&&a.muz[i]||[0,-60],mx=px(a.vx)+dr*q0[0],my=GY+q0[1],tb=b.tbx,bx=px(b.vx!=null?b.vx:b.x),tx=tb?bx+fdir(b)*(tb[0]+tb[2]/2):bx,D0=Math.max(90,Math.abs(tx-mx)),D=D0*1.8;
   say(nm+" "+w.n+" fires!");playBuf("flame",.8,1);a.rc[i]=1.2;
   const L1=15,L2=20,L3=L2+2*L1,t00=performance.now();
   for(let c=1;c<=L3;c++){
     const tgt=t00+(c-1)*1000/30;while(performance.now()<tgt)await sleep(4);if(B.over||a.dead)return;
-    if(c==1)B.flx.push({base:1,x:mx,y:my,dir:dr,W:D,t0:performance.now(),dur:1600});
+    if(c==1)B.flx.push({base:1,x:mx,y:my,dir:dr,W:D,hold:L3-15,t0:performance.now(),dur:1800});
     if(c<L3){
       const L13=c>L2+L1?(c-(L2+L1))/L1*D:0,L14=c<L1?c/L1*D:D;
       if(c%3==0){
