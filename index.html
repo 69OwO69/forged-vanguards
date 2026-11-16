@@ -4165,7 +4165,7 @@ async function shoot0(a,b,i){
     const nh_=w.alt?(()=>{let c=0;while(a.muz[i+"h"+c])c++;return c})():0,rk_=Math.random()*nh_|0,mz=w.alt&&nh_>1&&a.muz[i+"h"+(w.ralt?rk_:s%nh_)]||(w.bolt&&s%2&&a.muz[i+"b"])||a.muz[i],x0=px(a.vx)+(mz?dr*mz[0]:0),x1=px(b.x)+(w.behind?dr*TS*.2:0)+(w.shotgun?(Math.random()-.5)*34:0),y=(mz?GY+mz[1]+(s%2?1:-1)*(mz[2]||0):GY-52)+(w.shotgun?(Math.random()-.5)*2:0);
     if(w.shell){a.shl=a.shl||[];const sx=7+(Math.random()*5-2.5),pt=a.port&&a.port[i];let lx_=pt?pt[0]:(mz?mz[0]/MK:0),ly_=pt?pt[1]:(mz?mz[1]/MK:-60);a.shl.push({wi:i,x:lx_,y:ly_,vx:-sx*.27/MK,vy:(Math.random()*20-10)*.14/MK-.5,fy:Math.random()*2,r:Math.random()*6.28,vr:(Math.random()-.5)*.3,t0:performance.now(),lt:performance.now(),life:1000+Math.random()*500})}
     a.mfl=a.mfl||[];if(w.mfl){const nw=performance.now(),bb=a.mfl[i]=a.mfl[i]||[];if(w.ralt){bb[rk_]=nw}else if(w.wall){const ph=(s%16)/8,tr=ph<1?ph:2-ph,cy=w.wy?w.wy[0]+(w.wy[1]-w.wy[0])*tr:27+41*tr;for(let q=0;q<w.mfl.length;q++)if(Math.abs(w.mfl[q][1]-cy)<=6.5)bb[q]=nw}else{if(w.mfn){for(let k=0;k<w.mfn;k++)bb[Math.random()*w.mfl.length|0]=nw}else for(let q=0;q<w.mfl.length;q++)if(w.shotgun||w.mfall||Math.random()<.45)bb[q]=nw;if(!bb.some(t=>nw-t<5))bb[Math.random()*w.mfl.length|0]=nw}}a.rc[i]=rapid?.5:(w.rcv||1);if((w.shotgun&&s==0)||w.smoke){a.pmT=a.pmT||[];a.pmT[i]=performance.now();if(w.snd2&&s==0)playBuf(w.snd2,1.3)}if(w.snp)playBuf(w.snp,.5,.9+Math.random()*.2);if(!rapid&&!(w.shotgun&&s>0))w.snd?playBuf(w.snd,w.shotgun?.45:1,1,w.sndMax||0):sfx(260,.15);
-    if(w.bolt){B.bolts=B.bolts||[];const bt=mkBolt(x0,y,x1+dr*(10+Math.random()*30),GY-60-Math.random()*80);if(w.bc=="r")bt.red=1;B.bolts.push(bt);hit(s,x1)}else if(rapid&&!w.pj)hit(s,x1);else{const gy1=w.behind?GY-40-Math.random()*45:null,p={x0,x1,y,y1:gy1!=null?gy1:(w.pj?GY-50-Math.random()*30:null),t0:performance.now(),dur:DUR,c:w.pj?w.pc:w.c,pimg:w.pj,s:w.pj?w.ps:undefined,arc:w.arc,rapid,fx:w.fx,fo:w.fo,fxo:w.fxo,msh:w.msh,gty:w.ty,dir:dr};if(!w.shotgun)B.projs.push(p);
+    if(w.bolt){B.bolts=B.bolts||[];const bt=mkBolt(x0,y,x1+dr*(10+Math.random()*30),GY-60-Math.random()*80);if(w.bc=="r")bt.red=1;B.bolts.push(bt);hit(s,x1)}else if(rapid&&!w.pj)hit(s,x1);else{const gy1=w.behind?GY-40-Math.random()*45:null,p={x0,x1,y,y1:gy1!=null?gy1:(w.pj?aimY(b):null),t0:performance.now(),dur:DUR,c:w.pj?w.pc:w.c,pimg:w.pj,s:w.pj?w.ps:undefined,arc:w.arc,rapid,fx:w.fx,fo:w.fo,fxo:w.fxo,msh:w.msh,gty:w.ty,dir:dr};if(!w.shotgun)B.projs.push(p);
     if(w.shotgun)hit(s,x1);else setTimeout(()=>{if(w.behind&&!B.over){B.boom.push({x:x1,y:gy1,t0:performance.now(),s:1.1});B.shake=Math.max(B.shake||0,14)}hit(s,x1)},DUR*(w.hitAt||1));setTimeout(()=>{B.projs=B.projs.filter(q=>q!==p)},DUR)}
     if(s<n-1)await sleep(gap);
   }
@@ -4802,6 +4802,8 @@ async function novaVolley(a,b,i,w,hit){
   await sleep(150);
 }
 
+/* projectile aim: somewhere on the target's torso (never the legs) */
+function aimY(b){const tb=b&&b.tbx;return tb?GY+tb[1]+tb[3]*(.15+Math.random()*.7):GY-60-Math.random()*55}
 async function wipeVolley(a,b,i,w,hit){
   const dr=fdir(a),n=w.shots||1,nb=w.nb||1,nm=a==B.p?"Your":"Enemy";let done=0,fired=0;B.projs=B.projs||[];say(nm+" "+w.n+(w.chgG?" is charging...":" fires!"));
   const mzW=s=>{const q=a.muz&&(a.muz[i+"h"+(w.mzs?w.mzs[s]:s%nb)]||a.muz[i])||[0,-60];return[px(a.vx)+dr*q[0],GY+q[1]]};
@@ -4855,7 +4857,7 @@ async function projFire(a,b,i,w){
   for(let k=0;k<n&&!B.over&&b.hp>0&&!a.dead&&a.hp>0;k++){
     if(w.chEach){B.nvx=B.nvx||[];say(nm+" "+w.n+" is charging...");const co={nv:"ch",a,i,mk:i+"h"+w.mzs[k%w.mzs.length],t0:performance.now(),dur:1500,c:NVC[w.chc||"y"],dir:dr,sz:1};B.nvx.push(co);playBuf("nvch",.9);await sleep(1500);B.nvx=B.nvx.filter(z=>z!==co);if(B.over||b.dead||b.hp<=0||a.dead)break}
     fired++;
-    const[x0,y0]=pt(k),x1=px(b.vx!=null?b.vx:b.x)-dr*(14+Math.random()*16),y1=GY-40-Math.random()*95,dur=ch?330:240+Math.random()*40;
+    const[x0,y0]=pt(k),x1=px(b.vx!=null?b.vx:b.x)-dr*(14+Math.random()*16),y1=aimY(b),dur=ch?330:240+Math.random()*40;
     a.rc[i]=1.2;if(w.ss)playBuf(w.ss,.8,(w.sb||1)*(w.sp?1+(Math.random()*2-1)*w.sp:1));else if(w.ss1){}else if(!ch)playBuf(DKS[w.dk],n>1?.45:.8,.95+Math.random()*.1);if(w.dshl){const bx_=a.gb&&a.gb[i];a.shl=a.shl||[];a.shl.push({wi:i,dsh:1,x:bx_?(bx_[0]+8)/MK:0,y:bx_?(bx_[1]+bx_[3])/2/MK:-120,vx:-(1.0+Math.random()*.5),vy:-(.7+Math.random()*.9),fy:Math.random()*2,r:Math.random()*6.28,vr:(Math.random()-.5)*.35,t0:performance.now(),lt:performance.now(),life:3300+Math.random()*300})}
     B.projs.push({glow:1,x0,y:y0,t0:performance.now(),dur:150,c:rgb,dir:dr,s:ch?1.8:1});
     const pr={x0,x1,y:y0,y1,t0:performance.now(),dur,dir:dr,pimg:w.pj||pj,s:w.ps||(ch?1.9:1),c:rgb};B.projs.push(pr);
@@ -4875,7 +4877,7 @@ const dur0=w=>/ch$/.test(w.dk)?340:260;
 async function scopeVolley(a,b,i,w){
   const dr=fdir(a),foe=b==B.p?"p":"e",nm=a==B.p?"Your":"Enemy",n=3,RS={c:0,d:0},PL=RSI(RS,RPL(w,n)),pj=DKP[w.dk],rgb=DKC[pj];let tot=0,done=0,fired=0;B.nvx=B.nvx||[];B.projs=B.projs||[];
   const mz=k=>{const q=a.muz&&(a.muz[i+"h"+k]||a.muz[i])||[0,-60];return[px(a.vx)+dr*q[0],GY+q[1]]};
-  const tgt=()=>[px(b.vx!=null?b.vx:b.x)-dr*(14+Math.random()*16),GY-40-Math.random()*95];
+  const tgt=()=>[px(b.vx!=null?b.vx:b.x)-dr*(14+Math.random()*16),aimY(b)];
   const land=(k,x1,y1,dur,last)=>setTimeout(()=>{done++;if(B.over||b.dead)return;
     const dmg=RDM(a,b,w,PL[Math.min(k,PL.length-1)],last,RS);b.hp=Math.max(0,b.hp-dmg);tot+=dmg;
     if(last){if(w.hd)b.heat+=w.hd;if(w.ed){const l=Math.min(b.en,w.ed);b.en-=l}if(w.cd&&b.cool>1){b.cool-=Math.min(b.cool-1,w.cd)}if(w.erd&&b.enMax>1){b.enMax-=Math.min(b.enMax-1,w.erd)}if(w.hcd&&b.hc>2){b.hc-=Math.min(b.hc-2,w.hcd)}if(w.ecd&&b.enCap>2){const l=Math.min(b.enCap-2,w.ecd);b.enCap-=l;b.en=Math.min(b.en,b.enCap)}}
@@ -4904,7 +4906,7 @@ async function scopeVolley(a,b,i,w){
 async function eyeVolley(a,b,i,w){
   const dr=fdir(a),foe=b==B.p?"p":"e",nm=a==B.p?"Your":"Enemy",n=2,RS={c:0,d:0},PL=RSI(RS,RPL(w,n)),pj=DKP[w.dk],rgb=DKC[pj];let tot=0,done=0,fired=0;B.nvx=B.nvx||[];B.projs=B.projs||[];
   const mz=k=>{const q=a.muz&&(a.muz[i+"h"+k]||a.muz[i])||[0,-60];return[px(a.vx)+dr*q[0],GY+q[1]]};
-  const tgt=()=>[px(b.vx!=null?b.vx:b.x)-dr*(14+Math.random()*16),GY-40-Math.random()*95];
+  const tgt=()=>[px(b.vx!=null?b.vx:b.x)-dr*(14+Math.random()*16),aimY(b)];
   const land=(k,x1,y1,dur,last)=>setTimeout(()=>{done++;if(B.over||b.dead)return;
     const dmg=RDM(a,b,w,PL[Math.min(k,PL.length-1)],last,RS);b.hp=Math.max(0,b.hp-dmg);tot+=dmg;
     if(last){if(w.hd)b.heat+=w.hd;if(w.ed){const l=Math.min(b.en,w.ed);b.en-=l}if(w.cd&&b.cool>1){b.cool-=Math.min(b.cool-1,w.cd)}if(w.erd&&b.enMax>1){b.enMax-=Math.min(b.enMax-1,w.erd)}if(w.hcd&&b.hc>2){b.hc-=Math.min(b.hc-2,w.hcd)}if(w.ecd&&b.enCap>2){const l=Math.min(b.enCap-2,w.ecd);b.enCap-=l;b.en=Math.min(b.en,b.enCap)}}
