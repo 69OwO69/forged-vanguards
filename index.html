@@ -1644,13 +1644,17 @@ function mushDraw(g){const now=performance.now();B.mush=B.mush.filter(q=>now-q.t
     if(MUSHI.fire.complete&&MUSHI.fire.naturalWidth)for(const f of MUSHF){const sz=193*sc*f[2]*(.25+.75*cg),ox=f[0]*sc*cg*(1+.25*k),oy=f[1]*sc*cg*(1+.18*k);g.save();g.translate(cx+ox,cy+oy);g.rotate(f[3]+k*.5*(f[3]<0?-1:1));g.drawImage(MUSHI.fire,-sz/2,-sz/2,sz,sz);g.restore()}
     if(age<200){const r=260*sc*(.4+age/200),gr=g.createRadialGradient(q.x,q.y-60*sc,0,q.x,q.y-60*sc,r);gr.addColorStop(0,"rgba(255,250,220,"+(.9*(1-age/200))+")");gr.addColorStop(1,"rgba(255,170,60,0)");g.globalCompositeOperation="lighter";g.globalAlpha=1;g.fillStyle=gr;g.fillRect(q.x-r,q.y-60*sc-r,r*2,r*2)}
     g.restore()}}
+function rgEyes(g,e,x,y,rot,k){const w=e.h*e.img.naturalWidth/e.img.naturalHeight,now=performance.now(),pu=.85+.15*Math.sin(now/90);g.save();g.translate(x,y);g.rotate(rot);g.globalCompositeOperation="lighter";if("filter" in g)g.filter="none";
+  for(const [nx,ny] of [[.879,.549],[.975,.549]]){const px_=(nx-e.ax)*w,py_=(ny-e.ay)*e.h,r=e.h*(.06+.06*k)*pu,gr=g.createRadialGradient(px_,py_,0,px_,py_,r);gr.addColorStop(0,"rgba(255,235,170,"+(.9*k)+")");gr.addColorStop(.3,"rgba(255,90,20,"+(.6*k)+")");gr.addColorStop(1,"rgba(255,30,0,0)");g.fillStyle=gr;g.fillRect(px_-r,py_-r,r*2,r*2)}
+  g.restore()}
 function rgDraw(g){const r=B.rgv;if(!r||r.k<=0)return;const m=g.getTransform(),c=g.canvas,pt=m.transformPoint({x:r.cx,y:r.cy}),R0=c.height*.2,R1=c.width*.52,gr=g.createRadialGradient(pt.x,pt.y,R0,pt.x,pt.y,R1);gr.addColorStop(0,"rgba(0,0,0,0)");gr.addColorStop(.5,"rgba(0,0,0,"+(.55*r.k)+")");gr.addColorStop(1,"rgba(0,0,0,"+(.93*r.k)+")");
   g.save();g.setTransform(1,0,0,1,0,0);if("filter" in g)g.filter="none";g.globalCompositeOperation="source-over";g.globalAlpha=1;g.fillStyle=gr;g.fillRect(0,0,c.width,c.height);g.restore()}
-async function regretAnim(a,b,i,onHit,w){
+async function regretAnim(a,b,i,onHit,w){a.rge=a.rge||[];try{await regretAnim0(a,b,i,onHit,w)}finally{a.rge[i]=0}}
+async function regretAnim0(a,b,i,onHit,w){
   const rg=B.rgv={cx:(px(a.vx)+px(b.vx!=null?b.vx:b.x))/2,cy:GY-85*MK,k:0},clear=async(ms)=>{const k0=rg.k,t0=performance.now();for(;;){const q=Math.min(1,(performance.now()-t0)/ms);rg.k=k0*(1-q);if(q>=1)break;await sleep(16)}if(B.rgv===rg)B.rgv=null};
   sfx(150,.14,"sawtooth");await swUp(a,i,1.2);a.aim=a.aim||[];
   const CHG=2400,t0=performance.now();playBuf("rgChg",1);
-  for(;;){const k=Math.min(1,(performance.now()-t0)/CHG);rg.k=Math.min(1,k*1.25);a.aim[i]=1.35+.2*k+(Math.random()-.5)*.04*k;B.shake=Math.max(B.shake||0,1+3*k*k);if(k>=1)break;await sleep(16);if(B.over||b.dead||a.dead){B.rgv=null;return}}
+  for(;;){const k=Math.min(1,(performance.now()-t0)/CHG);rg.k=Math.min(1,k*1.25);a.rge[i]=Math.min(1,k*1.5);a.aim[i]=1.35+.2*k+(Math.random()-.5)*.04*k;B.shake=Math.max(B.shake||0,1+3*k*k);if(k>=1)break;await sleep(16);if(B.over||b.dead||a.dead){B.rgv=null;return}}
   sfx(620,.16,"sawtooth");await swRec(a,i,a.aim[i],.15,90);B.shake=Math.max(B.shake||0,9);onHit(0);
   if(B.over||b.dead||b.hp<=0||a.dead){await swRec(a,i,.15,0,300);await clear(300);return}
   const h0=performance.now();while(performance.now()-h0<1000){a.aim[i]=.15+(Math.random()-.5)*.012;if(B.over||b.dead||a.dead)break;await sleep(16)}
@@ -1925,7 +1929,7 @@ function drawParts(g,m,tm){
     if(m.shl&&m.shl.length){const nw_=performance.now();for(const q of m.shl){if(q.wi!==wi||!q.dsh)continue;const dt=Math.min(3,(nw_-q.lt)/16.67);q.lt=nw_;q.vy+=.11/MK*dt;if(q.y+q.vy*dt>=q.fy){q.y=q.fy;q.vy*=-.4;q.vx*=.6;if(!q.g){q.g=1;playBuf("shd",.8,.9+Math.random()*.2)}}q.x+=q.vx*dt;q.y+=q.vy*dt;q.r+=q.vr*dt;const ag=nw_-q.t0;g.save();if("filter" in g)g.filter="none";g.globalAlpha=Math.max(0,Math.min(1,(q.life-ag)/160));g.translate(q.x,q.y);g.rotate(q.r);g.drawImage(SHL,-6.8,-3.7,13.6,7.4);g.restore()}}
     if(e&&m.trl&&m.trl[wi]){const nw=performance.now();for(const q of m.trl[wi]){const age=nw-q.t;if(age>0&&age<170){g.globalAlpha=.4*(1-age/170);sp(g,e,mx+ox,my+oy,e.h,sw*.02-q.a,1)}}g.globalAlpha=1}
     if(e&&m.dflip&&m.dflip[wi]){const fx_=mx+ox,fy_=my+oy;g.translate(fx_,fy_);g.scale(-1,1);g.translate(-fx_,-fy_)}
-    if(e){if(W[id].scythe)scyCap(m,wi,g,e,mx+ox,my+oy,sw*.02+rt);if(!e.brl)sp(g,W[id].scythe?scyEv(m,wi,e):e,mx+ox,my+oy,e.h,sw*.02+rt);if(id==15&&m.wshn&&m.wshn[wi]&&!back)shnShine(g,e,mx+ox,my+oy,sw*.02+rt);if(id==333&&m.wshn&&m.wshn[wi]&&!back)ysStatic(g,e,mx+ox,my+oy,sw*.02+rt)}
+    if(e){if(W[id].scythe)scyCap(m,wi,g,e,mx+ox,my+oy,sw*.02+rt);if(!e.brl)sp(g,W[id].scythe?scyEv(m,wi,e):e,mx+ox,my+oy,e.h,sw*.02+rt);if(id==15&&m.wshn&&m.wshn[wi]&&!back)shnShine(g,e,mx+ox,my+oy,sw*.02+rt);if(id==333&&m.wshn&&m.wshn[wi]&&!back)ysStatic(g,e,mx+ox,my+oy,sw*.02+rt);if(id==336&&m.rge&&m.rge[wi]>0&&!back)rgEyes(g,e,mx+ox,my+oy,sw*.02+rt,m.rge[wi])}
     if(e&&e.sph)spnDraw(g,e,m,wi,mx+ox,my+oy,sw*.02+rt);
     if(m.etF&&m.etF[wi]){const ef=m.etF[wi],k=(performance.now()-ef.t0)/ef.dur;if(k>=1)m.etF[wi]=null;else if(k>=0){const fi=FLM[Math.min(FLM.length-1,Math.floor(k*FLM.length))],mzq=m.muz[wi+"h0"]||m.muz[wi];if(fi&&fi.complete&&mzq){g.save();if("filter" in g)g.filter="none";g.translate(mzq[0],mzq[1]);g.rotate(ef.rot||0);g.drawImage(fi,-14*ef.sc*MK,-82*ef.sc*MK,129*ef.sc*MK,129*ef.sc*MK);g.restore()}}}
     if(e&&e.brl)brlDraw(g,e,m,wi,mx+ox,my+oy,sw*.02+rt);
