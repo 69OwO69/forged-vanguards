@@ -4089,7 +4089,9 @@ try{if(!S.gj7){S.gj7=1;addI("t",7,true);save();if(typeof head=="function")setTim
  $("sm").onclick=()=>{S.mute=!S.mute;save();const inB=B&&!$("battle").classList.contains("hide");S.mute?(stopMusic(),lobbyOff()):inB?startMusic():lobbyOn();lab()};$("sx").onclick=()=>{S.nosfx=!S.nosfx;save();lab();if(!S.nosfx)playBuf("click")};gear()})();
 
 $("mu").onclick=()=>{S.mute=!S.mute;save();if(S.mute){stopMusic();$("mu").textContent="Music: off"}else{$("mu").textContent="Music: on";const inB=B&&!$("battle").classList.contains("hide");if(inB)startMusic();else{stopMusic();if(typeof lobbyOn=="function")lobbyOn();else startMusic()}}};
-const legal=(a,b,i)=>{const w=a.weps[i],d=Math.abs(a.x-b.x);return !B.over&&!a.dead&&a.hp>0&&!b.dead&&!w.drone&&!a.used[i]&&!(w.uses&&!w.hook&&!w.chrg&&((a.wuse&&a.wuse[i])||0)>=w.uses)&&a.en>=w.en&&(a.am||0)>=(w.am||0)&&(a.ra||0)>=(w.ra||0)&&d>=w.min&&d<=w.max};
+/* Yoshimo Blade needs a free tile on the far side of the target; at the edge of the map (or with another mech behind it) the target counts as out of range */
+const ysFar=(a,b)=>{const sg=Math.sign(b.x-a.x),nx=b.x+sg;return sg&&nx>=0&&nx<=MAXT&&![B.p,B.e,...(B.sms||[])].some(o=>o&&o!==a&&!o.dead&&!o.gone&&o.x==nx)?nx:null};
+const legal=(a,b,i)=>{const w=a.weps[i],d=Math.abs(a.x-b.x);return !B.over&&!a.dead&&a.hp>0&&!b.dead&&!w.drone&&!a.used[i]&&!(w.uses&&!w.hook&&!w.chrg&&((a.wuse&&a.wuse[i])||0)>=w.uses)&&a.en>=w.en&&(a.am||0)>=(w.am||0)&&(a.ra||0)>=(w.ra||0)&&d>=w.min&&d<=w.max&&(!w.ysw||ysFar(a,b)!=null)};
 const BAR={en:0,ht:12,dmg:3,stag:32},swordIdx=m=>m.weps.map((w,i)=>w.melee?i:-1).filter(i=>i>=0),
 canBar=(a,b)=>{const sw=swordIdx(a);return !B.over&&sw.length>=4&&sw.slice(0,4).every(i=>legal(a,b,i))&&a.en>=BAR.en};
 async function tween(a,i,f,t,D){const t0=performance.now();for(;;){const k=Math.min(1,(performance.now()-t0)/D);a.aim[i]=f+(t-f)*k;if(k>=1)return;await sleep(16)}}
@@ -4928,8 +4930,7 @@ async function yoshiAnim(a,b,i,onHit,w){
   const tb=b.tbx,U=MK,cx=px(b.vx!=null?b.vx:b.x)+(tb?fdir(b)*(tb[0]+tb[2]/2):0),cy=tb?GY+tb[1]+tb[3]/2:GY-85*U*.6,R=tb?Math.max(tb[2],tb[3]):100*U;
   const y=B.ys={b,cx,cy,R,s:[],fade:0};
   try{
-    const sg=Math.sign(b.x-a.x),nx=b.x+sg;
-    if(sg&&nx>=0&&nx<=MAXT&&![B.p,B.e,...(B.sms||[])].some(o=>o&&o!==a&&!o.dead&&!o.gone&&o.x==nx)){a.x=nx;a.vx=nx}
+    const nx=ysFar(a,b);if(nx!=null){a.x=nx;a.vx=nx}
     await sleep(2000);
     for(let k=0;k<24;k++){if(B.over||b.dead)break;
       y.s.push({t0:performance.now(),ang:Math.random()*Math.PI,len:R*(2+Math.random()*1.8),ox:(Math.random()-.5)*R*.7,oy:(Math.random()-.5)*R*.7,w:1.6+Math.random()*2});
