@@ -4747,7 +4747,7 @@ const rsOf=(b,w)=>(b&&b.rs&&b.rs[RTY(w)])||0;
 /* total-damage roll: the whole attack rolls ONE number (per-hit range x hits), then splits it across the hits */
 const RPL=(w,n)=>{n=Math.max(1,n||1);let t;if(w.dr){const lo_=Math.round(w.dr[0]*n),hi_=Math.round(w.dr[1]*n);t=lo_+Math.floor(Math.random()*(hi_-lo_+1))}else t=Math.round(w.dmg*n*(.9+Math.random()*.2));const q=Math.floor(t/n),r=t-q*n,a=Array(n).fill(q);for(let i=0;i<r;i++)a[n-1-i]++;return a};/* lowest hits first, the bumped-up (highest) hits land last */
 const RSI=(st,pl)=>{st.T=pl.reduce((x,y)=>x+y,0);st.n=pl.length;st.j=0;return pl};
-const DTX=(rg,n,u)=>{const lo=Math.round(rg[0]*n),hi=Math.round(rg[1]*n),t=lo==hi?""+lo:lo+"-"+hi;return n>1?t+" ("+n+" "+(u||"hits")+")":t};
+const DTX=(rg,n,u)=>{const lo=Math.round(rg[0]*n),hi=Math.round(rg[1]*n),t=lo==hi?""+lo:lo+"-"+hi;return t};
 const RDM0=(a,b,w,raw,last,st)=>{if(!st)return Math.max(1,Math.floor((raw*OVM(a)-(last?rsOf(b,w):0))*(1-(b.res||0)/100)));
   /* even split: the whole volley's damage after flat resistance and armor % is worked out once, then divided evenly over the hits (the remainder lands on the last hits), so no hit shows 0 unless the total is smaller than the hit count */
   const R=rsOf(b,w),k=1-(b.res||0)/100,n=Math.max(1,st.n||1),T=(st.T!=null?st.T:raw*n)*OVM(a);
