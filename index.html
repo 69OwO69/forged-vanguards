@@ -4822,9 +4822,8 @@ async function reinVolley(a,b,i,w,hit){
   say(nm+" "+w.n+" fires!");
   const [tx,ty]=tg(),bms=[],T0=performance.now();
   for(let k=0;k<nb;k++){const bm={a,i,mk:nb>1?i+"h"+k:undefined,t0:T0,dur:1300,dir:dr,tx,ty,col:w.nova=="b"?"b":"r",size:w.bsz||2};B.rbm.push(bm);bms.push(bm)}
-  a.rc[i]=1.5;
   await sleep(333);
-  if(!B.over&&!b.dead){playBuf("nvf2",.9);B.shake=Math.max(B.shake||0,9);for(let k=0;k<nb;k++){hit(k,tx);if(k==0)playBuf("nvg",.9)}for(let q=0;q<10;q++)B.sparks.push({x:tx,y:ty+(Math.random()-.5)*30,vx:-dr*(1+Math.random()*4),vy:-1-Math.random()*4,z:5+Math.random()*4,l:14+Math.random()*12|0,L:26})}
+  if(!B.over&&!b.dead){a.rc[i]=1.5;playBuf("nvf2",.9);B.shake=Math.max(B.shake||0,9);for(let k=0;k<nb;k++){hit(k,tx);if(k==0)playBuf("nvg",.9)}for(let q=0;q<10;q++)B.sparks.push({x:tx,y:ty+(Math.random()-.5)*30,vx:-dr*(1+Math.random()*4),vy:-1-Math.random()*4,z:5+Math.random()*4,l:14+Math.random()*12|0,L:26})}
   await sleep(960);B.rbm=B.rbm.filter(q=>!bms.includes(q));
   {const t0=performance.now(),f=a.aim[i]||0,D=320;for(;;){const k=Math.min(1,(performance.now()-t0)/D);a.aim[i]=f*(1-k);if(k>=1)break;await sleep(16)}}
   await sleep(100)}
