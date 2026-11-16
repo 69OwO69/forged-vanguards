@@ -4918,7 +4918,7 @@ function ysDraw(g){const y=B.ys,now=performance.now();if(!y)return;const al=y.fa
   for(const s of y.s){const age=now-s.t0;if(age<0||age>380)continue;const head=Math.min(1,age/40),tail=age>70?Math.min(1,(age-70)/310):0;if(tail>=head)continue;
     const dx=Math.cos(s.ang),dy=Math.sin(s.ang),x0=y.cx+s.ox-dx*s.len/2,y0=y.cy+s.oy-dy*s.len/2,ax=x0+dx*s.len*tail,ay=y0+dy*s.len*tail,bx=x0+dx*s.len*head,by=y0+dy*s.len*head,mx=(ax+bx)/2,my=(ay+by)/2,nx=-dy,ny=dx,ww=s.w*(1-tail*.5)*U*2,fa=Math.max(0,1-tail*.9);
     g.globalAlpha=al*fa;g.shadowColor="#9fd0ff";g.shadowBlur=16*U;g.fillStyle="#fff";g.beginPath();g.moveTo(ax,ay);g.quadraticCurveTo(mx+nx*ww,my+ny*ww,bx,by);g.quadraticCurveTo(mx-nx*ww,my-ny*ww,ax,ay);g.fill();
-    g.shadowBlur=0;g.strokeStyle="#fff";g.lineWidth=Math.max(1,1.6*U);g.beginPath();g.moveTo(ax,ay);g.lineTo(bx,by);g.stroke();
+    g.shadowBlur=0;g.strokeStyle="#fff";g.lineWidth=Math.max(1,1.1*U);g.beginPath();g.moveTo(ax,ay);g.lineTo(bx,by);g.stroke();
     if(age<90){const r=(40+s.len*.18)*U*(1-age/90);const gr=g.createRadialGradient(y.cx+s.ox,y.cy+s.oy,0,y.cx+s.ox,y.cy+s.oy,r);gr.addColorStop(0,"rgba(255,255,255,.45)");gr.addColorStop(1,"rgba(255,255,255,0)");g.globalAlpha=al;g.fillStyle=gr;g.fillRect(y.cx+s.ox-r,y.cy+s.oy-r,r*2,r*2)}}
   g.restore()}
 async function yoshiAnim(a,b,i,onHit,w){
@@ -4930,9 +4930,10 @@ async function yoshiAnim(a,b,i,onHit,w){
   try{
     const sg=Math.sign(b.x-a.x),nx=b.x+sg;
     if(sg&&nx>=0&&nx<=MAXT&&![B.p,B.e,...(B.sms||[])].some(o=>o&&o!==a&&!o.dead&&!o.gone&&o.x==nx)){a.x=nx;a.vx=nx}
+    await sleep(2000);
     for(let k=0;k<24;k++){if(B.over||b.dead)break;
-      y.s.push({t0:performance.now(),ang:Math.random()*Math.PI,len:R*(2+Math.random()*1.8),ox:(Math.random()-.5)*R*.7,oy:(Math.random()-.5)*R*.7,w:4+Math.random()*5});
-      playBuf("ysCut",.85,.9+Math.random()*.2);onHit(k);B.shake=Math.max(B.shake||0,4);await sleep(100)}
+      y.s.push({t0:performance.now(),ang:Math.random()*Math.PI,len:R*(2+Math.random()*1.8),ox:(Math.random()-.5)*R*.7,oy:(Math.random()-.5)*R*.7,w:1.6+Math.random()*2});
+      playBuf("ysCut",.4,.9+Math.random()*.2);onHit(k);B.shake=Math.max(B.shake||0,4);await sleep(60)}
     await sleep(220);y.fade=performance.now();await sleep(500)}
   finally{if(B.ys===y)B.ys=null}}
 /* Rein / Termination beams: no charge, a square-ended beam straight out of each barrel; twins fire both beams at the same instant */
