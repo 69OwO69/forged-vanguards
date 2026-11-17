@@ -5366,7 +5366,7 @@ async function flameVolley(a,b,i,w,hit){
   /* the APK flamethrower (BMEffectManager.flameThrowerHandler), 30 fps ticks: base glow on tick 1, then every 3rd tick until tick 50 one puff on the line (head position) and one random puff between tail and head; each puff plays flame1 stages 1-11 (3 ticks each) */
   const dr=fdir(a),nm=a==B.p?"Your":"Enemy";B.flx=B.flx||[];
   const q0=a.muz&&a.muz[i]||[0,-60],mx=px(a.vx)+dr*q0[0],my=GY+q0[1],tb=b.tbx,bx=px(b.vx!=null?b.vx:b.x),tx=tb?bx+fdir(b)*(tb[0]+tb[2]/2):bx,D=Math.max(90,Math.abs(tx-mx));
-  say(nm+" "+w.n+" fires!");playBuf("flame",.8,1);if(w.fsx)playBuf(w.fsx,.8,.9);a.rc[i]=1.2;
+  say(nm+" "+w.n+" fires!");playBuf("flame",.8,1);if(w.fsx)playBuf(w.fsx,.8,.9);
   const L1=15,L2=20,L3=L2+2*L1,t00=performance.now();let nx=0,k=0,hitDone=false;
   B.flx.push({base:1,bl:w.fbl,fs:w.fsc||1,x:mx,y:my,dir:dr,W:D,hold:L3-15,t0:t00,dur:1800});
   /* same spawn rate as the APK (2 puffs per 3 ticks) but spawned every ~1.5 ticks on the real clock, so the stream is continuous instead of clumped */
