@@ -2332,7 +2332,7 @@ fzOK=(k,i,u)=>FZ&&u!==FZ.u&&!EQU(u)&&!(mkUp()&&K[k][i].kit)&&!(K[k][i].cost==0&&
 const FZC=[["t","Torso","torso"],["l","Legs","leg"],["top","Top guns","topWeapon"],["side","Side guns","sideWeapon"],["drone","Drones","drone"],["m","Mods","module"],["tp","Special","special"],["kit","Kits","kit"]],
 fzCat=(kk,it)=>kk=="t"?"t":kk=="l"?"l":kk=="w"?(it.hook||it.chrg?"tp":it.drone?"drone":it.side?"side":"top"):(it.kit?"kit":it.tp||it.shp?"tp":"m");
 let _fzd=null;const fzDoor=()=>_fzd||(_fzd=(()=>{const x=document.querySelector("#wx img");return x?x.src:""})());
-["Heat","Energy"].forEach(e=>{const f=n=>M.findIndex(m=>m.n==n);EVO["m:"+f("Super "+e+" Shield Mark 1")]=f("Super "+e+" Shield Mark 2");});
+/* Super Heat/Energy Shield Mark 1 and 2 are not on the evolution board: they are obtained separately */
 function fzRender(tu){
   if(!FZ){$("fz").classList.add("hide");return}
   const sc=FZ.rst?0:($("fzgs")?$("fzgs").scrollTop:0),has=FZ.k!=null,k=FZ.k,i=FZ.i;FZ.rst=0;FZ.ix=FZ.ix||{};if(!FZ.cat)FZ.cat=has?fzCat(k,K[k][i]):"t";
