@@ -1137,6 +1137,24 @@ button,[role=button],.nb,.bkb{touch-action:manipulation;-webkit-user-select:none
 #cv .lbl{color:#e3e6e8;font-weight:900;font-size:calc(42*var(--cu));text-align:center;text-shadow:calc(2*var(--cu)) calc(2*var(--cu)) 0 #000}
 #cv .gin{display:block;margin:0 auto;width:calc(600*var(--cu));height:calc(66*var(--cu));background:#333;border:calc(5*var(--cu)) solid #424242;border-radius:calc(14*var(--cu));color:#fff;font:inherit;font-weight:700;font-size:calc(34*var(--cu));padding:0 calc(14*var(--cu));outline:0}
 #cv .gin:focus{border-color:#3fb0f0}
+
+#cv .rkf{position:absolute;inset:0;border:calc(12*var(--cu)) solid #1583c4;border-radius:calc(16*var(--cu));background:#001426;box-shadow:inset 0 0 0 calc(4*var(--cu)) #04304f}
+#cv .rkdv{position:absolute;left:0;right:0;top:calc(246*var(--cu));height:calc(20*var(--cu));background:linear-gradient(#1c93d6,#0e66a2);border-top:calc(3*var(--cu)) solid #0a3d63;border-bottom:calc(3*var(--cu)) solid #06304f}
+#cv .rkt{position:absolute;left:0;right:0;top:calc(34*var(--cu));text-align:center;color:#fff;font-weight:900;font-size:calc(42*var(--cu));text-shadow:calc(2*var(--cu)) calc(3*var(--cu)) 0 #000}
+#cv .rktb{position:absolute;top:calc(100*var(--cu));width:calc(255*var(--cu));height:calc(80*var(--cu));border:0;border-radius:calc(8*var(--cu));background:linear-gradient(#0f6db0,#0a4d82);box-shadow:inset 0 0 0 calc(5*var(--cu)) #06385f,0 0 0 calc(2*var(--cu)) #0a4d82;color:#fff;font:inherit;font-weight:900;font-size:calc(40*var(--cu));text-shadow:calc(2*var(--cu)) calc(3*var(--cu)) 0 #000;cursor:pointer}
+#cv .rktb.on{outline:calc(7*var(--cu)) solid #ff9a0a;outline-offset:calc(3*var(--cu));border-radius:calc(8*var(--cu))}
+#cv .rkso{position:absolute;left:calc(38*var(--cu));top:calc(150*var(--cu));width:calc(340*var(--cu));height:calc(82*var(--cu));background:#02213a;border-radius:calc(14*var(--cu));display:flex;align-items:center;gap:calc(24*var(--cu));padding-left:calc(14*var(--cu));white-space:nowrap;cursor:pointer;color:#fff;font-weight:900;font-size:calc(31*var(--cu));text-shadow:calc(2*var(--cu)) calc(2*var(--cu)) 0 #000}
+#cv .rkso i{width:calc(62*var(--cu));height:calc(62*var(--cu));background:#000;border:calc(2*var(--cu)) solid #111;display:flex;align-items:center;justify-content:center}
+#cv .rkse{position:absolute;left:0;right:0;top:calc(196*var(--cu));text-align:center;color:#ff9a0a;font-weight:900;font-size:calc(36*var(--cu));text-shadow:calc(2*var(--cu)) calc(2*var(--cu)) 0 #000}
+#cv .rkpz{position:absolute;right:calc(110*var(--cu));top:calc(50*var(--cu));width:calc(220*var(--cu));text-align:center;cursor:pointer;color:#1e9bff;font-weight:900;font-size:calc(34*var(--cu));text-shadow:calc(2*var(--cu)) calc(2*var(--cu)) 0 #000}
+#cv .rkpz svg{display:block;margin:0 auto;width:calc(140*var(--cu));height:calc(130*var(--cu))}
+#cv .rkh{position:absolute;left:calc(26*var(--cu));right:calc(110*var(--cu));top:calc(278*var(--cu));height:calc(62*var(--cu));background:#4a4a4a;color:#d6d6d6;font-weight:900;font-size:calc(27*var(--cu))}
+#cv .rkh span,#cv .rr span,#cv .rr img,#cv .rr .fgw,#cv .rr .ph{position:absolute;top:50%;transform:translateY(-50%);white-space:nowrap}
+#cv .rr{position:relative;height:calc(61*var(--cu));background:#262626;color:#fff;font-weight:900;font-size:calc(33*var(--cu));text-shadow:calc(1*var(--cu)) calc(2*var(--cu)) 0 #000;cursor:pointer}
+#cv .rr:nth-child(even){background:#000}
+#cv .rr.me{background:linear-gradient(#b87000,#a45f00);border-top:calc(2*var(--cu)) solid #d89a2a}
+#cv .rr.sel{filter:brightness(1.45)}
+#cv .rr .ph{height:calc(52*var(--cu));width:calc(30*var(--cu))}
 #cv .drop{position:absolute;background:#021a2a;border:calc(5*var(--cu)) solid #0f7fc4;border-radius:calc(10*var(--cu));z-index:5;overflow:hidden}
 #cv .drop div{padding:calc(10*var(--cu)) calc(24*var(--cu));color:#fff;font-weight:800;font-size:calc(36*var(--cu));cursor:pointer}
 #cv .drop div:hover,#cv .drop div.sel{background:#0f4f7e}
@@ -6316,7 +6334,7 @@ function vChat(){seedChat();let h=bg("Chat");
   if(ST.chans)h+=art(A.a_chan,182,97)+`<div class="lst" style="left:196px;top:109px;width:270px;height:205px;z-index:5">${CH().map(c=>`<div class="chrow ${c==ST.ch?"sel":""}" data-a="chPick" data-id="${c}">${esc(c)}</div>`).join("")}</div>`;
   return `<div style="position:absolute;left:0;top:0;width:800px;height:497px;transform:scale(.965);transform-origin:0 0">${h}</div>`}
 
-const cvOn=()=>scr=="chat"||(scr=="srch"&&ST.sb=="chat");
+const cvOn=()=>scr=="chat"||scr=="rank"||(scr=="srch"&&ST.sb=="chat");
 const IM=(k)=>`<i><img src="${A["i_"+k].u}" style="width:100%;height:100%;display:block;object-fit:contain"></i>`;
 const u=n=>`calc(${n}*var(--cu))`;
 let _lv=null;const lvArt=()=>_lv||(_lv=(()=>{const e=document.getElementById("wx"),f=x=>(x||"").replace(/^url\(["']?/,"").replace(/["']?\)$/,"");return{f:f(getComputedStyle(e).backgroundImage),d:f(getComputedStyle(e,"::after").backgroundImage)}})());
@@ -6325,7 +6343,7 @@ const CB=(a,k,x,y,z=108,ex="")=>`<button class="cb" data-a="${a}" style="left:${
 const PHONE='<svg class="ph" viewBox="0 0 26 46"><rect x="2" y="2" width="22" height="42" rx="5" fill="#000" stroke="#fff" stroke-width="3"/><rect x="9" y="37" width="8" height="3" rx="1.5" fill="#fff"/></svg>';
 const rkimg=p=>`<img class="rkimg" src="${RANKI[Math.max(0,Math.min(RANKI.length-1,rankOf(p.rating)-1))]}">`;
 const FC=["#d62020","#fff","#1c3f9e","#0a8a3c","#f2c200","#7a1fa2","#e8731a","#6aa8e8"];
-const cvFlag=p=>{let n=0;for(const ch of String(p.id)+(p.name||""))n=(n*31+ch.charCodeAt(0))>>>0;const a=FC[n%8],b=FC[(n>>3)%8],c=FC[(n>>6)%8],v=(n>>9)%3,w=Math.round(38*CU),hh=Math.round(25*CU);
+const cvFlag=p=>{let n=0;for(const ch of String(p.id)+(p.name||""))n=(n*31+ch.charCodeAt(0))>>>0;const a=FC[n%8],b=FC[(n>>>3)%8],c=FC[(n>>>6)%8],v=(n>>>9)%3,w=Math.round(38*CU),hh=Math.round(25*CU);
  const bg=v==0?`linear-gradient(${a} 33.3%,${b} 33.3% 66.6%,${c} 66.6%)`:v==1?`linear-gradient(90deg,${a} 33.3%,${b} 33.3% 66.6%,${c} 66.6%)`:`linear-gradient(${a} 50%,${b} 50%)`;
  return `<div style="width:${w}px;height:${hh}px;flex:none;background:${bg};border:1px solid rgba(0,0,0,.6)"></div>`};
 const cvRow=p=>`<div class="pr ${p.me?"me":""} ${D.friends.includes(p.id)?"fr":""}" data-a="chPlayer" data-id="${p.id}">${cvFlag(p)}${rkimg(p)}${p.mob?PHONE:""}<span class="nm">${esc(p.name)}</span></div>`;
@@ -6337,6 +6355,19 @@ function cvScroll(){cv.querySelectorAll(".cs").forEach(b=>{const l=$(b.dataset.f
   l.addEventListener("scroll",up);b.querySelector(".su").onclick=()=>{l.scrollTop-=l.clientHeight*.4};b.querySelector(".sd").onclick=()=>{l.scrollTop+=l.clientHeight*.4};
   h.onmousedown=e=>{e.preventDefault();const y0=e.clientY,s0=l.scrollTop;const mv=ev=>{l.scrollTop=s0+(ev.clientY-y0)*(l.scrollHeight-l.clientHeight)/Math.max(1,tr.clientHeight-h.offsetHeight)};const un=()=>{removeEventListener("mousemove",mv);removeEventListener("mouseup",un)};addEventListener("mousemove",mv);addEventListener("mouseup",un)};
   l._up=up;up()})}
+
+const SEASON=()=>{const n=new Date(),d=new Date(Date.UTC(n.getUTCFullYear(),n.getUTCMonth(),n.getUTCDate()+((8-n.getUTCDay())%7||7)));let m=Math.max(0,d-n),dd=Math.floor(m/864e5),hh=Math.floor(m%864e5/36e5);return `Season ends in : ${dd} days and ${hh} hours`};
+const CHEST='<svg viewBox="0 0 140 130"><defs><linearGradient id="chg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9d18a"/><stop offset="1" stop-color="#8a6a22"/></linearGradient></defs><path d="M22 52 40 18H100L118 52V108Q118 122 104 122H36Q22 122 22 108Z" fill="url(#chg)" stroke="#3a2a08" stroke-width="5" stroke-linejoin="round"/><rect x="30" y="56" width="80" height="8" fill="#5a4310"/><path d="M70 66 94 80V102L70 116 46 102V80Z" fill="#1d7a3a" stroke="#0a3a18" stroke-width="4"/><path d="M70 76 74 86 84 87 77 94 79 104 70 99 61 104 63 94 56 87 66 86Z" fill="#ffd400"/></svg>';
+const lvOf=p=>p.me?(typeof S!=="undefined"&&(S.lvl||S.lv||S.level))||1:(p.bat%240)+1;
+function cvRank(){const L=sortedPlayers();
+  let h=`<div class="rkf"></div><div class="rkdv"></div>`+LV("back",u(28),u(22),100)+`<div class="rkt">Players ranking list</div>`;
+  h+=`<button class="rktb on" data-a="rkPlayers" style="left:${u(592)}">Players</button><button class="rktb" data-a="rkClans" style="left:${u(886)}">Clans</button>`;
+  h+=`<div class="rkso" data-a="online"><i>${ST.online?'<svg viewBox="0 0 40 40" width="100%" height="100%"><path d="M7 21 16 30 33 10" fill="none" stroke="#fff" stroke-width="6"/></svg>':""}</i>Show online:</div><div class="rkse">${SEASON()}</div>`;
+  h+=`<div class="rkpz" data-a="prize">${CHEST}Prize list</div>`;
+  h+=`<div class="rkh"><span style="left:${u(10)}">POSITION</span><span style="left:${u(196)}">LEVEL</span><span style="left:${u(418)}">NAME</span><span style="left:${u(1192)}">ARENA POINTS</span></div>`;
+  const rows=L.map((p,i)=>`<div class="rr ${p.me?"me":""} ${ST.sel==p.id?"sel":""}" data-a="rkRow" data-id="${p.id}"><span style="left:${u(10)}">${fmt(i+1)}</span><span style="left:${u(196)}">${lvOf(p)}</span><div class="fgw" style="position:absolute;left:${u(296)};top:50%;transform:translateY(-50%)">${cvFlag(p)}</div><img src="${RANKI[Math.max(0,Math.min(RANKI.length-1,rankOf(p.rating)-1))]}" style="left:${u(344)};width:${u(52)};height:${u(52)}"><span style="left:${u(418)}">${esc(p.name)}</span>${p.mob?PHONE.replace('class="ph"','class="ph" style="left:'+u(1138)+'"'):""}<span style="left:${u(1192)}">${fmt(p.rating)}</span></div>`).join("");
+  h+=`<div class="clst" id="mpL" style="left:${u(26)};right:${u(110)};top:${u(340)};bottom:${u(14)}">${rows}</div>`+sbar("mpL",`right:${u(22)};top:${u(278)};bottom:${u(14)};width:${u(88)}`);
+  return h}
 function cvChat(){seedChat();
   const on=[me(),...BOTS.filter(b=>b.on)].filter(p=>!D.blocked.includes(p.id));
   let h=LV("back",u(15),u(1),116)+CB("srch","inspect",u(165),u(3))+CB("chans",ST.chans?"closeDropList":"openDropList",u(285),u(3));
@@ -6353,9 +6384,9 @@ function cvSearch(){let h=`<div class="cdim"></div><div class="cfr" style="width
     h+=`<div class="clst" style="left:${u(30)};right:${u(30)};top:${u(20)};bottom:${u(20)}">${rows||`<div class="lbl" style="padding-top:${u(200)}">No players found</div>`}</div>`}
   else h+=`<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:${u(14)}"><div class="lbl">Enter Player's Name:</div><input class="gin" id="mpSq" maxlength="20" autocomplete="off" value="${esc(ST.srch)}"><div class="lbl">-OR-</div><div class="lbl">Enter Player's ID:</div><input class="gin" id="mpSi" maxlength="9" autocomplete="off" value="${esc(ST.sid)}"><button class="cb" data-a="srGo" style="position:static;width:${u(138)};height:${u(138)};margin-top:${u(10)}">${IM("inspect")}</button></div>`;
   return h+`</div>`}
-function cvDraw(){const act=document.activeElement,ai=act&&act.tagName=="INPUT"&&cv.contains(act)?act.id:null,av=ai?act.value:null,ss=ai?act.selectionStart:0;
+function cvDraw(keep){const act=document.activeElement,ai=act&&act.tagName=="INPUT"&&cv.contains(act)?act.id:null,av=ai?act.value:null,ss=ai?act.selectionStart:0;
   const o0=$("mpO"),so=o0?o0.scrollTop:0;
-  cv.innerHTML=cvChat();const H=$("mpH");if(H)H.scrollTop=H.scrollHeight;const O=$("mpO");if(O)O.scrollTop=so;cvScroll();
+  const L0=$("mpL"),sl=L0?L0.scrollTop:0;cv.innerHTML=scr=="rank"?cvRank():cvChat();const LL=$("mpL");if(LL)LL.scrollTop=keep?sl:0;const H=$("mpH");if(H)H.scrollTop=H.scrollHeight;const O=$("mpO");if(O)O.scrollTop=so;cvScroll();
   if(ai){const n=$(ai);if(n){n.value=av;n.focus();try{n.setSelectionRange(ss,ss)}catch(e){}}}}
 function mdrawers(){/* mech canvases */}
 function vClan(){const c=ST.clanView||D.clan,own=D.clan&&c.id==D.clan.id;let h=bg("Clan");
@@ -6401,7 +6432,7 @@ let mrAF=0;
 function drawMechCanvas(){const c=$("mpM");if(!c||scr!="insp"){mrAF=0;return}const g=c.getContext("2d"),p=find(ST.insp)||me();g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,492,492);
   try{c._m=c._m||mechFor(p,ST.mi);if(c._m){g.save();g.translate(215,425);const k=1.9;g.scale(k,k);drawMech(g,0,0,1,c._m,false);g.restore()}}catch(e){}
   mrAF=requestAnimationFrame(drawMechCanvas)}
-function draw(keep){if(cvOn()){st.style.display="none";cv.style.display="block";mrAF=0;fit();return cvDraw()}st.style.display="";cv.style.display="none";const act=document.activeElement,ai=act&&act.tagName=="INPUT"&&st.contains(act)?act.id:null,av=ai?act.value:null,ss=ai?act.selectionStart:0;
+function draw(keep){if(cvOn()){st.style.display="none";cv.style.display="block";mrAF=0;fit();return cvDraw(keep)}st.style.display="";cv.style.display="none";const act=document.activeElement,ai=act&&act.tagName=="INPUT"&&st.contains(act)?act.id:null,av=ai?act.value:null,ss=ai?act.selectionStart:0;
   const l0=st.querySelector(".lst"),sc=l0?l0.scrollTop:0;st.innerHTML=V[scr]();fit();const l=st.querySelector(".lst");if(l&&keep)l.scrollTop=sc;sbars();
   if(ai){const n=$(ai);if(n){n.value=av;n.focus();try{n.setSelectionRange(ss,ss)}catch(e){}}}
   const H=$("mpH");if(H)H.scrollTop=H.scrollHeight;if(scr=="insp"&&ST.itab=="mech"&&!mrAF)mrAF=requestAnimationFrame(drawMechCanvas)}
@@ -6458,6 +6489,8 @@ const onClk=e=>{const t=e.target.closest("[data-a]");if(!t)return;const a=t.data
   case"srGo":{const q=(($("mpSq")||{}).value||"").trim().toLowerCase(),id=(($("mpSi")||{}).value||"").trim();ST.srch=q;ST.sid=id;const all=[...BOTS,me()];ST.sres=(!q&&!id)?all.filter(b=>D.friends.includes(b.id)):all.filter(b=>(q&&b.name.toLowerCase().includes(q))||(id&&String(b.pid)==id));return go("srch")}
   case"srRow":return openInsp(id,"srch");
   case"invsx":return tip("Battle invitation sent");
+  case"prize":return tip("Prize list unavailable offline");
+  case"rkPlayers":return;
   }};st.addEventListener("click",onClk);cv.addEventListener("click",onClk);
 const onKd=e=>{e.stopPropagation();if(e.key=="Enter"){if(e.target.id=="mpIn")say();if(e.target.id=="mpSq"||e.target.id=="mpSi")e.currentTarget.querySelector("[data-a=srGo]").click()}};st.addEventListener("keydown",onKd);cv.addEventListener("keydown",onKd);
 const onKu=e=>e.stopPropagation();st.addEventListener("keyup",onKu);cv.addEventListener("keyup",onKu);
