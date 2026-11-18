@@ -21,14 +21,21 @@ const css=`#bld{position:fixed;left:0;top:0;right:0;bottom:0;z-index:200;backgro
 #bld h3{margin:0 0 8px!important;padding:0!important;height:auto!important;line-height:1.2!important;font-size:15px;color:#7fb4dc;font-weight:400;letter-spacing:1px}
 #bld .wt{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 12px}#bld .wt button.on{background:#0a6aa8;border-color:#7fd0ff}
 #bld .sl{display:grid;grid-template-columns:70px 1fr 64px 40px 30px;gap:6px;align-items:center;margin-bottom:7px}
-#bld .sl select{min-width:0;width:100%}#bld .sl input[type=number]{width:100%}
+#bld .sl select{min-width:0;width:100%}#bld .pk{display:flex;align-items:center;gap:8px;text-align:left;min-width:0;height:46px;padding:3px 8px}#bld .pk span{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}#bld .pk img,#bld .pt img{width:40px;height:38px;object-fit:contain;flex:none}#bld .pk i,#bld .pt i{width:40px;height:38px;flex:none}#bld .sl input[type=number]{width:100%}
 #bld canvas{width:100%;height:240px;background:#162636;border-radius:6px;display:block}
 #bld table{width:100%;border-collapse:collapse;margin-top:8px}#bld td,#bld th{padding:3px 6px;border-bottom:1px solid #17496f;text-align:left;font-weight:400}
 #bld .st{display:grid;grid-template-columns:1fr auto;gap:2px 10px;margin-top:10px}#bld .st span:nth-child(even){text-align:right;color:#ffd24a}
-#bld textarea{width:100%;height:100px;font:12px monospace;resize:vertical}#bld .muted{color:#7f98b0;font-size:12px}`;
+#bld textarea{width:100%;height:100px;font:12px monospace;resize:vertical}#bld .muted{color:#7f98b0;font-size:12px}
+#bpk{position:absolute;left:0;top:0;right:0;bottom:0;z-index:5;background:rgba(0,6,12,.82);display:flex;align-items:center;justify-content:center}#bpk[hidden]{display:none}
+#bpk .bx{width:min(1180px,96vw);height:min(780px,92vh);background:#0b1b2b;border:2px solid #17496f;border-radius:10px;display:flex;flex-direction:column;padding:12px;gap:10px}
+#bpk .bt{display:flex;gap:10px;align-items:center}#bpk .bt b{flex:none;font-size:16px;color:#7fb4dc;font-weight:400}#bpk .bt input{flex:1}
+#bpk .bb{flex:1;display:flex;gap:12px;min-height:0}#bpk .gr{flex:1;overflow:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;align-content:start}
+#bpk .pt{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 6px;height:auto;min-height:92px}#bpk .pt img{width:100%;height:56px}#bpk .pt span{font-size:12px;text-align:center;line-height:1.1}
+#bpk .si{width:300px;flex:none;background:#0e2438;border-radius:8px;padding:12px;overflow:auto}#bpk .si h4{margin:0 0 8px;font-size:16px;color:#ffd24a;font-weight:400}#bpk .si img{width:100%;height:110px;object-fit:contain;background:#162636;border-radius:6px;margin-bottom:8px}
+#bpk .si div{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid #17496f;padding:2px 0}#bpk .si div b{color:#ffd24a;font-weight:400;text-align:right}`;
 document.head.insertAdjacentHTML("beforeend","<style>"+css+"</style>");
 document.body.insertAdjacentHTML("beforeend",`<div id="bld" hidden><div class="bh"><b>ENEMY BUILDER</b><span class="muted">Build every wave of every campaign mission. Saves here instantly; Export to send the designs to be built into the game.</span><button id="bx">Close</button></div>
-<div class="bm"><div class="col c1"><h3>MISSION</h3><select id="bmi" style="width:100%"></select><h3 style="margin-top:14px">WAVE</h3><div class="wt" id="bwt"></div>
+<div id="bpk" hidden><div class="bx"><div class="bt"><b id="bpt">PICK</b><input id="bps" placeholder="Search by name…" spellcheck="false"><button id="bpc">Cancel</button></div><div class="bb"><div class="gr" id="bpg"></div><div class="si" id="bpi"><span class="muted">Hover an item to see its stats (level 1).</span></div></div></div></div><div class="bm"><div class="col c1"><h3>MISSION</h3><select id="bmi" style="width:100%"></select><h3 style="margin-top:14px">WAVE</h3><div class="wt" id="bwt"></div>
 <h3>STAT MULTIPLIER</h3><input id="bmul" type="number" min="0.1" max="20" step="0.05" style="width:100%"><div class="muted" style="margin-top:6px">Applied on top of the items. Difficulty stars then multiply it again: ★ ×1, ★★ ×1.6, ★★★ ×2.4.</div>
 <h3 style="margin-top:14px">THIS WAVE</h3><button id="bsv" class="go" style="width:100%">Save</button><button id="bcl" style="width:100%;margin-top:6px">Clear this wave</button><div class="muted" id="bmsg" style="margin-top:8px"></div></div>
 <div class="col c2"><h3>EQUIPMENT</h3><div id="bsl"></div><div class="muted">Modules were removed from the game, so enemies have no module slots.</div></div>
@@ -36,11 +43,22 @@ document.body.insertAdjacentHTML("beforeend",`<div id="bld" hidden><div class="b
 <h3 style="margin-top:16px">EXPORT / IMPORT</h3><textarea id="bjs" spellcheck="false"></textarea><div style="display:flex;gap:6px;margin-top:6px"><button id="bex">Export all</button><button id="bcp">Copy</button><button id="bim">Import</button></div></div></div></div>`);
 const sel=(arr,v)=>arr.map(([i,n])=>`<option value="${i}"${i==v?" selected":""}>${n}</option>`).join("");
 let rafOn=false,bb=null,bbF=0;
+const artSrc=(k,id)=>{const a=ART[k]&&ART[k][id];return a&&a.img&&a.img.src?a.img.src:""};
+const thumb=(k,id)=>{if(id==="")return "<i></i>";const u=artSrc(k,id);return u?`<img alt="" src="${u}">`:"<i></i>"};
+const N=n=>Math.round(n).toLocaleString();
+function itemInfo(k,id){const it=(k=="w"?W:K[k])[id],r=[],A=(a,b)=>{if(b!=null&&b!==""&&b!==0&&b!==false)r.push([a,b])};
+  if(k=="t"){A("Hit points",N(it.hp));A("Energy regen",N(it.en));A("Energy capacity",N(it.encap));A("Heat capacity",N(it.hc));A("Cooling",N(it.cool));A("Weight",N(it.w));A("Weight capacity",N(it.cap));A("Physical resist",it.rp);A("Explosive resist",it.rf);A("Electric resist",it.re)}
+  else if(k=="l"){A("Hit points",N(it.hp));A("Weight",N(it.w));A("Steps per walk",it.s);A("Jump",it.j);if(it.mag)A("Magnet damage",N(it.mag.dmg))}
+  else{const n=it.shots>1?it.shots:1,dr=it.dr||[it.dmg,it.dmg],lo=Math.round(dr[0]*n),hi=Math.round(dr[1]*n);A("Damage",lo==hi?N(lo):N(lo)+"-"+N(hi));A("Damage type",it.ty);A("Shots",it.shots>1?it.shots:0);A("Energy",N(it.en||0));A("Heat",N(it.ht||0));A("Range",(it.min!=null?it.min+"-"+it.max:""));A("Weight",N(it.w));A("Uses",it.uses);A("Heat damage",it.hd);A("Energy damage",it.ed);if(it.brk)A("Guard break",JSON.stringify(it.brk).replace(/[{}"]/g,""));if(it.drone)A("Type","Drone");if(it.mythic)A("Rarity","Mythic")}
+  return `<h4>${it.n||"#"+id}</h4>`+(artSrc(k,id)?`<img alt="" src="${artSrc(k,id)}">`:"")+r.map(([a,b])=>`<div><span>${a}</span><b>${b}</b></div>`).join("")}
+let PK=null;
+function openPick(si){const k=si==0?"t":si==1?"l":"w";PK={si,k,list:opts(k,si-2)};$("bpt").textContent="PICK "+SL[si].toUpperCase();$("bps").value="";pkDraw();$("bpk").hidden=false;$("bps").focus()}
+function pkDraw(){const q=$("bps").value.trim().toLowerCase(),{k,list}=PK;$("bpg").innerHTML=`<button class="pt" data-pid=""><i style="width:40px;height:56px"></i><span>— empty —</span></button>`+list.filter(([i,n])=>!q||n.toLowerCase().includes(q)).map(([i,n])=>`<button class="pt" data-pid="${i}">${thumb(k,i)}<span>${n}</span></button>`).join("")}
 function draw(){const d=BL.d;
   $("bwt").innerHTML=WV(BL.mi).map((s,k)=>`<button data-w="${k}" class="${k==BL.k?"on":""}">${k+1}${s.last?(MIS[BL.mi].boss?" · boss":" · last"):""}${(S.designs&&S.designs[keyOf(BL.mi,k)])?" ✔":""}</button>`).join("");
   $("bmul").value=d.mul;
   $("bsl").innerHTML=SL.map((nm,si)=>{const it=si==0?d.t:si==1?d.l:d.w[si-2],k=si==0?"t":si==1?"l":"w",id=it&&it.id!=null?it.id:"";
-    return `<div class="sl" data-s="${si}"><span>${nm}</span><select data-f="id"><option value="">— empty —</option>${sel(opts(k,si-2),id)}</select><input type="number" data-f="lv" min="1" max="${id!==""?maxLv(k,id):50}" value="${it?it.lv||1:1}" ${id===""?"disabled":""}><label title="Shiny"><input type="checkbox" data-f="sh" ${it&&it.sh?"checked":""} ${id===""?"disabled":""}>✨</label><button data-f="rm" title="Remove">×</button></div>`}).join("");
+    return `<div class="sl" data-s="${si}"><span>${nm}</span><button type="button" class="pk" data-f="pick">${thumb(k,id)}<span>${id!==""?((k=="w"?W:K[k])[id].n||"#"+id):"— empty —"}</span></button><input type="number" data-f="lv" min="1" max="${id!==""?maxLv(k,id):50}" value="${it?it.lv||1:1}" ${id===""?"disabled":""}><label title="Shiny"><input type="checkbox" data-f="sh" ${it&&it.sh?"checked":""} ${id===""?"disabled":""}>✨</label><button data-f="rm" title="Remove">×</button></div>`}).join("");
   stats()}
 function stats(){const m=build(),cv=$("bcv"),ex=document.getElementById("bst");bb=null;bbF=0;
   if(!m){$("bst").innerHTML="";$("bwp").innerHTML="";return}
@@ -63,7 +81,12 @@ function setSel(si,f,v){const d=BL.d,k=si==0?"t":si==1?"l":"w";let it=si==0?d.t:
   draw()}
 $("bld").addEventListener("change",e=>{const t=e.target,row=t.closest(".sl");if(row&&t.dataset.f)return setSel(+row.dataset.s,t.dataset.f,t.type=="checkbox"?t.checked:t.value);
   if(t.id=="bmi"){BL.mi=+t.value;BL.k=WV(BL.mi).length-1;load();draw()}if(t.id=="bmul"){BL.d.mul=Math.max(.1,+t.value||1);stats()}});
+$("bld").addEventListener("input",e=>{if(e.target.id=="bps"&&PK)pkDraw()});
+$("bld").addEventListener("mouseover",e=>{const t=e.target.closest(".pt");if(t&&PK&&t.dataset.pid)$("bpi").innerHTML=itemInfo(PK.k,+t.dataset.pid)});
 $("bld").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
+  if(b.dataset.f=="pick")return openPick(+b.closest(".sl").dataset.s);
+  if(b.id=="bpc"){PK=null;return $("bpk").hidden=true}
+  if(b.dataset.pid!=null&&PK){const si=PK.si;PK=null;$("bpk").hidden=true;return setSel(si,"id",b.dataset.pid)}
   if(b.dataset.f=="rm")return setSel(+b.closest(".sl").dataset.s,"rm");
   if(b.dataset.w!=null){BL.k=+b.dataset.w;load();return draw()}
   if(b.id=="bx")return $("bld").hidden=true;
