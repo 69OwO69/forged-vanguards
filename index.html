@@ -3480,7 +3480,8 @@ function specMech(sp){
     const tu=mk("t",sp.t),lu=mk("l",sp.l),w=[null,null,null,null,null,null,null],wu=[null,null,null,null,null,null,null];
     for(let si=0;si<9;si++){const it=sp.w&&sp.w[si];if(it&&it.id!=null&&W[it.id]){w[si]=it.id;wu[si]=mk("w",it)}}
     const tid=sp.t&&K.t[sp.t.id]?sp.t.id:null,lid=sp.l&&K.l[sp.l.id]?sp.l.id:null;
-    S.sel={t:tid,tu,l:lid,lu,w,wu,m:null,mu:null,mx:[],mxu:[]};
+    const ml=(sp.m||[]).filter(it=>it&&it.id!=null&&M[it.id]&&!M[it.id].gone).slice(0,4),mus=ml.map(it=>mk("m",it));
+    S.sel={t:tid,tu,l:lid,lu,w,wu,m:ml.length?ml[0].id:null,mu:ml.length?mus[0]:null,mx:ml.slice(1).map(it=>it.id),mxu:mus.slice(1)};
     m=mechOf(tid,lid,[],1,true,w)
   }finally{S.sel=JSON.parse(bs);S.xs=JSON.parse(bx);S.tf=bt}
   if(sp.mul>0&&sp.mul!=1)mulMech(m,+sp.mul);
@@ -3489,7 +3490,7 @@ const CAMPD={};/* enemy designs built in the Enemy Builder and baked into the ga
 function designFor(mi,key){const kk=key||(mi&&mi.id),d=mi&&((S.designs&&S.designs[kk])||CAMPD[kk]);if(!(d&&(d.t||d.l||d.w)))return null;
   /* a saved enemy design that still uses a removed item is ignored (the mission falls back to its normal build) */
   const dead=(k,it)=>it&&it.id!=null&&(!K[k][it.id]||K[k][it.id].gone);
-  if(dead("t",d.t)||dead("l",d.l)||Object.values(d.w||{}).some(it=>dead("w",it)))return null;return d}
+  if(dead("t",d.t)||dead("l",d.l)||Object.values(d.w||{}).some(it=>dead("w",it))||(d.m||[]).some(it=>dead("m",it)))return null;return d}
 function importDesigns(txt){let j;try{j=JSON.parse(txt)}catch(e){return toast("That isn't valid JSON")}const d=j&&j.designs?j.designs:j;if(!d||typeof d!="object")return toast("No designs found");S.designs=S.designs||{};let n=0;for(const k in d){if(d[k]&&typeof d[k]=="object"){S.designs[k]=d[k];n++}}save();toast("Imported "+n+" enemy design"+(n==1?"":"s"))}
 function fbMech(){if(FBM)return JSON.parse(JSON.stringify(FBM));if(!S.fb){S.fb=JSON.parse(JSON.stringify(S.sel));save()}const cur=S.sel;S.sel=JSON.parse(JSON.stringify(S.fb));let m;try{m=myMech()}finally{S.sel=cur}return m}
 function botMech(){if(!S.bot){S.bot=JSON.parse(JSON.stringify(S.sel));save()}const cur=S.sel,sb=JSON.parse(JSON.stringify(S.bot));sb.w=(sb.w||[]).slice();sb.w[0]=null;sb.w[1]=null;S.sel=sb;let m;try{m=myMech()}finally{S.sel=cur}return m}

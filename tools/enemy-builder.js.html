@@ -1,74 +1,114 @@
 <script id="bldjs">
-/* ---------- Enemy builder: pick a campaign mission + wave, equip it, see real stats, export JSON for the game's code ---------- */
+/* ---------- Enemy builder v2: mech in the middle, equipment squares around it ---------- */
 (()=>{
 const $=id=>document.getElementById(id);
-const SL=["Torso","Legs","Top 1","Top 2","Left 1","Left 2","Right 1","Right 2","Drone"];
-let BL={mi:0,k:0,d:null};window._BL=BL;
+let BL={mi:0,k:0,d:null,pd:0,sel:null};window._BL=BL;window._BLdraw=()=>draw();
 const keyOf=(mi,k)=>{const m=MIS[mi];return k==WV(mi).length-1?String(m.id):m.id+":"+k};
-const blank=()=>({t:null,l:null,w:{},name:"",p:Object.assign({},PCT0)});
+const blank=()=>({t:null,l:null,w:{},m:[],name:"",p:Object.assign({},PCT0)});
 const PL=[["hp","Health"],["dmg","Damage"],["en","Energy capacity"],["enr","Energy regen"],["hc","Heat capacity"],["cool","Cooling"]];
-const load=()=>{const kk=keyOf(BL.mi,BL.k),d=(S.designs&&S.designs[kk])||(typeof CAMPD!="undefined"&&CAMPD[kk]);BL.d=d?JSON.parse(JSON.stringify(d)):blank();BL.d.p=Object.assign({},PCT0,BL.d.p||{});if(BL.d.name==null)BL.d.name=""};
+const SLOTS={t:"Torso",l:"Legs",w0:"Top 1",w1:"Top 2",w2:"Left 1",w3:"Left 2",w4:"Right 1",w5:"Right 2",w6:"Drone",w7:"Hook",w8:"Charger",tp:"Teleporter",sh:"Shield"};
+const kindOf=s=>s=="t"?"t":s=="l"?"l":s[0]=="w"?"w":"m";
+const hasDes=kk=>{const d=(S.designs&&S.designs[kk])||CAMPD[kk];return !!(d&&(d.t||d.l||Object.keys(d.w||{}).length))};
+const load=()=>{const kk=keyOf(BL.mi,BL.k),d=(S.designs&&S.designs[kk])||CAMPD[kk];BL.d=d?JSON.parse(JSON.stringify(d)):blank();BL.d.p=Object.assign({},PCT0,BL.d.p||{});BL.d.w=BL.d.w||{};BL.d.m=BL.d.m||[];if(BL.d.name==null)BL.d.name="";BL.sel=null};
 const maxLv=(k,id)=>CAPL[RI(k,id)]||10;
-const opts=(k,slot)=>{const out=[];const src=k=="w"?W:K[k];for(const i in src){const it=src[i];if(!it||it.gone)continue;if(k=="w"){const dr=!!it.drone;if(slot==6?!dr:dr)continue;if(slot<2&&it.side)continue}out.push([+i,it.n||("#"+i)])}return out.sort((a,b)=>a[1].localeCompare(b[1]))};
+const isTp=i=>!!(M[i]&&M[i].tp),isSh=i=>!!(M[i]&&M[i].shp);
+const modOf=s=>BL.d.m.find(it=>it&&(s=="tp"?isTp(it.id):isSh(it.id)));
+const getIt=s=>s=="t"?BL.d.t:s=="l"?BL.d.l:s[0]=="w"?BL.d.w[+s.slice(1)]:modOf(s);
+const nameOf=(k,id)=>{const it=(k=="w"?W:K[k])[id];return it&&it.n||"#"+id};
+const opts=s=>{const k=kindOf(s),out=[],src=k=="w"?W:K[k];for(const i in src){const it=src[i];if(!it||it.gone)continue;
+  if(k=="w"&&!okS(+i,+s.slice(1)))continue;if(k=="m"&&!(s=="tp"?it.tp:it.shp))continue;out.push([+i,it.n||("#"+i)])}return out.sort((a,b)=>a[1].localeCompare(b[1]))};
 function build(){const d=BL.d;if(!(d.t||d.l||Object.keys(d.w).length))return null;try{const dd=JSON.parse(JSON.stringify(d));if(dd.t&&dd.t.id==null)dd.t=null;const e=specMech(dd);pctMech(e,dd.p);const pd=BL.pd||0;if(pd==1||pd==2)pctMech(e,starP(pd));const kk=["dg","or","r4","mb"][pd]||"dg";e.tkit=kk;e.lkit=kk;e.wkit=(e.wids||[]).map(()=>kk);return e}catch(e){console.error(e);return null}}
-const css=`#bld{position:fixed;left:0;top:0;right:0;bottom:0;z-index:200;background:#07111c;color:#e6eefb;font:14px/1.3 ACE,Arial,sans-serif;display:flex;flex-direction:column}
+const css=`#bld{position:fixed;inset:0;z-index:200;background:#07111c;color:#e6eefb;font:14px/1.3 ACE,Arial,sans-serif;display:flex;flex-direction:column}
 #bld[hidden]{display:none}#bld *{box-sizing:border-box}
-#bld .bh{display:flex;align-items:center;gap:12px;padding:10px 16px;background:#0e2a44;border-bottom:3px solid #0a6aa8;flex:none}
-#bld .bh b{font-size:20px;flex:1}#bld button,#bld select,#bld input,#bld textarea{font:inherit;color:#e6eefb;background:#12263a;border:1px solid #2f5b82;border-radius:6px;padding:5px 9px}
-#bld button{cursor:pointer}#bld button:hover{background:#1b3a58}#bld .go{background:#2e8a2a;border-color:#6ad060}
-#bld .bm{flex:1;display:flex;gap:14px;padding:14px;min-height:0}
-#bld .col{background:#0b1b2b;border:2px solid #17496f;border-radius:8px;padding:12px;overflow:auto;min-height:0}
-#bld .col h3:not(:first-child){margin-top:18px!important}#bld .col .muted{margin-top:6px}#bld .col{display:block!important;justify-content:flex-start!important;gap:0!important}#bld .c1{width:270px;flex:none}#bld .c2{flex:1;min-width:0}#bld .c3{width:420px;flex:none}
-#bld h3{margin:0 0 8px!important;padding:0!important;height:auto!important;line-height:1.2!important;font-size:15px;color:#7fb4dc;font-weight:400;letter-spacing:1px}
-#bld .wt{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 12px}#bld .wt button.on{background:#0a6aa8;border-color:#7fd0ff}
-#bld .sl{display:grid;grid-template-columns:70px 1fr 64px 40px 30px;gap:6px;align-items:center;margin-bottom:7px}
-#bld .sl select{min-width:0;width:100%}#bld .pk{display:flex;align-items:center;gap:8px;text-align:left;min-width:0;height:46px;padding:3px 8px}#bld .pk span{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}#bld .pk img,#bld .pt img{width:40px;height:38px;object-fit:contain;flex:none}#bld .pk i,#bld .pt i{width:40px;height:38px;flex:none}#bld .sl input[type=number]{width:100%}
-#bpd button.on{background:#2f6fd0;border-color:#8fb8ff;color:#fff}#bld canvas{width:100%;height:240px;background:#162636;border-radius:6px;display:block}
-#bld table{width:100%;border-collapse:collapse;margin-top:8px}#bld td,#bld th{padding:3px 6px;border-bottom:1px solid #17496f;text-align:left;font-weight:400}
-#bld .st{display:grid;grid-template-columns:1fr auto;gap:2px 10px;margin-top:10px}#bld .st span:nth-child(even){text-align:right;color:#ffd24a}
-#bld textarea{width:100%;height:100px;font:12px monospace;resize:vertical}#bld .muted{color:#7f98b0;font-size:12px}#bld .pg{display:grid;grid-template-columns:1fr 70px;gap:4px 8px;align-items:center}#bld .pg input{width:100%}#bld .sg{margin-bottom:8px}#bld .sg b{display:block;font-weight:400;color:#ffd24a;margin-bottom:3px}
-#bpk{position:absolute;left:0;top:0;right:0;bottom:0;z-index:5;background:rgba(0,6,12,.82);display:flex;align-items:center;justify-content:center}#bpk[hidden]{display:none}
-#bpk .bx{width:min(1180px,96vw);height:min(780px,92vh);background:#0b1b2b;border:2px solid #17496f;border-radius:10px;display:flex;flex-direction:column;padding:12px;gap:10px}
+#bld .bh{display:flex;align-items:center;gap:12px;padding:8px 16px;background:#0e2a44;border-bottom:3px solid #0a6aa8;flex:none}
+#bld .bh b{font-size:20px;letter-spacing:1px}#bld .bh .sp{flex:1;color:#7f98b0;font-size:12px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#bld button,#bld select,#bld input,#bld textarea{font:inherit;color:#e6eefb;background:#12263a;border:1px solid #2f5b82;border-radius:6px;padding:5px 9px;min-width:0}
+#bld button{cursor:pointer}#bld button:hover{background:#1b3a58}#bld .on{background:#0a6aa8!important;border-color:#7fd0ff!important}
+#bld .bm{flex:1;display:flex;gap:12px;padding:12px;min-height:0}
+#bld .bcol{background:#0b1b2b;border:2px solid #17496f;border-radius:8px;padding:12px;overflow:auto;min-height:0}
+#bld h3{margin:0 0 8px;font-size:13px;color:#7fb4dc;font-weight:400;letter-spacing:1px}
+#bld .c1{width:250px;flex:none;display:flex;flex-direction:column;gap:6px}#bld .c3{width:320px;flex:none;display:block}
+#bld .ml{flex:1;min-height:90px;overflow:auto;display:flex;flex-direction:column;gap:3px}#bld .ml button{text-align:left;padding:4px 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:none}
+#bld .wt{display:flex;gap:5px;flex-wrap:wrap}#bld .wt button{min-width:38px}
+#bld .c2{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px;padding:10px}
+#bld .pvb{display:flex;gap:6px;align-items:center;flex:none}#bld .pvb span{color:#7fb4dc;font-size:13px;margin-right:4px}#bld .pvb button{padding:3px 12px}
+#bld .stage{flex:1;min-height:0;display:flex;gap:10px;align-items:stretch}
+#bld .mid{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px}
+#bld .sqc{display:flex;flex-direction:column;gap:10px;justify-content:center;flex:none}#bld .sqr{display:flex;gap:10px;justify-content:center;flex:none;flex-wrap:wrap}
+#bld canvas{flex:1;min-height:0;width:100%;background:#162636;border-radius:8px;display:block}
+#bld .sq{position:relative;width:var(--sq);height:var(--sq);padding:0;display:flex;align-items:center;justify-content:center;background:#10253a;border:2px solid #2f5b82;border-radius:8px;flex:none;overflow:hidden}
+#bld .sq.has{border-color:#5fa0d0;background:#16324c}
+#bld .sq img{width:80%;height:62%;object-fit:contain;margin-top:10px}#bld .sq i{font-style:normal;font-size:26px;color:#2f5b82;margin-top:10px}
+#bld .sq small{position:absolute;left:0;right:0;top:3px;text-align:center;font-size:11px;color:#8fb4d4;pointer-events:none}
+#bld .sq em{position:absolute;right:4px;bottom:3px;font-style:normal;font-size:11px;color:#ffd24a;pointer-events:none}
+#bld .grp{display:flex;gap:10px;align-items:flex-start}#bld .gl{display:flex;flex-direction:column;gap:3px;align-items:center}#bld .gl>span{font-size:11px;color:#7f98b0;letter-spacing:1px}
+#bld .bar{flex:none;min-height:42px;display:flex;gap:10px;align-items:center;justify-content:center;background:#0e2438;border-radius:8px;padding:6px 10px;flex-wrap:wrap}
+#bld .bar b{font-weight:400;color:#ffd24a}#bld .bar input[type=number]{width:64px}
+#bld .st{display:grid;grid-template-columns:1fr auto;gap:3px 10px;margin-bottom:12px}#bld .st span:nth-child(even){text-align:right;color:#ffd24a}
+#bld table{width:100%;border-collapse:collapse;margin-bottom:12px}#bld td,#bld th{padding:3px 4px;border-bottom:1px solid #17496f;text-align:left;font-weight:400;font-size:13px}
+#bld details{margin-top:10px;background:#0e2438;border-radius:8px;padding:8px 10px}#bld summary{cursor:pointer;color:#7fb4dc;letter-spacing:1px;font-size:13px}
+#bld .pg{display:grid;grid-template-columns:1fr 70px;gap:4px 8px;align-items:center;margin-top:8px}#bld .pg input{width:100%}#bld .sg b{display:block;font-weight:400;color:#ffd24a;margin-top:8px}
+#bld textarea{width:100%;height:90px;font:12px monospace;resize:vertical;margin-top:8px}#bld .muted{color:#7f98b0;font-size:12px;margin-top:6px}
+#bpk{position:absolute;inset:0;z-index:5;background:rgba(0,6,12,.82);display:flex;align-items:center;justify-content:center}#bpk[hidden]{display:none}
+#bpk .bx{width:min(1100px,96vw);height:min(720px,92vh);background:#0b1b2b;border:2px solid #17496f;border-radius:10px;display:flex;flex-direction:column;padding:12px;gap:10px}
 #bpk .bt{display:flex;gap:10px;align-items:center}#bpk .bt b{flex:none;font-size:16px;color:#7fb4dc;font-weight:400}#bpk .bt input{flex:1}
-#bpk .bb{flex:1;display:flex;gap:12px;min-height:0}#bpk .gr{flex:1;overflow:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;align-content:start}
-#bpk .pt{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 6px;height:auto;min-height:92px}#bpk .pt img{width:100%;height:56px}#bpk .pt span{font-size:12px;text-align:center;line-height:1.1}
-#bpk .si{width:300px;flex:none;background:#0e2438;border-radius:8px;padding:12px;overflow:auto}#bpk .si h4{margin:0 0 8px;font-size:16px;color:#ffd24a;font-weight:400}#bpk .si img{width:100%;height:110px;object-fit:contain;background:#162636;border-radius:6px;margin-bottom:8px}
-#bpk .si div{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid #17496f;padding:2px 0}#bpk .si div b{color:#ffd24a;font-weight:400;text-align:right}`;
+#bpk .bb{flex:1;display:flex;gap:12px;min-height:0}#bpk .gr{flex:1;overflow:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;align-content:start}
+#bpk .pt{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 6px;min-height:92px}#bpk .pt img{width:100%;height:56px;object-fit:contain}#bpk .pt i{width:40px;height:56px}#bpk .pt span{font-size:12px;text-align:center;line-height:1.1}
+#bpk .si{width:280px;flex:none;background:#0e2438;border-radius:8px;padding:12px;overflow:auto}#bpk .si h4{margin:0 0 8px;font-size:16px;color:#ffd24a;font-weight:400}#bpk .si img{width:100%;height:100px;object-fit:contain;background:#162636;border-radius:6px;margin-bottom:8px}
+#bpk .si div{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid #17496f;padding:2px 0}#bpk .si div b{color:#ffd24a;font-weight:400;text-align:right}
+#bld{--sq:clamp(60px,10.5vh,92px)}
+#bld h3{height:auto!important;margin:0 0 8px!important;padding:0!important;line-height:1.2!important}#bld details,#bld summary{height:auto!important;min-height:0!important;display:block!important}#bld .bcol>button,#bld details button{height:auto!important;min-height:0!important}#bld .wt{justify-content:flex-start!important;align-items:flex-start!important;height:auto!important}#bld .wt button{height:auto!important;flex:none!important}#bld .st{align-items:start!important;height:auto!important}#bld .ml button,#bld .wt button{height:auto!important;margin:0!important}`;
 document.head.insertAdjacentHTML("beforeend","<style>"+css+"</style>");
-document.body.insertAdjacentHTML("beforeend",`<div id="bld" hidden><div class="bh"><b>ENEMY BUILDER</b><span class="muted">Build every wave of every campaign mission. Saves here instantly; Export to send the designs to be built into the game.</span><button id="bx">Close</button></div>
-<div id="bpk" hidden><div class="bx"><div class="bt"><b id="bpt">PICK</b><input id="bps" placeholder="Search by name…" spellcheck="false"><button id="bpc">Cancel</button></div><div class="bb"><div class="gr" id="bpg"></div><div class="si" id="bpi"><span class="muted">Hover an item to see its stats (level 1).</span></div></div></div></div><div class="bm"><div class="col c1"><h3>MISSION</h3><select id="bmi" style="width:100%"></select><h3 style="margin-top:14px">WAVE</h3><div class="wt" id="bwt"></div>
-<h3>ENEMY NAME</h3><input id="bnm" type="text" maxlength="30" style="width:100%" placeholder="">
-<h3>STAT PERCENTAGES (THIS WAVE)</h3><div class="pg" id="bpp"></div><div class="muted" style="margin-top:6px">100 = exactly the items. 80 = 20% weaker, 110 = 10% stronger. Applies to the ★ Easy version.</div>
-<h3>DIFFICULTY STARS</h3><div id="bsp"></div><div class="muted" style="margin-top:6px">Applied on top of the wave percentages, for every mission. Defaults are the real game's numbers: Hard 214% (2.14x), Insane 286% (2.86x).</div>
-<h3 style="margin-top:14px">THIS WAVE</h3><button id="bsv" class="go" style="width:100%">Save</button><button id="bcl" style="width:100%;margin-top:6px">Clear this wave</button><div class="muted" id="bmsg" style="margin-top:8px"></div></div>
-<div class="col c2"><h3>EQUIPMENT</h3><div id="bsl"></div><div class="muted">Modules were removed from the game, so enemies have no module slots.</div></div>
-<div class="col c3"><h3>PREVIEW</h3><div id="bpd" style="display:flex;gap:6px;margin-bottom:8px"><button data-pd="0">Easy</button><button data-pd="1">Hard</button><button data-pd="2">Insane</button><button data-pd="3">Boss</button></div><canvas id="bcv"></canvas><div class="st" id="bst"></div><table id="bwp"></table>
-<h3 style="margin-top:16px">EXPORT / IMPORT</h3><textarea id="bjs" spellcheck="false"></textarea><div style="display:flex;gap:6px;margin-top:6px"><button id="bex">Export all</button><button id="bcp">Copy</button><button id="bim">Import</button></div></div></div></div>`);
-const sel=(arr,v)=>arr.map(([i,n])=>`<option value="${i}"${i==v?" selected":""}>${n}</option>`).join("");
+const sqH=s=>`<button type="button" class="sq" data-sq="${s}"></button>`;
+document.body.insertAdjacentHTML("beforeend",`<div id="bld" hidden><div class="bh"><b>ENEMY BUILDER</b><span class="sp" id="bmsg">Changes save automatically on this browser. Use Export (right side) to send the designs to be built into the game.</span><button id="bx">Close</button></div>
+<div id="bpk" hidden><div class="bx"><div class="bt"><b id="bpt">PICK</b><input id="bps" placeholder="Search by name…" spellcheck="false"><button id="bpc">Cancel</button></div><div class="bb"><div class="gr" id="bpg"></div><div class="si" id="bpi"><span class="muted">Hover an item to see its stats (level 1).</span></div></div></div></div>
+<div class="bm"><div class="bcol c1"><h3>MISSION</h3><div class="ml" id="bml"></div><h3 style="margin-top:6px">WAVE</h3><div class="wt" id="bwt"></div><h3 style="margin-top:6px">ENEMY NAME</h3><input id="bnm" type="text" maxlength="30" style="width:100%"></div>
+<div class="bcol c2"><div class="pvb" id="bpd"><span>PREVIEW AS</span><button data-pd="0">Easy</button><button data-pd="1">Hard</button><button data-pd="2">Insane</button><button data-pd="3">Boss</button></div>
+<div class="stage"><div class="sqc">${sqH("w2")}${sqH("w3")}</div><div class="mid"><div class="sqr">${sqH("w0")}${sqH("w1")}</div><canvas id="bcv"></canvas></div><div class="sqc">${sqH("w4")}${sqH("w5")}</div></div>
+<div class="sqr" style="gap:18px"><div class="grp">${sqH("t")}${sqH("l")}</div><div class="grp">${sqH("w6")}${sqH("w7")}${sqH("w8")}</div><div class="grp">${sqH("tp")}${sqH("sh")}</div></div>
+<div class="bar" id="bbar"></div></div>
+<div class="bcol c3"><h3>STATS</h3><div class="st" id="bst"></div><table id="bwp"></table>
+<details id="badv"><summary>ADVANCED</summary><div class="muted">Stat percentages for this wave (100 = exactly the items, 80 = 20% weaker). They apply to the Easy version.</div><div class="pg" id="bpp"></div>
+<div class="muted" style="margin-top:12px">Difficulty stars, same for every mission (100 = no change). Hard is 160 and Insane is 214 by default.</div><div id="bsp"></div></details>
+<details><summary>EXPORT / IMPORT</summary><textarea id="bjs" spellcheck="false"></textarea><div style="display:flex;gap:6px;margin-top:6px"><button id="bex">Export all</button><button id="bcp">Copy</button><button id="bim">Import</button></div></details>
+<button id="bcl" style="width:100%;margin-top:10px">Clear this wave</button></div></div></div>`);
 let rafOn=false,bb=null,bbF=0;
 const artSrc=(k,id)=>{const a=ART[k]&&ART[k][id];return a&&a.img&&a.img.src?a.img.src:""};
-const thumb=(k,id)=>{if(id==="")return "<i></i>";const u=artSrc(k,id);return u?`<img alt="" src="${u}">`:"<i></i>"};
+const thumb=(k,id)=>{if(id===""||id==null)return "<i></i>";const u=artSrc(k,id);return u?`<img alt="" src="${u}">`:"<i></i>"};
 const N=n=>Math.round(n).toLocaleString();
 function itemInfo(k,id){const it=(k=="w"?W:K[k])[id],r=[],A=(a,b)=>{if(b!=null&&b!==""&&b!==0&&b!==false)r.push([a,b])};
   if(k=="t"){A("Hit points",N(it.hp));A("Energy regen",N(it.en));A("Energy capacity",N(it.encap));A("Heat capacity",N(it.hc));A("Cooling",N(it.cool));A("Weight",N(it.w));A("Weight capacity",N(it.cap));A("Physical resist",it.rp);A("Explosive resist",it.rf);A("Electric resist",it.re)}
   else if(k=="l"){A("Hit points",N(it.hp));A("Weight",N(it.w));A("Steps per walk",it.s);A("Jump",it.j);if(it.mag)A("Magnet damage",N(it.mag.dmg))}
-  else{const n=it.shots>1?it.shots:1,dr=it.dr||[it.dmg,it.dmg],lo=Math.round(dr[0]*n),hi=Math.round(dr[1]*n);A("Damage",lo==hi?N(lo):N(lo)+"-"+N(hi));A("Damage type",it.ty);A("Shots",it.shots>1?it.shots:0);A("Energy",N(it.en||0));A("Heat",N(it.ht||0));A("Range",(it.min!=null?it.min+"-"+it.max:""));A("Weight",N(it.w));A("Uses",it.uses);A("Heat damage",it.hd);A("Energy damage",it.ed);if(it.brk)A("Guard break",JSON.stringify(it.brk).replace(/[{}"]/g,""));if(it.drone)A("Type","Drone");if(it.mythic)A("Rarity","Mythic")}
+  else if(k=="m"){A("Teleporter",it.tp?"Yes":0);A("Shield strength",it.shp);A("Energy",it.e);A("Weight",N(it.w||0))}
+  else{const n=it.shots>1?it.shots:1,dr=it.dr||[it.dmg,it.dmg],lo=Math.round(dr[0]*n),hi=Math.round(dr[1]*n);A("Damage",lo==hi?N(lo):N(lo)+"-"+N(hi));A("Damage type",it.ty);A("Shots",it.shots>1?it.shots:0);A("Energy",N(it.en||0));A("Heat",N(it.ht||0));A("Range",(it.min!=null?it.min+"-"+it.max:""));A("Weight",N(it.w));A("Uses",it.uses);A("Heat damage",it.hd);A("Energy damage",it.ed);if(it.brk)A("Guard break",JSON.stringify(it.brk).replace(/[{}"]/g,""));if(it.drone)A("Type","Drone");if(it.hook)A("Type","Hook");if(it.chrg)A("Type","Charge");if(it.mythic)A("Rarity","Mythic")}
   return `<h4>${it.n||"#"+id}</h4>`+(artSrc(k,id)?`<img alt="" src="${artSrc(k,id)}">`:"")+r.map(([a,b])=>`<div><span>${a}</span><b>${b}</b></div>`).join("")}
 let PK=null;
-function openPick(si){const k=si==0?"t":si==1?"l":"w";PK={si,k,list:opts(k,si-2)};$("bpt").textContent="PICK "+SL[si].toUpperCase();$("bps").value="";pkDraw();$("bpk").hidden=false;$("bps").focus()}
-function pkDraw(){const q=$("bps").value.trim().toLowerCase(),{k,list}=PK;$("bpg").innerHTML=`<button class="pt" data-pid=""><i style="width:40px;height:56px"></i><span>— empty —</span></button>`+list.filter(([i,n])=>!q||n.toLowerCase().includes(q)).map(([i,n])=>`<button class="pt" data-pid="${i}">${thumb(k,i)}<span>${n}</span></button>`).join("")}
+function openPick(s){PK={s,k:kindOf(s),list:opts(s)};$("bpt").textContent="PICK "+SLOTS[s].toUpperCase();$("bps").value="";pkDraw();$("bpk").hidden=false;$("bps").focus()}
+function pkDraw(){const q=$("bps").value.trim().toLowerCase(),{k,list}=PK;$("bpg").innerHTML=`<button class="pt" data-pid=""><i></i><span>— empty —</span></button>`+list.filter(([i,n])=>!q||n.toLowerCase().includes(q)).map(([i,n])=>`<button class="pt" data-pid="${i}">${thumb(k,i)}<span>${n}</span></button>`).join("")}
+function commit(){const kk=keyOf(BL.mi,BL.k),d=BL.d;d.name=$("bnm").value.trim();S.designs=S.designs||{};
+  if(!(d.t||d.l||Object.keys(d.w).length))delete S.designs[kk];else{const c=JSON.parse(JSON.stringify(d));c.m=(c.m||[]).filter(Boolean);if(!c.m.length)delete c.m;S.designs[kk]=c}
+  save()}
+function setSel(s,f,v){const d=BL.d,k=kindOf(s);let it=getIt(s);
+  if(f=="rm"||(f=="id"&&v==="")){if(s=="t")d.t=null;else if(s=="l")d.l=null;else if(k=="w")delete d.w[+s.slice(1)];else d.m=d.m.filter(x=>x!==it);if(BL.sel==s)BL.sel=null}
+  else{if(!it){it={id:null,lv:1,sh:false};if(s=="t")d.t=it;else if(s=="l")d.l=it;else if(k=="w")d.w[+s.slice(1)]=it;else d.m.push(it)}
+    if(f=="id"){it.id=+v;it.lv=Math.min(it.lv||1,maxLv(k,it.id));BL.sel=s}if(f=="lv")it.lv=Math.max(1,Math.min(maxLv(k,it.id),+v||1));if(f=="sh")it.sh=!!v}
+  commit();draw()}
 function draw(){const d=BL.d;
-  $("bwt").innerHTML=WV(BL.mi).map((s,k)=>`<button data-w="${k}" class="${k==BL.k?"on":""}">${k+1}${s.last?(MIS[BL.mi].boss?" · boss":" · last"):""}${((S.designs&&S.designs[keyOf(BL.mi,k)])||CAMPD[keyOf(BL.mi,k)])?" ✔":""}</button>`).join("");
+  $("bml").innerHTML=MIS.map((m,i)=>{let n=0;const W2=WV(i);for(let k=0;k<W2.length;k++)if(hasDes(keyOf(i,k)))n++;return `<button data-mi="${i}" class="${i==BL.mi?"on":""}">${i+1}. ${m.n}${m.boss?" ★":""}${n?` · ${n}/${W2.length} ✔`:""}</button>`}).join("");
+  $("bwt").innerHTML=WV(BL.mi).map((s,k)=>`<button data-w="${k}" class="${k==BL.k?"on":""}">${k+1}${s.last?(MIS[BL.mi].boss?"B":"L"):""}${hasDes(keyOf(BL.mi,k))?" ✔":""}</button>`).join("");
   $("bnm").value=d.name||"";$("bnm").placeholder=mqName(BL.mi,BL.k);
-  $("bpp").innerHTML=PL.map(([f,n])=>`<span>${n}</span><input type="number" data-p="${f}" min="1" max="1000" step="1" value="${d.p[f]}">`).join("");
+  document.querySelectorAll("#bpd button").forEach(x=>x.classList.toggle("on",+x.dataset.pd===(BL.pd||0)));
+  if(!$("badv").open||!document.activeElement||!document.activeElement.dataset.p){$("bpp").innerHTML=PL.map(([f,n])=>`<span>${n}</span><input type="number" data-p="${f}" min="1" max="1000" step="1" value="${d.p[f]}">`).join("")}
   {const cf=(S.designs&&S.designs._cfg)||CAMPD._cfg||{},st=cf.stars||[];$("bsp").innerHTML=[1,2].map(n=>{const v=Object.assign({},PCT0,STARP0[n],st[n]||{});return `<div class="sg"><b>${"★".repeat(n+1)} ${n==1?"Hard":"Insane"}</b><div class="pg">${PL.map(([f,nm])=>`<span>${nm}</span><input type="number" data-sp="${n}" data-f2="${f}" min="1" max="2000" value="${v[f]}">`).join("")}</div></div>`}).join("")}
-  $("bsl").innerHTML=SL.map((nm,si)=>{const it=si==0?d.t:si==1?d.l:d.w[si-2],k=si==0?"t":si==1?"l":"w",id=it&&it.id!=null?it.id:"";
-    return `<div class="sl" data-s="${si}"><span>${nm}</span><button type="button" class="pk" data-f="pick">${thumb(k,id)}<span>${id!==""?((k=="w"?W:K[k])[id].n||"#"+id):"— empty —"}</span></button><input type="number" data-f="lv" min="1" max="${id!==""?maxLv(k,id):50}" value="${it?it.lv||1:1}" ${id===""?"disabled":""}><label title="Shiny"><input type="checkbox" data-f="sh" ${it&&it.sh?"checked":""} ${id===""?"disabled":""}>✨</label><button data-f="rm" title="Remove">×</button></div>`}).join("");
+  document.querySelectorAll("#bld .sq").forEach(b=>{const s=b.dataset.sq,k=kindOf(s),it=getIt(s),id=it&&it.id!=null?it.id:"";b.className="sq"+(id!==""?" has":"")+(BL.sel==s?" on":"");b.title=SLOTS[s]+(id!==""?": "+nameOf(k,id):" (empty)");
+    b.innerHTML=`<small>${SLOTS[s]}</small>${id!==""?thumb(k,id):"<i>+</i>"}${id!==""&&it.lv>1?`<em>Lv ${it.lv}</em>`:""}`});
+  const s=BL.sel,it=s&&getIt(s);
+  $("bbar").innerHTML=it&&it.id!=null?`<b>${SLOTS[s]}: ${nameOf(kindOf(s),it.id)}</b><label>Level <input type="number" data-f="lv" min="1" max="${maxLv(kindOf(s),it.id)}" value="${it.lv||1}"></label><label><input type="checkbox" data-f="sh" ${it.sh?"checked":""}> Shiny</label><button data-f="pick">Change</button><button data-f="rm">Remove</button>`:`<span class="muted" style="margin:0">Click a square to pick an item. Click a filled square to change its level, make it shiny, or remove it.</span>`;
   stats()}
-function stats(){const m=build(),cv=$("bcv"),ex=document.getElementById("bst");bb=null;bbF=0;
-  if(!m){$("bst").innerHTML="";$("bwp").innerHTML="";return}
+function stats(){const m=build();bb=null;bbF=0;
+  if(!m){$("bst").innerHTML="";$("bwp").innerHTML="";BL.m=null;return}
   const d=BL.d,wt=(d.t?(K.t[d.t.id]||{}).w||0:0)+(d.l?(K.l[d.l.id]||{}).w||0:0)+Object.values(d.w).reduce((a,x)=>a+(x&&W[x.id]?W[x.id].w||0:0),0),cap=d.t&&K.t[d.t.id]?K.t[d.t.id].cap:0;
-  const F=n=>Math.round(n).toLocaleString();
+  const F=N,ut=[];if(m.tp)ut.push("Teleporter");if(m.shd&&m.shd.length)ut.push("Shield");
   $("bst").innerHTML=[["Hit points",F(m.max)],["Energy capacity",F(m.enCap)],["Energy regen",F(m.enMax)],["Heat capacity",F(m.hc)],["Cooling",F(m.cool)],["Weight",F(wt)+(cap?" / "+F(cap):"")]].map(([a,b])=>`<span>${a}</span><span>${b}</span>`).join("");
   $("bwp").innerHTML="<tr><th>Weapon</th><th>Damage</th><th>Energy</th><th>Heat</th></tr>"+m.weps.map(w=>{const n=w.shots>1?w.shots:1,lo=Math.round(w.dr[0]*n),hi=Math.round(w.dr[1]*n);return `<tr><td>${w.n}</td><td>${lo==hi?F(lo):F(lo)+"-"+F(hi)}</td><td>${F(w.en||0)}</td><td>${F(w.ht||0)}</td></tr>`}).join("");
   BL.m=m}
@@ -79,32 +119,29 @@ function loop(){if($("bld").hidden){rafOn=false;return}const cv=$("bcv"),m=BL.m;
       if(bb){const bw=bb.x1-bb.x0,bh=bb.y1-bb.y0,k=Math.min(w*.8/bw,h*.8/bh,3);g.save();g.translate(w/2-(bb.x0+bb.x1)/2*k,h*.9-bb.y1*k);g.scale(k,k);try{drawMech(g,0,0,1,m,0)}catch(e){}g.restore()}}}
   requestAnimationFrame(loop)}
 function msg(t){$("bmsg").textContent=t}
-function setSel(si,f,v){const d=BL.d,k=si==0?"t":si==1?"l":"w";let it=si==0?d.t:si==1?d.l:d.w[si-2];
-  if(f=="rm"||(f=="id"&&v==="")){if(si==0)d.t=null;else if(si==1)d.l=null;else delete d.w[si-2]}
-  else{if(!it){it={id:null,lv:1,sh:false};if(si==0)d.t=it;else if(si==1)d.l=it;else d.w[si-2]=it}
-    if(f=="id"){it.id=+v;it.lv=Math.min(it.lv||1,maxLv(k,it.id))}if(f=="lv")it.lv=Math.max(1,Math.min(maxLv(k,it.id),+v||1));if(f=="sh")it.sh=!!v}
-  draw()}
-$("bld").addEventListener("change",e=>{const t=e.target,row=t.closest(".sl");if(row&&t.dataset.f)return setSel(+row.dataset.s,t.dataset.f,t.type=="checkbox"?t.checked:t.value);
-  if(t.id=="bmi"){BL.mi=+t.value;BL.k=WV(BL.mi).length-1;load();draw()}if(t.id=="bnm"){BL.d.name=t.value.trim();return}
-  if(t.dataset.p){BL.d.p[t.dataset.p]=Math.max(1,+t.value||100);return stats()}
+$("bld").addEventListener("change",e=>{const t=e.target;
+  if(t.dataset.f&&BL.sel)return setSel(BL.sel,t.dataset.f,t.type=="checkbox"?t.checked:t.value);
+  if(t.id=="bnm"){commit();return draw()}
+  if(t.dataset.p){BL.d.p[t.dataset.p]=Math.max(1,+t.value||100);commit();return stats()}
   if(t.dataset.sp){S.designs=S.designs||{};const cf=S.designs._cfg=S.designs._cfg||JSON.parse(JSON.stringify(CAMPD._cfg||{stars:[{},JSON.parse(JSON.stringify(STARP0[1])),JSON.parse(JSON.stringify(STARP0[2]))]}));cf.stars=cf.stars||[{},{},{}];cf.stars[+t.dataset.sp]=Object.assign({},PCT0,STARP0[+t.dataset.sp],cf.stars[+t.dataset.sp]||{});cf.stars[+t.dataset.sp][t.dataset.f2]=Math.max(1,+t.value||100);save();return msg("Star percentages saved.")}});
 $("bld").addEventListener("input",e=>{if(e.target.id=="bps"&&PK)pkDraw()});
 $("bld").addEventListener("mouseover",e=>{const t=e.target.closest(".pt");if(t&&PK&&t.dataset.pid)$("bpi").innerHTML=itemInfo(PK.k,+t.dataset.pid)});
 $("bld").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
-  if(b.dataset.f=="pick")return openPick(+b.closest(".sl").dataset.s);
+  if(b.dataset.sq){const s=b.dataset.sq,it=getIt(s);if(it&&it.id!=null){BL.sel=BL.sel==s?null:s;return draw()}BL.sel=s;draw();return openPick(s)}
+  if(b.dataset.f=="pick"&&BL.sel)return openPick(BL.sel);
+  if(b.dataset.f=="rm"&&BL.sel)return setSel(BL.sel,"rm");
   if(b.id=="bpc"){PK=null;return $("bpk").hidden=true}
-  if(b.dataset.pid!=null&&PK){const si=PK.si;PK=null;$("bpk").hidden=true;return setSel(si,"id",b.dataset.pid)}
-  if(b.dataset.f=="rm")return setSel(+b.closest(".sl").dataset.s,"rm");
+  if(b.dataset.pid!=null&&PK){const s=PK.s;PK=null;$("bpk").hidden=true;return setSel(s,"id",b.dataset.pid)}
+  if(b.dataset.mi!=null){BL.mi=+b.dataset.mi;BL.k=WV(BL.mi).length-1;load();return draw()}
   if(b.dataset.w!=null){BL.k=+b.dataset.w;load();return draw()}
+  if(b.dataset.pd!=null){BL.pd=+b.dataset.pd;return draw()}
   if(b.id=="bx")return $("bld").hidden=true;
-  if(b.id=="bsv"){const kk=keyOf(BL.mi,BL.k),d=BL.d;d.name=$("bnm").value.trim();S.designs=S.designs||{};if(!(d.t||d.l||Object.keys(d.w).length)){delete S.designs[kk]}else S.designs[kk]=JSON.parse(JSON.stringify(d));save();draw();return msg("Saved. The campaign now uses this enemy on this browser.")}
-  if(b.id=="bcl"){const kk=keyOf(BL.mi,BL.k);if(S.designs)delete S.designs[kk];save();load();draw();return msg("Cleared.")}
+  if(b.id=="bcl"){const kk=keyOf(BL.mi,BL.k);if(S.designs)delete S.designs[kk];save();load();draw();return msg("Wave cleared.")}
   if(b.id=="bex"){const all=Object.assign({},CAMPD,S.designs||{});$("bjs").value=JSON.stringify({designs:all},null,1);return msg(Object.keys(all).length+" entries exported below (saved ones plus the ones already in the game).")}
   if(b.id=="bcp"){$("bjs").select();try{navigator.clipboard.writeText($("bjs").value)}catch(_){document.execCommand&&document.execCommand("copy")}return msg("Copied.")}
   if(b.id=="bim"){importDesigns($("bjs").value);load();draw();return msg("Imported.")}});
-window.openBuilder=()=>{if(BL.mi<0)BL.mi=0;$("bmi").innerHTML=MIS.map((m,i)=>`<option value="${i}">${i+1}. ${m.n}${m.boss?" (boss)":""}</option>`).join("");$("bmi").value=BL.mi;BL.k=Math.min(BL.k,WV(BL.mi).length-1);load();$("bld").hidden=false;draw();if(!rafOn){rafOn=true;requestAnimationFrame(loop)}};
+window.openBuilder=()=>{if(BL.mi<0)BL.mi=0;BL.k=Math.min(BL.k,WV(BL.mi).length-1);load();$("bld").hidden=false;draw();const a=$("bml").querySelector(".on");if(a)a.scrollIntoView({block:"nearest"});if(!rafOn){rafOn=true;requestAnimationFrame(loop)}};
 {const b=$("edb");if(b)b.onclick=()=>window.openBuilder()}
-document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest("#bpd button");if(!t)return;BL.pd=+t.dataset.pd;document.querySelectorAll("#bpd button").forEach(x=>x.classList.toggle("on",+x.dataset.pd===BL.pd));try{stats()}catch(_){}});
 if(location.hash=="#builder")setTimeout(window.openBuilder,800);
 })();
 </script>
