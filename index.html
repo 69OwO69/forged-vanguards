@@ -4747,7 +4747,7 @@ async function wDrop(){
   const x=old&&old.x!=null?old.x:MAXT;next.x=x;next.vx=x;
   b.e=next;b.fl=b.fl||[];b.proj=null;
   b.over=false;b.busy=true;
-  if(b.turn!="p"){b.turn="p";b.tl={p:1,e:2};b.p.used=[];b.p.did=false;b.ch=null}
+  b.turn="p";b.tl={p:1,e:2};b.p.used=[];b.p.did=false;b.ch=null;b.autoE=0;/* every new wave starts a fresh player turn */
   if(boss){bossIntro(b,900);controls();return}
   next.drop={t0:performance.now()+150,dur:1000};
   controls();await sleep(1450);if(B!==b||b.over)return;b.busy=false;controls();autoEnd()}
