@@ -1115,7 +1115,7 @@ button,[role=button],.nb,.bkb{touch-action:manipulation;-webkit-user-select:none
 #cv .cs .st_{position:absolute;left:0;width:100%;top:calc(52*var(--cu));bottom:calc(52*var(--cu));background:#000}
 #cv .cs .sh{position:absolute;left:0;width:100%;background:linear-gradient(#5d5d5d,#3a3a3a);border:calc(3*var(--cu)) solid #2a2a2a;cursor:grab}
 #cv .cm{padding:calc(2*var(--cu)) calc(8*var(--cu));font-weight:800;font-size:calc(35*var(--cu));line-height:1.28;color:#fff;word-break:break-word;text-shadow:calc(1*var(--cu)) calc(2*var(--cu)) 0 #000}
-#cv .cm b{color:#ff9d0a;font-weight:800;cursor:pointer}#cv .cm b:hover{text-decoration:underline}#cv .cb.lv{background:#2a0c08;border:calc(5*var(--cu)) solid #a8321f;border-radius:calc(9*var(--cu));box-shadow:inset 0 0 0 calc(3*var(--cu)) #5a1a10,0 calc(3*var(--cu)) 0 #3a0e08;padding:calc(6*var(--cu))}#cv .cb.lv img{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none}#cv .cb.lv:hover{filter:brightness(1.25)}
+#cv .cm b{color:#ff9d0a;font-weight:800;cursor:pointer}#cv .cm b:hover{text-decoration:underline}#cv .cb.lv{background:none;border:0;box-shadow:none;padding:0;border-radius:0;background-size:100% 100%;background-repeat:no-repeat;display:flex;align-items:center;justify-content:center}#cv .cb.lv img{width:62%;height:auto;display:block;pointer-events:none}#cv .cb.lv{filter:brightness(1.25) saturate(1.4)}#cv .cb.lv:hover{filter:brightness(1.6) saturate(1.8)}#cv .cb.lv:active{transform:scale(.94)}
 #cv .cm.w{color:#ff3b2f;font-weight:500;font-size:calc(31*var(--cu));display:flex;align-items:center;gap:calc(14*var(--cu));text-shadow:none}
 #cv .pr{height:calc(64.4*var(--cu));display:flex;align-items:center;gap:calc(8*var(--cu));padding-left:calc(6*var(--cu));cursor:pointer;background:#232323;color:#fff;font-weight:800;font-size:calc(34*var(--cu));text-shadow:calc(1*var(--cu)) calc(2*var(--cu)) 0 #000}
 #cv .pr:nth-child(even){background:#000}
@@ -6319,7 +6319,8 @@ function vChat(){seedChat();let h=bg("Chat");
 const cvOn=()=>scr=="chat"||(scr=="srch"&&ST.sb=="chat");
 const IM=(k)=>`<i><img src="${A["i_"+k].u}" style="width:100%;height:100%;display:block;object-fit:contain"></i>`;
 const u=n=>`calc(${n}*var(--cu))`;
-const LV=(a,x,y,z,ex="")=>`<button class="cb lv" data-a="${a}" style="left:${x};top:${y};width:${u(z)};height:${u(z)};${ex}"><img src="${fzDoor()}" alt="Leave"></button>`;
+let _lv=null;const lvArt=()=>_lv||(_lv=(()=>{const e=document.getElementById("wx"),f=x=>(x||"").replace(/^url\(["']?/,"").replace(/["']?\)$/,"");return{f:f(getComputedStyle(e).backgroundImage),d:f(getComputedStyle(e,"::after").backgroundImage)}})());
+const LV=(a,x,y,z,ex="")=>{const L=lvArt();return `<button class="cb lv" data-a="${a}" style="left:${x};top:${y};width:${u(z)};height:${u(z)};background-image:url(${L.f});${ex}"><img src="${L.d}" alt="Leave"></button>`};
 const CB=(a,k,x,y,z=108,ex="")=>`<button class="cb" data-a="${a}" style="left:${x};top:${y};width:${u(z)};height:${u(z)};${ex}">${IM(k)}</button>`;
 const PHONE='<svg class="ph" viewBox="0 0 26 46"><rect x="2" y="2" width="22" height="42" rx="5" fill="#000" stroke="#fff" stroke-width="3"/><rect x="9" y="37" width="8" height="3" rx="1.5" fill="#fff"/></svg>';
 const rkimg=p=>`<img class="rkimg" src="${RANKI[Math.max(0,Math.min(RANKI.length-1,rankOf(p.rating)-1))]}">`;
@@ -6347,7 +6348,7 @@ function cvChat(){seedChat();
   if(ST.chans)h+=`<div class="drop" style="left:${u(285)};top:${u(116)};width:${u(300)}">${CH().map(c=>`<div class="${c==ST.ch?"sel":""}" data-a="chPick" data-id="${c}">${esc(c)}</div>`).join("")}</div>`;
   if(scr=="srch")h+=cvSearch();
   return h}
-function cvSearch(){let h=`<div class="cdim"></div><div class="cfr" style="width:${u(1000)};height:${u(720)}"><div class="ttl">${ST.sres?"Search results":"Search online players"}</div><button class="cb lv xb" data-a="back" style="width:${u(66)};height:${u(66)};top:${u(-102)};right:${u(24)}"><img src="${fzDoor()}" alt="Leave"></button>`;
+function cvSearch(){let h=`<div class="cdim"></div><div class="cfr" style="width:${u(1000)};height:${u(720)}"><div class="ttl">${ST.sres?"Search results":"Search online players"}</div>${LV("back","auto",u(-102),66,`left:auto;right:${u(24)}`)}`;
   if(ST.sres){const rows=ST.sres.map(p=>`<div class="pr" data-a="srRow" data-id="${p.id}">${cvFlag(p)}${rkimg(p)}<span class="nm">${esc(p.name)}</span><span style="color:#9fc4e6;font-size:${u(30)}">${clanOf(p.clan)?esc(clanOf(p.clan).name):""}</span></div>`).join("");
     h+=`<div class="clst" style="left:${u(30)};right:${u(30)};top:${u(20)};bottom:${u(20)}">${rows||`<div class="lbl" style="padding-top:${u(200)}">No players found</div>`}</div>`}
   else h+=`<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:${u(14)}"><div class="lbl">Enter Player's Name:</div><input class="gin" id="mpSq" maxlength="20" autocomplete="off" value="${esc(ST.srch)}"><div class="lbl">-OR-</div><div class="lbl">Enter Player's ID:</div><input class="gin" id="mpSi" maxlength="9" autocomplete="off" value="${esc(ST.sid)}"><button class="cb" data-a="srGo" style="position:static;width:${u(138)};height:${u(138)};margin-top:${u(10)}">${IM("inspect")}</button></div>`;
