@@ -3150,7 +3150,7 @@ function pctMech(m,p){if(!p)return m;const q=Object.assign({},PCT0,p),R=(v,k)=>M
   if(q.en!=100){m.enCap=R(m.enCap,q.en);m.en=m.enCap}if(q.enr!=100)m.enMax=R(m.enMax,q.enr);
   if(q.dmg!=100){const k=q.dmg/100;m.weps=m.weps.map(w=>{const mul=(w.shots>1),f=v=>mul?v*k:Math.max(1,Math.round(v*k));return{...w,dmg:f(w.dmg),hd:w.hd?f(w.hd):w.hd,dr:w.dr&&w.dr.map(f),heal:w.heal&&f(w.heal),ed:w.ed?f(w.ed):w.ed}})}
   return m}
-const STARP0=[{},{hp:160,dmg:160,hc:160,cool:160,en:160,enr:160},{hp:240,dmg:240,hc:240,cool:240,en:240,enr:240}];
+const STARP0=[{},{hp:114,dmg:114,hc:114,cool:114,en:114,enr:114},{hp:186,dmg:186,hc:186,cool:186,en:186,enr:186}];/* from the real game: Hard = 114%, Insane = 186% of the Easy stats */
 const starP=d=>{const c=(S.designs&&S.designs._cfg)||CAMPD._cfg;return(c&&c.stars&&c.stars[d])||STARP0[d]||{}};
 function WV(i){const m=MIS[i];if(m.swarm)return[{t:m.t,l:m.l,w:m.w,mul:m.mul,last:1}];
   const n=WV_cnt(i),out=[];
@@ -3201,7 +3201,7 @@ function mqDraw(){const q=$("mq"),i=MQ.i,m=MIS[i],WS=WV(i),cl=cdOf(m);if(MQ.d>cl
   const d=MQ.d,dn=d+1,first=cl<dn,cr=Math.round((first?m.r:Math.round(m.r/3))*DIFR[d]),tk=first?5:0,last=MQ.w==WS.length-1&&m.boss;
   q.innerHTML=`<button type="button" class="mqb" data-px="1" tabindex="-1"></button><div class="mqp"><i class="mqfr"></i><b class="mqt">${m.n}</b><button type="button" class="mqx" data-px="1" title="Close"><img alt="Close" src="${MQA.x}"></button>
 <div class="mql">${WS.map((s_,k)=>`<button type="button" class="mqr${k==MQ.w?" on":""}" data-mw="${k}"><b>${k+1}</b><canvas width="140" height="120" data-k="${k}"></canvas><span class="${s_.last&&m.boss?"bo":""}">${mqName(i,k)}</span></button>`).join("")}</div>
-<div class="mqd">${[0,1,2].map(n=>`<button type="button" class="mqs${n==d?" on":""}${n>cl?" lk":""}" data-md="${n}" ${n>cl?"disabled":""} title="${n>cl?"Clear the previous difficulty to unlock":["Easy","Normal","Hard"][n]}">${n>cl?`<img class="lkk" alt="" src="${MQA.lk}">`:`${("<img alt='' src='"+MQA.sf+"'>").repeat(n+1)}`}</button>`).join("")}</div>
+<div class="mqd">${[0,1,2].map(n=>`<button type="button" class="mqs${n==d?" on":""}${n>cl?" lk":""}" data-md="${n}" ${n>cl?"disabled":""} title="${n>cl?"Clear the previous difficulty to unlock":["Easy","Hard","Insane"][n]}">${n>cl?`<img class="lkk" alt="" src="${MQA.lk}">`:`${("<img alt='' src='"+MQA.sf+"'>").repeat(n+1)}`}</button>`).join("")}</div>
 <div class="mqg" style="background-image:url(${mqFloor(i)})"><canvas id="mqc"></canvas><b class="mqn${last?" bo":""}">${mqName(i,MQ.w)}</b></div>
 <div class="mqy"><span class="g"><img alt="" src="${MQA.gold}">${cr.toLocaleString()}</span>${tk?`<span class="k"><img alt="" src="${MQA.tok}">${tk}</span>`:""}</div>
 <button type="button" class="mqfb" data-start="1" title="Fight"><img alt="Fight" src="${MQA.fb}"></button></div>`;
