@@ -3402,7 +3402,7 @@ function bossIntro(b0,DL){const DUR=1200,NM=String(b0.mi.n||"BOSS").toUpperCase(
   setTimeout(()=>{if(B!==b0)return;let el=document.getElementById("cname");if(el)el.remove();document.body.insertAdjacentHTML("beforeend",'<div id="cname" style="font-size:min(clamp(38px,8vw,112px),calc(94vw / '+(NM.length*.8)+'))">'+[...NM].map((c,i)=>'<span style="animation-delay:'+i*175+'ms">'+(c==" "?"&nbsp;":c)+'</span>').join("")+'</div>');[...NM].forEach((c,i)=>setTimeout(()=>{playBuf("foot",.9,.92+(i%3)*.05)},i*175))},DL+DUR+400);
   setTimeout(()=>{const el=document.getElementById("cname");if(el)el.classList.add("out")},END-500);
   setTimeout(()=>{document.body.classList.remove("bossin");b0.cine=0;document.body.classList.remove("cine");const el=document.getElementById("cname");if(el)el.remove();arenaTrackStart(b0)},END);
-  setTimeout(()=>{if(B===b0&&!b0.over){b0.busy=false;controls()}},END+450)}
+  setTimeout(()=>{if(B===b0&&!b0.over){if(b0.wi>0&&b0.turn=="p"){b0.p.did=false;b0.p.used=[];b0.ch=null;b0.nb=0}b0.busy=false;controls()}},END+450)}
 function startBattle(mi){document.body.classList.remove("bossin");playBuf("match");stopMusic(1);try{CAMB.stop()}catch(e){}arenaDuck();arenaPrep();startBattle0(mi);{document.body.classList.remove("cine");if(!document.getElementById("cine"))document.body.insertAdjacentHTML("beforeend",'<div id="cine"></div>');const b0=B;if(b0&&b0.e&&!b0.e.swarm&&b0.mi&&b0.mi.boss&&!(b0.wn>1))bossIntro(b0,4000)}
   const v=$("vs"),pl=v.querySelector(".vl"),pr=v.querySelector(".vr"),cl=pl.querySelector("canvas"),cr=pr.querySelector("canvas"),b=B;
   pr.querySelector(".nm").textContent=mi?(mi.n||"MISSION "+mi.id):"ENEMY";
@@ -4749,10 +4749,10 @@ async function wDrop(){
   const x=old&&old.x!=null?old.x:MAXT;next.x=x;next.vx=x;
   b.e=next;b.fl=b.fl||[];b.proj=null;
   b.over=false;b.busy=true;
-  b.turn="p";b.tl={p:1,e:2};b.p.used=[];b.p.did=false;b.ch=null;b.autoE=0;/* every new wave starts a fresh player turn */
+  b.turn="p";b.tl={p:1,e:2};b.p.used=[];b.p.did=false;b.ch=null;b.autoE=0;b.nb=0;/* every new wave starts a fresh player turn */
   if(boss){bossIntro(b,900);controls();return}
   next.drop={t0:performance.now()+150,dur:1000};
-  controls();await sleep(1450);if(B!==b||b.over)return;b.busy=false;controls();autoEnd()}
+  controls();await sleep(1450);if(B!==b||b.over)return;if(b.turn=="p"){b.p.did=false;b.p.used=[];b.ch=null;b.nb=0}b.busy=false;controls();autoEnd()}
 {const _fw=finish;finish=function(won){const b=B;if(b&&b.mi&&won&&b.wn>1&&b.wi<b.wn-1&&!b.over&&!b.skipFin){wDrop();return}return _fw.apply(this,arguments)}}
 function lobbyOff(){pairStop();menuTrackSync()}
 async function lobbyOn(){if(PR||S.mute||!AC||!$("battle").classList.contains("hide")){menuTrackSync();return}await pairStart("lobby");menuTrackSync()}
