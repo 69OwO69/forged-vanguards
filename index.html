@@ -6198,7 +6198,10 @@ function aiApk(e,p){
   /* drone: switch on when energy covers 2 attacks, back off when it can no longer pay for one */
   const dw=W.find(w=>w.drone);
   if(dw){if(e.don){if(dw.en>e.en)return{t:"dd"}}else if(e.en>=dw.en*2&&!e.did)return{t:"d"}}
-  const score=w=>(w.shots||1)*(w.dr?(w.dr[0]+w.dr[1])/2:w.dmg)+2*((w.hd||0)+(w.ed||0)+(w.cd||0))+10*(w.rd||0);
+  /* APK getWeaponAverageDamage: the target's resistance to this damage type comes off the base first (floor 1), what is left comes off the addon (floor 0); the guns are then ranked on base + addon/2 plus the heat/energy bonus */
+  const score=w=>{const n=w.shots||1,lo=n*(w.dr?w.dr[0]:w.dmg),hi=n*(w.dr?w.dr[1]:w.dmg);let base=lo,add=Math.max(0,hi-lo),r=0;try{r=Math.max(0,rsOf(p,w)||0)}catch(_){}
+    if(r>=base){r-=base;base=1}else{base-=r;r=0}if(r>0)add=Math.max(0,add-r);
+    return base+add/2+2*((w.hd||0)+(w.ed||0)+(w.cd||0))+10*(w.rd||0)};
   const top=ix=>{if(!ix.length)return[];let b=-1e9;for(const i of ix)b=Math.max(b,score(W[i]));return ix.filter(i=>score(W[i])>=b-1e-6)};
   const pick=a=>a[Math.floor(Math.random()*a.length)];
   /* shield: switched on when the bot has nothing better to do this round */
