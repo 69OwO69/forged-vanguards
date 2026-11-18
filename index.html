@@ -2631,6 +2631,7 @@ function fzRender(tu){
     const eqd=EQU(c.u);return `<div class="fzt rt rt${RI(kk,ii)} ${off?"off":""} ${tg?"tg":""} ${eqd?"eq":""} ${c.s?"shn":""}" data-fa="${kk}:${ii}:${c.u}" draggable="${!has||ok}">${ICO(kk,it,c.s,lv,c.kit)}${lv>=1&&!it.nou?`<b class="clv">${lvBadge(lv)}</b>`:""}${ok&&!mkUp()?`<b class="q3">+${fzY(kk,ii,c.u).toLocaleString()}</b>`:""}${ok&&c.x&&!mkUp()?`<b class="q5">upgraded</b>`:""}</div>`};
   let L="",M="",tiles=[],queue=[];const cn={};
   for(const [kk,ii,c] of all){const sel=has&&FZ.ix[c.u]&&fzOK(kk,ii,c.u);if(sel)queue.push(mk(kk,ii,c));else{const cc=fzCat(kk,K[kk][ii]);cn[cc]=(cn[cc]||0)+1;if(!fast&&cc===FZ.cat)tiles.push(mk(kk,ii,c))}}
+  {const ko=CKITS.filter(c=>(S.ck[c.id]||0)>0);if(ko.length){cn.kit=(cn.kit||0)+ko.reduce((n,c)=>n+S.ck[c.id],0);if(!fast&&FZ.cat==="kit"&&!mkUp())ko.slice().reverse().forEach(c=>{const cp0=has?copyOf(k,i,FZ.u):null,bad=!has||k=="m"||!cp0||cp0.s||cp0.kit;tiles.unshift(`<div class="fzt rt rt0${bad?" off":""}" data-fck="${c.id}" title="${c.n} colour kit" draggable="false"><img src="${c.ic}" alt=""><b class="q3">x${S.ck[c.id]}</b><b class="q5">${c.n}</b></div>`)})}}
   const CL=`<button class="fzlvb" data-fcl="1" title="Leave"><img src="${fzDoor()}" alt="Leave"></button>`+FZC.map(([id,nm,ic])=>`<button class="fzcat${id===FZ.cat?" on":""}" data-fcat="${id}" title="${nm}"><img src="${ic=="kit"?KITCAT:WSI["c_"+ic]}" alt=""><b>${cn[id]||0}</b></button>`).join("");
   if(has){
     const cp=copyOf(k,i,FZ.u);if(!cp){FZ.k=null;FZ.u=null;return fzRender()}
@@ -2682,8 +2683,7 @@ async function fzAnim(x0,x1,r,pv){
 function fzKitUI(k,cp){if(k=="m"||!cp)return"";const ck=CKT(cp.kit);
   if(cp.s)return`<div class="fzs2 fzkit">Colour kits can't be used on shiny items.</div>`;
   if(ck)return`<div class="fzkit"><img src="${ck.ic}" alt=""><span><b>${ck.n}</b><i>Colour kit applied \u00b7 permanent</i></span></div>`;
-  const own=CKITS.filter(c=>(S.ck[c.id]||0)>0);
-  return`<div class="fzkit">${own.length?own.map(c=>`<button class="fzb" data-fkit="${c.id}"><img src="${c.ic}" alt="">Use ${c.n} <b>x${S.ck[c.id]}</b></button>`).join(""):`<span class="fzs2">No colour kits. Buy them in the Daily shop.</span>`}</div>`}
+  return`<div class="fzkit"><span class="fzs2">${CKITS.some(c=>(S.ck[c.id]||0)>0)?"Open the Kits tab and pick a colour kit to paint this item.":"No colour kits. Buy them in the Daily shop."}</span></div>`}
 function fzKit(id){if(!FZ||FZ.k==null||FZ.k=="m")return;const cp=copyOf(FZ.k,FZ.i,FZ.u),ck=CKT(id);if(!cp||!ck||cp.s||cp.kit||!(S.ck[id]>0))return;const it=K[FZ.k][FZ.i];
   askBuy(`<div>Apply <i>${ck.n}</i> to <i>${it.n}</i>? The kit is used up and the colour is permanent.</div>`,()=>{const c2=copyOf(FZ.k,FZ.i,FZ.u);if(!c2||c2.s||c2.kit||!(S.ck[id]>0))return;S.ck[id]--;c2.kit=id;save();playBuf("equip",.5);toast(ck.n+" applied to "+it.n);fzRender()})}
 async function fzDo(){
@@ -2839,6 +2839,7 @@ $("fz").onclick=e=>{if(!FZ||FZ.busy)return;const b=e.target.closest("button"),t=
   if(b&&b.dataset.pg){const g=$("fzgs"),t=g.querySelector(".fzt:not(.gone)"),rh=t?t.offsetHeight+(parseFloat(getComputedStyle(g).rowGap)||0):75;g.scrollBy({top:(+b.dataset.pg)*Math.max(rh,Math.floor(g.clientHeight/rh)*rh),behavior:"smooth"});return}
   if(b&&b.dataset.fm){const q=b.dataset.fm;FZ.sel[q]=Math.max(0,(FZ.sel[q]||0)-1);return fzRender()}
   if(sl&&FZ.k!=null){FZ.k=null;FZ.u=null;FZ.ix={};return fzRender()}
+  if(t&&t.dataset.fck){if(FZ.k==null)return toast("Pick an item to colour first.");const cp0=copyOf(FZ.k,FZ.i,FZ.u);if(FZ.k=="m")return toast("Colour kits can't be used on modules.");if(cp0&&cp0.s)return toast("Colour kits can't be used on shiny items.");if(cp0&&cp0.kit)return toast("This item already has a colour kit.");return fzKit(t.dataset.fck)}
   if(t)fzPick(t.dataset.fa)};
 {let dr=null,rp=0;const G=()=>$("fzgs"),B=()=>$("fzsb"),rh=()=>{const g=G(),t=g&&g.querySelector(".fzt:not(.gone)");return t?t.offsetHeight+(parseFloat(getComputedStyle(g).rowGap)||0):75};
  $("fz").addEventListener("pointerdown",e=>{const b=e.target.closest&&e.target.closest(".fzsb");if(!b||b.classList.contains("off"))return;const g=G(),th=b.querySelector("i"),hit=th.getBoundingClientRect(),k=b.getBoundingClientRect().height/b.offsetHeight;b.setPointerCapture(e.pointerId);
