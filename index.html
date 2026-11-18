@@ -3150,7 +3150,7 @@ function pctMech(m,p){if(!p)return m;const q=Object.assign({},PCT0,p),R=(v,k)=>M
   if(q.en!=100){m.enCap=R(m.enCap,q.en);m.en=m.enCap}if(q.enr!=100)m.enMax=R(m.enMax,q.enr);
   if(q.dmg!=100){const k=q.dmg/100;m.weps=m.weps.map(w=>{const mul=(w.shots>1),f=v=>mul?v*k:Math.max(1,Math.round(v*k));return{...w,dmg:f(w.dmg),hd:w.hd?f(w.hd):w.hd,dr:w.dr&&w.dr.map(f),heal:w.heal&&f(w.heal),ed:w.ed?f(w.ed):w.ed}})}
   return m}
-const STARP0=[{},{hp:114,dmg:114,hc:114,cool:114,en:114,enr:114},{hp:186,dmg:186,hc:186,cool:186,en:186,enr:186}];/* from the real game: Hard = 114%, Insane = 186% of the Easy stats */
+const STARP0=[{},{hp:214,dmg:214,hc:214,cool:214,en:214,enr:214},{hp:286,dmg:286,hc:286,cool:286,en:286,enr:286}];/* from the real game: Hard = 2.14x, Insane = 2.86x the Easy stats */
 const starP=d=>{const c=(S.designs&&S.designs._cfg)||CAMPD._cfg;return(c&&c.stars&&c.stars[d])||STARP0[d]||{}};
 function WV(i){const m=MIS[i];if(m.swarm)return[{t:m.t,l:m.l,w:m.w,mul:m.mul,last:1}];
   const n=WV_cnt(i),out=[];
