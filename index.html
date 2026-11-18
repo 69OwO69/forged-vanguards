@@ -6218,7 +6218,7 @@ function aiApk(e,p){
   const l15=top(W.map((w,i)=>i).filter(i=>gunOK(W[i])&&afford(W[i])));
   let want=-1;
   if(l15.length){const l16=top(W.map((w,i)=>i).filter(i=>gunOK(W[i])&&afford(W[i])&&!e.used[i]&&inR(W[i],d)));want=l16.length?pick(l16):l15[0];
-    if(inR(W[want],d)){if(!e.used[want])return{t:"g",ix:[want]};return shdOpt()}}/* already fired and still in range: hold position instead of shuffling */
+    if(inR(W[want],d)&&!e.used[want])return{t:"g",ix:[want]}}/* already fired and still in range: like the APK bot it backs off to a tile where the gun still reaches (step 3), and only cools down when there is no such tile */
   /* 3. reposition so the wanted gun is in range */
   if(canMove(e)){
     const dir0=px_>x?1:-1;
