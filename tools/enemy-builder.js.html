@@ -3,14 +3,14 @@
 (()=>{
 const $=id=>document.getElementById(id);
 const SL=["Torso","Legs","Top 1","Top 2","Left 1","Left 2","Right 1","Right 2","Drone"];
-let BL={mi:0,k:0,d:null};
+let BL={mi:0,k:0,d:null};window._BL=BL;
 const keyOf=(mi,k)=>{const m=MIS[mi];return k==WV(mi).length-1?String(m.id):m.id+":"+k};
 const blank=()=>({t:null,l:null,w:{},name:"",p:Object.assign({},PCT0)});
 const PL=[["hp","Health"],["dmg","Damage"],["en","Energy capacity"],["enr","Energy regen"],["hc","Heat capacity"],["cool","Cooling"]];
 const load=()=>{const kk=keyOf(BL.mi,BL.k),d=(S.designs&&S.designs[kk])||(typeof CAMPD!="undefined"&&CAMPD[kk]);BL.d=d?JSON.parse(JSON.stringify(d)):blank();BL.d.p=Object.assign({},PCT0,BL.d.p||{});if(BL.d.name==null)BL.d.name=""};
 const maxLv=(k,id)=>CAPL[RI(k,id)]||10;
 const opts=(k,slot)=>{const out=[];const src=k=="w"?W:K[k];for(const i in src){const it=src[i];if(!it||it.gone)continue;if(k=="w"){const dr=!!it.drone;if(slot==6?!dr:dr)continue;if(slot<2&&it.side)continue}out.push([+i,it.n||("#"+i)])}return out.sort((a,b)=>a[1].localeCompare(b[1]))};
-function build(){const d=BL.d;if(!(d.t||d.l||Object.keys(d.w).length))return null;try{const dd=JSON.parse(JSON.stringify(d));if(dd.t&&dd.t.id==null)dd.t=null;const e=specMech(dd);pctMech(e,dd.p);return e}catch(e){console.error(e);return null}}
+function build(){const d=BL.d;if(!(d.t||d.l||Object.keys(d.w).length))return null;try{const dd=JSON.parse(JSON.stringify(d));if(dd.t&&dd.t.id==null)dd.t=null;const e=specMech(dd);pctMech(e,dd.p);const pd=BL.pd||0;if(pd==1||pd==2)pctMech(e,starP(pd));const kk=["dg","or","r4","mb"][pd]||"dg";e.tkit=kk;e.lkit=kk;e.wkit=(e.wids||[]).map(()=>kk);return e}catch(e){console.error(e);return null}}
 const css=`#bld{position:fixed;left:0;top:0;right:0;bottom:0;z-index:200;background:#07111c;color:#e6eefb;font:14px/1.3 ACE,Arial,sans-serif;display:flex;flex-direction:column}
 #bld[hidden]{display:none}#bld *{box-sizing:border-box}
 #bld .bh{display:flex;align-items:center;gap:12px;padding:10px 16px;background:#0e2a44;border-bottom:3px solid #0a6aa8;flex:none}
@@ -23,7 +23,7 @@ const css=`#bld{position:fixed;left:0;top:0;right:0;bottom:0;z-index:200;backgro
 #bld .wt{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 12px}#bld .wt button.on{background:#0a6aa8;border-color:#7fd0ff}
 #bld .sl{display:grid;grid-template-columns:70px 1fr 64px 40px 30px;gap:6px;align-items:center;margin-bottom:7px}
 #bld .sl select{min-width:0;width:100%}#bld .pk{display:flex;align-items:center;gap:8px;text-align:left;min-width:0;height:46px;padding:3px 8px}#bld .pk span{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}#bld .pk img,#bld .pt img{width:40px;height:38px;object-fit:contain;flex:none}#bld .pk i,#bld .pt i{width:40px;height:38px;flex:none}#bld .sl input[type=number]{width:100%}
-#bld canvas{width:100%;height:240px;background:#162636;border-radius:6px;display:block}
+#bpd button.on{background:#2f6fd0;border-color:#8fb8ff;color:#fff}#bld canvas{width:100%;height:240px;background:#162636;border-radius:6px;display:block}
 #bld table{width:100%;border-collapse:collapse;margin-top:8px}#bld td,#bld th{padding:3px 6px;border-bottom:1px solid #17496f;text-align:left;font-weight:400}
 #bld .st{display:grid;grid-template-columns:1fr auto;gap:2px 10px;margin-top:10px}#bld .st span:nth-child(even){text-align:right;color:#ffd24a}
 #bld textarea{width:100%;height:100px;font:12px monospace;resize:vertical}#bld .muted{color:#7f98b0;font-size:12px}#bld .pg{display:grid;grid-template-columns:1fr 70px;gap:4px 8px;align-items:center}#bld .pg input{width:100%}#bld .sg{margin-bottom:8px}#bld .sg b{display:block;font-weight:400;color:#ffd24a;margin-bottom:3px}
@@ -42,7 +42,7 @@ document.body.insertAdjacentHTML("beforeend",`<div id="bld" hidden><div class="b
 <h3>DIFFICULTY STARS</h3><div id="bsp"></div><div class="muted" style="margin-top:6px">Applied on top of the wave percentages, for every mission. Defaults are the real game's numbers: Hard 214% (2.14x), Insane 286% (2.86x).</div>
 <h3 style="margin-top:14px">THIS WAVE</h3><button id="bsv" class="go" style="width:100%">Save</button><button id="bcl" style="width:100%;margin-top:6px">Clear this wave</button><div class="muted" id="bmsg" style="margin-top:8px"></div></div>
 <div class="col c2"><h3>EQUIPMENT</h3><div id="bsl"></div><div class="muted">Modules were removed from the game, so enemies have no module slots.</div></div>
-<div class="col c3"><h3>PREVIEW</h3><canvas id="bcv"></canvas><div class="st" id="bst"></div><table id="bwp"></table>
+<div class="col c3"><h3>PREVIEW</h3><div id="bpd" style="display:flex;gap:6px;margin-bottom:8px"><button data-pd="0">Easy</button><button data-pd="1">Hard</button><button data-pd="2">Insane</button><button data-pd="3">Boss</button></div><canvas id="bcv"></canvas><div class="st" id="bst"></div><table id="bwp"></table>
 <h3 style="margin-top:16px">EXPORT / IMPORT</h3><textarea id="bjs" spellcheck="false"></textarea><div style="display:flex;gap:6px;margin-top:6px"><button id="bex">Export all</button><button id="bcp">Copy</button><button id="bim">Import</button></div></div></div></div>`);
 const sel=(arr,v)=>arr.map(([i,n])=>`<option value="${i}"${i==v?" selected":""}>${n}</option>`).join("");
 let rafOn=false,bb=null,bbF=0;
@@ -104,6 +104,7 @@ $("bld").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)r
   if(b.id=="bim"){importDesigns($("bjs").value);load();draw();return msg("Imported.")}});
 window.openBuilder=()=>{if(BL.mi<0)BL.mi=0;$("bmi").innerHTML=MIS.map((m,i)=>`<option value="${i}">${i+1}. ${m.n}${m.boss?" (boss)":""}</option>`).join("");$("bmi").value=BL.mi;BL.k=Math.min(BL.k,WV(BL.mi).length-1);load();$("bld").hidden=false;draw();if(!rafOn){rafOn=true;requestAnimationFrame(loop)}};
 {const b=$("edb");if(b)b.onclick=()=>window.openBuilder()}
+document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest("#bpd button");if(!t)return;BL.pd=+t.dataset.pd;document.querySelectorAll("#bpd button").forEach(x=>x.classList.toggle("on",+x.dataset.pd===BL.pd));try{stats()}catch(_){}});
 if(location.hash=="#builder")setTimeout(window.openBuilder,800);
 })();
 </script>
