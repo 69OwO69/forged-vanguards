@@ -1155,6 +1155,14 @@ button,[role=button],.nb,.bkb{touch-action:manipulation;-webkit-user-select:none
 #cv .rr.me{background:linear-gradient(#b87000,#a45f00);border-top:calc(2*var(--cu)) solid #d89a2a}
 #cv .rr.sel{filter:brightness(1.45)}
 #cv .rr .ph{height:calc(52*var(--cu));width:calc(30*var(--cu))}
+
+#cv canvas{background:none!important;border:0!important;box-shadow:none!important;outline:0}#cv .hd2{position:absolute;left:calc(26*var(--cu));top:calc(-82*var(--cu));height:calc(68*var(--cu));display:flex;align-items:center;gap:calc(18*var(--cu));color:#fff;font-weight:900;font-size:calc(40*var(--cu));text-shadow:calc(2*var(--cu)) calc(3*var(--cu)) 0 #000;white-space:nowrap}
+#cv .hd2 img{height:calc(64*var(--cu));width:calc(64*var(--cu));object-fit:contain}
+#cv .tabo{outline:calc(7*var(--cu)) solid #ff9a0a;outline-offset:calc(3*var(--cu));border-radius:calc(12*var(--cu))}
+#cv .emp{position:absolute;width:calc(108*var(--cu));height:calc(108*var(--cu));border-radius:calc(14*var(--cu));background:#000d14;border:calc(8*var(--cu)) solid #04202f}
+#cv .bl{position:absolute;background:linear-gradient(90deg,#1583c4,#0e66a2)}
+#cv .ipt{position:absolute;color:#fff;font-weight:900;text-shadow:calc(2*var(--cu)) calc(3*var(--cu)) 0 #000;white-space:nowrap}
+#cv .ml{position:absolute;color:#fff;font-weight:900;font-size:calc(40*var(--cu));text-shadow:calc(2*var(--cu)) calc(3*var(--cu)) 0 #000;white-space:nowrap}
 #cv .drop{position:absolute;background:#021a2a;border:calc(5*var(--cu)) solid #0f7fc4;border-radius:calc(10*var(--cu));z-index:5;overflow:hidden}
 #cv .drop div{padding:calc(10*var(--cu)) calc(24*var(--cu));color:#fff;font-weight:800;font-size:calc(36*var(--cu));cursor:pointer}
 #cv .drop div:hover,#cv .drop div.sel{background:#0f4f7e}
@@ -6334,7 +6342,7 @@ function vChat(){seedChat();let h=bg("Chat");
   if(ST.chans)h+=art(A.a_chan,182,97)+`<div class="lst" style="left:196px;top:109px;width:270px;height:205px;z-index:5">${CH().map(c=>`<div class="chrow ${c==ST.ch?"sel":""}" data-a="chPick" data-id="${c}">${esc(c)}</div>`).join("")}</div>`;
   return `<div style="position:absolute;left:0;top:0;width:800px;height:497px;transform:scale(.965);transform-origin:0 0">${h}</div>`}
 
-const cvOn=()=>scr=="chat"||scr=="rank"||(scr=="srch"&&ST.sb=="chat");
+const cvOn=()=>scr=="chat"||scr=="rank"||scr=="insp"||(scr=="srch"&&ST.sb=="chat");
 const IM=(k)=>`<i><img src="${A["i_"+k].u}" style="width:100%;height:100%;display:block;object-fit:contain"></i>`;
 const u=n=>`calc(${n}*var(--cu))`;
 let _lv=null;const lvArt=()=>_lv||(_lv=(()=>{const e=document.getElementById("wx"),f=x=>(x||"").replace(/^url\(["']?/,"").replace(/["']?\)$/,"");return{f:f(getComputedStyle(e).backgroundImage),d:f(getComputedStyle(e,"::after").backgroundImage)}})());
@@ -6367,7 +6375,35 @@ function cvRank(){const L=sortedPlayers();
   h+=`<div class="rkh"><span style="left:${u(10)}">POSITION</span><span style="left:${u(196)}">LEVEL</span><span style="left:${u(418)}">NAME</span><span style="left:${u(1192)}">ARENA POINTS</span></div>`;
   const rows=L.map((p,i)=>`<div class="rr ${p.me?"me":""} ${ST.sel==p.id?"sel":""}" data-a="rkRow" data-id="${p.id}"><span style="left:${u(10)}">${fmt(i+1)}</span><span style="left:${u(196)}">${lvOf(p)}</span><div class="fgw" style="position:absolute;left:${u(296)};top:50%;transform:translateY(-50%)">${cvFlag(p)}</div><img src="${RANKI[Math.max(0,Math.min(RANKI.length-1,rankOf(p.rating)-1))]}" style="left:${u(344)};width:${u(52)};height:${u(52)}"><span style="left:${u(418)}">${esc(p.name)}</span>${p.mob?PHONE.replace('class="ph"','class="ph" style="left:'+u(1138)+'"'):""}<span style="left:${u(1192)}">${fmt(p.rating)}</span></div>`).join("");
   h+=`<div class="clst" id="mpL" style="left:${u(26)};right:${u(110)};top:${u(340)};bottom:${u(14)}">${rows}</div>`+sbar("mpL",`right:${u(22)};top:${u(278)};bottom:${u(14)};width:${u(88)}`);
+  if(ST.pp&&scr=="rank")h+=cvProfile();
   return h}
+
+const RK=p=>`<img src="${RANKI[Math.max(0,Math.min(RANKI.length-1,rankOf(p.rating)-1))]}">`;
+const cfram=(w,h,head,body,closeAct)=>`<div class="cdim" data-a="${closeAct}"></div><div class="cfr" style="width:${u(w)};height:${u(h)}"><div class="hd2">${head}</div>${LV(closeAct,"auto",u(-84),68,`left:auto;right:${u(10)}`)}${body}</div>`;
+const TABB=(k,ic,x,y,on)=>`<button class="cb ${on?"tabo":""}" data-a="it_${k}" style="left:${u(x)};top:${u(y)};width:${u(130)};height:${u(130)}">${IM(ic)}</button>`;
+function cvProfile(){const p=find(ST.pp);if(!p)return"";const bl=D.blocked.includes(p.id);
+  const B5=(a,ic,x,ex="")=>`<button class="cb" data-a="${a}" style="left:${u(x)};top:${u(54)};width:${u(108)};height:${u(108)};${ex}">${IM(ic)}</button>`;
+  return cfram(760,330,`${RK(p)}<span>${esc(p.name)}</span>`,B5("ppBlock",bl?"chatUnBlock":"chatBlock",31)+B5("ppInv","createBattleInvitation",170,p.me?"opacity:.4":"")+`<div class="emp" style="left:${u(309)};top:${u(54)}"></div>`+B5("ppChat","chat",448)+B5("ppInsp","inspect",587),"ppClose")}
+function cvInsp(){const p=find(ST.insp)||me(),c=clanOf(p.clan);
+  let b=`<div class="bl" style="left:${u(380)};top:0;width:${u(14)};bottom:0"></div><div class="bl" style="left:0;top:${u(318)};width:${u(380)};height:${u(14)}"></div>`;
+  b+=TABB("mech","mech",30,22,ST.itab=="mech")+TABB("clan","clan",208,22,ST.itab=="clan")+TABB("rep","replays",118,170,ST.itab=="rep");
+  b+=`<div class="ipt" style="left:0;width:${u(380)};top:${u(360)};text-align:center;font-size:${u(40)};color:${p.on?"#12b012":"#8a8f94"}">${p.on?"Online":"Offline"}</div><div class="ipt" style="left:0;width:${u(380)};bottom:${u(26)};text-align:center;font-size:${u(34)}">${esc(p.name)}-${p.pid}</div>`;
+  if(ST.itab=="mech"){const n=p.me?1:3;ST.mi=Math.min(ST.mi,n-1);
+    b+=`<canvas id="mpM" width="492" height="492" style="position:absolute;left:${u(560)};top:${u(8)};width:${u(740)};height:${u(740)}"></canvas>`;
+    if(n>1)b+=`<svg data-a="mPrev" viewBox="0 0 100 130" style="position:absolute;left:${u(440)};top:${u(318)};width:${u(80)};height:${u(130)};cursor:pointer"><path d="M92 10 12 65 92 120Z" fill="#001a45" stroke="#0e66a2" stroke-width="10" stroke-linejoin="round"/></svg><svg data-a="mNext" viewBox="0 0 100 130" style="position:absolute;right:${u(40)};top:${u(318)};width:${u(80)};height:${u(130)};cursor:pointer"><path d="M8 10 88 65 8 120Z" fill="#001a45" stroke="#0e66a2" stroke-width="10" stroke-linejoin="round"/></svg>`}
+  else if(ST.itab=="clan"){
+    if(!c)b+=`<div class="ml" style="left:${u(430)};top:${u(30)};color:#6d8aa0">No clan</div>`;
+    else{const rk=sortedClans().findIndex(x=>x.id==c.id)+1,mem=c.me?c.mem.length+1:Math.min(24,c.n),tot=Math.round(c.wins/(.35+(c.wins%40)/100)),pc=Math.round(c.wins*100/Math.max(1,tot));
+      const list=(c.me?[me(),...c.mem.map(find)]:BOTS.filter(x=>x.clan==c.id).slice(0,mem)).filter(Boolean);
+      b+=`<div class="ml" style="left:${u(414)};top:${u(8)};color:#ff9a0a">(${rk==1?"Leader Clan":"Clan rank "+rk})</div><div class="ml" style="left:${u(414)};top:${u(64)}">Ladder wins : ${fmt(c.wins)} / ${fmt(tot)} (${pc}%)</div><div class="ml" style="left:${u(414)};top:${u(120)}">Members : ${mem} / 24</div>`;
+      const fw=Math.round(250*CU),fh=Math.round(166*CU);
+      b+=`<div style="position:absolute;right:${u(2)};top:${u(8)};width:${fw}px;height:${fh}px">${flag(c.f,0,0,fw,fh)}</div>`;
+      b+=`<div class="ml" style="left:${u(414)};top:${u(236)}">Medals:</div><div style="position:absolute;left:${u(620)};right:0;top:${u(188)};height:${u(130)};background:#00366a;display:flex;align-items:center;gap:${u(14)};padding-left:${u(14)}">${rk<=3?`<img src="${A["medal"+rk].u}" style="height:${u(100)}">`:""}</div>`;
+      b+=`<div class="rkh" style="left:${u(402)};right:${u(88)};top:${u(332)};height:${u(66)}"><span style="left:${u(12)}">LEVEL</span><span style="left:${u(260)}">NAME</span></div>`;
+      b+=`<div class="clst" id="mpI" style="left:${u(402)};right:${u(88)};top:${u(398)};bottom:0">${list.map(m=>`<div class="rr ${m.me?"me":""}" data-a="cmOpen" data-id="${m.id}" style="height:${u(68)}"><span style="left:${u(12)}">${lvOf(m)}</span><div class="fgw" style="position:absolute;left:${u(140)};top:50%;transform:translateY(-50%)">${cvFlag(m)}</div><img src="${RANKI[Math.max(0,Math.min(RANKI.length-1,rankOf(m.rating)-1))]}" style="left:${u(196)};width:${u(56)};height:${u(56)}"><span style="left:${u(260)}">${esc(m.name)}</span></div>`).join("")}</div>`+sbar("mpI",`right:0;top:${u(332)};bottom:0;width:${u(88)}`)}}
+  else{const rows=[];if(p.me){(S.hist||[]).forEach(x=>rows.push([x.w?"Victory":"Defeat",x.m||""]))}else for(let i=0;i<10;i++){const q=BOTS[(i*7+p.bat)%BOTS.length];rows.push([(i+p.wins)%3?"Victory":"Defeat","vs "+q.name])}
+    b+=`<div class="clst" id="mpI" style="left:${u(402)};right:${u(88)};top:0;bottom:0">${rows.map(x=>`<div class="rr"><span style="left:${u(14)}">${x[0]}</span><span style="left:${u(260)};color:#9fc4e6">${esc(x[1])}</span></div>`).join("")||`<div class="lbl" style="padding-top:${u(200)}">No replays</div>`}</div>`+sbar("mpI",`right:0;top:0;bottom:0;width:${u(88)}`)}
+  return cfram(1500,880,`${RK(p)}<span>${esc(p.name)}</span>`,b,"back")}
 function cvChat(){seedChat();
   const on=[me(),...BOTS.filter(b=>b.on)].filter(p=>!D.blocked.includes(p.id));
   let h=LV("back",u(15),u(1),116)+CB("srch","inspect",u(165),u(3))+CB("chans",ST.chans?"closeDropList":"openDropList",u(285),u(3));
@@ -6378,6 +6414,7 @@ function cvChat(){seedChat();
   h+=`<div class="cpn" style="right:0;top:${u(125)};width:${u(460)};bottom:0;border:0;background:#000"><div class="clst" id="mpO" style="left:${u(5)};top:0;bottom:0;width:${u(407)}">${on.map(cvRow).join("")}</div>${sbar("mpO",`right:${u(2)};top:0;bottom:0;width:${u(46)}`)}</div>`;
   if(ST.chans)h+=`<div class="drop" style="left:${u(285)};top:${u(116)};width:${u(300)}">${CH().map(c=>`<div class="${c==ST.ch?"sel":""}" data-a="chPick" data-id="${c}">${esc(c)}</div>`).join("")}</div>`;
   if(scr=="srch")h+=cvSearch();
+  if(ST.pp&&scr=="chat")h+=cvProfile();
   return h}
 function cvSearch(){let h=`<div class="cdim"></div><div class="cfr" style="width:${u(1000)};height:${u(720)}"><div class="ttl">${ST.sres?"Search results":"Search online players"}</div>${LV("back","auto",u(-84),68,`left:auto;right:${u(10)}`)}`;
   if(ST.sres){const rows=ST.sres.map(p=>`<div class="pr" data-a="srRow" data-id="${p.id}">${cvFlag(p)}${rkimg(p)}<span class="nm">${esc(p.name)}</span><span style="color:#9fc4e6;font-size:${u(30)}">${clanOf(p.clan)?esc(clanOf(p.clan).name):""}</span></div>`).join("");
@@ -6386,7 +6423,7 @@ function cvSearch(){let h=`<div class="cdim"></div><div class="cfr" style="width
   return h+`</div>`}
 function cvDraw(keep){const act=document.activeElement,ai=act&&act.tagName=="INPUT"&&cv.contains(act)?act.id:null,av=ai?act.value:null,ss=ai?act.selectionStart:0;
   const o0=$("mpO"),so=o0?o0.scrollTop:0;
-  const L0=$("mpL"),sl=L0?L0.scrollTop:0;cv.innerHTML=scr=="rank"?cvRank():cvChat();const LL=$("mpL");if(LL)LL.scrollTop=keep?sl:0;const H=$("mpH");if(H)H.scrollTop=H.scrollHeight;const O=$("mpO");if(O)O.scrollTop=so;cvScroll();
+  const L0=$("mpL"),sl=L0?L0.scrollTop:0;cv.innerHTML=scr=="insp"?(ST.ib=="rank"?cvRank():ST.ib=="clan"?"":cvChat())+cvInsp():scr=="rank"?cvRank():cvChat();const LL=$("mpL");if(LL)LL.scrollTop=keep?sl:0;const H=$("mpH");if(H)H.scrollTop=H.scrollHeight;const O=$("mpO");if(O)O.scrollTop=so;cvScroll();
   if(ai){const n=$(ai);if(n){n.value=av;n.focus();try{n.setSelectionRange(ss,ss)}catch(e){}}}}
 function mdrawers(){/* mech canvases */}
 function vClan(){const c=ST.clanView||D.clan,own=D.clan&&c.id==D.clan.id;let h=bg("Clan");
@@ -6432,16 +6469,16 @@ let mrAF=0;
 function drawMechCanvas(){const c=$("mpM");if(!c||scr!="insp"){mrAF=0;return}const g=c.getContext("2d"),p=find(ST.insp)||me();g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,492,492);
   try{c._m=c._m||mechFor(p,ST.mi);if(c._m){g.save();g.translate(215,425);const k=1.9;g.scale(k,k);drawMech(g,0,0,1,c._m,false);g.restore()}}catch(e){}
   mrAF=requestAnimationFrame(drawMechCanvas)}
-function draw(keep){if(cvOn()){st.style.display="none";cv.style.display="block";mrAF=0;fit();return cvDraw(keep)}st.style.display="";cv.style.display="none";const act=document.activeElement,ai=act&&act.tagName=="INPUT"&&st.contains(act)?act.id:null,av=ai?act.value:null,ss=ai?act.selectionStart:0;
+function draw(keep){if(cvOn()){st.style.display="none";cv.style.display="block";if(scr!="insp")mrAF=0;fit();const rr_=cvDraw(keep);if(scr=="insp"&&ST.itab=="mech"&&!mrAF)mrAF=requestAnimationFrame(drawMechCanvas);return rr_}st.style.display="";cv.style.display="none";const act=document.activeElement,ai=act&&act.tagName=="INPUT"&&st.contains(act)?act.id:null,av=ai?act.value:null,ss=ai?act.selectionStart:0;
   const l0=st.querySelector(".lst"),sc=l0?l0.scrollTop:0;st.innerHTML=V[scr]();fit();const l=st.querySelector(".lst");if(l&&keep)l.scrollTop=sc;sbars();
   if(ai){const n=$(ai);if(n){n.value=av;n.focus();try{n.setSelectionRange(ss,ss)}catch(e){}}}
   const H=$("mpH");if(H)H.scrollTop=H.scrollHeight;if(scr=="insp"&&ST.itab=="mech"&&!mrAF)mrAF=requestAnimationFrame(drawMechCanvas)}
 const go=(s,keep)=>{scr=s;draw(keep)};
-window.mpOpen=function(w){$("cmx").classList.remove("hide");ST.sel=null;ST.chans=false;ST.online=false;
+window.mpOpen=function(w){ST.pp=null;$("cmx").classList.remove("hide");ST.sel=null;ST.chans=false;ST.online=false;
   if(w=="chat"){ST.ret="chat";go("chat")}else if(w=="clan"){ST.ret="clan";if(D.clan){ST.clanView=null;go("clan")}else go("clans")}else{ST.ret="rank";ST.tab="players";go("rank")}};
 const close=()=>{$("cmx").classList.add("hide");cv.style.display="none";mrAF=0};
 const BK={rank:close,clans:()=>go("rank"),chat:close,clan:()=>go("clans"),create:()=>go("clans"),flag:()=>go("create"),insp:()=>go(ST.ib||"rank"),srch:()=>{if(ST.sres){ST.sres=null;return go("srch")}go(ST.sb||"chat")}};
-const openInsp=(id,from)=>{ST.insp=id;ST.ib=from;ST.itab="mech";ST.mi=0;go("insp")};
+const openInsp=(id,from)=>{ST.pp=null;ST.insp=id;ST.ib=from;ST.itab="mech";ST.mi=0;go("insp")};
 function addMsg(ch,n,t,m){log(ch).push({n,t,me:m});const H=$("mpH");if(scr=="chat"&&ST.ch==ch&&H){H.innerHTML=chatHTML();H.scrollTop=H.scrollHeight;if(H._up)H._up()}}
 function say(){const L=$("mpIn");if(!L)return;const t=L.value.trim();if(!t)return;L.value="";addMsg(ST.ch,D.name,t,1);sv()}
 setInterval(()=>{if(scr!="chat"||$("cmx").classList.contains("hide")||ST.ch=="Clan")return;if(R()<.5){const b=BOTS[RI(0,BOTS.length-1)];if(!D.blocked.includes(b.id))addMsg(ST.ch,b.name,PHR[RI(0,PHR.length-1)],0)}},3500);
@@ -6451,7 +6488,7 @@ const onClk=e=>{const t=e.target.closest("[data-a]");if(!t)return;const a=t.data
   case"back":return BK[scr]();
   case"rkClans":ST.sel=null;return go("clans");
   case"online":ST.online=!ST.online;return go("rank");
-  case"rkRow":if(ST.sel==id)return openInsp(id,"rank");ST.sel=id;return go("rank",1);
+  case"rkRow":ST.pp=id;return go("rank",1);
   case"rkClan":if(ST.sel==id){ST.clanView=allClans().find(c=>c.id==id);ST.sel=null;return go("clan")}ST.sel=id;return go("clans",1);
   case"clSearch":ST.srch="";ST.sid="";ST.sres=null;ST.sb="clans";return go("srch");
   case"clCreate":if(D.clan){ST.clanView=null;return go("clan")}ST.nameDraft="";ST.fd=null;return go("create");
@@ -6460,7 +6497,13 @@ const onClk=e=>{const t=e.target.closest("[data-a]");if(!t)return;const a=t.data
   case"chPick":ST.ch=id;ST.chans=false;return go("chat");
   case"invs":D.inv=!D.inv;sv();return go("chat",1);
   case"send":return say();
-  case"chPlayer":if(id!="me")openInsp(id,"chat");return;
+  case"chPlayer":ST.pp=id;return go(scr,1);
+  case"ppClose":ST.pp=null;return go(scr,1);
+  case"ppInsp":{const i=ST.pp;ST.pp=null;return openInsp(i,scr)}
+  case"ppChat":ST.pp=null;ST.ch="Global";return go("chat");
+  case"ppInv":tip("Battle invitation sent");return;
+  case"ppBlock":{const i=ST.pp;D.blocked=D.blocked.includes(i)?D.blocked.filter(x=>x!=i):[...D.blocked,i];sv();tip(D.blocked.includes(i)?"Player blocked":"Player unblocked");return go(scr,1)}
+  case"cmOpen":return openInsp(id,ST.ib);
   case"cmRow":ST.sel=ST.sel==id?null:id;return go("clan",1);
   case"clInsp":if(ST.sel&&ST.sel!="me")return openInsp(ST.sel,"clan");if(ST.sel=="me")return openInsp("me","clan");return;
   case"clChat":ST.ch="Clan";return go("chat");
