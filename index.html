@@ -1849,7 +1849,7 @@ let S={camp:[],lv:{},bi:{},rating:1000,loads:[],cr:100,wins:0,own:{t:[11],l:[4],
 try{const r=localStorage.getItem("mechfoundry");if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
 const save=()=>{try{localStorage.setItem("mechfoundry",JSON.stringify(S))}catch(e){}}
 /* Quests. Repeating: QUESTS=[{id,p:"d"|"w"|"m",n:"title",goal:N,rew:{cr:N,tk:N},ic:optional image src}] ; progress via questAdd(id,amount). Resets at 00:00 UTC (daily), Monday 00:00 UTC (weekly), 1st of the month (monthly).
-   Milestones (INF): INF=[{id,n,ic,get:()=>currentValue,base:N,mult:2,rew:N}] ; tier t needs base*mult^t, pays 3,000 SM + 10 tokens (5,000 SM + 30 tokens on every 5th tier). */
+   Milestones (INF): INF=[{id,n,ic,get:()=>currentValue,base:N,mult:2,rew:N}] ; tier t needs base*mult^t, pays 1,000 SM + 10 tokens (3,000 SM + 30 tokens on every 5th tier). */
 const msAdd=(k,n)=>{if(!(n>0))return;S.ms=S.ms||{};S.ms[k]=(S.ms[k]||0)+n;save()},msGet=k=>(S.ms&&S.ms[k])||0;
 const QUESTS=[],BONUS={d:{cr:100},w:{cr:300},m:{cr:1000}};
 const INF=[
@@ -1867,7 +1867,7 @@ const QPER={d:"Daily",w:"Weekly",m:"Monthly"},qKey={d:()=>Math.floor(Date.now()/
 let QP="rep";
 function qState(){const st=S.qs=S.qs||{};st.prog=st.prog||{};st.claimed=st.claimed||{};st.inf=st.inf||{};st.rs=st.rs||{};let ch=0;for(const p of["d","w","m"]){const k=qKey[p]();if(st.rs[p]!==k){st.rs[p]=k;QUESTS.forEach(q=>{if(q.p==p){delete st.prog[q.id];delete st.claimed[q.id]}});delete st.claimed["bonus_"+p];ch=1}}if(ch)save();return st}
 const qProg=q=>Math.min(q.goal,qState().prog[q.id]||0),qReady=q=>!qState().claimed[q.id]&&qProg(q)>=q.goal;
-const infTidy=(x,t)=>{const g=0.29*x/(t+1);if(g<1)return Math.max(1,Math.round(x));const k=Math.pow(10,Math.floor(Math.log10(g))),f=g/k,u=(f>=5?5:f>=2?2:1)*k;return Math.max(1,Math.round(x/u)*u)},infT=(d,t)=>d.p?t==0?d.base:infTidy(d.base*Math.pow(t+1,d.p),t):Math.round(d.base*Math.pow(d.mult||2,t)),infRw=t=>(t+1)%5==0?{cr:5000,tk:30}:{cr:3000,tk:10},infReady=d=>{let v=0;try{v=d.get()}catch(e){}return v>=infT(d,qState().inf[d.id]||0)};
+const infTidy=(x,t)=>{const g=0.29*x/(t+1);if(g<1)return Math.max(1,Math.round(x));const k=Math.pow(10,Math.floor(Math.log10(g))),f=g/k,u=(f>=5?5:f>=2?2:1)*k;return Math.max(1,Math.round(x/u)*u)},infT=(d,t)=>d.p?t==0?d.base:infTidy(d.base*Math.pow(t+1,d.p),t):Math.round(d.base*Math.pow(d.mult||2,t)),infRw=t=>(t+1)%5==0?{cr:3000,tk:30}:{cr:1000,tk:10},infReady=d=>{let v=0;try{v=d.get()}catch(e){}return v>=infT(d,qState().inf[d.id]||0)};
 function qPay(r){S.cr+=(r&&r.cr)||0;S.tk=(S.tk||0)+((r&&r.tk)||0)}
 function questAdd(id,n=1){const q=QUESTS.find(x=>x.id==id);if(!q)return;const st=qState();st.prog[id]=Math.min(q.goal,(st.prog[id]||0)+n);save()}
 function questClaim(id){const q=QUESTS.find(x=>x.id==id);if(!q||!qReady(q))return;qState().claimed[id]=1;qPay(q.rew);msAdd("q",1);save();head();questScr()}
