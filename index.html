@@ -4632,19 +4632,16 @@ function start2v2(){
   startBattle();const b=B;if(!b)return;
   const pm=t2Init(myMech()),em=t2Init(botMech());em.c="#d9604f";
   b.t2={p:[pm],e:[em],pn,pst:["act","wait"],est:["act","wait"]};
-  t2Hud();say("2v2 - you lead. Your partner "+pn+" drops in when you fall.")}
-function t2Hud(){let e=document.getElementById("t2h");const T=B&&B.t2;if(!T||B.over&&!B.t2live){if(e)e.remove();return}
-  if(!e){e=document.createElement("div");e.id="t2h";e.style.cssText="position:fixed;top:calc(min(100vw*135/800,calc(var(--vh,1vh)*100)*.3) + 4px);left:50%;transform:translateX(-50%);z-index:9000;font:12px 'Russo One',sans-serif;letter-spacing:.08em;color:#cfe;background:rgba(5,16,28,.8);border:1px solid #2a6a4a;border-radius:6px;padding:3px 12px;pointer-events:none;white-space:nowrap;display:flex;gap:14px;align-items:center";document.body.appendChild(e)}
-  const pip=(n,st)=>'<span style="display:inline-flex;align-items:center;gap:5px;opacity:'+(st=="wait"?.7:st=="dead"?.4:1)+';color:'+(st=="act"?"#7dffb0":st=="dead"?"#ff6b5b":"#9fb4c8")+'"><i style="width:9px;height:9px;border-radius:50%;background:'+(st=="act"?"#46d46a":st=="dead"?"#ff4a4a":"#3a4a5c")+';display:inline-block"></i>'+n+'</span>';
-  e.innerHTML='<b style="color:#ffb02e">2V2</b>'+pip("YOU",T.pst[0])+pip(T.pn,T.pst[1])+'<span style="color:#6a8">VS</span>'+pip("FOE 1",T.est[0])+pip("FOE 2",T.est[1])}
+  t2Hud()}
+function t2Hud(){const e=document.getElementById("t2h");if(e)e.remove()}
 async function t2Drop(side){
   const b=B,T=b.t2;b.over=true;b.t2live=1;b.busy=true;const old=b[side],st=side=="p"?T.pst:T.est,i=st.indexOf("act");if(i>=0)st[i]="dead";
   const next=T[side].shift(),ni=st.indexOf("wait");if(ni>=0)st[ni]="act";
   const nm=side=="p"?T.pn:"FOE 2";
-  say(side=="p"?"Your mech is down! "+nm+" drops in.":"Enemy mech down! Their second pilot drops in.");t2Hud();
+  t2Hud();
   try{document.getElementById("t2b")||0}catch(e){}
-  {let d=document.getElementById("t2b");if(d)d.remove();d=document.createElement("div");d.id="t2b";d.style.cssText="position:fixed;left:0;right:0;top:34%;text-align:center;z-index:9001;pointer-events:none;font:900 clamp(22px,4.4vw,56px)/1.1 'Russo One',sans-serif;letter-spacing:.14em;color:#fff;text-shadow:0 0 14px "+(side=="p"?"#5df2ff":"#ff7a5b")+",0 0 34px "+(side=="p"?"#5df2ff":"#ff7a5b")+"";d.innerHTML=(side=="p"?nm.toUpperCase()+" DROPS IN":"ENEMY REINFORCEMENT")+'<div style="font-size:.32em;letter-spacing:.3em;margin-top:6px;color:#ffb02e">'+(side=="p"?"TEAMMATE TAKES CONTROL":"SECOND PILOT DEPLOYING")+'</div>';document.body.appendChild(d);setTimeout(()=>d.remove(),2100)}
-  await sleep(1500);
+
+  await sleep(600);
   {const w0=performance.now();while((b.aiRun||0)>0&&B===b&&performance.now()-w0<8000)await sleep(100)}/* let the enemy's running turn unwind first, or it would carry on into the new turn */
   if(B!==b)return;
   const x=old&&old.x!=null?old.x:(side=="p"?0:MAXT);next.x=x;next.vx=x;if(side=="e")next.c="#d9604f";
@@ -4653,8 +4650,8 @@ async function t2Drop(side){
   b.over=false;b.t2live=0;b.busy=true;
   /* the survivor keeps its place; the turn goes back to the player with fresh action counts unless it was already the player's turn and an enemy fell */
   if(!(side=="e"&&b.turn=="p")){b.turn="p";b.tl={p:1,e:2};b.p.used=[];b.p.did=false;b.ch=null}
-  controls();say(side=="p"?nm+" is dropping in...":"Enemy pilot is dropping in...");t2Hud();
-  await sleep(1450);if(B!==b||b.over)return;b.busy=false;controls();autoEnd();say(side=="p"?nm+" is in. Your turn.":"New enemy deployed. Your turn.")}
+  controls();t2Hud();
+  await sleep(1450);if(B!==b||b.over)return;b.busy=false;controls();autoEnd()}
 {const wrap=(f)=>async function(){const b=B;if(b)b.aiRun=(b.aiRun||0)+1;try{return await f.apply(this,arguments)}finally{if(b)b.aiRun--}};ai=wrap(ai);endTurn=wrap(endTurn)}
 {const _f2=finish;finish=function(won){const b=B;if(b&&b.t2&&!b.over&&!b.skipFin){const q=won?b.t2.e:b.t2.p;if(q.length){t2Drop(won?"e":"p");return}}
   const r=_f2.apply(this,arguments);if(b&&b.t2){setTimeout(()=>{const e=document.getElementById("t2h");if(e)e.remove()},50)}return r}}
