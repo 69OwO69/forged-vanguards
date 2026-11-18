@@ -1851,7 +1851,7 @@ const save=()=>{try{localStorage.setItem("mechfoundry",JSON.stringify(S))}catch(
 /* Quests. Repeating: QUESTS=[{id,p:"d"|"w"|"m",n:"title",goal:N,rew:{cr:N,tk:N},ic:optional image src}] ; progress via questAdd(id,amount). Resets at 00:00 UTC (daily), Monday 00:00 UTC (weekly), 1st of the month (monthly).
    Milestones (INF): INF=[{id,n,ic,get:()=>currentValue,base:N,mult:2,rew:N}] ; tier t needs base*mult^t, pays 500 SM + 10 tokens (2,000 SM + 20 tokens on every 5th tier). */
 const msAdd=(k,n)=>{if(!(n>0))return;S.ms=S.ms||{};S.ms[k]=(S.ms[k]||0)+n;save();try{qEv(k=="time"?"time":k,k=="time"?n/60:n)}catch(e){}},msGet=k=>(S.ms&&S.ms[k])||0;
-const QUESTS=[],BONUS={d:{cr:3000,tk:10},w:{cr:15000,tk:50},m:{cr:25000,tk:150}},QPICK=3;
+const QUESTS=[],BONUS={d:{cr:3000,tk:10},w:{cr:15000,tk:50},m:{cr:50000,tk:150}},QPICK=3;
 /* Random pools: every period each player gets QPICK random quests from the pool (kept in S.qs.pick, re-rolled at the reset). ev = counter fed by qEv(ev,n): win, arena (PvP win), camp, box, cr (SM spent), tk (tokens spent), dmg, lv, time (minutes in battle). */
 const QPOOL=[
  {id:"d_camp2",p:"d",ev:"camp",goal:2,n:"Win 2 campaign missions",rew:{cr:1000,tk:1}},
