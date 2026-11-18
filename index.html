@@ -1163,6 +1163,16 @@ button,[role=button],.nb,.bkb{touch-action:manipulation;-webkit-user-select:none
 #cv .bl{position:absolute;background:linear-gradient(90deg,#1583c4,#0e66a2)}
 #cv .ipt{position:absolute;color:#fff;font-weight:900;text-shadow:calc(2*var(--cu)) calc(3*var(--cu)) 0 #000;white-space:nowrap}
 #cv .ml{position:absolute;color:#fff;font-weight:900;font-size:calc(40*var(--cu));text-shadow:calc(2*var(--cu)) calc(3*var(--cu)) 0 #000;white-space:nowrap}
+
+#cv .cbx{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border:calc(14*var(--cu)) solid #1583c4;border-radius:calc(18*var(--cu));background:#00141f;box-shadow:inset 0 0 0 calc(4*var(--cu)) #04304f}
+#cv .sq{position:absolute;width:calc(116*var(--cu));height:calc(116*var(--cu));padding:calc(9*var(--cu));border:0;border-radius:calc(14*var(--cu));cursor:pointer;display:block}
+#cv .sq i{display:flex;width:100%;height:100%;align-items:center;justify-content:center;border-radius:calc(8*var(--cu))}
+#cv .sq.rd{background:linear-gradient(#e00000,#8a0000);box-shadow:0 calc(3*var(--cu)) 0 #3a0000}#cv .sq.rd i{background:#400000}
+#cv .sq.gn{background:linear-gradient(#10d010,#058a05);box-shadow:0 calc(3*var(--cu)) 0 #033a03}#cv .sq.gn i{background:#005a00}
+#cv .sq svg{width:78%;height:78%}#cv .sq:hover{filter:brightness(1.2)}
+#cv .qtx{position:absolute;left:0;right:0;text-align:center;color:#d9d9d9;font-weight:900;font-size:calc(44*var(--cu));line-height:1.2;text-shadow:calc(2*var(--cu)) calc(3*var(--cu)) 0 #000}
+#cv .rr2{height:calc(87*var(--cu))}#cv .rr2 .l2{position:absolute;left:calc(232*var(--cu));top:calc(50*var(--cu));font-size:calc(28*var(--cu));color:#e8e8e8;transform:none}
+#cv .rr2 .l1{top:calc(30*var(--cu))!important}
 #cv .drop{position:absolute;background:#021a2a;border:calc(5*var(--cu)) solid #0f7fc4;border-radius:calc(10*var(--cu));z-index:5;overflow:hidden}
 #cv .drop div{padding:calc(10*var(--cu)) calc(24*var(--cu));color:#fff;font-weight:800;font-size:calc(36*var(--cu));cursor:pointer}
 #cv .drop div:hover,#cv .drop div.sel{background:#0f4f7e}
@@ -6273,7 +6283,7 @@ const GT=T,GL=L,GW=W;/* the community module shadows T and L with helpers */
 (()=>{
 const A=MPA,$=id=>document.getElementById(id),K="fv_mp";
 let D={};try{D=JSON.parse(localStorage.getItem(K))||{}}catch(e){}
-D=Object.assign({name:"Pilot",clan:null,friends:[],blocked:[],chat:{},inv:true,tcost:25},D);
+D=Object.assign({name:"Pilot",clan:null,friends:[],blocked:[],chat:{},inv:true,tcost:25,ccost:5000},D);
 const sv=()=>{try{localStorage.setItem(K,JSON.stringify(D))}catch(e){}};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const fmt=n=>Number(n).toLocaleString("en-US");
@@ -6342,7 +6352,7 @@ function vChat(){seedChat();let h=bg("Chat");
   if(ST.chans)h+=art(A.a_chan,182,97)+`<div class="lst" style="left:196px;top:109px;width:270px;height:205px;z-index:5">${CH().map(c=>`<div class="chrow ${c==ST.ch?"sel":""}" data-a="chPick" data-id="${c}">${esc(c)}</div>`).join("")}</div>`;
   return `<div style="position:absolute;left:0;top:0;width:800px;height:497px;transform:scale(.965);transform-origin:0 0">${h}</div>`}
 
-const cvOn=()=>scr=="chat"||scr=="rank"||scr=="insp"||(scr=="srch"&&ST.sb=="chat");
+const cvOn=()=>scr=="chat"||scr=="rank"||scr=="insp"||scr=="clans"||(scr=="srch"&&ST.sb=="chat");
 const IM=(k)=>`<i><img src="${A["i_"+k].u}" style="width:100%;height:100%;display:block;object-fit:contain"></i>`;
 const u=n=>`calc(${n}*var(--cu))`;
 let _lv=null;const lvArt=()=>_lv||(_lv=(()=>{const e=document.getElementById("wx"),f=x=>(x||"").replace(/^url\(["']?/,"").replace(/["']?\)$/,"");return{f:f(getComputedStyle(e).backgroundImage),d:f(getComputedStyle(e,"::after").backgroundImage)}})());
@@ -6366,7 +6376,7 @@ function cvScroll(){cv.querySelectorAll(".cs").forEach(b=>{const l=$(b.dataset.f
 
 const SEASON=()=>{const n=new Date(),d=new Date(Date.UTC(n.getUTCFullYear(),n.getUTCMonth(),n.getUTCDate()+((8-n.getUTCDay())%7||7)));let m=Math.max(0,d-n),dd=Math.floor(m/864e5),hh=Math.floor(m%864e5/36e5);return `Season ends in : ${dd} days and ${hh} hours`};
 const CHEST='<svg viewBox="0 0 140 130"><defs><linearGradient id="chg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9d18a"/><stop offset="1" stop-color="#8a6a22"/></linearGradient></defs><path d="M22 52 40 18H100L118 52V108Q118 122 104 122H36Q22 122 22 108Z" fill="url(#chg)" stroke="#3a2a08" stroke-width="5" stroke-linejoin="round"/><rect x="30" y="56" width="80" height="8" fill="#5a4310"/><path d="M70 66 94 80V102L70 116 46 102V80Z" fill="#1d7a3a" stroke="#0a3a18" stroke-width="4"/><path d="M70 76 74 86 84 87 77 94 79 104 70 99 61 104 63 94 56 87 66 86Z" fill="#ffd400"/></svg>';
-const lvOf=p=>p.me?(typeof S!=="undefined"&&(S.lvl||S.lv||S.level))||1:(p.bat%240)+1;
+const lvOf=p=>p.me?(()=>{try{return plv()}catch(e){return 1}})():(p.bat%240)+1;
 function cvRank(){const L=sortedPlayers();
   let h=`<div class="rkf"></div><div class="rkdv"></div>`+LV("back",u(28),u(22),100)+`<div class="rkt">Players ranking list</div>`;
   h+=`<button class="rktb on" data-a="rkPlayers" style="left:${u(592)}">Players</button><button class="rktb" data-a="rkClans" style="left:${u(886)}">Clans</button>`;
@@ -6404,6 +6414,32 @@ function cvInsp(){const p=find(ST.insp)||me(),c=clanOf(p.clan);
   else{const rows=[];if(p.me){(S.hist||[]).forEach(x=>rows.push([x.w?"Victory":"Defeat",x.m||""]))}else for(let i=0;i<10;i++){const q=BOTS[(i*7+p.bat)%BOTS.length];rows.push([(i+p.wins)%3?"Victory":"Defeat","vs "+q.name])}
     b+=`<div class="clst" id="mpI" style="left:${u(402)};right:${u(88)};top:0;bottom:0">${rows.map(x=>`<div class="rr"><span style="left:${u(14)}">${x[0]}</span><span style="left:${u(260)};color:#9fc4e6">${esc(x[1])}</span></div>`).join("")||`<div class="lbl" style="padding-top:${u(200)}">No replays</div>`}</div>`+sbar("mpI",`right:0;top:0;bottom:0;width:${u(88)}`)}
   return cfram(1500,880,`${RK(p)}<span>${esc(p.name)}</span>`,b,"back")}
+
+const XSV=`<svg viewBox="0 0 40 40"><path d="M7 7 33 33M33 7 7 33" stroke="#000" stroke-width="12" stroke-linecap="round"/><path d="M7 7 33 33M33 7 7 33" stroke="#fff" stroke-width="7" stroke-linecap="round"/></svg>`,CKV=`<svg viewBox="0 0 40 40"><path d="M6 21 16 32 35 7" fill="none" stroke="#000" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 21 16 32 35 7" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const SQ=(a,k,x,y,ex="")=>`<button class="sq ${k}" data-a="${a}" style="left:${x};top:${y};${ex}"><i>${k=="rd"?XSV:CKV}</i></button>`;
+const leaderOf=c=>c.me?D.name:(BOTS.find(b=>b.clan==c.id)||{name:"-"}).name;
+const cMem=c=>c.me?c.mem.length+1:Math.min(24,c.n);
+const cIcon=c=>`<img src="${RANKI[Math.max(0,Math.min(RANKI.length-1,Math.floor(c.wins/2600)))]}" style="left:${u(30)};width:${u(60)};height:${u(60)}">`;
+function cvClans(){let L=sortedClans();if(ST.cq)L=L.filter(c=>c.name.toLowerCase().includes(ST.cq));
+  let h=`<div class="rkf"></div><div class="rkdv" style="top:${u(250)}"></div>`+LV("clBack",u(28),u(22),100)+`<div class="rkt" style="top:${u(46)}">Clans</div>`;
+  h+=`<button class="rktb" data-a="clSearch" style="left:${u(560)};top:${u(126)};width:${u(300)};height:${u(90)}">Search</button><button class="rktb" data-a="clCreate" style="left:${u(900)};top:${u(126)};width:${u(300)};height:${u(90)}">${D.clan?"My clan":"Create"}</button>`;
+  h+=`<div class="rkh" style="top:${u(278)}"><span style="left:${u(10)}">NAME</span><span style="left:${u(910)}">MEMBERS</span><span style="left:${u(1130)}">WINS</span><span style="left:${u(1330)}">ARENA POINTS</span></div>`;
+  const rows=L.map(c=>`<div class="rr rr2 ${c.me?"me":""}" data-a="rkClan" data-id="${c.id}">${cIcon(c)}<span class="l1" style="left:${u(232)}">${esc(c.name)}</span><span class="l2">Leader : ${esc(leaderOf(c))}</span><span style="left:${u(914)}">${cMem(c)} / 24</span><span style="left:${u(1134)}">${fmt(c.n*3+(c.wins%50))}</span><span style="left:${u(1334)}">${fmt(Math.round(c.wins/60))}</span></div>`).join("");
+  h+=`<div class="clst" id="mpL" style="left:${u(26)};right:${u(110)};top:${u(340)};bottom:${u(14)}">${rows||`<div class="lbl" style="padding-top:${u(160)}">No clans found</div>`}</div>`+sbar("mpL",`right:${u(22)};top:${u(278)};bottom:${u(14)};width:${u(88)}`);
+  if(ST.cp)h+=cvClanPop();if(ST.csr)h+=cvClSearch();if(ST.cr)h+=cvCreate();return h}
+function cvClSearch(){return `<div class="cdim" data-a="csX"></div><div class="cbx" style="width:${u(780)};height:${u(520)}"><div class="qtx" style="top:${u(30)};font-size:${u(40)}">Enter the name of the clan<br>you wish to find:</div><input class="gin" id="mpCq" maxlength="20" autocomplete="off" value="${esc(ST.cq||"")}" style="position:absolute;left:${u(30)};right:${u(30)};top:${u(170)};width:auto;margin:0">${SQ("csX","rd",u(30),"auto","bottom:"+u(30))}${SQ("csGo","gn","auto","auto","right:"+u(30)+";bottom:"+u(30))}</div>`}
+function cvCreate(){const ic=INF.find(d=>d.id=="sm").ic;return `<div class="cdim" data-a="crX"></div><div class="cfr" style="width:${u(980)};height:${u(580)}"><div class="ttl">Create clan</div>${LV("crX","auto",u(-84),68,`left:auto;right:${u(10)}`)}<div class="qtx" style="top:${u(30)}">Enter clan's name:</div><input class="gin" id="mpCn" maxlength="20" autocomplete="off" value="${esc(ST.nameDraft||"")}" style="position:absolute;left:${u(40)};right:${u(40)};top:${u(110)};width:auto;margin:0">${SQ("crX","rd",u(10),"auto","bottom:"+u(14))}<div style="position:absolute;left:50%;transform:translateX(-50%);bottom:${u(14)};width:${u(380)};height:${u(150)};border:${u(8)} solid #04202f;border-radius:${u(16)};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:${u(8)}"><div style="color:#fff;font-weight:900;font-size:${u(40)};text-shadow:${u(2)} ${u(3)} 0 #000">Cost:</div><div style="display:flex;align-items:center;gap:${u(12)};font-weight:900;text-shadow:${u(2)} ${u(3)} 0 #000"><span style="color:#ff9a0a;font-size:${u(50)}">${fmt(D.ccost)}</span><img src="${ic}" style="height:${u(60)}"></div></div>${SQ("crGo","gn","auto","auto","right:"+u(10)+";bottom:"+u(14))}</div>`}
+function cvClanPop(){const c=clanOf(ST.cp);if(!c)return"";const own=D.clan&&c.id==D.clan.id,rk=sortedClans().findIndex(x=>x.id==c.id)+1,mem=cMem(c),tot=Math.round(c.wins/(.35+(c.wins%40)/100)),pc=Math.round(c.wins*100/Math.max(1,tot));
+  const list=own?[{...me(),role:"Leader"},...c.mem.map(i=>({...find(i),role:"Member"})),...c.req.map(i=>({...find(i),role:"Request"}))]:BOTS.filter(x=>x.clan==c.id).slice(0,mem).map(x=>({...x,role:"Member"}));
+  let b=`<div class="ml" style="left:${u(20)};top:${u(8)};color:#ff9a0a">(${rk==1?"Leader Clan":"Clan rank "+rk})</div><div class="ml" style="left:${u(20)};top:${u(64)}">Ladder wins : ${fmt(c.wins)} / ${fmt(tot)} (${pc}%)</div><div class="ml" style="left:${u(20)};top:${u(120)}">Members : ${mem} / 24</div>`;
+  const fw=Math.round(250*CU),fh=Math.round(166*CU);
+  b+=`<div style="position:absolute;right:${u(10)};top:${u(8)};width:${fw}px;height:${fh}px">${flag(c.f,0,0,fw,fh)}</div>`;
+  b+=`<div class="ml" style="left:${u(20)};top:${u(236)}">Medals:</div><div style="position:absolute;left:${u(230)};right:0;top:${u(188)};height:${u(130)};background:#00366a;display:flex;align-items:center;padding-left:${u(14)}">${rk<=3?`<img src="${A["medal"+rk].u}" style="height:${u(100)}">`:""}</div>`;
+  b+=`<div class="rkh" style="left:0;right:${u(88)};top:${u(332)};height:${u(66)}"><span style="left:${u(12)}">LEVEL</span><span style="left:${u(260)}">NAME</span><span style="left:${u(700)}">ROLE</span></div>`;
+  const sm=(a,k,id,x)=>`<button class="cb" data-a="${a}" data-id="${id}" style="left:auto;right:${u(x)};top:50%;transform:translateY(-50%);width:${u(54)};height:${u(54)};padding:${u(4)}">${IM(k)}</button>`;
+  b+=`<div class="clst" id="mpI" style="left:0;right:${u(88)};top:${u(398)};bottom:${u(120)}">${list.map(m=>`<div class="rr" data-a="cpMem" data-id="${m.id}" style="height:${u(68)}"><span style="left:${u(12)}">${lvOf(m)}</span><div class="fgw" style="position:absolute;left:${u(140)};top:50%;transform:translateY(-50%)">${cvFlag(m)}</div><img src="${RANKI[Math.max(0,Math.min(RANKI.length-1,rankOf(m.rating)-1))]}" style="left:${u(196)};width:${u(56)};height:${u(56)}"><span style="left:${u(260)}">${esc(m.name)}</span><span style="left:${u(700)};color:${m.role=="Request"?"#ffd24a":"#9fc4e6"}">${m.role}</span>${own&&m.role=="Request"?sm("cpAcc","acceptClanInvitation",m.id,80)+sm("cpDec","declineClanInvitation",m.id,10):own&&m.role=="Member"?sm("cpKick","clanKick",m.id,10):""}</div>`).join("")}</div>`+sbar("mpI",`right:0;top:${u(332)};bottom:${u(120)};width:${u(88)}`);
+  b+=own?`<button class="cb" data-a="cpChat" style="left:${u(10)};top:auto;bottom:${u(6)};width:${u(104)};height:${u(104)}">${IM("chat")}</button><button class="cb" data-a="cpLeave" style="left:${u(130)};top:auto;bottom:${u(6)};width:${u(104)};height:${u(104)}">${IM("clanLeave")}</button>`:`<button class="cb" data-a="cpJoin" style="left:${u(10)};top:auto;bottom:${u(6)};width:${u(104)};height:${u(104)};${D.clan?"opacity:.4":""}">${IM("clanRequestToJoin")}</button>`;
+  return cfram(1300,830,`${cIcon(c).replace(/ style="[^"]*"/,"")}<span>${esc(c.name)}</span>`,b,"cpClose")}
 function cvChat(){seedChat();
   const on=[me(),...BOTS.filter(b=>b.on)].filter(p=>!D.blocked.includes(p.id));
   let h=LV("back",u(15),u(1),116)+CB("srch","inspect",u(165),u(3))+CB("chans",ST.chans?"closeDropList":"openDropList",u(285),u(3));
@@ -6423,7 +6459,7 @@ function cvSearch(){let h=`<div class="cdim"></div><div class="cfr" style="width
   return h+`</div>`}
 function cvDraw(keep){const act=document.activeElement,ai=act&&act.tagName=="INPUT"&&cv.contains(act)?act.id:null,av=ai?act.value:null,ss=ai?act.selectionStart:0;
   const o0=$("mpO"),so=o0?o0.scrollTop:0;
-  const L0=$("mpL"),sl=L0?L0.scrollTop:0;cv.innerHTML=scr=="insp"?(ST.ib=="rank"?cvRank():ST.ib=="clan"?"":cvChat())+cvInsp():scr=="rank"?cvRank():cvChat();const LL=$("mpL");if(LL)LL.scrollTop=keep?sl:0;const H=$("mpH");if(H)H.scrollTop=H.scrollHeight;const O=$("mpO");if(O)O.scrollTop=so;cvScroll();
+  const L0=$("mpL"),sl=L0?L0.scrollTop:0;cv.innerHTML=scr=="insp"?(ST.ib=="rank"?cvRank():ST.ib=="clans"?cvClans():ST.ib=="clan"?"":cvChat())+cvInsp():scr=="rank"?cvRank():scr=="clans"?cvClans():cvChat();const LL=$("mpL");if(LL)LL.scrollTop=keep?sl:0;const H=$("mpH");if(H)H.scrollTop=H.scrollHeight;const O=$("mpO");if(O)O.scrollTop=so;cvScroll();
   if(ai){const n=$(ai);if(n){n.value=av;n.focus();try{n.setSelectionRange(ss,ss)}catch(e){}}}}
 function mdrawers(){/* mech canvases */}
 function vClan(){const c=ST.clanView||D.clan,own=D.clan&&c.id==D.clan.id;let h=bg("Clan");
@@ -6474,10 +6510,10 @@ function draw(keep){if(cvOn()){st.style.display="none";cv.style.display="block";
   if(ai){const n=$(ai);if(n){n.value=av;n.focus();try{n.setSelectionRange(ss,ss)}catch(e){}}}
   const H=$("mpH");if(H)H.scrollTop=H.scrollHeight;if(scr=="insp"&&ST.itab=="mech"&&!mrAF)mrAF=requestAnimationFrame(drawMechCanvas)}
 const go=(s,keep)=>{scr=s;draw(keep)};
-window.mpOpen=function(w){ST.pp=null;$("cmx").classList.remove("hide");ST.sel=null;ST.chans=false;ST.online=false;
-  if(w=="chat"){ST.ret="chat";go("chat")}else if(w=="clan"){ST.ret="clan";if(D.clan){ST.clanView=null;go("clan")}else go("clans")}else{ST.ret="rank";ST.tab="players";go("rank")}};
+window.mpOpen=function(w){ST.pp=null;ST.cp=null;ST.csr=0;ST.cr=0;ST.cq="";$("cmx").classList.remove("hide");ST.sel=null;ST.chans=false;ST.online=false;
+  if(w=="chat"){ST.ret="chat";go("chat")}else if(w=="clan"){ST.ret="clan";ST.cp=D.clan?D.clan.id:null;go("clans")}else{ST.ret="rank";ST.tab="players";go("rank")}};
 const close=()=>{$("cmx").classList.add("hide");cv.style.display="none";mrAF=0};
-const BK={rank:close,clans:()=>go("rank"),chat:close,clan:()=>go("clans"),create:()=>go("clans"),flag:()=>go("create"),insp:()=>go(ST.ib||"rank"),srch:()=>{if(ST.sres){ST.sres=null;return go("srch")}go(ST.sb||"chat")}};
+const BK={rank:close,clans:()=>ST.ret=="clan"?close():go("rank"),chat:close,clan:()=>go("clans"),create:()=>go("clans"),flag:()=>go("create"),insp:()=>go(ST.ib||"rank"),srch:()=>{if(ST.sres){ST.sres=null;return go("srch")}go(ST.sb||"chat")}};
 const openInsp=(id,from)=>{ST.pp=null;ST.insp=id;ST.ib=from;ST.itab="mech";ST.mi=0;go("insp")};
 function addMsg(ch,n,t,m){log(ch).push({n,t,me:m});const H=$("mpH");if(scr=="chat"&&ST.ch==ch&&H){H.innerHTML=chatHTML();H.scrollTop=H.scrollHeight;if(H._up)H._up()}}
 function say(){const L=$("mpIn");if(!L)return;const t=L.value.trim();if(!t)return;L.value="";addMsg(ST.ch,D.name,t,1);sv()}
@@ -6489,9 +6525,22 @@ const onClk=e=>{const t=e.target.closest("[data-a]");if(!t)return;const a=t.data
   case"rkClans":ST.sel=null;return go("clans");
   case"online":ST.online=!ST.online;return go("rank");
   case"rkRow":ST.pp=id;return go("rank",1);
-  case"rkClan":if(ST.sel==id){ST.clanView=allClans().find(c=>c.id==id);ST.sel=null;return go("clan")}ST.sel=id;return go("clans",1);
-  case"clSearch":ST.srch="";ST.sid="";ST.sres=null;ST.sb="clans";return go("srch");
-  case"clCreate":if(D.clan){ST.clanView=null;return go("clan")}ST.nameDraft="";ST.fd=null;return go("create");
+  case"rkClan":ST.cp=id;return go("clans",1);
+  case"clBack":return BK.clans();
+  case"csX":ST.csr=0;return go("clans",1);
+  case"csGo":{ST.cq=((($("mpCq")||{}).value)||"").trim().toLowerCase();ST.csr=0;return go("clans")}
+  case"crX":ST.cr=0;return go("clans",1);
+  case"cpClose":ST.cp=null;return go("clans",1);
+  case"cpMem":return openInsp(id,"clans");
+  case"cpAcc":{const c=D.clan;c.req=c.req.filter(i=>i!=id);c.mem.push(id);sv();return go("clans",1)}
+  case"cpDec":{const c=D.clan;c.req=c.req.filter(i=>i!=id);sv();return go("clans",1)}
+  case"cpKick":{const c=D.clan;c.mem=c.mem.filter(i=>i!=id);sv();return go("clans",1)}
+  case"cpLeave":D.clan=null;ST.cp=null;sv();return go("clans");
+  case"cpJoin":if(!D.clan)tip("Request sent");return;
+  case"cpChat":ST.ch="Clan";ST.cp=null;return go("chat");
+  case"crGo":{const n=((($("mpCn")||{}).value)||"").trim();ST.nameDraft=n;if(n.length<3)return tip("Name too short");if(allClans().some(c=>c.name.toLowerCase()==n.toLowerCase()))return tip("Name taken");if(typeof S!=="undefined"){if((S.cr||0)<D.ccost)return tip("Not enough SM");S.cr-=D.ccost;msAdd("cr",D.ccost);try{save()}catch(e){}try{head()}catch(e){}}D.clan={id:"mine",name:n,f:{t:RI(0,NF-1),s:RI(0,NS-1),c:RI(0,NC-1)},me:1,wins:gs("wins",0),mem:[],req:BOTS.filter(b=>!b.clan).slice(0,2).map(b=>b.id)};sv();ST.cr=0;ST.nameDraft="";ST.cp="mine";return go("clans")}
+  case"clSearch":ST.csr=1;return go("clans",1);
+  case"clCreate":if(D.clan){ST.cp=D.clan.id;return go("clans",1)}ST.cr=1;ST.nameDraft="";return go("clans",1);
   case"srch":ST.srch="";ST.sid="";ST.sres=null;ST.sb="chat";return go("srch");
   case"chans":ST.chans=!ST.chans;return go("chat",1);
   case"chPick":ST.ch=id;ST.chans=false;return go("chat");
@@ -6535,7 +6584,7 @@ const onClk=e=>{const t=e.target.closest("[data-a]");if(!t)return;const a=t.data
   case"prize":return tip("Prize list unavailable offline");
   case"rkPlayers":return;
   }};st.addEventListener("click",onClk);cv.addEventListener("click",onClk);
-const onKd=e=>{e.stopPropagation();if(e.key=="Enter"){if(e.target.id=="mpIn")say();if(e.target.id=="mpSq"||e.target.id=="mpSi")e.currentTarget.querySelector("[data-a=srGo]").click()}};st.addEventListener("keydown",onKd);cv.addEventListener("keydown",onKd);
+const onKd=e=>{e.stopPropagation();if(e.key=="Enter"){if(e.target.id=="mpIn")say();if(e.target.id=="mpSq"||e.target.id=="mpSi")e.currentTarget.querySelector("[data-a=srGo]").click();if(e.target.id=="mpCq")e.currentTarget.querySelector("[data-a=csGo]").click();if(e.target.id=="mpCn")e.currentTarget.querySelector("[data-a=crGo]").click()}};st.addEventListener("keydown",onKd);cv.addEventListener("keydown",onKd);
 const onKu=e=>e.stopPropagation();st.addEventListener("keyup",onKu);cv.addEventListener("keyup",onKu);
 $("cmx").addEventListener("wheel",e=>{const l=e.target.closest(".lst,.clst");if(l)l.scrollTop+=e.deltaY},{passive:true});
 $("cmx").addEventListener("contextmenu",e=>e.preventDefault());
