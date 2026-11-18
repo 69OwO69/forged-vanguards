@@ -6,17 +6,15 @@ let BL={mi:0,k:0,d:null,pd:0,sel:null};window._BL=BL;window._BLdraw=()=>draw();
 const keyOf=(mi,k)=>{const m=MIS[mi];return k==WV(mi).length-1?String(m.id):m.id+":"+k};
 const blank=()=>({t:null,l:null,w:{},m:[],name:"",p:Object.assign({},PCT0)});
 const PL=[["hp","Health"],["dmg","Damage"],["en","Energy capacity"],["enr","Energy regen"],["hc","Heat capacity"],["cool","Cooling"]];
-const SLOTS={t:"Torso",l:"Legs",w0:"Top 1",w1:"Top 2",w2:"Left 1",w3:"Left 2",w4:"Right 1",w5:"Right 2",w6:"Drone",w7:"Hook",w8:"Charger",tp:"Teleporter",sh:"Shield"};
+const SLOTS={t:"Torso",l:"Legs",w0:"Top 1",w1:"Top 2",w2:"Left 1",w3:"Left 2",w4:"Right 1",w5:"Right 2",w6:"Drone",w7:"Hook",w8:"Charger",m0:"Module 1",m1:"Module 2",m2:"Module 3",m3:"Module 4",m4:"Module 5",m5:"Module 6"};
 const kindOf=s=>s=="t"?"t":s=="l"?"l":s[0]=="w"?"w":"m";
 const hasDes=kk=>{const d=(S.designs&&S.designs[kk])||CAMPD[kk];return !!(d&&(d.t||d.l||Object.keys(d.w||{}).length))};
-const load=()=>{const kk=keyOf(BL.mi,BL.k),d=(S.designs&&S.designs[kk])||CAMPD[kk];BL.d=d?JSON.parse(JSON.stringify(d)):blank();BL.d.p=Object.assign({},PCT0,BL.d.p||{});BL.d.w=BL.d.w||{};BL.d.m=BL.d.m||[];if(BL.d.name==null)BL.d.name="";BL.sel=null};
+const load=()=>{const kk=keyOf(BL.mi,BL.k),d=(S.designs&&S.designs[kk])||CAMPD[kk];BL.d=d?JSON.parse(JSON.stringify(d)):blank();BL.d.p=Object.assign({},PCT0,BL.d.p||{});BL.d.w=BL.d.w||{};BL.d.m=(BL.d.m||[]).filter(Boolean);if(BL.d.name==null)BL.d.name="";BL.sel=null};
 const maxLv=(k,id)=>CAPL[RI(k,id)]||10;
-const isTp=i=>!!(M[i]&&M[i].tp),isSh=i=>!!(M[i]&&M[i].shp);
-const modOf=s=>BL.d.m.find(it=>it&&(s=="tp"?isTp(it.id):isSh(it.id)));
-const getIt=s=>s=="t"?BL.d.t:s=="l"?BL.d.l:s[0]=="w"?BL.d.w[+s.slice(1)]:modOf(s);
+const getIt=s=>s=="t"?BL.d.t:s=="l"?BL.d.l:s[0]=="w"?BL.d.w[+s.slice(1)]:BL.d.m[+s.slice(1)];
 const nameOf=(k,id)=>{const it=(k=="w"?W:K[k])[id];return it&&it.n||"#"+id};
 const opts=s=>{const k=kindOf(s),out=[],src=k=="w"?W:K[k];for(const i in src){const it=src[i];if(!it||it.gone)continue;
-  if(k=="w"&&!okS(+i,+s.slice(1)))continue;if(k=="m"&&!(s=="tp"?it.tp:it.shp))continue;out.push([+i,it.n||("#"+i)])}return out.sort((a,b)=>a[1].localeCompare(b[1]))};
+  if(k=="w"&&!okS(+i,+s.slice(1)))continue;if(k=="m"&&it.kcl)continue;out.push([+i,it.n||("#"+i)])}return out.sort((a,b)=>a[1].localeCompare(b[1]))};
 function build(){const d=BL.d;if(!(d.t||d.l||Object.keys(d.w).length))return null;try{const dd=JSON.parse(JSON.stringify(d));if(dd.t&&dd.t.id==null)dd.t=null;const e=specMech(dd);pctMech(e,dd.p);const pd=BL.pd||0;if(pd==1||pd==2)pctMech(e,starP(pd));const kk=["dg","or","r4","mb"][pd]||"dg";e.tkit=kk;e.lkit=kk;e.wkit=(e.wids||[]).map(()=>kk);return e}catch(e){console.error(e);return null}}
 const css=`#bld{position:fixed;inset:0;z-index:200;background:#07111c;color:#e6eefb;font:14px/1.3 ACE,Arial,sans-serif;display:flex;flex-direction:column}
 #bld[hidden]{display:none}#bld *{box-sizing:border-box}
@@ -56,7 +54,7 @@ const css=`#bld{position:fixed;inset:0;z-index:200;background:#07111c;color:#e6e
 #bpk .pt{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 6px;min-height:92px}#bpk .pt img{width:100%;height:56px;object-fit:contain}#bpk .pt i{width:40px;height:56px}#bpk .pt span{font-size:12px;text-align:center;line-height:1.1}
 #bpk .si{width:280px;flex:none;background:#0e2438;border-radius:8px;padding:12px;overflow:auto}#bpk .si h4{margin:0 0 8px;font-size:16px;color:#ffd24a;font-weight:400}#bpk .si img{width:100%;height:100px;object-fit:contain;background:#162636;border-radius:6px;margin-bottom:8px}
 #bpk .si div{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid #17496f;padding:2px 0}#bpk .si div b{color:#ffd24a;font-weight:400;text-align:right}
-#bld{--sq:clamp(60px,10.5vh,92px)}
+#bld{--sq:clamp(54px,9.5vh,88px)}#bld .msq .sq{width:calc(var(--sq)*.78);height:calc(var(--sq)*.78)}#bld .msq .sq img{height:56%;margin-top:8px}#bld .msq small{font-size:10px}
 #bld h3{height:auto!important;margin:0 0 8px!important;padding:0!important;line-height:1.2!important}#bld details,#bld summary{height:auto!important;min-height:0!important;display:block!important}#bld .bcol>button,#bld details button{height:auto!important;min-height:0!important}#bld .wt{justify-content:flex-start!important;align-items:flex-start!important;height:auto!important}#bld .wt button{height:auto!important;flex:none!important}#bld .st{align-items:start!important;height:auto!important}#bld .ml button,#bld .wt button{height:auto!important;margin:0!important}`;
 document.head.insertAdjacentHTML("beforeend","<style>"+css+"</style>");
 const sqH=s=>`<button type="button" class="sq" data-sq="${s}"></button>`;
@@ -65,7 +63,7 @@ document.body.insertAdjacentHTML("beforeend",`<div id="bld" hidden><div class="b
 <div class="bm"><div class="bcol c1"><h3>MISSION</h3><div class="ml" id="bml"></div><h3 style="margin-top:6px">WAVE</h3><div class="wt" id="bwt"></div><h3 style="margin-top:6px">ENEMY NAME</h3><input id="bnm" type="text" maxlength="30" style="width:100%"></div>
 <div class="bcol c2"><div class="pvb" id="bpd"><span>PREVIEW AS</span><button data-pd="0">Easy</button><button data-pd="1">Hard</button><button data-pd="2">Insane</button><button data-pd="3">Boss</button></div>
 <div class="stage"><div class="sqc">${sqH("w2")}${sqH("w3")}</div><div class="mid"><div class="sqr">${sqH("w0")}${sqH("w1")}</div><canvas id="bcv"></canvas></div><div class="sqc">${sqH("w4")}${sqH("w5")}</div></div>
-<div class="sqr" style="gap:18px"><div class="grp">${sqH("t")}${sqH("l")}</div><div class="grp">${sqH("w6")}${sqH("w7")}${sqH("w8")}</div><div class="grp">${sqH("tp")}${sqH("sh")}</div></div>
+<div class="sqr" style="gap:18px"><div class="grp">${sqH("t")}${sqH("l")}</div><div class="grp">${sqH("w6")}${sqH("w7")}${sqH("w8")}</div><div class="grp"></div></div><div class="sqr msq">${[0,1,2,3,4,5].map(i=>sqH("m"+i)).join("")}</div>
 <div class="bar" id="bbar"></div></div>
 <div class="bcol c3"><h3>STATS</h3><div class="st" id="bst"></div><table id="bwp"></table>
 <details id="badv"><summary>ADVANCED</summary><div class="muted">Stat percentages for this wave (100 = exactly the items, 80 = 20% weaker). They apply to the Easy version.</div><div class="pg" id="bpp"></div>
@@ -79,7 +77,7 @@ const N=n=>Math.round(n).toLocaleString();
 function itemInfo(k,id){const it=(k=="w"?W:K[k])[id],r=[],A=(a,b)=>{if(b!=null&&b!==""&&b!==0&&b!==false)r.push([a,b])};
   if(k=="t"){A("Hit points",N(it.hp));A("Energy regen",N(it.en));A("Energy capacity",N(it.encap));A("Heat capacity",N(it.hc));A("Cooling",N(it.cool));A("Weight",N(it.w));A("Weight capacity",N(it.cap));A("Physical resist",it.rp);A("Explosive resist",it.rf);A("Electric resist",it.re)}
   else if(k=="l"){A("Hit points",N(it.hp));A("Weight",N(it.w));A("Steps per walk",it.s);A("Jump",it.j);if(it.mag)A("Magnet damage",N(it.mag.dmg))}
-  else if(k=="m"){A("Teleporter",it.tp?"Yes":0);A("Shield strength",it.shp);A("Energy",it.e);A("Weight",N(it.w||0))}
+  else if(k=="m"){A("Hit points",it.hp);A("Energy regen",it.en);A("Energy capacity",it.ec);A("Heat capacity",it.hc);A("Cooling",it.cool);A("Physical resist",it.rp);A("Explosive resist",it.rf);A("Electric resist",it.re);A("Bullets",it.am);A("Rockets",it.ra);A("Teleports",it.tpInf?"Unlimited":it.tp);A("Shield strength",it.shp);if(it.mythic)A("Rarity","Mythic")}
   else{const n=it.shots>1?it.shots:1,dr=it.dr||[it.dmg,it.dmg],lo=Math.round(dr[0]*n),hi=Math.round(dr[1]*n);A("Damage",lo==hi?N(lo):N(lo)+"-"+N(hi));A("Damage type",it.ty);A("Shots",it.shots>1?it.shots:0);A("Energy",N(it.en||0));A("Heat",N(it.ht||0));A("Range",(it.min!=null?it.min+"-"+it.max:""));A("Weight",N(it.w));A("Uses",it.uses);A("Heat damage",it.hd);A("Energy damage",it.ed);if(it.brk)A("Guard break",JSON.stringify(it.brk).replace(/[{}"]/g,""));if(it.drone)A("Type","Drone");if(it.hook)A("Type","Hook");if(it.chrg)A("Type","Charge");if(it.mythic)A("Rarity","Mythic")}
   return `<h4>${it.n||"#"+id}</h4>`+(artSrc(k,id)?`<img alt="" src="${artSrc(k,id)}">`:"")+r.map(([a,b])=>`<div><span>${a}</span><b>${b}</b></div>`).join("")}
 let PK=null;
@@ -89,8 +87,8 @@ function commit(){const kk=keyOf(BL.mi,BL.k),d=BL.d;d.name=$("bnm").value.trim()
   if(!(d.t||d.l||Object.keys(d.w).length))delete S.designs[kk];else{const c=JSON.parse(JSON.stringify(d));c.m=(c.m||[]).filter(Boolean);if(!c.m.length)delete c.m;S.designs[kk]=c}
   save()}
 function setSel(s,f,v){const d=BL.d,k=kindOf(s);let it=getIt(s);
-  if(f=="rm"||(f=="id"&&v==="")){if(s=="t")d.t=null;else if(s=="l")d.l=null;else if(k=="w")delete d.w[+s.slice(1)];else d.m=d.m.filter(x=>x!==it);if(BL.sel==s)BL.sel=null}
-  else{if(!it){it={id:null,lv:1,sh:false};if(s=="t")d.t=it;else if(s=="l")d.l=it;else if(k=="w")d.w[+s.slice(1)]=it;else d.m.push(it)}
+  if(f=="rm"||(f=="id"&&v==="")){if(s=="t")d.t=null;else if(s=="l")d.l=null;else if(k=="w")delete d.w[+s.slice(1)];else d.m[+s.slice(1)]=null;if(BL.sel==s)BL.sel=null}
+  else{if(!it){it={id:null,lv:1,sh:false};if(s=="t")d.t=it;else if(s=="l")d.l=it;else if(k=="w")d.w[+s.slice(1)]=it;else d.m[+s.slice(1)]=it}
     if(f=="id"){it.id=+v;it.lv=Math.min(it.lv||1,maxLv(k,it.id));BL.sel=s}if(f=="lv")it.lv=Math.max(1,Math.min(maxLv(k,it.id),+v||1));if(f=="sh")it.sh=!!v}
   commit();draw()}
 function draw(){const d=BL.d;
@@ -108,7 +106,7 @@ function draw(){const d=BL.d;
 function stats(){const m=build();bb=null;bbF=0;
   if(!m){$("bst").innerHTML="";$("bwp").innerHTML="";BL.m=null;return}
   const d=BL.d,wt=(d.t?(K.t[d.t.id]||{}).w||0:0)+(d.l?(K.l[d.l.id]||{}).w||0:0)+Object.values(d.w).reduce((a,x)=>a+(x&&W[x.id]?W[x.id].w||0:0),0),cap=d.t&&K.t[d.t.id]?K.t[d.t.id].cap:0;
-  const F=N,ut=[];if(m.tp)ut.push("Teleporter");if(m.shd&&m.shd.length)ut.push("Shield");
+  const F=N;
   $("bst").innerHTML=[["Hit points",F(m.max)],["Energy capacity",F(m.enCap)],["Energy regen",F(m.enMax)],["Heat capacity",F(m.hc)],["Cooling",F(m.cool)],["Weight",F(wt)+(cap?" / "+F(cap):"")]].map(([a,b])=>`<span>${a}</span><span>${b}</span>`).join("");
   $("bwp").innerHTML="<tr><th>Weapon</th><th>Damage</th><th>Energy</th><th>Heat</th></tr>"+m.weps.map(w=>{const n=w.shots>1?w.shots:1,lo=Math.round(w.dr[0]*n),hi=Math.round(w.dr[1]*n);return `<tr><td>${w.n}</td><td>${lo==hi?F(lo):F(lo)+"-"+F(hi)}</td><td>${F(w.en||0)}</td><td>${F(w.ht||0)}</td></tr>`}).join("");
   BL.m=m}
