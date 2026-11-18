@@ -3658,7 +3658,7 @@ function controls(){if(B&&B.p&&B.p.shdOn)shdAuto(B.p);
   if(!cat){
     const cb=(k,ic,t)=>T(img(CBI[ic]),t,`data-cat="${k}"`,!!B.egg&&k!="m");
     bar=cb("m","move","Movement")+cb("g","guns","Weapons")+cb("s","spec","Specials")+cb("k","kits","Kits")+
-      (B.ms&&B.ms.length>1?T(img(CBI.swm),swTip(),'data-cat="sw"',!(idle&&swAvail().length),idle&&!swAvail().length?["gen"]:null):"")+
+      (B.ms&&B.ms.length>1?T(img(CBI.swm),swTip(),'data-cat="sw"',!!B.egg):"")+
       T(img(CBI.spk),p.mag?`Stomp (${L[p.lid].n}) · ${SP(p).dmg[0]==SP(p).dmg[1]?SP(p).dmg[0]:SP(p).dmg[0]+"-"+SP(p).dmg[1]} ${({phys:"physical",fire:"explosive",energy:"electric"})[SP(p).ty]} dmg${SP(p).hd?" · +"+SP(p).hd+" heat dmg":""}${SP(p).ed?" · drains "+SP(p).ed+" energy":""} · pushes ${SP(p).push} · reach ${SP(p).rg} · free${p.mag.uses?" · "+Math.max(0,p.mag.uses-(p.magUsed||0))+" of "+p.mag.uses+" uses left":""}${wkOK?" · also drops a Twin Walker (once per battle)":""}`:`Stomp · ${STP.dmg[0]}-${STP.dmg[1]} dmg · pushes ${STP.push} · range ${STP.rg}${STP.en?" · "+STP.en+" en":" · free"}${wkOK?" · also drops a Twin Walker (once per battle)":""}`,'data-a="stompA"',!!B.egg||!stOK,idle&&p.en<SP(p).en?["en"]:idle&&!wkOK&&!(SPU(p)&&E.some(o=>Math.abs(o.x-p.x)<=SP(p).rg))?[SPU(p)?"rg":"en"]:null,p.mag&&p.mag.uses?Array.from({length:p.mag.uses},(_,j)=>j<(p.magUsed||0)?1:0):undefined)+
       T(img(CBI.stomp),`Shut engine down · uses 1 action · cools up to ${p.cool} heat (now ${p.heat}/${p.hc})`,'data-a="cool"',!!B.egg||!idle);
   }else{
@@ -3689,7 +3689,7 @@ function controls(){if(B&&B.p&&B.p.shdOn)shdAuto(B.p);
       it=ks_.map((kk,j)=>{const m=M[kk.i],ef=kitEff(p,m),can=idle&&!kk.used&&ef.ok;return T(`<span class="wic">${ICO("m",m,false)}</span>`,`${m.n} · ${ef.txt} · once per battle · uses one action`,`data-a="kit" data-ki="${j}"`,!can,idle&&!kk.used&&!ef.ok?["gen"]:null,[kk.used?1:0])}).join("");
       if(!it)lbl="Kits · none equipped"}
     else if(cat=="sw"){
-      it=(B.ms||[]).filter(o=>o.m!==B.p).map(o=>{const k=B.ms.indexOf(o),ok=idle&&swOK(o);return T(swIc(o),swItemTip(o),`data-a="swpick" data-swi="${k}"`,!ok,idle&&!swOK(o)?["gen"]:null)}).join("");
+      it=(B.ms||[]).map((o,k)=>{const ok=idle&&swOK(o);return T(swIc(o),swItemTip(o),`data-a="swpick" data-swi="${k}"`,!ok,idle&&!swOK(o)?["gen"]:null,[o.sw?1:0])}).join("");
       if(!it)lbl="Switch Mech · no other mechs"}
     bar=bkBtn+it;
   }
@@ -4785,9 +4785,10 @@ function swInit(p){B.ms=null;try{
 const swAvail=()=>(B.ms||[]).filter(o=>swOK(o));
 const swTip=()=>{const a=swAvail();return a.length?"Switch Mech · swap to another of your mechs ("+a.length+" available, you can switch to each mech once) · uses an action":"Switch Mech · no mechs left to switch to"};
 function swCur(){return(B.ms||[]).find(o=>o.m===B.p)}
-function swIc(o){const m=o.m,t=T[m.tid];return t?`<span class="wic">${ICO("t",t,!!m.tsh,m.tlv,m.tkit)}</span>`:""}
+function swIc(o){const m=o.m;if(!o.ico||o.icoT!==(m.tkit||"")+m.tlv){try{const mm=mpMeasure(m);if(mm){const c=document.createElement("canvas");c.width=c.height=128;const g=c.getContext("2d"),k=Math.min(118/(mm.x1-mm.x0),118/(mm.y1-mm.y0),3);g.translate(64-(mm.x0+mm.x1)/2*k,64-(mm.y0+mm.y1)/2*k);g.scale(k,k);drawMech(g,0,0,1,m,0);o.ico=c.toDataURL("image/png");o.icoT=(m.tkit||"")+m.tlv}}catch(e){}}
+  return o.ico?`<span class="wic"><img src="${o.ico}" alt=""></span>`:""}
 const swOK=o=>!!o&&o.st!="dead"&&o.m!==B.p&&!o.sw;
-function swItemTip(o){const m=o.m,hp=Math.max(0,Math.round(m.hp)),mx=Math.round(m.max||m.hp);return "Mech "+(o.i+1)+" \u00b7 "+hp+" / "+mx+" HP \u00b7 "+(o.st=="dead"?"destroyed":o.sw?"already switched to this battle":"switch to this mech \u00b7 uses an action")}
+function swItemTip(o){const m=o.m,hp=Math.max(0,Math.round(m.hp)),mx=Math.round(m.max||m.hp);return "Mech "+(o.i+1)+" \u00b7 "+hp+" / "+mx+" HP \u00b7 "+(o.m===B.p?"currently equipped":o.st=="dead"?"destroyed":o.sw?"already switched to this battle":"switch to this mech \u00b7 uses an action")}
 async function swMech(k){const b=B,o=b.ms&&b.ms[k];if(!swOK(o)||b.over||b.busy||b.turn!="p"||b.p.did)return;
   const old=b.p,oo=swCur();b.busy=true;old.did=true;controls();say("Switching mechs!");
   const x=old.x,f=b.tpfx={m:old,t0:performance.now(),x0:x,x1:x,moved:false,sv:false,TL:{e:0,h:0,ed:0}};playBuf("tpoff",1);
