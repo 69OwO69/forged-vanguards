@@ -1140,7 +1140,7 @@ button,[role=button],.nb,.bkb{touch-action:manipulation;-webkit-user-select:none
 
 #cv .rkf{position:absolute;inset:0;border:calc(12*var(--cu)) solid #1583c4;border-radius:calc(16*var(--cu));background:#001426;box-shadow:inset 0 0 0 calc(4*var(--cu)) #04304f}
 #cv .rkdv{position:absolute;left:0;right:0;top:calc(246*var(--cu));height:calc(20*var(--cu));background:linear-gradient(#1c93d6,#0e66a2);border-top:calc(3*var(--cu)) solid #0a3d63;border-bottom:calc(3*var(--cu)) solid #06304f}
-#cv .rkt{position:absolute;left:0;right:0;top:calc(34*var(--cu));text-align:center;color:#fff;font-weight:900;font-size:calc(42*var(--cu));text-shadow:calc(2*var(--cu)) calc(3*var(--cu)) 0 #000}
+#cv .rkt,#cv .rkse{pointer-events:none}#cv .rkt{position:absolute;left:0;right:0;top:calc(34*var(--cu));text-align:center;color:#fff;font-weight:900;font-size:calc(42*var(--cu));text-shadow:calc(2*var(--cu)) calc(3*var(--cu)) 0 #000}
 #cv .rktb{position:absolute;top:calc(100*var(--cu));width:calc(255*var(--cu));height:calc(80*var(--cu));border:0;border-radius:calc(8*var(--cu));background:linear-gradient(#0f6db0,#0a4d82);box-shadow:inset 0 0 0 calc(5*var(--cu)) #06385f,0 0 0 calc(2*var(--cu)) #0a4d82;color:#fff;font:inherit;font-weight:900;font-size:calc(40*var(--cu));text-shadow:calc(2*var(--cu)) calc(3*var(--cu)) 0 #000;cursor:pointer}
 #cv .rktb.on{outline:calc(7*var(--cu)) solid #ff9a0a;outline-offset:calc(3*var(--cu));border-radius:calc(8*var(--cu))}
 #cv .rkso{position:absolute;left:calc(38*var(--cu));top:calc(150*var(--cu));width:calc(340*var(--cu));height:calc(82*var(--cu));background:#02213a;border-radius:calc(14*var(--cu));display:flex;align-items:center;gap:calc(24*var(--cu));padding-left:calc(14*var(--cu));white-space:nowrap;cursor:pointer;color:#fff;font-weight:900;font-size:calc(31*var(--cu));text-shadow:calc(2*var(--cu)) calc(2*var(--cu)) 0 #000}
@@ -1173,6 +1173,24 @@ button,[role=button],.nb,.bkb{touch-action:manipulation;-webkit-user-select:none
 #cv .qtx{position:absolute;left:0;right:0;text-align:center;color:#d9d9d9;font-weight:900;font-size:calc(44*var(--cu));line-height:1.2;text-shadow:calc(2*var(--cu)) calc(3*var(--cu)) 0 #000}
 #cv .rr2{height:calc(87*var(--cu))}#cv .rr2 .l2{position:absolute;left:calc(232*var(--cu));top:calc(50*var(--cu));font-size:calc(28*var(--cu));color:#e8e8e8;transform:none}
 #cv .rr2 .l1{top:calc(30*var(--cu))!important}
+
+#mbtn{position:fixed;z-index:30;display:none;padding:0;border:0;background:none;cursor:pointer}
+#mbtn .mf{position:absolute;inset:0;border-radius:14%;padding:7%;background:linear-gradient(160deg,#4fc0f8 0%,#1788cf 38%,#0b5f9c 100%);box-shadow:0 3px 0 #04345a,inset 0 2px 0 rgba(255,255,255,.4)}
+#mbtn .mf i{display:flex;width:100%;height:100%;align-items:center;justify-content:center;border-radius:10%;background:#001a45;box-shadow:inset 0 0 8px #000}
+#mbtn svg{width:72%;height:72%}#mbtn:hover{filter:brightness(1.2)}
+#mbdg{position:absolute;right:-8%;top:-8%;min-width:42%;height:42%;padding:0 6%;box-sizing:border-box;border-radius:999px;background:#e01b1b;border:2px solid #fff;color:#fff;font-weight:900;font-size:calc(var(--mh,60px)*.26);display:flex;align-items:center;justify-content:center;pointer-events:none;text-shadow:1px 1px 0 #000}
+#mbdg.hide{display:none}
+#cv .mr{display:flex;align-items:center;gap:calc(22*var(--cu));padding:calc(14*var(--cu)) calc(24*var(--cu));background:#262626;min-height:calc(116*var(--cu));border-left:calc(10*var(--cu)) solid transparent;cursor:pointer}
+#cv .mr:nth-child(even){background:#0a0a0a}
+#cv .mr.un{border-left-color:#ff9a0a}
+#cv .mr .mi{flex:none;width:calc(74*var(--cu));height:calc(74*var(--cu));display:flex;align-items:center;justify-content:center;border-radius:calc(10*var(--cu));background:#001a45;border:calc(4*var(--cu)) solid #1583c4;padding:calc(8*var(--cu));box-sizing:border-box}
+#cv .mr .mi img{width:100%;height:100%;object-fit:contain}
+#cv .mr .mt{flex:1;min-width:0}
+#cv .mr .mh{display:flex;justify-content:space-between;gap:calc(16*var(--cu));font-weight:900;font-size:calc(34*var(--cu));color:#fff;text-shadow:calc(1*var(--cu)) calc(2*var(--cu)) 0 #000}
+#cv .mr.un .mh b{color:#ff9a0a}#cv .mr .mh em{font-style:normal;font-size:calc(24*var(--cu));color:#8fa3b5;white-space:nowrap}
+#cv .mr .mb{margin-top:calc(6*var(--cu));font-weight:700;font-size:calc(28*var(--cu));line-height:1.22;color:#cfd8e0;word-break:break-word}
+#cv .mr .ma{flex:none;display:flex;gap:calc(14*var(--cu))}
+#cv .mr .ma .cb{position:static;width:calc(80*var(--cu));height:calc(80*var(--cu))}
 #cv .drop{position:absolute;background:#021a2a;border:calc(5*var(--cu)) solid #0f7fc4;border-radius:calc(10*var(--cu));z-index:5;overflow:hidden}
 #cv .drop div{padding:calc(10*var(--cu)) calc(24*var(--cu));color:#fff;font-weight:800;font-size:calc(36*var(--cu));cursor:pointer}
 #cv .drop div:hover,#cv .drop div.sel{background:#0f4f7e}
@@ -6321,6 +6339,31 @@ function sbars(){st.querySelectorAll(".lst[data-sb]").forEach(l=>{const x=+l.dat
   const up=()=>{const r=l.clientHeight/Math.max(1,l.scrollHeight);t.style.display=r>=.999?"none":"block";h.style.height=Math.max(24,l.offsetHeight*r)+"px";h.style.top=(l.scrollTop/Math.max(1,l.scrollHeight-l.clientHeight))*(l.offsetHeight-h.offsetHeight)+"px"};
   l.addEventListener("scroll",up);up();
   h.onmousedown=e=>{e.preventDefault();const y0=e.clientY,s0=l.scrollTop,k=st.getBoundingClientRect().width/800;const mv=ev=>{l.scrollTop=s0+(ev.clientY-y0)/k*(l.scrollHeight-l.clientHeight)/Math.max(1,l.offsetHeight-h.offsetHeight)};const u=()=>{removeEventListener("mousemove",mv);removeEventListener("mouseup",u)};addEventListener("mousemove",mv);addEventListener("mouseup",u)}})}
+
+/* ---- inbox ---- */
+D.mail=D.mail||[];D.upd=D.upd||[];
+const UPD=[["u1","Update: Arena screens rebuilt","Community chat, the leaderboard, player profiles, inspect and the clans screens have a new look."],["u2","Update: Quests and milestones","Daily, weekly and monthly quests with completion bonuses, plus the milestone tiers."],["u3","Welcome to your inbox","Clan join requests, clan news and update logs arrive here."]];
+const mailUnread=()=>D.mail.filter(m=>!m.r).length;
+function mailBadge(){const b=$("mbdg");if(!b)return;const n=mailUnread();b.textContent=n>99?"99+":n;b.classList.toggle("hide",!n)}
+function mailAdd(m){D.mail.unshift(Object.assign({id:"m"+Date.now()+Math.random().toString(36).slice(2,6),ts:Date.now(),r:0},m));D.mail=D.mail.slice(0,60);sv();mailBadge();if(scr=="mail"&&!$("cmx").classList.contains("hide"))draw(1)}
+UPD.forEach(u=>{if(!D.upd.includes(u[0])){D.upd.push(u[0]);D.mail.unshift({id:"upd"+u[0],k:"upd",t:u[1],b:u[2],ts:Date.now(),r:0})}});sv();
+const ago=t=>{const m=Math.max(0,Math.floor((Date.now()-t)/6e4));return m<1?"just now":m<60?m+" min ago":m<1440?Math.floor(m/60)+" hr ago":Math.floor(m/1440)+" days ago"};
+function reqDone(id,acc){const c=D.clan;D.mail.forEach(m=>{if(m.k=="req"&&m.p==id&&m.st=="pending"){m.st=acc?"accepted":"declined";m.r=1;m.b=(acc?"Accepted: ":"Declined: ")+(find(id)||{name:"Player"}).name+(acc?" joined your clan.":" was declined.")}});sv();mailBadge()}
+function cvMail(){let h=`<div class="rkf"></div><div class="rkdv" style="top:${u(170)}"></div>`+LV("mailBack",u(28),u(22),100)+`<div class="rkt" style="top:${u(46)}">Inbox</div>`;
+  h+=`<button class="rktb" data-a="mAll" style="right:${u(560)};left:auto;top:${u(64)};width:${u(250)};height:${u(70)};font-size:${u(30)}">Mark read</button><button class="rktb" data-a="mClear" style="right:${u(280)};left:auto;top:${u(64)};width:${u(250)};height:${u(70)};font-size:${u(30)}">Clear all</button>`;
+  const rows=D.mail.map(m=>{const ic=m.k=="req"?"clanRequestToJoin":m.k=="clan"?"clan":"info",pend=m.k=="req"&&m.st=="pending";
+    return `<div class="mr ${m.r?"":"un"}" data-a="mRead" data-id="${m.id}"><div class="mi"><img src="${A["i_"+ic].u}"></div><div class="mt"><div class="mh"><b>${esc(m.t)}</b><em>${ago(m.ts)}</em></div><div class="mb">${esc(m.b)}</div></div>${pend?`<div class="ma"><button class="cb" data-a="mAcc" data-id="${m.id}">${IM("acceptClanInvitation")}</button><button class="cb" data-a="mDec" data-id="${m.id}">${IM("declineClanInvitation")}</button></div>`:""}</div>`}).join("");
+  h+=`<div class="clst" id="mpL" style="left:${u(26)};right:${u(110)};top:${u(204)};bottom:${u(14)}">${rows||`<div class="lbl" style="padding-top:${u(200)}">No messages</div>`}</div>`+sbar("mpL",`right:${u(22)};top:${u(204)};bottom:${u(14)};width:${u(88)}`);return h}
+function mailBtn(){let b=$("mbtn");if(b)return b;b=document.createElement("button");b.id="mbtn";b.title="Inbox";b.setAttribute("aria-label","Inbox");
+  b.innerHTML='<div class="mf"><i><svg viewBox="0 0 64 48"><rect x="3" y="5" width="58" height="38" rx="6" fill="#fff"/><path d="M3 11 32 31 61 11V9Q61 5 57 5H7Q3 5 3 9Z" fill="#bcd6ee"/><path d="M5 9 32 28 59 9" fill="none" stroke="#1a5f9a" stroke-width="3" stroke-linejoin="round"/><path d="M5 41 24 24M59 41 40 24" stroke="#1a5f9a" stroke-width="2.5" stroke-linecap="round"/></svg></i></div><div id="mbdg" class="hide">0</div>';
+  document.body.appendChild(b);b.onclick=()=>{try{window.mpOpen("mail")}catch(e){}};return b}
+function mailSync(){const b=mailBtn(),q=$("qbtn");if(!q){b.style.display="none";return}
+  const hid=q.classList.contains("hide")||q.offsetParent===null&&getComputedStyle(q).position!="fixed"||!$("cmx").classList.contains("hide");
+  if(hid){b.style.display="none";return}
+  const r=q.getBoundingClientRect(),sz=Math.round(r.width*.78);b.style.display="block";b.style.width=sz+"px";b.style.height=sz+"px";b.style.setProperty("--mh",sz+"px");b.style.left=Math.round(r.left+(r.width-sz)/2)+"px";b.style.top=Math.round(r.bottom+r.width*.12)+"px";mailBadge()}
+try{const q=$("qbtn");if(q)new MutationObserver(mailSync).observe(q,{attributes:true,attributeFilter:["class","style"]});new MutationObserver(mailSync).observe($("cmx"),{attributes:true,attributeFilter:["class"]})}catch(e){}
+addEventListener("resize",mailSync);setInterval(mailSync,1500);mailSync();
+setInterval(()=>{const c=D.clan;if(!c||!c.me||c.req.length>=5||c.mem.length+1>=24||R()>.4)return;const b=BOTS.find(x=>!x.clan&&!c.mem.includes(x.id)&&!c.req.includes(x.id)&&R()<.5);if(!b)return;c.req.push(b.id);mailAdd({k:"req",t:"Clan join request",b:b.name+" wants to join "+c.name+".",p:b.id,st:"pending"})},45000);
 /* ---- screens ---- */
 const sortedPlayers=()=>{let L=[...BOTS,me()];if(ST.online)L=L.filter(p=>p.on);return L.sort((a,b)=>b.rating-a.rating||b.wins-a.wins)};
 const sortedClans=()=>allClans().slice().sort((a,b)=>b.wins-a.wins);
@@ -6352,7 +6395,7 @@ function vChat(){seedChat();let h=bg("Chat");
   if(ST.chans)h+=art(A.a_chan,182,97)+`<div class="lst" style="left:196px;top:109px;width:270px;height:205px;z-index:5">${CH().map(c=>`<div class="chrow ${c==ST.ch?"sel":""}" data-a="chPick" data-id="${c}">${esc(c)}</div>`).join("")}</div>`;
   return `<div style="position:absolute;left:0;top:0;width:800px;height:497px;transform:scale(.965);transform-origin:0 0">${h}</div>`}
 
-const cvOn=()=>scr=="chat"||scr=="rank"||scr=="insp"||scr=="clans"||(scr=="srch"&&ST.sb=="chat");
+const cvOn=()=>scr=="chat"||scr=="mail"||scr=="rank"||scr=="insp"||scr=="clans"||(scr=="srch"&&ST.sb=="chat");
 const IM=(k)=>`<i><img src="${A["i_"+k].u}" style="width:100%;height:100%;display:block;object-fit:contain"></i>`;
 const u=n=>`calc(${n}*var(--cu))`;
 let _lv=null;const lvArt=()=>_lv||(_lv=(()=>{const e=document.getElementById("wx"),f=x=>(x||"").replace(/^url\(["']?/,"").replace(/["']?\)$/,"");return{f:f(getComputedStyle(e).backgroundImage),d:f(getComputedStyle(e,"::after").backgroundImage)}})());
@@ -6431,7 +6474,7 @@ function cvClSearch(){return `<div class="cdim" data-a="csX"></div><div class="c
 function cvCreate(){const ic=INF.find(d=>d.id=="sm").ic;return `<div class="cdim" data-a="crX"></div><div class="cfr" style="width:${u(980)};height:${u(580)}"><div class="ttl">Create clan</div>${LV("crX","auto",u(-84),68,`left:auto;right:${u(10)}`)}<div class="qtx" style="top:${u(30)}">Enter clan's name:</div><input class="gin" id="mpCn" maxlength="20" autocomplete="off" value="${esc(ST.nameDraft||"")}" style="position:absolute;left:${u(40)};right:${u(40)};top:${u(110)};width:auto;margin:0">${SQ("crX","rd",u(10),"auto","bottom:"+u(14))}<div style="position:absolute;left:50%;transform:translateX(-50%);bottom:${u(14)};width:${u(380)};height:${u(150)};border:${u(8)} solid #04202f;border-radius:${u(16)};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:${u(8)}"><div style="color:#fff;font-weight:900;font-size:${u(40)};text-shadow:${u(2)} ${u(3)} 0 #000">Cost:</div><div style="display:flex;align-items:center;gap:${u(12)};font-weight:900;text-shadow:${u(2)} ${u(3)} 0 #000"><span style="color:#ff9a0a;font-size:${u(50)}">${fmt(D.ccost)}</span><img src="${ic}" style="height:${u(60)}"></div></div>${SQ("crGo","gn","auto","auto","right:"+u(10)+";bottom:"+u(14))}</div>`}
 function cvClanPop(){const c=clanOf(ST.cp);if(!c)return"";const own=D.clan&&c.id==D.clan.id,rk=sortedClans().findIndex(x=>x.id==c.id)+1,mem=cMem(c),tot=Math.round(c.wins/(.35+(c.wins%40)/100)),pc=Math.round(c.wins*100/Math.max(1,tot));
   const list=own?[{...me(),role:"Leader"},...c.mem.map(i=>({...find(i),role:"Member"})),...c.req.map(i=>({...find(i),role:"Request"}))]:BOTS.filter(x=>x.clan==c.id).slice(0,mem).map(x=>({...x,role:"Member"}));
-  let b=`<div class="ml" style="left:${u(20)};top:${u(8)};color:#ff9a0a">(${rk==1?"Leader Clan":"Clan rank "+rk})</div><div class="ml" style="left:${u(20)};top:${u(64)}">Ladder wins : ${fmt(c.wins)} / ${fmt(tot)} (${pc}%)</div><div class="ml" style="left:${u(20)};top:${u(120)}">Members : ${mem} / 24</div>`;
+  let b=`<div class="ml" style="left:${u(20)};top:${u(8)};color:#ff9a0a">(${rk==1?"Leader Clan":"Clan rank "+rk})${c.priv?" <span style=\"color:#9fc4e6\">Private</span>":""}</div><div class="ml" style="left:${u(20)};top:${u(64)}">Ladder wins : ${fmt(c.wins)} / ${fmt(tot)} (${pc}%)</div><div class="ml" style="left:${u(20)};top:${u(120)}">Members : ${mem} / 24</div>`;
   const fw=Math.round(250*CU),fh=Math.round(166*CU);
   b+=`<div style="position:absolute;right:${u(10)};top:${u(8)};width:${fw}px;height:${fh}px">${flag(c.f,0,0,fw,fh)}</div>`;
   b+=`<div class="ml" style="left:${u(20)};top:${u(236)}">Medals:</div><div style="position:absolute;left:${u(230)};right:0;top:${u(188)};height:${u(130)};background:#00366a;display:flex;align-items:center;padding-left:${u(14)}">${rk<=3?`<img src="${A["medal"+rk].u}" style="height:${u(100)}">`:""}</div>`;
@@ -6459,7 +6502,7 @@ function cvSearch(){let h=`<div class="cdim"></div><div class="cfr" style="width
   return h+`</div>`}
 function cvDraw(keep){const act=document.activeElement,ai=act&&act.tagName=="INPUT"&&cv.contains(act)?act.id:null,av=ai?act.value:null,ss=ai?act.selectionStart:0;
   const o0=$("mpO"),so=o0?o0.scrollTop:0;
-  const L0=$("mpL"),sl=L0?L0.scrollTop:0;cv.innerHTML=scr=="insp"?(ST.ib=="rank"?cvRank():ST.ib=="clans"?cvClans():ST.ib=="clan"?"":cvChat())+cvInsp():scr=="rank"?cvRank():scr=="clans"?cvClans():cvChat();const LL=$("mpL");if(LL)LL.scrollTop=keep?sl:0;const H=$("mpH");if(H)H.scrollTop=H.scrollHeight;const O=$("mpO");if(O)O.scrollTop=so;cvScroll();
+  const L0=$("mpL"),sl=L0?L0.scrollTop:0;cv.innerHTML=scr=="insp"?(ST.ib=="rank"?cvRank():ST.ib=="clans"?cvClans():ST.ib=="clan"?"":cvChat())+cvInsp():scr=="rank"?cvRank():scr=="clans"?cvClans():scr=="mail"?cvMail():cvChat();const LL=$("mpL");if(LL)LL.scrollTop=keep?sl:0;const H=$("mpH");if(H)H.scrollTop=H.scrollHeight;const O=$("mpO");if(O)O.scrollTop=so;cvScroll();
   if(ai){const n=$(ai);if(n){n.value=av;n.focus();try{n.setSelectionRange(ss,ss)}catch(e){}}}}
 function mdrawers(){/* mech canvases */}
 function vClan(){const c=ST.clanView||D.clan,own=D.clan&&c.id==D.clan.id;let h=bg("Clan");
@@ -6510,10 +6553,10 @@ function draw(keep){if(cvOn()){st.style.display="none";cv.style.display="block";
   if(ai){const n=$(ai);if(n){n.value=av;n.focus();try{n.setSelectionRange(ss,ss)}catch(e){}}}
   const H=$("mpH");if(H)H.scrollTop=H.scrollHeight;if(scr=="insp"&&ST.itab=="mech"&&!mrAF)mrAF=requestAnimationFrame(drawMechCanvas)}
 const go=(s,keep)=>{scr=s;draw(keep)};
-window.mpOpen=function(w){ST.pp=null;ST.cp=null;ST.csr=0;ST.cr=0;ST.cq="";$("cmx").classList.remove("hide");ST.sel=null;ST.chans=false;ST.online=false;
+window.mpOpen=function(w){if(w=="mail"){D.mail.forEach(m=>{if(m.k!="req"||m.st!="pending")m.r=1});sv();mailBadge();ST.pp=null;ST.cp=null;ST.csr=0;ST.cr=0;$("cmx").classList.remove("hide");ST.ret="mail";mailSync();return go("mail")}ST.pp=null;ST.cp=null;ST.csr=0;ST.cr=0;ST.cq="";$("cmx").classList.remove("hide");ST.sel=null;ST.chans=false;ST.online=false;
   if(w=="chat"){ST.ret="chat";go("chat")}else if(w=="clan"){ST.ret="clan";ST.cp=D.clan?D.clan.id:null;go("clans")}else{ST.ret="rank";ST.tab="players";go("rank")}};
-const close=()=>{$("cmx").classList.add("hide");cv.style.display="none";mrAF=0};
-const BK={rank:close,clans:()=>ST.ret=="clan"?close():go("rank"),chat:close,clan:()=>go("clans"),create:()=>go("clans"),flag:()=>go("create"),insp:()=>go(ST.ib||"rank"),srch:()=>{if(ST.sres){ST.sres=null;return go("srch")}go(ST.sb||"chat")}};
+const close=()=>{$("cmx").classList.add("hide");setTimeout(mailSync,50);cv.style.display="none";mrAF=0};
+const BK={mail:close,rank:close,clans:()=>ST.ret=="clan"?close():go("rank"),chat:close,clan:()=>go("clans"),create:()=>go("clans"),flag:()=>go("create"),insp:()=>go(ST.ib||"rank"),srch:()=>{if(ST.sres){ST.sres=null;return go("srch")}go(ST.sb||"chat")}};
 const openInsp=(id,from)=>{ST.pp=null;ST.insp=id;ST.ib=from;ST.itab="mech";ST.mi=0;go("insp")};
 function addMsg(ch,n,t,m){log(ch).push({n,t,me:m});const H=$("mpH");if(scr=="chat"&&ST.ch==ch&&H){H.innerHTML=chatHTML();H.scrollTop=H.scrollHeight;if(H._up)H._up()}}
 function say(){const L=$("mpIn");if(!L)return;const t=L.value.trim();if(!t)return;L.value="";addMsg(ST.ch,D.name,t,1);sv()}
@@ -6532,13 +6575,13 @@ const onClk=e=>{const t=e.target.closest("[data-a]");if(!t)return;const a=t.data
   case"crX":ST.cr=0;return go("clans",1);
   case"cpClose":ST.cp=null;return go("clans",1);
   case"cpMem":return openInsp(id,"clans");
-  case"cpAcc":{const c=D.clan;c.req=c.req.filter(i=>i!=id);c.mem.push(id);sv();return go("clans",1)}
-  case"cpDec":{const c=D.clan;c.req=c.req.filter(i=>i!=id);sv();return go("clans",1)}
-  case"cpKick":{const c=D.clan;c.mem=c.mem.filter(i=>i!=id);sv();return go("clans",1)}
-  case"cpLeave":D.clan=null;ST.cp=null;sv();return go("clans");
-  case"cpJoin":if(!D.clan)tip("Request sent");return;
+  case"cpAcc":{const c=D.clan;c.req=c.req.filter(i=>i!=id);if(c.mem.length+1<24)c.mem.push(id);reqDone(id,1);sv();return go("clans",1)}
+  case"cpDec":{const c=D.clan;c.req=c.req.filter(i=>i!=id);reqDone(id,0);sv();return go("clans",1)}
+  case"cpKick":{const c=D.clan;c.mem=c.mem.filter(i=>i!=id);mailAdd({k:"clan",t:"Clan news",b:(find(id)||{name:"A player"}).name+" was removed from "+c.name+".",r:1});sv();return go("clans",1)}
+  case"cpLeave":{const n=D.clan?D.clan.name:"";D.clan=null;ST.cp=null;sv();if(n)mailAdd({k:"clan",t:"Clan news",b:"You left "+n+".",r:1});return go("clans")}
+  case"cpJoin":if(!D.clan){const c=clanOf(ST.cp);if(c){mailAdd({k:"clan",t:"Request sent",b:"Your request to join "+c.name+" was sent. The clan leader has to accept it.",r:1});tip("Request sent")}}return;
   case"cpChat":ST.ch="Clan";ST.cp=null;return go("chat");
-  case"crGo":{const n=((($("mpCn")||{}).value)||"").trim();ST.nameDraft=n;if(n.length<3)return tip("Name too short");if(allClans().some(c=>c.name.toLowerCase()==n.toLowerCase()))return tip("Name taken");if(typeof S!=="undefined"){if((S.cr||0)<D.ccost)return tip("Not enough SM");S.cr-=D.ccost;msAdd("cr",D.ccost);try{save()}catch(e){}try{head()}catch(e){}}D.clan={id:"mine",name:n,f:{t:RI(0,NF-1),s:RI(0,NS-1),c:RI(0,NC-1)},me:1,wins:gs("wins",0),mem:[],req:BOTS.filter(b=>!b.clan).slice(0,2).map(b=>b.id)};sv();ST.cr=0;ST.nameDraft="";ST.cp="mine";return go("clans")}
+  case"crGo":{const n=((($("mpCn")||{}).value)||"").trim();ST.nameDraft=n;if(n.length<3)return tip("Name too short");if(allClans().some(c=>c.name.toLowerCase()==n.toLowerCase()))return tip("Name taken");if(typeof S!=="undefined"){if((S.cr||0)<D.ccost)return tip("Not enough SM");S.cr-=D.ccost;msAdd("cr",D.ccost);try{save()}catch(e){}try{head()}catch(e){}}D.clan={id:"mine",name:n,f:{t:RI(0,NF-1),s:RI(0,NS-1),c:RI(0,NC-1)},me:1,priv:1,wins:gs("wins",0),mem:[],req:BOTS.filter(b=>!b.clan).slice(0,2).map(b=>b.id)};sv();mailAdd({k:"clan",t:"Clan created",b:"Your clan "+n+" is private: players can find it and request to join, and you accept or decline in your inbox.",r:1});D.clan.req.forEach(i=>mailAdd({k:"req",t:"Clan join request",b:(find(i)||{name:"A player"}).name+" wants to join "+n+".",p:i,st:"pending"}));ST.cr=0;ST.nameDraft="";ST.cp="mine";return go("clans")}
   case"clSearch":ST.csr=1;return go("clans",1);
   case"clCreate":if(D.clan){ST.cp=D.clan.id;return go("clans",1)}ST.cr=1;ST.nameDraft="";return go("clans",1);
   case"srch":ST.srch="";ST.sid="";ST.sres=null;ST.sb="chat";return go("srch");
@@ -6580,6 +6623,12 @@ const onClk=e=>{const t=e.target.closest("[data-a]");if(!t)return;const a=t.data
   case"inInv":{const b=find(ST.insp);if(D.clan&&!D.clan.mem.includes(b.id)&&!D.clan.req.includes(b.id)){D.clan.req.push(b.id);sv();tip("Invitation sent")}return}
   case"srGo":{const q=(($("mpSq")||{}).value||"").trim().toLowerCase(),id=(($("mpSi")||{}).value||"").trim();ST.srch=q;ST.sid=id;const all=[...BOTS,me()];ST.sres=(!q&&!id)?all.filter(b=>D.friends.includes(b.id)):all.filter(b=>(q&&b.name.toLowerCase().includes(q))||(id&&String(b.pid)==id));return go("srch")}
   case"srRow":return openInsp(id,"srch");
+  case"mailBack":return close();
+  case"mAll":D.mail.forEach(m=>{if(m.k!="req"||m.st!="pending")m.r=1});sv();mailBadge();return go("mail",1);
+  case"mClear":D.mail=D.mail.filter(m=>m.k=="req"&&m.st=="pending");sv();mailBadge();return go("mail");
+  case"mRead":{const m=D.mail.find(x=>x.id==id);if(m&&(m.k!="req"||m.st!="pending")){m.r=m.r?0:1;sv();mailBadge();go("mail",1)}return}
+  case"mAcc":{const m=D.mail.find(x=>x.id==id),c=D.clan;if(m&&c){c.req=c.req.filter(i=>i!=m.p);if(!c.mem.includes(m.p)&&c.mem.length+1<24)c.mem.push(m.p);reqDone(m.p,1)}return go("mail",1)}
+  case"mDec":{const m=D.mail.find(x=>x.id==id),c=D.clan;if(m&&c){c.req=c.req.filter(i=>i!=m.p);reqDone(m.p,0)}return go("mail",1)}
   case"invsx":return tip("Battle invitation sent");
   case"prize":return tip("Prize list unavailable offline");
   case"rkPlayers":return;
