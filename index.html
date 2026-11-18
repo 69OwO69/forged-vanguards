@@ -1854,9 +1854,8 @@ const msAdd=(k,n)=>{if(!(n>0))return;S.ms=S.ms||{};S.ms[k]=(S.ms[k]||0)+n;save()
 const QUESTS=[],BONUS={d:{cr:3000,tk:10},w:{cr:15000,tk:50},m:{cr:25000,tk:150}},QPICK=3;
 /* Random pools: every period each player gets QPICK random quests from the pool (kept in S.qs.pick, re-rolled at the reset). ev = counter fed by qEv(ev,n): win, arena (PvP win), camp, box, cr (SM spent), tk (tokens spent), dmg, lv, time (minutes in battle). */
 const QPOOL=[
- {id:"d_win3",p:"d",ev:"win",goal:3,n:"Win 3 battles",rew:{cr:300}},
  {id:"d_camp2",p:"d",ev:"camp",goal:2,n:"Win 2 campaign missions",rew:{cr:500}},
- {id:"d_arn1",p:"d",ev:"arena",goal:1,n:"Win an arena battle",rew:{cr:300}},
+ {id:"d_arn1",p:"d",ev:"arena",goal:1,n:"Win 1 arena battle",rew:{cr:300}},
  {id:"d_box3",p:"d",ev:"box",goal:3,n:"Open 3 boxes",rew:{cr:400}},
  {id:"d_sm5k",p:"d",ev:"cr",goal:5000,n:"Spend 5,000 SM",rew:{cr:400}},
  {id:"d_dmg1k",p:"d",ev:"dmg",goal:1000,n:"Deal 1,000 damage",rew:{cr:300}},
