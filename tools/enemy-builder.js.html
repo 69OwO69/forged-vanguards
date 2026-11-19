@@ -6,15 +6,16 @@ let BL={mi:0,k:0,d:null,pd:0,sel:null};window._BL=BL;window._BLdraw=()=>draw();
 const keyOf=(mi,k)=>{const m=MIS[mi];return k==WV(mi).length-1?String(m.id):m.id+":"+k};
 const blank=()=>({t:null,l:null,w:{},m:[],name:"",p:Object.assign({},PCT0)});
 const PL=[["hp","Health"],["dmg","Damage"],["en","Energy capacity"],["enr","Energy regen"],["hc","Heat capacity"],["cool","Cooling"]];
-const SLOTS={t:"Torso",l:"Legs",w0:"Top 1",w1:"Top 2",w2:"Left 1",w3:"Left 2",w4:"Right 1",w5:"Right 2",w6:"Drone",w7:"Hook",w8:"Charger",m0:"Module 1",m1:"Module 2",m2:"Module 3",m3:"Module 4",m4:"Module 5",m5:"Module 6"};
+const SLOTS={t:"Torso",l:"Legs",w0:"Top 1",w1:"Top 2",w2:"Left 1",w3:"Left 2",w4:"Right 1",w5:"Right 2",w6:"Drone",w7:"Hook",w8:"Charger",m0:"Module 1",m1:"Module 2",m2:"Module 3",m3:"Module 4",m4:"Module 5",m5:"Module 6",m6:"Module 7",m7:"Module 8",tp:"Teleport",sh:"Shield"};
+const MI=s=>s=="tp"?8:s=="sh"?9:+s.slice(1);
 const kindOf=s=>s=="t"?"t":s=="l"?"l":s[0]=="w"?"w":"m";
 const hasDes=kk=>{const d=(S.designs&&S.designs[kk])||CAMPD[kk];return !!(d&&(d.t||d.l||Object.keys(d.w||{}).length))};
-const load=()=>{const kk=keyOf(BL.mi,BL.k),d=(S.designs&&S.designs[kk])||CAMPD[kk];BL.d=d?JSON.parse(JSON.stringify(d)):blank();BL.d.p=Object.assign({},PCT0,BL.d.p||{});BL.d.w=BL.d.w||{};BL.d.m=(BL.d.m||[]).filter(Boolean);if(BL.d.name==null)BL.d.name="";BL.sel=null};
+const load=()=>{const kk=keyOf(BL.mi,BL.k),d=(S.designs&&S.designs[kk])||CAMPD[kk];BL.d=d?JSON.parse(JSON.stringify(d)):blank();BL.d.p=Object.assign({},PCT0,BL.d.p||{});BL.d.w=BL.d.w||{};{const arr=Array(10).fill(null);let n=0;for(const it of (BL.d.m||[])){if(!it||it.id==null||!M[it.id])continue;if(M[it.id].tp)arr[8]=it;else if(M[it.id].shp)arr[9]=it;else if(n<8)arr[n++]=it}BL.d.m=arr}if(BL.d.name==null)BL.d.name="";BL.sel=null};
 const maxLv=(k,id)=>CAPL[RI(k,id)]||10;
-const getIt=s=>s=="t"?BL.d.t:s=="l"?BL.d.l:s[0]=="w"?BL.d.w[+s.slice(1)]:BL.d.m[+s.slice(1)];
+const getIt=s=>s=="t"?BL.d.t:s=="l"?BL.d.l:s[0]=="w"?BL.d.w[+s.slice(1)]:BL.d.m[MI(s)];
 const nameOf=(k,id)=>{const it=(k=="w"?W:K[k])[id];return it&&it.n||"#"+id};
 const opts=s=>{const k=kindOf(s),out=[],src=k=="w"?W:K[k];for(const i in src){const it=src[i];if(!it||it.gone)continue;
-  if(k=="w"&&!okS(+i,+s.slice(1)))continue;if(k=="m"&&it.kcl)continue;out.push([+i,it.n||("#"+i),it.cost||0])}return out.sort((a,b)=>tier(b[2])-tier(a[2])||b[2]-a[2]||a[1].localeCompare(b[1]))};
+  if(k=="w"&&!okS(+i,+s.slice(1)))continue;if(k=="m"&&(it.kcl||(s=="tp"?!it.tp:s=="sh"?!it.shp:(it.tp||it.shp))))continue;out.push([+i,it.n||("#"+i),it.cost||0])}return out.sort((a,b)=>tier(b[2])-tier(a[2])||b[2]-a[2]||a[1].localeCompare(b[1]))};
 function build(){const d=BL.d;if(!(d.t||d.l||Object.keys(d.w).length))return null;try{const dd=JSON.parse(JSON.stringify(d));if(dd.t&&dd.t.id==null)dd.t=null;const e=specMech(dd);pctMech(e,dd.p);const pd=BL.pd||0;if(pd==1||pd==2)pctMech(e,starP(pd));const kk=["dg","or","r4","mb"][pd]||"dg";e.tkit=kk;e.lkit=kk;e.wkit=(e.wids||[]).map(()=>kk);return e}catch(e){console.error(e);return null}}
 const css=`#bld{position:fixed;inset:0;z-index:200;background:#07111c;color:#e6eefb;font:14px/1.3 ACE,Arial,sans-serif;display:flex;flex-direction:column}
 #bld[hidden]{display:none}#bld *{box-sizing:border-box}
@@ -63,7 +64,7 @@ document.body.insertAdjacentHTML("beforeend",`<div id="bld" hidden><div class="b
 <div class="bm"><div class="bcol c1"><h3>MISSION</h3><div class="ml" id="bml"></div><h3 style="margin-top:6px">WAVE</h3><div class="wt" id="bwt"></div><h3 style="margin-top:6px">ENEMY NAME</h3><input id="bnm" type="text" maxlength="30" style="width:100%"></div>
 <div class="bcol c2"><div class="pvb" id="bpd"><span>PREVIEW AS</span><button data-pd="0">Easy</button><button data-pd="1">Hard</button><button data-pd="2">Insane</button><button data-pd="3">Boss</button></div>
 <div class="stage"><div class="sqc">${sqH("w2")}${sqH("w3")}</div><div class="mid"><div class="sqr">${sqH("w0")}${sqH("w1")}</div><canvas id="bcv"></canvas></div><div class="sqc">${sqH("w4")}${sqH("w5")}</div></div>
-<div class="sqr" style="gap:18px"><div class="grp">${sqH("t")}${sqH("l")}</div><div class="grp">${sqH("w6")}${sqH("w7")}${sqH("w8")}</div><div class="grp"></div></div><div class="sqr msq">${[0,1,2,3,4,5].map(i=>sqH("m"+i)).join("")}</div>
+<div class="sqr" style="gap:18px"><div class="grp">${sqH("t")}${sqH("l")}</div><div class="grp">${sqH("w6")}${sqH("w7")}${sqH("w8")}</div><div class="grp">${sqH("tp")}${sqH("sh")}</div><div class="grp"></div></div><div class="sqr msq">${[0,1,2,3,4,5,6,7].map(i=>sqH("m"+i)).join("")}</div>
 <div class="bar" id="bbar"></div></div>
 <div class="bcol c3"><h3>STATS</h3><div class="st" id="bst"></div><table id="bwp"></table>
 <details id="badv"><summary>ADVANCED</summary><div class="muted">Stat percentages for this wave (100 = exactly the items, 80 = 20% weaker). They apply to the Easy version.</div><div class="pg" id="bpp"></div>
@@ -87,12 +88,12 @@ function commit(){const kk=keyOf(BL.mi,BL.k),d=BL.d;d.name=$("bnm").value.trim()
   if(!(d.t||d.l||Object.keys(d.w).length))delete S.designs[kk];else{const c=JSON.parse(JSON.stringify(d));c.m=(c.m||[]).filter(Boolean);if(!c.m.length)delete c.m;S.designs[kk]=c}
   save()}
 function setSel(s,f,v){const d=BL.d,k=kindOf(s);let it=getIt(s);
-  if(f=="rm"||(f=="id"&&v==="")){if(s=="t")d.t=null;else if(s=="l")d.l=null;else if(k=="w")delete d.w[+s.slice(1)];else d.m[+s.slice(1)]=null;if(BL.sel==s)BL.sel=null}
-  else{if(!it){it={id:null,lv:1,sh:false};if(s=="t")d.t=it;else if(s=="l")d.l=it;else if(k=="w")d.w[+s.slice(1)]=it;else d.m[+s.slice(1)]=it}
+  if(f=="rm"||(f=="id"&&v==="")){if(s=="t")d.t=null;else if(s=="l")d.l=null;else if(k=="w")delete d.w[+s.slice(1)];else d.m[MI(s)]=null;if(BL.sel==s)BL.sel=null}
+  else{if(!it){it={id:null,lv:1,sh:false};if(s=="t")d.t=it;else if(s=="l")d.l=it;else if(k=="w")d.w[+s.slice(1)]=it;else d.m[MI(s)]=it}
     if(f=="id"){it.id=+v;it.lv=Math.min(it.lv||1,maxLv(k,it.id));BL.sel=s}if(f=="lv")it.lv=Math.max(1,Math.min(maxLv(k,it.id),+v||1));if(f=="sh")it.sh=!!v}
   commit();draw()}
 function draw(){const d=BL.d;
-  $("bml").innerHTML=MIS.map((m,i)=>{let n=0;const W2=WV(i);for(let k=0;k<W2.length;k++)if(hasDes(keyOf(i,k)))n++;return `<button data-mi="${i}" class="${i==BL.mi?"on":""}">${i+1}. ${m.n}${m.boss?" ★":""}${n?` · ${n}/${W2.length} ✔`:""}</button>`}).join("");
+  $("bml").innerHTML=MIS.map((m,i)=>{let n=0;const W2=WV(i);for(let k=0;k<W2.length;k++)if(hasDes(keyOf(i,k)))n++;return `<button data-mi="${i}" class="${i==BL.mi?"on":""}">${i+1}. ${m.n}${m.boss?" ★":""}${n==W2.length?" ✔":n?` ${n}/${W2.length}`:""}</button>`}).join("");
   $("bwt").innerHTML=WV(BL.mi).map((s,k)=>`<button data-w="${k}" class="${k==BL.k?"on":""}">${k+1}${s.last?(MIS[BL.mi].boss?"B":"L"):""}${hasDes(keyOf(BL.mi,k))?" ✔":""}</button>`).join("");
   $("bnm").value=d.name||"";$("bnm").placeholder=mqName(BL.mi,BL.k);
   document.querySelectorAll("#bpd button").forEach(x=>x.classList.toggle("on",+x.dataset.pd===(BL.pd||0)));

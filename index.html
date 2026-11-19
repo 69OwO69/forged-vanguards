@@ -3479,7 +3479,7 @@ function specMech(sp){
     const tu=mk("t",sp.t),lu=mk("l",sp.l),w=[null,null,null,null,null,null,null],wu=[null,null,null,null,null,null,null];
     for(let si=0;si<9;si++){const it=sp.w&&sp.w[si];if(it&&it.id!=null&&W[it.id]){w[si]=it.id;wu[si]=mk("w",it)}}
     const tid=sp.t&&K.t[sp.t.id]?sp.t.id:null,lid=sp.l&&K.l[sp.l.id]?sp.l.id:null;
-    const ml=(sp.m||[]).filter(it=>it&&it.id!=null&&M[it.id]&&!M[it.id].gone).slice(0,8),mus=ml.map(it=>mk("m",it));
+    const ml=(sp.m||[]).filter(it=>it&&it.id!=null&&M[it.id]&&!M[it.id].gone).slice(0,10),mus=ml.map(it=>mk("m",it));
     S.sel={t:tid,tu,l:lid,lu,w,wu,m:ml.length?ml[0].id:null,mu:ml.length?mus[0]:null,mx:ml.slice(1).map(it=>it.id),mxu:mus.slice(1)};
     m=mechOf(tid,lid,[],1,true,w)
   }finally{S.sel=JSON.parse(bs);S.xs=JSON.parse(bx);S.tf=bt}
