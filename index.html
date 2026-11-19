@@ -3486,7 +3486,7 @@ function specMech(sp){
   }finally{S.sel=JSON.parse(bs);S.xs=JSON.parse(bx);S.tf=bt}
   if(sp.mul>0&&sp.mul!=1)mulMech(m,+sp.mul);
   return m}
-const CAMPD={};/* enemy designs built in the Enemy Builder and baked into the game */
+const CAMPD={"1":{"t":{"id":22,"lv":1,"sh":false},"l":{"id":4,"lv":1,"sh":false},"w":{"4":{"id":255,"lv":1,"sh":false}},"name":"front liner","p":{"hp":100,"dmg":100,"hc":100,"cool":100,"en":100,"enr":100}},"2":{"t":{"id":22,"lv":1,"sh":false},"l":{"id":4,"lv":1,"sh":false},"w":{"2":{"id":3,"lv":1,"sh":false},"4":{"id":255,"lv":1,"sh":false}},"m":[{"id":104,"lv":1,"sh":false}],"name":"recruit","p":{"hp":100,"dmg":100,"hc":100,"cool":100,"en":100,"enr":100}},"3":{"t":{"id":22,"lv":1,"sh":false},"l":{"id":4,"lv":1,"sh":false},"w":{"2":{"id":277,"lv":10,"sh":false},"4":{"id":277,"lv":10,"sh":false},"6":{"id":208,"lv":1,"sh":false}},"m":[{"id":92,"lv":1,"sh":false},{"id":77,"lv":1,"sh":false},{"id":66,"lv":1,"sh":false},{"id":160,"lv":1,"sh":false},{"id":74,"lv":1,"sh":false},{"id":74,"lv":1,"sh":false}],"name":"patrol guard","p":{"hp":100,"dmg":100,"hc":100,"cool":100,"en":100,"enr":100}}};/* enemy designs built in the Enemy Builder and baked into the game */
 function designFor(mi,key){const kk=key||(mi&&mi.id),d=mi&&((S.designs&&S.designs[kk])||CAMPD[kk]);if(!(d&&(d.t||d.l||d.w)))return null;
   /* a saved enemy design that still uses a removed item is ignored (the mission falls back to its normal build) */
   const dead=(k,it)=>it&&it.id!=null&&(!K[k][it.id]||K[k][it.id].gone);
