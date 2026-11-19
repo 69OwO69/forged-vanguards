@@ -14,7 +14,7 @@ const maxLv=(k,id)=>CAPL[RI(k,id)]||10;
 const getIt=s=>s=="t"?BL.d.t:s=="l"?BL.d.l:s[0]=="w"?BL.d.w[+s.slice(1)]:BL.d.m[+s.slice(1)];
 const nameOf=(k,id)=>{const it=(k=="w"?W:K[k])[id];return it&&it.n||"#"+id};
 const opts=s=>{const k=kindOf(s),out=[],src=k=="w"?W:K[k];for(const i in src){const it=src[i];if(!it||it.gone)continue;
-  if(k=="w"&&!okS(+i,+s.slice(1)))continue;if(k=="m"&&it.kcl)continue;out.push([+i,it.n||("#"+i)])}return out.sort((a,b)=>a[1].localeCompare(b[1]))};
+  if(k=="w"&&!okS(+i,+s.slice(1)))continue;if(k=="m"&&it.kcl)continue;out.push([+i,it.n||("#"+i),it.cost||0])}return out.sort((a,b)=>tier(b[2])-tier(a[2])||b[2]-a[2]||a[1].localeCompare(b[1]))};
 function build(){const d=BL.d;if(!(d.t||d.l||Object.keys(d.w).length))return null;try{const dd=JSON.parse(JSON.stringify(d));if(dd.t&&dd.t.id==null)dd.t=null;const e=specMech(dd);pctMech(e,dd.p);const pd=BL.pd||0;if(pd==1||pd==2)pctMech(e,starP(pd));const kk=["dg","or","r4","mb"][pd]||"dg";e.tkit=kk;e.lkit=kk;e.wkit=(e.wids||[]).map(()=>kk);return e}catch(e){console.error(e);return null}}
 const css=`#bld{position:fixed;inset:0;z-index:200;background:#07111c;color:#e6eefb;font:14px/1.3 ACE,Arial,sans-serif;display:flex;flex-direction:column}
 #bld[hidden]{display:none}#bld *{box-sizing:border-box}
@@ -50,7 +50,7 @@ const css=`#bld{position:fixed;inset:0;z-index:200;background:#07111c;color:#e6e
 #bpk{position:absolute;inset:0;z-index:5;background:rgba(0,6,12,.82);display:flex;align-items:center;justify-content:center}#bpk[hidden]{display:none}
 #bpk .bx{width:min(1100px,96vw);height:min(720px,92vh);background:#0b1b2b;border:2px solid #17496f;border-radius:10px;display:flex;flex-direction:column;padding:12px;gap:10px}
 #bpk .bt{display:flex;gap:10px;align-items:center}#bpk .bt b{flex:none;font-size:16px;color:#7fb4dc;font-weight:400}#bpk .bt input{flex:1}
-#bpk .bb{flex:1;display:flex;gap:12px;min-height:0}#bpk .gr{flex:1;overflow:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;align-content:start}
+#itip{z-index:500!important}#bpk .rh{grid-column:1/-1;border-bottom:2px solid;padding:2px 0;margin-top:6px;font-size:13px;letter-spacing:1px}#bpk .pt{border:2px solid #2f5b82}#bpk .bb{flex:1;display:flex;gap:12px;min-height:0}#bpk .gr{flex:1;overflow:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;align-content:start}
 #bpk .pt{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 6px;min-height:92px}#bpk .pt img{width:100%;height:56px;object-fit:contain}#bpk .pt i{width:40px;height:56px}#bpk .pt span{font-size:12px;text-align:center;line-height:1.1}
 #bpk .si{width:280px;flex:none;background:#0e2438;border-radius:8px;padding:12px;overflow:auto}#bpk .si h4{margin:0 0 8px;font-size:16px;color:#ffd24a;font-weight:400}#bpk .si img{width:100%;height:100px;object-fit:contain;background:#162636;border-radius:6px;margin-bottom:8px}
 #bpk .si div{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid #17496f;padding:2px 0}#bpk .si div b{color:#ffd24a;font-weight:400;text-align:right}
@@ -59,7 +59,7 @@ const css=`#bld{position:fixed;inset:0;z-index:200;background:#07111c;color:#e6e
 document.head.insertAdjacentHTML("beforeend","<style>"+css+"</style>");
 const sqH=s=>`<button type="button" class="sq" data-sq="${s}"></button>`;
 document.body.insertAdjacentHTML("beforeend",`<div id="bld" hidden><div class="bh"><b>ENEMY BUILDER</b><span class="sp" id="bmsg">Changes save automatically on this browser. Use Export (right side) to send the designs to be built into the game.</span><button id="bx">Close</button></div>
-<div id="bpk" hidden><div class="bx"><div class="bt"><b id="bpt">PICK</b><input id="bps" placeholder="Search by name…" spellcheck="false"><button id="bpc">Cancel</button></div><div class="bb"><div class="gr" id="bpg"></div><div class="si" id="bpi"><span class="muted">Hover an item to see its stats (level 1).</span></div></div></div></div>
+<div id="bpk" hidden><div class="bx"><div class="bt"><b id="bpt">PICK</b><input id="bps" placeholder="Search by name…" spellcheck="false"><button id="bpc">Cancel</button></div><div class="bb"><div class="gr" id="bpg"></div></div></div></div>
 <div class="bm"><div class="bcol c1"><h3>MISSION</h3><div class="ml" id="bml"></div><h3 style="margin-top:6px">WAVE</h3><div class="wt" id="bwt"></div><h3 style="margin-top:6px">ENEMY NAME</h3><input id="bnm" type="text" maxlength="30" style="width:100%"></div>
 <div class="bcol c2"><div class="pvb" id="bpd"><span>PREVIEW AS</span><button data-pd="0">Easy</button><button data-pd="1">Hard</button><button data-pd="2">Insane</button><button data-pd="3">Boss</button></div>
 <div class="stage"><div class="sqc">${sqH("w2")}${sqH("w3")}</div><div class="mid"><div class="sqr">${sqH("w0")}${sqH("w1")}</div><canvas id="bcv"></canvas></div><div class="sqc">${sqH("w4")}${sqH("w5")}</div></div>
@@ -81,8 +81,8 @@ function itemInfo(k,id){const it=(k=="w"?W:K[k])[id],r=[],A=(a,b)=>{if(b!=null&&
   else{const n=it.shots>1?it.shots:1,dr=it.dr||[it.dmg,it.dmg],lo=Math.round(dr[0]*n),hi=Math.round(dr[1]*n);A("Damage",lo==hi?N(lo):N(lo)+"-"+N(hi));A("Damage type",it.ty);A("Shots",it.shots>1?it.shots:0);A("Energy",N(it.en||0));A("Heat",N(it.ht||0));A("Range",(it.min!=null?it.min+"-"+it.max:""));A("Weight",N(it.w));A("Uses",it.uses);A("Heat damage",it.hd);A("Energy damage",it.ed);if(it.brk)A("Guard break",JSON.stringify(it.brk).replace(/[{}"]/g,""));if(it.drone)A("Type","Drone");if(it.hook)A("Type","Hook");if(it.chrg)A("Type","Charge");if(it.mythic)A("Rarity","Mythic")}
   return `<h4>${it.n||"#"+id}</h4>`+(artSrc(k,id)?`<img alt="" src="${artSrc(k,id)}">`:"")+r.map(([a,b])=>`<div><span>${a}</span><b>${b}</b></div>`).join("")}
 let PK=null;
-function openPick(s){PK={s,k:kindOf(s),list:opts(s)};$("bpt").textContent="PICK "+SLOTS[s].toUpperCase();$("bps").value="";pkDraw();$("bpk").hidden=false;$("bps").focus()}
-function pkDraw(){const q=$("bps").value.trim().toLowerCase(),{k,list}=PK;$("bpg").innerHTML=`<button class="pt" data-pid=""><i></i><span>— empty —</span></button>`+list.filter(([i,n])=>!q||n.toLowerCase().includes(q)).map(([i,n])=>`<button class="pt" data-pid="${i}">${thumb(k,i)}<span>${n}</span></button>`).join("")}
+function openPick(s){PK={s,k:kindOf(s),list:opts(s)};$("bpt").textContent="PICK "+SLOTS[s].toUpperCase()+" (best rarity first, hover for full stats)";$("bps").value="";pkDraw();$("bpk").hidden=false;$("bps").focus()}
+function pkDraw(){const q=$("bps").value.trim().toLowerCase(),{k,list}=PK;let last=-1,h=`<button class="pt" data-pid=""><i></i><span>— empty —</span></button>`;for(const [i,n,c] of list){if(q&&!n.toLowerCase().includes(q))continue;const t=tier(c);if(t!=last){last=t;h+=`<div class="rh" style="color:${RAR(c)};border-color:${RAR(c)}">${TN[t]=="Mythic"?"Mythical":TN[t]}</div>`}h+=`<button class="pt" data-pid="${i}" style="border-color:${RAR(c)}">${thumb(k,i)}<span>${n}</span></button>`}$("bpg").innerHTML=h}
 function commit(){const kk=keyOf(BL.mi,BL.k),d=BL.d;d.name=$("bnm").value.trim();S.designs=S.designs||{};
   if(!(d.t||d.l||Object.keys(d.w).length))delete S.designs[kk];else{const c=JSON.parse(JSON.stringify(d));c.m=(c.m||[]).filter(Boolean);if(!c.m.length)delete c.m;S.designs[kk]=c}
   save()}
@@ -123,9 +123,11 @@ $("bld").addEventListener("change",e=>{const t=e.target;
   if(t.dataset.p){BL.d.p[t.dataset.p]=Math.max(1,+t.value||100);commit();return stats()}
   if(t.dataset.sp){S.designs=S.designs||{};const cf=S.designs._cfg=S.designs._cfg||JSON.parse(JSON.stringify(CAMPD._cfg||{stars:[{},JSON.parse(JSON.stringify(STARP0[1])),JSON.parse(JSON.stringify(STARP0[2]))]}));cf.stars=cf.stars||[{},{},{}];cf.stars[+t.dataset.sp]=Object.assign({},PCT0,STARP0[+t.dataset.sp],cf.stars[+t.dataset.sp]||{});cf.stars[+t.dataset.sp][t.dataset.f2]=Math.max(1,+t.value||100);save();return msg("Star percentages saved.")}});
 $("bld").addEventListener("input",e=>{if(e.target.id=="bps"&&PK)pkDraw()});
-$("bld").addEventListener("mouseover",e=>{const t=e.target.closest(".pt");if(t&&PK&&t.dataset.pid)$("bpi").innerHTML=itemInfo(PK.k,+t.dataset.pid)});
+$("bld").addEventListener("mouseover",e=>{const t=e.target.closest(".pt,.sq");let k=null,id=null;if(t&&t.classList.contains("pt")&&PK&&t.dataset.pid){k=PK.k;id=+t.dataset.pid}else if(t&&t.classList.contains("sq")&&!PK){const it=getIt(t.dataset.sq);if(it&&it.id!=null){k=kindOf(t.dataset.sq);id=it.id}}if(k)window.evtCard(k,id,e);else window.evtHide()});
+$("bld").addEventListener("mousemove",e=>{const t=e.target.closest(".pt,.sq");if(!t)window.evtHide()});
+$("bld").addEventListener("mouseleave",()=>window.evtHide());
 $("bld").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
-  if(b.dataset.sq){const s=b.dataset.sq,it=getIt(s);if(it&&it.id!=null){BL.sel=BL.sel==s?null:s;return draw()}BL.sel=s;draw();return openPick(s)}
+  window.evtHide();if(b.dataset.sq){const s=b.dataset.sq,it=getIt(s);if(it&&it.id!=null){BL.sel=BL.sel==s?null:s;return draw()}BL.sel=s;draw();return openPick(s)}
   if(b.dataset.f=="pick"&&BL.sel)return openPick(BL.sel);
   if(b.dataset.f=="rm"&&BL.sel)return setSel(BL.sel,"rm");
   if(b.id=="bpc"){PK=null;return $("bpk").hidden=true}
