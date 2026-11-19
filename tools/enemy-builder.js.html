@@ -14,7 +14,7 @@ const load=()=>{const kk=keyOf(BL.mi,BL.k),d=(S.designs&&S.designs[kk])||CAMPD[k
 const maxLv=(k,id)=>CAPL[RI(k,id)]||10;
 const getIt=s=>s=="t"?BL.d.t:s=="l"?BL.d.l:s[0]=="w"?BL.d.w[+s.slice(1)]:BL.d.m[MI(s)];
 const nameOf=(k,id)=>{const it=(k=="w"?W:K[k])[id];return it&&it.n||"#"+id};
-const opts=s=>{const k=kindOf(s),out=[],src=k=="w"?W:K[k];for(const i in src){const it=src[i];if(!it||it.gone)continue;
+const opts=s=>{const k=kindOf(s),out=[],src=k=="w"?W:K[k];for(const i in src){const it=src[i];if(!it||(it.gone&&!it.bo))continue;
   if(k=="w"&&!okS(+i,+s.slice(1)))continue;if(k=="m"&&(it.kcl||(s=="tp"?!it.tp:s=="sh"?!it.shp:(it.tp||it.shp))))continue;out.push([+i,it.n||("#"+i),it.cost||0])}return out.sort((a,b)=>tier(b[2])-tier(a[2])||b[2]-a[2]||a[1].localeCompare(b[1]))};
 function build(){const d=BL.d;if(!(d.t||d.l||Object.keys(d.w).length))return null;try{const dd=JSON.parse(JSON.stringify(d));if(dd.t&&dd.t.id==null)dd.t=null;const e=specMech(dd);pctMech(e,dd.p);const pd=BL.pd||0;if(pd==1||pd==2)pctMech(e,starP(pd));const kk=["dg","or","r4","mb"][pd]||"dg";e.tkit=kk;e.lkit=kk;e.wkit=(e.wids||[]).map(()=>kk);return e}catch(e){console.error(e);return null}}
 const css=`#bld{position:fixed;inset:0;z-index:200;background:#07111c;color:#e6eefb;font:14px/1.3 ACE,Arial,sans-serif;display:flex;flex-direction:column}
