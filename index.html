@@ -3184,9 +3184,8 @@ function pctMech(m,p){if(!p)return m;const q=Object.assign({},PCT0,p),R=(v,k)=>M
   if(q.en!=100){m.enCap=R(m.enCap,q.en);m.en=m.enCap}if(q.enr!=100)m.enMax=R(m.enMax,q.enr);
   if(q.dmg!=100&&m.mag){const k=q.dmg/100,f=v=>v?Math.max(1,Math.round(v*k)):v;m.mag={...m.mag,dmg:f(m.mag.dmg),hd:f(m.mag.hd),ed:f(m.mag.ed)}}/* leg magnet / stomp damage scales too */
   if(q.dmg!=100){const k=q.dmg/100;m.weps=m.weps.map(w=>{const mul=(w.shots>1),f=v=>mul?v*k:Math.max(1,Math.round(v*k));return{...w,dmg:f(w.dmg),hd:w.hd?f(w.hd):w.hd,dr:w.dr&&w.dr.map(f),heal:w.heal&&f(w.heal),ed:w.ed?f(w.ed):w.ed,cd:w.cd?f(w.cd):w.cd,hcd:w.hcd?f(w.hcd):w.hcd,ecd:w.ecd?f(w.ecd):w.ecd,rd:w.rd?f(w.rd):w.rd,erd:w.erd?f(w.erd):w.erd,brk:w.brk}});
-    /* drones are weapons (scaled above); teleporter damage and the ammo pools scale too. Resistance (rs / res) and guard break (brk) never do. */
+    /* drones are weapons (scaled above); teleporter damage scales too. The ammo pools never do. Resistance (rs / res) and guard break (brk) never do. */
     if(m.tpl)m.tpl=m.tpl.map(t=>({...t,d:t.d&&t.d.map(v=>Math.max(1,Math.round(v*k))),ed:t.ed?Math.max(1,Math.round(t.ed*k)):t.ed}))}
-  if(q.dmg!=100){const k=q.dmg/100,A=v=>v?Math.max(1,Math.round(v*k)):v;m.am=A(m.am);m.amMax=A(m.amMax);m.ra=A(m.ra);m.raMax=A(m.raMax)}
   return m}
 const STARP0=[{},{hp:160,dmg:160,hc:160,cool:160,en:160,enr:160},{hp:214,dmg:214,hc:214,cool:214,en:214,enr:214}];/* balance: Hard = 1.60x, Insane = 2.14x the Easy stats (everything except resistance) */
 const starP=d=>{const c=(S.designs&&S.designs._cfg)||CAMPD._cfg;return(c&&c.stars&&c.stars[d])||STARP0[d]||{}};
