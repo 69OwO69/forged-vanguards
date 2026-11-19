@@ -4825,7 +4825,7 @@ async function t2Drop(side){
   next.drop={t0:performance.now()+150,dur:1000};/* falls in from the sky and lands with a shockwave */
   b.over=false;b.t2live=0;b.busy=true;
   /* the survivor keeps its place; the turn goes back to the player with fresh action counts unless it was already the player's turn and an enemy fell */
-  if(!(side=="e"&&b.turn=="p")){b.turn="p";b.tl={p:1,e:2};b.p.used=[];b.p.did=false;b.ch=null}
+  if(!(side=="e"&&b.turn=="p")){b.turn="p";b.tl={p:side=="p"?2:1,e:2};b.p.used=[];b.p.did=false;b.ch=null}
   controls();t2Hud();
   await sleep(1450);if(B!==b||b.over)return;b.busy=false;controls();autoEnd()}
 {const wrap=(f)=>async function(){const b=B;if(b)b.aiRun=(b.aiRun||0)+1;try{return await f.apply(this,arguments)}finally{if(b)b.aiRun--}};ai=wrap(ai);endTurn=wrap(endTurn)}
@@ -4858,7 +4858,7 @@ async function swDrop(){const b=B;b.over=true;b.busy=true;const oo=swCur();if(oo
   if(B!==b)return;
   const nx=b.ms.find(o=>o.st!="dead"&&o.m!==b.p);if(!nx){b.over=false;b.skipBench=1;return finish(false)}
   const old=b.p,nm=nx.m;nx.st="active";nx.used=1;nm.x=old.x;nm.vx=old.x;nm.ps=null;nm.used=[];nm.did=false;nm.dead=false;nm.gone=false;
-  b.p=nm;b.proj=null;b.fl=b.fl||[];b.over=false;b.busy=true;b.turn="p";b.tl={p:1,e:2};b.ch=null;b.autoE=0;b.nb=0;
+  b.p=nm;b.proj=null;b.fl=b.fl||[];b.over=false;b.busy=true;b.turn="p";b.tl={p:2,e:2};/* a mech dropping in after yours fell gets the full two actions */b.ch=null;b.autoE=0;b.nb=0;
   nm.drop={t0:performance.now()+150,dur:1000};controls();say("Mech "+(nx.i+1)+" drops in!");
   await sleep(1450);if(B!==b||b.over)return;nm.did=false;nm.used=[];b.busy=false;controls()}
 {const _fs=finish;finish=function(won){const b=B;if(b&&b.ms&&won===false&&!b.noBench&&!b.skipBench&&!b.over&&b.ms.some(o=>o.st!="dead"&&o.m!==b.p)){swDrop();return}return _fs.apply(this,arguments)}}
@@ -4925,7 +4925,7 @@ try{if(!S.gj7){S.gj7=1;addI("t",7,true);save();if(typeof head=="function")setTim
 (function(){const lab=()=>{$("sm").textContent=S.mute?"Off":"On";$("sx").textContent=S.nosfx?"Off":"On";};
  const gear=()=>{const h=$("hangar").classList.contains("hide");$("gear").classList.toggle("hide",h);$("qbtn").classList.toggle("hide",h||document.body.classList.contains("inw")||$("menu").classList.contains("hide")||["camp","prof","arn","quest","store","work"].some(i=>!$(i).classList.contains("hide")))};window._gear=gear;setInterval(gear,300);
 $("qbtn").onclick=()=>{$("qbtn").classList.add("hide");show("quest")};{const qi=$("qbtn").querySelector("img");$("qbtn").onmouseenter=()=>qi.src=qi.dataset.h;$("qbtn").onmouseleave=()=>qi.src=qi.dataset.n}$("quest").onclick=e=>{const b=e.target.closest("button");if(b&&b.dataset.go)show(b.dataset.go)};
- $("gear").onclick=()=>{lab();try{$("bld0").textContent="Build 2026-11-20 b19 · "+Object.keys(CAMPD).filter(k=>k[0]!="_").length+" enemy designs built in"}catch(_){}{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();$("set").onclick=e=>{if(e.target.id=="set")$("set").classList.add("hide")};
+ $("gear").onclick=()=>{lab();try{$("bld0").textContent="Build 2026-11-20 b20 · "+Object.keys(CAMPD).filter(k=>k[0]!="_").length+" enemy designs built in"}catch(_){}{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();$("set").onclick=e=>{if(e.target.id=="set")$("set").classList.add("hide")};
 /* ---------- evolution tree (settings): built from EVO, so every item added to EVO shows up automatically ---------- */
 (function(){
   const CAT={t:"Torso",l:"Legs",w:"Weapon",m:"Module"};let root=null,st=null;
