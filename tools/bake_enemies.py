@@ -7,6 +7,8 @@ root=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 new=json.load(open(sys.argv[1])); new=new.get('designs',new)
 src=os.path.join(root,'tools','campaign-enemies.json')
 cur=json.load(open(src)) if os.path.exists(src) else {}
+for k,v in new.items():
+    if isinstance(v,dict) and not v.get('fx') and isinstance(cur.get(k),dict) and cur[k].get('fx'): v['fx']=cur[k]['fx']  # the builder export has no boss fx: never drop it
 cur.update(new)
 json.dump(cur,open(src,'w'),indent=1,sort_keys=True)
 p=os.path.join(root,'index.html');s=open(p,encoding='utf-8').read()
