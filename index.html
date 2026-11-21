@@ -2045,6 +2045,8 @@ const AUTO=[4,0,2,5,1,3,6,7,8],SN=["Top 1","Top 2","Left 1","Left 2","Right 1","
 const $=id=>document.getElementById(id);
 let S={camp:[],lv:{},bi:{},loads:[],cr:100,wins:0,own:{t:[11],l:[4],w:[3],m:[]},sel:{t:11,l:4,w:[null,null,null,null,null,null],m:null}};
 try{const r=localStorage.getItem("mechfoundry");if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
+/* the removed Heat Yoshimo Blade (W[461]) may still sit in saves made on b49: drop it everywhere */
+try{if(W.length<=461){const X=461,clr=a=>Array.isArray(a)&&a.forEach((v,j)=>{if(v===X)a[j]=null});S.own.w=S.own.w.filter(i=>i!==X);if(S.xs&&S.xs.w)delete S.xs.w[X];clr(S.sel.w);(S.loads||[]).forEach(l=>l&&clr(l.w));(S.mechs||[]).forEach(m=>m&&clr(m.w));delete S.hyb1}}catch(e){}
 const save=()=>{try{localStorage.setItem("mechfoundry",JSON.stringify(S))}catch(e){}}
 /* Quests. Repeating: QUESTS=[{id,p:"d"|"w"|"m",n:"title",goal:N,rew:{cr:N,tk:N},ic:optional image src}] ; progress via questAdd(id,amount). Resets at 00:00 UTC (daily), Monday 00:00 UTC (weekly), 1st of the month (monthly).
    Milestones (INF): INF=[{id,n,ic,get:()=>currentValue,base:N,mult:2,rew:N}] ; tier t needs base*mult^t, pays 500 SM + 10 tokens (2,000 SM + 20 tokens on every 5th tier). */
