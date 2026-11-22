@@ -5019,14 +5019,14 @@ async function swMech(k){const b=B,o=b.ms&&b.ms[k];if(!swOK(o)||b.over||b.busy||
   await sleep(27*1000/30);if(B!==b||b.over){b.tpfx=null;return}b.tpfx=null;
   b.busy=false;controls();autoEnd()}
 /* the current mech is destroyed: the next living one drops in with everything it had (hp, heat, energy, drone) */
-async function swDrop(){const b=B;b.over=true;b.busy=true;const oo=swCur();if(oo)oo.st="dead";
+async function swDrop(){const b=B;const kt=b.turn;b.skipDr=kt=="e"?!!b.inV:0;b.inV=0;/* kill came from the volley: don't fire it twice; and never leave the volley flag set, or the next wave kill would skip your own drone */b.over=true;b.busy=true;const oo=swCur();if(oo)oo.st="dead";
   await sleep(600);{const w0=performance.now();while((b.aiRun||0)>0&&B===b&&performance.now()-w0<8000)await sleep(100)}
   if(B!==b)return;
   const nx=b.ms.find(o=>o.st!="dead"&&o.m!==b.p);if(!nx){b.over=false;b.skipBench=1;return finish(false)}
   const old=b.p,nm=nx.m;nx.st="active";nx.used=1;nm.x=old.x;nm.vx=old.x;nm.ps=null;nm.used=[];nm.did=false;nm.dead=false;nm.gone=false;
-  b.p=nm;b.proj=null;b.fl=b.fl||[];b.over=false;b.busy=true;b.turn="p";b.tl={p:2,e:2};/* a mech dropping in after yours fell gets the full two actions */b.ch=null;b.autoE=0;b.nb=0;
+  b.p=nm;b.proj=null;b.fl=b.fl||[];b.over=false;b.busy=true;if(kt!="e"){b.turn="p";b.tl={p:2,e:2}}/* killed on the enemy's turn: that turn simply ends as normal (its drone fires at the new mech, a 2nd action is still taken), exactly like a wave drop on the enemy side */b.ch=null;b.autoE=0;b.nb=0;if(kt=="e")b.pendEnd=1;
   nm.drop={t0:performance.now()+150,dur:1000};controls();say("Mech "+(nx.i+1)+" drops in!");
-  await sleep(1450);if(B!==b||b.over)return;nm.did=false;nm.used=[];b.busy=false;controls()}
+  await sleep(1450);if(B!==b||b.over)return;nm.did=false;nm.used=[];b.pendEnd=0;b.busy=false;controls();if(kt=="e")endTurn()}
 {const _fs=finish;finish=function(won){const b=B;if(b&&b.ms&&won===false&&!b.noBench&&!b.skipBench&&!b.over&&b.ms.some(o=>o.st!="dead"&&o.m!==b.p)){swDrop();return}return _fs.apply(this,arguments)}}
 async function wDrop(){
   const b=B;b.over=true;b.busy=true;const old=b.e;b.wi++;b.skipDr=!!b.inV;b.inV=0;/* drones/summons already fired this turn when the kill came from them */
@@ -5111,7 +5111,7 @@ try{if(!S.gj7){S.gj7=1;addI("t",7,true);save();if(typeof head=="function")setTim
 (function(){const lab=()=>{$("sm").textContent=S.mute?"Off":"On";$("sx").textContent=S.nosfx?"Off":"On";};
  const gear=()=>{const h=$("hangar").classList.contains("hide");$("gear").classList.toggle("hide",h);$("qbtn").classList.toggle("hide",h||document.body.classList.contains("inw")||$("menu").classList.contains("hide")||["camp","prof","arn","quest","store","work"].some(i=>!$(i).classList.contains("hide")))};window._gear=gear;setInterval(gear,300);
 $("qbtn").onclick=()=>{$("qbtn").classList.add("hide");show("quest")};{const qi=$("qbtn").querySelector("img");$("qbtn").onmouseenter=()=>qi.src=qi.dataset.h;$("qbtn").onmouseleave=()=>qi.src=qi.dataset.n}$("quest").onclick=e=>{const b=e.target.closest("button");if(b&&b.dataset.go)show(b.dataset.go)};
- $("gear").onclick=()=>{lab();try{$("bld0").textContent="Build 2026-11-23 b78 · "+Object.keys(CAMPD).filter(k=>k[0]!="_").length+" enemy designs built in"}catch(_){}{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();$("set").onclick=e=>{if(e.target.id=="set")$("set").classList.add("hide")};
+ $("gear").onclick=()=>{lab();try{$("bld0").textContent="Build 2026-11-23 b79 · "+Object.keys(CAMPD).filter(k=>k[0]!="_").length+" enemy designs built in"}catch(_){}{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();$("set").onclick=e=>{if(e.target.id=="set")$("set").classList.add("hide")};
 /* ---------- evolution tree (settings): built from EVO, so every item added to EVO shows up automatically ---------- */
 (function(){
   const CAT={t:"Torso",l:"Legs",w:"Weapon",m:"Module"};let root=null,st=null;
