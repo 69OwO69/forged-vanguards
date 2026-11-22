@@ -1220,7 +1220,12 @@ button,[role=button],.nb,.bkb{touch-action:manipulation;-webkit-user-select:none
 #cmv .srv{position:absolute;right:calc(110*var(--cu));top:calc(34*var(--cu));display:flex;gap:calc(10*var(--cu))}
 #cmv .srv button,#cmv .srtb button{border:0;border-radius:calc(8*var(--cu));background:#0a4d82;color:#fff;font:inherit;font-weight:900;font-size:calc(30*var(--cu));padding:calc(10*var(--cu)) calc(22*var(--cu));cursor:pointer;opacity:.7}
 #cmv .srv button.on,#cmv .srtb button.on{opacity:1;background:#1583c4;box-shadow:0 0 0 calc(3*var(--cu)) #ff9d0a}
-#cmv .srh{color:#ff9d0a;font-weight:900;font-size:calc(44*var(--cu));text-shadow:calc(2*var(--cu)) calc(3*var(--cu)) 0 #000;margin:0 0 calc(14*var(--cu))}
+#cmv .srh{display:flex;justify-content:space-between;align-items:baseline;gap:calc(16*var(--cu));white-space:nowrap;color:#ff9d0a;font-weight:900;font-size:calc(44*var(--cu));text-shadow:calc(2*var(--cu)) calc(3*var(--cu)) 0 #000;margin:0 0 calc(14*var(--cu))}
+#cmv .srme{color:#9fe08a;font-size:calc(26*var(--cu));white-space:nowrap;text-transform:uppercase}
+#cmv .srme2{position:absolute;left:0;right:0;top:calc(220*var(--cu));text-align:center;color:#9fe08a;font-weight:900;font-size:calc(34*var(--cu));text-shadow:calc(2*var(--cu)) calc(2*var(--cu)) 0 #000}
+#cmv .mine{box-shadow:0 0 0 calc(5*var(--cu)) #7dff8a,0 0 calc(34*var(--cu)) rgba(125,255,138,.55)!important;position:relative}
+#cmv .sry{position:absolute;right:calc(12*var(--cu));top:calc(-2*var(--cu));background:#7dff8a;color:#06260c;font-style:normal;font-weight:900;font-size:calc(24*var(--cu));padding:calc(3*var(--cu)) calc(14*var(--cu));border-radius:0 0 calc(10*var(--cu)) calc(10*var(--cu));z-index:2}
+#cmv .srk.mine{box-shadow:inset 0 0 0 calc(6*var(--cu)) #7dff8a,inset 0 0 calc(40*var(--cu)) rgba(125,255,138,.45)!important}#cmv .srk.mine .sry{left:50%;right:auto;top:auto;bottom:0;transform:translateX(-50%);border-radius:calc(10*var(--cu)) calc(10*var(--cu)) 0 0}
 #cmv .srx{display:inline-flex;align-items:center;gap:calc(10*var(--cu));background:rgba(0,0,0,.45);border-radius:calc(10*var(--cu));padding:calc(6*var(--cu)) calc(16*var(--cu));min-height:calc(64*var(--cu))}
 #cmv .srx img{height:calc(52*var(--cu));width:auto;max-width:calc(110*var(--cu))}
 #cmv .srx b{color:#fff;font-weight:900;font-size:calc(40*var(--cu));text-shadow:calc(2*var(--cu)) calc(2*var(--cu)) 0 #000}
@@ -1238,7 +1243,7 @@ button,[role=button],.nb,.bkb{touch-action:manipulation;-webkit-user-select:none
 /* design B: cards */
 #cmv .srd{position:absolute;left:calc(40*var(--cu));right:calc(40*var(--cu));top:calc(150*var(--cu));bottom:calc(30*var(--cu));display:flex;flex-direction:column;gap:calc(12*var(--cu))}
 #cmv .srg{flex:1;display:flex;gap:calc(24*var(--cu));min-height:0}
-#cmv .srk{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:calc(8*var(--cu));padding:calc(14*var(--cu));background:linear-gradient(#0f78b4,#06304f 75%,#031c33);border-top:calc(10*var(--cu)) solid var(--a);clip-path:polygon(0 0,100% 0,100% 100%,0 100%);border-radius:calc(10*var(--cu));overflow:hidden}
+#cmv .srk{position:relative;flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:calc(8*var(--cu));padding:calc(14*var(--cu));background:linear-gradient(#0f78b4,#06304f 75%,#031c33);border-top:calc(10*var(--cu)) solid var(--a);clip-path:polygon(0 0,100% 0,100% 100%,0 100%);border-radius:calc(10*var(--cu));overflow:hidden}
 #cmv .srk .srb{width:calc(76*var(--cu));height:calc(76*var(--cu))}#cmv .srk .srb b{font-size:calc(30*var(--cu))}#cmv .srk .srb img{width:calc(34*var(--cu))}#cmv .srk .srt{font-size:calc(34*var(--cu))}
 #cmv .srl{display:flex;flex-wrap:wrap;justify-content:center;gap:calc(8*var(--cu))}#cmv .srk .srx{min-height:calc(40*var(--cu));padding:calc(3*var(--cu)) calc(10*var(--cu));gap:calc(6*var(--cu))}#cmv .srk .srx b{font-size:calc(26*var(--cu))}#cmv .srk .srx img{height:calc(30*var(--cu))}#cmv .srk{padding:calc(8*var(--cu));gap:calc(4*var(--cu))}
 /* design C: tabs + wide rows */
@@ -5160,7 +5165,7 @@ try{if(!S.gj7){S.gj7=1;addI("t",7,true);save();if(typeof head=="function")setTim
 (function(){const lab=()=>{$("sm").textContent=S.mute?"Off":"On";$("sx").textContent=S.nosfx?"Off":"On";};
  const gear=()=>{const h=$("hangar").classList.contains("hide");$("gear").classList.toggle("hide",h);$("qbtn").classList.toggle("hide",h||document.body.classList.contains("inw")||$("menu").classList.contains("hide")||["camp","prof","arn","quest","store","work"].some(i=>!$(i).classList.contains("hide")))};window._gear=gear;setInterval(gear,300);
 $("qbtn").onclick=()=>{$("qbtn").classList.add("hide");show("quest")};{const qi=$("qbtn").querySelector("img");$("qbtn").onmouseenter=()=>qi.src=qi.dataset.h;$("qbtn").onmouseleave=()=>qi.src=qi.dataset.n}$("quest").onclick=e=>{const b=e.target.closest("button");if(b&&b.dataset.go)show(b.dataset.go)};
- $("gear").onclick=()=>{lab();try{$("bld0").textContent="Build 2026-11-23 b93 · "+Object.keys(CAMPD).filter(k=>k[0]!="_").length+" enemy designs built in"}catch(_){}{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();$("set").onclick=e=>{if(e.target.id=="set")$("set").classList.add("hide")};
+ $("gear").onclick=()=>{lab();try{$("bld0").textContent="Build 2026-11-23 b94 · "+Object.keys(CAMPD).filter(k=>k[0]!="_").length+" enemy designs built in"}catch(_){}{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();$("set").onclick=e=>{if(e.target.id=="set")$("set").classList.add("hide")};
 /* ---------- evolution tree (settings): built from EVO, so every item added to EVO shows up automatically ---------- */
 (function(){
   const CAT={t:"Torso",l:"Legs",w:"Weapon",m:"Module"};let root=null,st=null;
@@ -6915,13 +6920,16 @@ function sbars(){st.querySelectorAll(".lst[data-sb]").forEach(l=>{const x=+l.dat
 /* ---- inbox ---- */
 D.mail=D.mail||[];D.upd=D.upd||[];
 const UPD=[["u1","Update: Arena screens rebuilt","Community chat, the leaderboard, player profiles, inspect and the clans screens have a new look."],["u2","Update: Quests and milestones","Daily, weekly and monthly quests with completion bonuses, plus the milestone tiers."],["u3","Welcome to your inbox","Clan join requests, clan news and update logs arrive here."]];
-const mailUnread=()=>D.mail.filter(m=>!m.r).length;
+/* every message and request disappears 14 days after it arrived (an unanswered clan join request too) */
+function mailPrune(){const cut=Date.now()-14*864e5,old=D.mail.filter(m=>(m.ts||0)<cut);if(!old.length)return;D.mail=D.mail.filter(m=>(m.ts||0)>=cut);if(D.clan&&D.clan.req)old.forEach(m=>{if(m.k=="req"&&m.st=="pending")D.clan.req=D.clan.req.filter(i=>i!=m.p)});sv()}
+const mailUnread=()=>{mailPrune();return D.mail.filter(m=>!m.r).length};
 function mailBadge(){const b=$("mbdg");if(!b)return;const n=mailUnread();b.textContent=n>99?"99+":n;b.classList.toggle("hide",!n)}
 function mailAdd(m){D.mail.unshift(Object.assign({id:"m"+Date.now()+Math.random().toString(36).slice(2,6),ts:Date.now(),r:0},m));D.mail=D.mail.slice(0,60);sv();mailBadge();if(scr=="mail"&&!$("cmx").classList.contains("hide"))draw(1)}
+setInterval(()=>{const n=D.mail.length;mailPrune();if(D.mail.length!=n){mailBadge();if(scr=="mail"&&!$("cmx").classList.contains("hide"))draw(1)}},36e5);
 UPD.forEach(u=>{if(!D.upd.includes(u[0])){D.upd.push(u[0]);D.mail.unshift({id:"upd"+u[0],k:"upd",t:u[1],b:u[2],ts:Date.now(),r:0})}});sv();
 const ago=t=>{const m=Math.max(0,Math.floor((Date.now()-t)/6e4));return m<1?"just now":m<60?m+" min ago":m<1440?Math.floor(m/60)+" hr ago":Math.floor(m/1440)+" days ago"};
 function reqDone(id,acc){const c=D.clan;D.mail.forEach(m=>{if(m.k=="req"&&m.p==id&&m.st=="pending"){m.st=acc?"accepted":"declined";m.r=1;m.b=(acc?"Accepted: ":"Declined: ")+(find(id)||{name:"Player"}).name+(acc?" joined your clan.":" was declined.")}});sv();mailBadge()}
-function cvMail(){let h=`<div class="rkf"></div><div class="rkdv" style="top:${u(170)}"></div>`+LV("mailBack",u(28),u(22),100)+`<div class="rkt" style="top:${u(46)}">Inbox</div>`;
+function cvMail(){mailPrune();let h=`<div class="rkf"></div><div class="rkdv" style="top:${u(170)}"></div>`+LV("mailBack",u(28),u(22),100)+`<div class="rkt" style="top:${u(46)}">Inbox</div>`;
   h+=`<button class="rktb" data-a="mAll" style="right:${u(280)};left:auto;top:${u(64)};width:${u(250)};height:${u(70)};font-size:${u(30)}">Read all</button>`;
   const rows=D.mail.map(m=>{const ic=m.k=="req"?"clanRequestToJoin":m.k=="clan"?"clan":"info",pend=m.k=="req"&&m.st=="pending";
     return `<div class="mr ${m.r?"":"un"}" data-a="mRead" data-id="${m.id}"><div class="mi"><img src="${A["i_"+ic].u}"></div><div class="mt"><div class="mh"><b>${esc(m.t)}</b><em>${ago(m.ts)}</em></div><div class="mb">${esc(m.b)}</div></div>${pend?`<div class="ma"><button class="cb" data-a="mAcc" data-id="${m.id}">${IM("acceptClanInvitation")}</button><button class="cb" data-a="mDec" data-id="${m.id}">${IM("declineClanInvitation")}</button></div>`:""}</div>`}).join("");
@@ -7114,13 +7122,16 @@ const SRC={1:["#ffd24a","#a8741a"],3:["#d5dbe3","#6f7885"],10:["#e39a5a","#8a4f2
 function srChips(r,big){const f=v=>v.toLocaleString(),ch=(ic,tx)=>`<span class="srx">${ic}<b>${tx}</b></span>`;
   return ch(`<img src="${RES.coin}" alt="">`,f(r.cr))+ch(`<img src="${TKI}" alt="">`,f(r.tk))+(r.bx?ch(CHEST,"x"+r.bx):"")}
 function srBadge(x){const c=SRC[x.n];return `<div class="srb" style="--a:${c[0]};--b:${c[1]}">${x.n<=3?`<img src="${A["medal"+(x.n==1?1:x.n==3?2:3)].u||""}" alt="">`:""}<b>${x.n}</b></div>`}
-function cvPrize(){const v=ST.pzv||0,t=ST.pzt||0;
+/* where the player stands: clan position (if in a clan) and arena position */
+function srMine(){const cs=sortedClans(),cp=D.clan?cs.findIndex(x=>x.id==D.clan.id)+1:0,ps=[...BOTS,me()].sort((a,b)=>b.ap-a.ap||b.wins-a.wins),pp=ps.findIndex(x=>x.me)+1,ti=(L,p)=>p?L.findIndex(x=>p<=x.n):-1;
+  return{c:ti(SRW.c,cp),p:ti(SRW.p,pp),ct:D.clan?`Your clan: ${esc(D.clan.name)} \u00b7 #${cp}`:"You are not in a clan",pt:`Your rank: #${pp}`}}
+function cvPrize(){const v=ST.pzv||0,t=ST.pzt||0,M=srMine();
   let h=`<div class="pzo"><div class="rkf"></div>${LV("pzX",u(28),u(22),100)}<div class="rkt">Season rewards</div><div class="srv">${["A","B","C"].map((k,i)=>`<button class="${i==v?"on":""}" data-a="pzV" data-id="${i}">Design ${k}</button>`).join("")}</div>`;
-  const row=(x,k)=>`<div class="srr" style="--a:${SRC[x.n][0]};--b:${SRC[x.n][1]}">${srBadge(x)}<span class="srt">${x.t}</span><div class="srch">${srChips(x)}</div></div>`;
-  if(v==0){h+=`<div class="sra"><div class="src"><div class="srh">Top clans</div>${SRW.c.map(row).join("")}</div><div class="src"><div class="srh">Top 100 arena players</div>${SRW.p.map(row).join("")}</div></div>`}
-  else if(v==1){const card=(x)=>`<div class="srk" style="--a:${SRC[x.n][0]};--b:${SRC[x.n][1]}">${srBadge(x)}<span class="srt">${x.t}</span><div class="srl">${srChips(x)}</div></div>`;
-    h+=`<div class="srd"><div class="srh">Top clans</div><div class="srg">${SRW.c.map(card).join("")}</div><div class="srh">Top arena players</div><div class="srg">${SRW.p.map(card).join("")}</div></div>`}
-  else{h+=`<div class="srtb"><button class="${t==0?"on":""}" data-a="pzT" data-id="0">Clans</button><button class="${t==1?"on":""}" data-a="pzT" data-id="1">Arena players</button></div><div class="srl2">${(t?SRW.p:SRW.c).map(x=>`<div class="srw" style="--a:${SRC[x.n][0]};--b:${SRC[x.n][1]}">${srBadge(x)}<span class="srt">${x.t}${t?"":" clans"}</span><div class="srch">${srChips(x)}</div></div>`).join("")}</div>`}
+  const mk=(g,i)=>M[g]==i?" mine":"",you='<i class="sry">YOU ARE HERE</i>',rowC=(x,i)=>`<div class="srr${mk("c",i)}" style="--a:${SRC[x.n][0]};--b:${SRC[x.n][1]}">${srBadge(x)}<span class="srt">${x.t}</span><div class="srch">${srChips(x)}</div>${M.c==i?you:""}</div>`,rowP=(x,i)=>`<div class="srr${mk("p",i)}" style="--a:${SRC[x.n][0]};--b:${SRC[x.n][1]}">${srBadge(x)}<span class="srt">${x.t}</span><div class="srch">${srChips(x)}</div>${M.p==i?you:""}</div>`;
+  if(v==0){h+=`<div class="sra"><div class="src"><div class="srh">Top clans<span class="srme">${M.ct}</span></div>${SRW.c.map(rowC).join("")}</div><div class="src"><div class="srh">Top 100 arena players<span class="srme">${M.pt}</span></div>${SRW.p.map(rowP).join("")}</div></div>`}
+  else if(v==1){const cardG=g=>(x,i)=>`<div class="srk${mk(g,i)}" style="--a:${SRC[x.n][0]};--b:${SRC[x.n][1]}">${M[g]==i?you:""}${srBadge(x)}<span class="srt">${x.t}</span><div class="srl">${srChips(x)}</div></div>`;
+    h+=`<div class="srd"><div class="srh">Top clans<span class="srme">${M.ct}</span></div><div class="srg">${SRW.c.map(cardG("c")).join("")}</div><div class="srh">Top arena players<span class="srme">${M.pt}</span></div><div class="srg">${SRW.p.map(cardG("p")).join("")}</div></div>`}
+  else{h+=`<div class="srtb"><button class="${t==0?"on":""}" data-a="pzT" data-id="0">Clans</button><button class="${t==1?"on":""}" data-a="pzT" data-id="1">Arena players</button></div><div class="srme2">${t?M.pt:M.ct}</div><div class="srl2">${(t?SRW.p:SRW.c).map((x,i)=>`<div class="srw${mk(t?"p":"c",i)}" style="--a:${SRC[x.n][0]};--b:${SRC[x.n][1]}">${srBadge(x)}<span class="srt">${x.t}${t?"":" clans"}</span><div class="srch">${srChips(x)}</div>${M[t?"p":"c"]==i?you:""}</div>`).join("")}</div>`}
   return h+`</div>`}
 function cvDraw(keep){const act=document.activeElement,ai=act&&act.tagName=="INPUT"&&cv.contains(act)?act.id:null,av=ai?act.value:null,ss=ai?act.selectionStart:0;
   const o0=$("mpO"),so=o0?o0.scrollTop:0;
