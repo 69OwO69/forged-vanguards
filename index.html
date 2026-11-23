@@ -1269,7 +1269,7 @@ button,[role=button],.nb,.bkb{touch-action:manipulation;-webkit-user-select:none
 #cmv .dxa.rt1::after{background-image:var(--rb1)}#cmv .dxa.rt2::after{background-image:var(--rb2)}#cmv .dxa.rt3::after{background-image:var(--rb3)}#cmv .dxa.rt4::after{background-image:var(--rb4)}#cmv .dxa.rt5::after{background-image:var(--rb5)}
 #cmv .dxa.rt img,#cmv .dxa.rt svg{position:absolute;left:10%;top:10%;width:80%;height:80%;max-width:none;max-height:none;object-fit:contain}
 /* the rarity frame art has rounded corners: round the glow behind it so it never pokes out */
-#cmv .xta,#cmv .dxa.rt{border-radius:8%}#work .tile.rt::before,#work .slot.rt::before{border-radius:8%!important}
+#cmv .xta,#cmv .dxa.rt{border-radius:10%}#work .tile.rt::before,#work .slot.rt::before{border-radius:8%!important}
 #cmv .xtl b,#cmv .xtl em{z-index:3}
 #cmv .xtl span{margin-top:calc(4*var(--cu))}
 #cmv .xtl.on{outline:calc(7*var(--cu)) solid #ff9a0a;outline-offset:calc(2*var(--cu))}
@@ -5261,7 +5261,7 @@ try{if(!S.gj7){S.gj7=1;addI("t",7,true);save();if(typeof head=="function")setTim
 (function(){const lab=()=>{$("sm").textContent=S.mute?"Off":"On";$("sx").textContent=S.nosfx?"Off":"On";};
  const gear=()=>{const h=$("hangar").classList.contains("hide");$("gear").classList.toggle("hide",h);$("qbtn").classList.toggle("hide",h||document.body.classList.contains("inw")||$("menu").classList.contains("hide")||["camp","prof","arn","quest","store","work"].some(i=>!$(i).classList.contains("hide")))};window._gear=gear;setInterval(gear,300);
 $("qbtn").onclick=()=>{$("qbtn").classList.add("hide");show("quest")};{const qi=$("qbtn").querySelector("img");$("qbtn").onmouseenter=()=>qi.src=qi.dataset.h;$("qbtn").onmouseleave=()=>qi.src=qi.dataset.n}$("quest").onclick=e=>{const b=e.target.closest("button");if(b&&b.dataset.go)show(b.dataset.go)};
- $("gear").onclick=()=>{lab();try{$("bld0").textContent="Build 2026-11-23 b138 · "+Object.keys(CAMPD).filter(k=>k[0]!="_").length+" enemy designs built in"}catch(_){}{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();$("set").onclick=e=>{if(e.target.id=="set")$("set").classList.add("hide")};
+ $("gear").onclick=()=>{lab();try{$("bld0").textContent="Build 2026-11-23 b139 · "+Object.keys(CAMPD).filter(k=>k[0]!="_").length+" enemy designs built in"}catch(_){}{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();$("set").onclick=e=>{if(e.target.id=="set")$("set").classList.add("hide")};
 /* ---------- evolution tree (settings): built from EVO, so every item added to EVO shows up automatically ---------- */
 (function(){
   const CAT={t:"Torso",l:"Legs",w:"Weapon",m:"Module"};let root=null,st=null;
@@ -7182,11 +7182,11 @@ function cvExp(){const X=window.dxApi;if(!X)return"";const d=X.S(),pk=X.pk(),rs=
   const dbt=X.DIF.map((x,k)=>`<button class="csb${dI===k?" sel":""}${run?" lk":""}"${run?"":` data-a="dx_dif" data-d="${k}"`} style="--dc:${x.c}"><b>${x.n}</b><span>${x.h} hour${x.h>1?"s":""}</span></button>`).join("");
   const ric=r=>r.k=="cr"?`<img src="${X.COIN}" alt="">`:r.k=="tk"?`<img src="${X.TKI}" alt="">`:r.k=="bx"?`<img src="${X.BOXI}" alt="">`:`<img src="${X.GIFT}" alt="">`;
   const rlab=r=>r.k=="it"?`<b style="color:${RAR(5000)}">Mythic item</b>`:r.k=="bx"?"Silver Item Box":r.k=="tk"?`${fmt(r.r[0])}-${fmt(r.r[1])} tokens`:`${fmt(r.r[0])}-${fmt(r.r[1])} credits`;
-  const rt=`<div class="xpn w2"><div class="xph">Reward chances</div>`+X.rows(dI).map(r=>`<div class="xrr">${ric(r)}<span>${rlab(r)}</span><em>${r.p}%</em></div>`).join("")+`</div>`;
+  const rt=`<div class="xpn w2"><div class="xph">Reward chances</div><div class="xe1" style="text-align:center">Rolled once for each successful drone</div>`+X.rows(dI).map(r=>`<div class="xrr">${ric(r)}<span>${rlab(r)}</span><em>${r.p}%</em></div>`).join("")+`</div>`;
   let rp;
   if(!run){const ps=ent.filter(Boolean).map(e=>X.ch(dI,e.i)),ex=ps.reduce((a,b)=>a+b,0)/100;
     rp=`<div class="xpn"><div class="xph">Expected</div>`+(ps.length?`<div class="xe1">Drone chances: ${ps.map(p=>`<b style="color:${cc(p)}">${p}%</b>`).join(" · ")}</div><div class="xe1">Win or lose, every drone that goes out rests for 1 hour before it can go again.</div><div class="xtc">About ${ex.toFixed(1)} ticket${ex.toFixed(1)=="1.0"?"":"s"}</div>`:`<div class="xe1">Add drones to the party. Each one rolls its own chance (rarity, type and difficulty) to bring back 1 ticket.</div>`)+`<button class="csb ${ps.length?"sgn":"dim"}"${ps.length?' data-a="dx_send"':""}>${ps.length?`Send ${ps.length} drone${ps.length>1?"s":""}`:"Send drones"}</button></div>`}
-  else rp=`<div class="xpn"><div class="xph">${rd?"Returned!":"Exploring..."}</div>`+(rd?`<div class="xtc" style="text-align:center">${pt.dr.length} drone${pt.dr.length>1?"s":""} back from ${df.n}</div><button class="csb sgn" data-a="dx_col">Collect</button>`:`<div class="xt2" data-t="0">${X.fmt(pt.t1-Date.now())}</div><div class="xpb2"><i data-p="0" style="width:${Math.min(100,(Date.now()-pt.t0)/(pt.t1-pt.t0)*100)}%"></i></div><div class="xe1" style="text-align:center">${pt.dr.length} drone${pt.dr.length>1?"s":""} on a ${df.n} expedition</div>`)+`</div>`;
+  else rp=`<div class="xpn"><div class="xph">${rd?"Returned!":"Exploring..."}</div>`+(rd?`<div class="xtc" style="text-align:center">${pt.dr.length} drone${pt.dr.length>1?"s":""} back from ${df.n}</div><button class="csb sgn" data-a="dx_col">Collect</button>`:`<div class="xt2" data-t="0">${X.fmt(pt.t1-Date.now())}</div><div class="xpb2"><i data-p="0" style="width:${Math.min(100,(Date.now()-pt.t0)/(pt.t1-pt.t0)*100)}%"></i></div><div class="xe1" style="text-align:center">${pt.dr.length} drone${pt.dr.length>1?"s":""} on a ${df.n} expedition</div><button class="csb" data-a="dx_cancel">Cancel expedition</button>`)+`</div>`;
   h+=`<div class="xlow"><div class="xdf">${dbt}</div>${rt}${rp}</div>`;
   if(!run&&pk.pi!=null){const cur=pk.s[pk.pi];
     const tiles=all.map(({i,c})=>{const out=dxOut(c.u),dm=dxDam(c.u),inp=pk.s.includes(c.u),dis=out||dm>0||inp,rc=RAR(W[i].cost),p=X.ch(dI,i);return `<button class="xtl${dis?" dis":""}${cur===c.u?" on":""}" style="--rc:${rc}" data-a="dx_pick" data-u="${c.u}" ${dis?"disabled":""}><div class="xta rt${tier(W[i].cost)}">${X.art(i,c)}</div><b style="color:${cc(p)}">${p}%</b>${dm>0?`<em data-rep="${c.u}">${X.fmt(dm)}</em>`:out?`<em>Away</em>`:inp?`<em style="color:#ffb534">In party</em>`:""}<span>${esc(W[i].n)}</span></button>`}).join("")||`<div class="lbl" style="padding-top:${u(200)}">You do not own any drones yet.</div>`;
@@ -7195,6 +7195,7 @@ function cvExp(){const X=window.dxApi;if(!X)return"";const d=X.S(),pk=X.pk(),rs=
       +`<div class="xn2" style="left:${u(360)};top:${u(656)};width:${u(800)};text-align:center">The percentage is each drone's chance on ${df.n}.</div>`
       +`<button class="csb" data-a="dx_pcancel" style="left:${u(1180)};top:${u(640)};width:${u(300)};height:${u(76)};font-size:${u(38)}">Cancel</button>`;
     h+=cfram(1532,854,`<span>Choose a drone for slot ${pk.pi+1}</span>`,body,"dx_pcancel")}
+  if(X.cc()&&run&&!rd)h+=cfram(900,430,`<span>Cancel expedition?</span>`,`<div class="xn2" style="left:${u(30)};top:${u(24)};width:${u(808)};text-align:center;font-size:${u(30)}">Your drones come back right away. You get no rewards, and they are not put on the 1 hour cooldown.</div><button class="csb" data-a="dx_cno" style="left:${u(30)};top:${u(200)};width:${u(398)};height:${u(90)}">Keep going</button><button class="csb sgn" data-a="dx_cyes" style="left:${u(440)};top:${u(200)};width:${u(398)};height:${u(90)}">Cancel it</button>`,"dx_cno");
   if(rs){const K_=window.K||{},rows=rs.list.map(r=>r.k=="cr"?`<div class="xrr"><img src="${X.COIN}" alt=""><span>+${fmt(r.n)} credits</span></div>`:r.k=="tk"?`<div class="xrr"><img src="${X.TKI}" alt=""><span>+${fmt(r.n)} tokens</span></div>`:r.k=="bx"?`<div class="xrr"><img src="${X.BOXI}" alt=""><span>Silver Item Box (in your box inventory)</span></div>`:(it=>`<div class="xrr">${ICO(r.kk,it,r.sh)}<span style="color:${RAR(it.cost)}">${r.sh?"Shiny ":""}${esc(it.n)}</span></div>`)(K[r.kk][r.i])).join("");
         const PH=370+66*Math.max(1,rs.list.length);h+=cfram(1000,PH,`<span>Expedition result</span>`,`<div class="xr3"><div class="xrh" style="color:${rs.tix?"#4fd16a":"#ff4a3a"}">${rs.tix?`${rs.tix} of ${rs.n} drone${rs.n>1?"s":""} brought back a ticket`:"No tickets this time"}</div>${rows}<small>Your drones rest for 1 hour before they can go out again.</small></div><button class="csb sgn" data-a="dx_rclose" style="left:${u(334)};top:${u(PH-114-104)};width:${u(300)};height:${u(90)}">OK</button>`,"dx_rclose")}
   return h}
@@ -7472,7 +7473,7 @@ const dxPull=rare=>{const bw=BOX[2].w;let t=4;if(!rare){let r=Math.random()*bw.r
   if(!pool.length)return null;const [k,i]=pool[Math.floor(Math.random()*pool.length)],sh=canSh(k,i)&&Math.random()<SHP;addI(k,i,sh);return{k:"it",kk:k,i,sh}};
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const num=n=>n.toLocaleString();
-let PK={d:1,s:[null,null,null,null,null],pi:null},RS=null;
+let PK={d:1,s:[null,null,null,null,null],pi:null},RS=null,CC=false;
 const dxCopies=()=>S.own.w.filter(i=>W[i]&&W[i].drone&&!W[i].gone).flatMap(i=>XS("w",i).map(c=>({i,c}))).sort((a,b)=>tier(W[b.i].cost)-tier(W[a.i].cost)||W[a.i].n.localeCompare(W[b.i].n));
 const art=(i,c)=>ICO("w",W[i],c&&c.s,c?lvOfP(RI("w",i),c.x):0,null);
 const nowReady=sl=>sl&&sl.t1<=Date.now();
@@ -7528,9 +7529,12 @@ function dxAct(a,ds){const d=dxS();
       else if(r.k=="bx"){S.bi=S.bi||{};S.bi[2]=(S.bi[2]||0)+1;list.push({k:"bx"})}
       else{const g=dxPull(true);if(g)list.push(g);else{const n=rnd(5000,15000);cr+=n;list.push({k:"cr",n})}}});
     qPay({cr,tk});RS={n:p.dr.length,tix,list,fail};d.pt=null;save()}
+  else if(a=="cancel"){if(d.pt&&!nowReady(d.pt))CC=true}
+  else if(a=="cno"){CC=false}
+  else if(a=="cyes"){if(d.pt&&!nowReady(d.pt)){d.pt=null;save()}CC=false}
   else if(a=="rclose"){RS=null}
   if(window.mpExp)window.mpExp();sync()}
-window.dxApi={S:dxS,DIF,SUC,ch,fmt,ready:nowReady,copies:dxCopies,art,pk:()=>PK,rs:()=>RS,TKI:TKI,act:dxAct,rows:rwRows,COIN:RES.coin,BOXI:CRI.b,GIFT:GIFT};
+window.dxApi={S:dxS,DIF,SUC,ch,fmt,ready:nowReady,copies:dxCopies,art,pk:()=>PK,rs:()=>RS,cc:()=>CC,TKI:TKI,act:dxAct,rows:rwRows,COIN:RES.coin,BOXI:CRI.b,GIFT:GIFT};
 }catch(err){console.error("dx",err)}})();
 </script>
 
