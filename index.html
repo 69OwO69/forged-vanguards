@@ -1435,28 +1435,28 @@ button,[role=button],.nb,.bkb{touch-action:manipulation;-webkit-user-select:none
 #cmx .dxb{all:unset;box-sizing:border-box;position:absolute;isolation:isolate;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:15px;font-weight:700;text-shadow:0 2px 3px #000,0 0 3px #000;line-height:1;white-space:nowrap}
 #cmx .dxb.ok{background:var(--dxok) 0 0/100% 100% no-repeat;font-size:15px}#cmx .dxb.ok:hover{background-image:var(--dxokh)}
 #cmx .dxb.dim{opacity:.45;pointer-events:none}
-#cmx .dxd{all:unset;box-sizing:border-box;position:absolute;display:flex;align-items:center;justify-content:space-between;padding:0 14px 0 16px;background:var(--nf0) 0 0/100% 100% no-repeat;color:#fff;font-size:15px;font-weight:700;text-shadow:0 2px 3px #000,0 0 3px #000;cursor:pointer;line-height:1}
+#cmx .dxd{all:unset;box-sizing:border-box;position:absolute;display:flex;align-items:center;justify-content:space-between;padding:0 24px 0 18px;background:var(--nf0) 0 0/100% 100% no-repeat;color:#fff;font-size:15px;font-weight:700;text-shadow:0 2px 3px #000,0 0 3px #000;cursor:pointer;line-height:1}
 #cmx .dxd span{font-size:12px;font-weight:700}
 #cmx .dxd.s0.on{background-image:var(--nf5)}#cmx .dxd.s1.on{background-image:var(--nf3)}#cmx .dxd.s2.on{background-image:var(--nf4)}
 #cmx .dxd:hover{filter:brightness(1.2)}#cmx .dxd.lk{cursor:default}#cmx .dxd.lk:not(.on){opacity:.5}#cmx .dxd.lk:hover{filter:none}
-#cmx .dxs{position:absolute;width:84px;height:116px}
+#cmx .dxs{position:absolute;width:84px;height:120px;--a:76px}#cmx .dxpn{position:absolute;box-sizing:border-box;border:solid transparent;border-width:6px;border-image:var(--dxrow) 18 fill/6px stretch}#cmx .dxf.dxm{background:#00141f}
 #cmx .dxs[data-a]{cursor:pointer}#cmx .dxs[data-a]:hover .dxa{filter:brightness(1.25)}
-#cmx .dxa{position:absolute;left:4px;top:0;width:76px;height:76px;overflow:hidden;box-sizing:border-box;display:flex;align-items:center;justify-content:center;background:#000 var(--rg0) center/134% 134% no-repeat;font-size:34px;color:#fff;text-shadow:0 2px 3px #000}
+#cmx .dxa{position:absolute;left:calc((100% - var(--a))/2);top:0;width:var(--a);height:var(--a);overflow:hidden;box-sizing:border-box;display:flex;align-items:center;justify-content:center;background:#000 var(--rg0) center/134% 134% no-repeat;font-size:34px;color:#fff;text-shadow:0 2px 3px #000}
 #cmx .dxa.em{background:var(--sock) 0 0/100% 100% no-repeat}
 #cmx .dxa.rt1{background-image:var(--rg1)}#cmx .dxa.rt2{background-image:var(--rg2)}#cmx .dxa.rt3{background-image:var(--rg3)}#cmx .dxa.rt4{background-image:var(--rg4)}#cmx .dxa.rt5{background-image:var(--rg5)}
 #cmx .dxa.rt::after{content:"";position:absolute;inset:0;background:var(--rb0) 0 0/100% 100% no-repeat;pointer-events:none;z-index:2}
 #cmx .dxa.rt1::after{background-image:var(--rb1)}#cmx .dxa.rt2::after{background-image:var(--rb2)}#cmx .dxa.rt3::after{background-image:var(--rb3)}#cmx .dxa.rt4::after{background-image:var(--rb4)}#cmx .dxa.rt5::after{background-image:var(--rb5)}
 #cmx .dxa img,#cmx .dxa svg{width:80%;height:80%;object-fit:contain;display:block}
-#cmx .dxn{position:absolute;left:0;top:78px;width:84px;height:36px;box-sizing:border-box;padding:0 9px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:10px;font-weight:700;line-height:1.05;overflow:hidden;color:#fff;text-shadow:0 1px 2px #000,0 0 2px #000;background:var(--nf0) 0 0/100% 100% no-repeat}
+#cmx .dxn{position:absolute;left:calc((100% - var(--a) - 8px)/2);top:calc(var(--a) + 3px);width:calc(var(--a) + 8px);height:max(36px,calc(var(--a)*.36));box-sizing:border-box;padding:0 9px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:max(10px,calc(var(--a)*.125));font-weight:700;line-height:1.05;overflow:hidden;color:#fff;text-shadow:0 1px 2px #000,0 0 2px #000;background:var(--nf0) 0 0/100% 100% no-repeat}
 #cmx .dxn.n1{background-image:var(--nf1)}#cmx .dxn.n2{background-image:var(--nf2)}#cmx .dxn.n3{background-image:var(--nf3)}#cmx .dxn.n4{background-image:var(--nf4)}#cmx .dxn.n5{background-image:var(--nf5)}
 #cmx .dxp{position:absolute;right:7px;top:3px;z-index:3;font-size:12px;font-weight:700;text-shadow:0 1px 2px #000,0 0 2px #000;pointer-events:none}
-#cmx .dxe{position:absolute;left:4px;width:76px;top:58px;z-index:3;text-align:center;font-size:10px;font-weight:700;font-style:normal;color:#fff;text-shadow:0 1px 2px #000,0 0 2px #000;background:rgba(0,0,0,.6);pointer-events:none}
+#cmx .dxe{position:absolute;left:calc((100% - var(--a))/2);width:var(--a);top:calc(var(--a) - 18px);z-index:3;text-align:center;font-size:10px;font-weight:700;font-style:normal;color:#fff;text-shadow:0 1px 2px #000,0 0 2px #000;background:rgba(0,0,0,.6);pointer-events:none}
 #cmx .dxs.off{opacity:.45;pointer-events:none}#cmx .dxs.dis{opacity:.5;cursor:default}#cmx .dxs.dis:hover .dxa{filter:none}#cmx .dxs.on .dxa{filter:brightness(1.35)}
-#cmx .dxr{position:absolute;box-sizing:border-box;display:flex;align-items:center;gap:8px;padding:0 12px;color:#fff;font-size:13px;font-weight:700;text-shadow:0 1px 2px #000,0 0 2px #000;border:solid transparent;border-width:6px;border-image:var(--dxrow) 18 fill/6px stretch}
-#cmx .dxr img,#cmx .dxr svg{width:22px;height:22px;object-fit:contain;flex:none}#cmx .dxr span{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}#cmx .dxr em{font-style:normal;color:#ffb534}
+#cmx .dxr{position:absolute;box-sizing:border-box;display:flex;align-items:center;gap:10px;padding:0 14px;color:#fff;font-size:13px;font-weight:700;text-shadow:0 1px 2px #000,0 0 2px #000;border:solid transparent;border-width:6px;border-image:var(--dxrow) 18 fill/6px stretch}
+#cmx .dxr img,#cmx .dxr svg{width:1.6em;height:1.6em;object-fit:contain;flex:none}#cmx .dxr span{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}#cmx .dxr em{font-style:normal;color:#ffb534}
 #cmx .dxq{position:absolute;height:12px;overflow:hidden}
 #cmx .dxq i{position:absolute;inset:0;background:var(--dxqb) 0 0/100% 100% no-repeat}#cmx .dxq i.bg{opacity:.28}
-#cmx .dxdim{position:absolute;inset:0;background:rgba(0,0,0,.5);z-index:20}
+#cmx .dxdim{position:absolute;left:-3000px;top:-3000px;width:7000px;height:7000px;background:rgba(0,0,0,.5);z-index:20}
 #cmx .dxf{position:absolute;z-index:21;box-sizing:border-box;border:solid transparent;border-width:41px 7px 7px 7px;border-image:var(--dxfr) 68 12 12 12 fill/47px 7px 7px 7px/6px 0 0 0 stretch;background-color:#00141f;border-radius:7px}
 #cmx .dxf .dxt2{position:absolute;left:11px;top:-37px;height:29px;display:flex;align-items:center;color:#fff;font-weight:700;font-size:17px;text-shadow:0 2px 3px #000,0 0 3px #000;white-space:nowrap}
 #cmx .dxf .dxx{all:unset;position:absolute;top:-39px;right:1px;width:40px;height:32px;cursor:pointer;background:var(--dxx) center/100% 100% no-repeat}
@@ -5295,7 +5295,7 @@ try{if(!S.gj7){S.gj7=1;addI("t",7,true);save();if(typeof head=="function")setTim
 (function(){const lab=()=>{$("sm").textContent=S.mute?"Off":"On";$("sx").textContent=S.nosfx?"Off":"On";};
  const gear=()=>{const h=$("hangar").classList.contains("hide");$("gear").classList.toggle("hide",h);$("qbtn").classList.toggle("hide",h||document.body.classList.contains("inw")||$("menu").classList.contains("hide")||["camp","prof","arn","quest","store","work"].some(i=>!$(i).classList.contains("hide")))};window._gear=gear;setInterval(gear,300);
 $("qbtn").onclick=()=>{$("qbtn").classList.add("hide");show("quest")};{const qi=$("qbtn").querySelector("img");$("qbtn").onmouseenter=()=>qi.src=qi.dataset.h;$("qbtn").onmouseleave=()=>qi.src=qi.dataset.n}$("quest").onclick=e=>{const b=e.target.closest("button");if(b&&b.dataset.go)show(b.dataset.go)};
- $("gear").onclick=()=>{lab();try{$("bld0").textContent="Build 2026-11-23 b146 · "+Object.keys(CAMPD).filter(k=>k[0]!="_").length+" enemy designs built in"}catch(_){}{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();$("set").onclick=e=>{if(e.target.id=="set")$("set").classList.add("hide")};
+ $("gear").onclick=()=>{lab();try{$("bld0").textContent="Build 2026-11-23 b147 · "+Object.keys(CAMPD).filter(k=>k[0]!="_").length+" enemy designs built in"}catch(_){}{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();$("set").onclick=e=>{if(e.target.id=="set")$("set").classList.add("hide")};
 /* ---------- evolution tree (settings): built from EVO, so every item added to EVO shows up automatically ---------- */
 (function(){
   const CAT={t:"Torso",l:"Legs",w:"Weapon",m:"Module"};let root=null,st=null;
@@ -7359,28 +7359,40 @@ function vExp(){const X=window.dxApi;if(!X)return"";
       +`<div class="lst" id="mpL" data-sb="10" style="left:197px;top:184px;width:476px;height:196px"><div style="width:464px">${rows}</div></div>`
       +`<button class="dxb ok" data-a="dx_rclose" style="left:358px;top:400px;width:150px;height:55px">OK</button>`}
   const cc=p=>p>=70?"#4fd16a":p>=45?"#ffb534":"#ff4a3a",S1=n=>n>1?"s":"";
-  let h=bg("Inspect")+T(124,44,540,"Drone Expedition","","font-size:24px;color:#fff;text-shadow:0 2px 3px #000")+back("back",685,35,50);
-  /* difficulty (left, top panel) */
-  X.DIF.forEach((x,k)=>{h+=`<button class="dxd s${k}${dI===k?" on":""}${run?" lk":""}"${run?"":` data-a="dx_dif" data-d="${k}"`} style="left:77px;top:${102+k*54}px;width:154px;height:48px">${x.n.toUpperCase()}<span>${x.h} hour${S1(x.h)}</span></button>`});
-  /* party slots (right panel) */
-  ent.forEach((e,n)=>{const x=263+n*94,at=run?"":` data-a="dx_add" data-n="${n}"`;
-    if(!e){if(run)return;h+=`<div class="dxs"${at} style="left:${x}px;top:103px"><div class="dxa em">${run?"":"+"}</div><div class="dxn">${run?"":"Add drone"}</div></div>`;return}
+  const cx=$("cmx"),kk=Math.min(cx.clientWidth/800,cx.clientHeight/480),WW=Math.max(800,cx.clientWidth/kk),HH=Math.max(480,cx.clientHeight/kk);
+  const cw=Math.round(WW-14),ch=Math.round(HH-6-48),M=10,lw=Math.round(Math.min(280,cw*.27)),rx=lw+2*M,rw=cw-rx-M;
+  const PN=(x,y,w,hh)=>`<div class="dxpn" style="left:${x}px;top:${y}px;width:${w}px;height:${hh}px"></div>`;
+  const TX=(x,y,w,txt,sz,col="#fff",ex="")=>`<div class="dxh" style="left:${x}px;top:${y}px;width:${w}px;font-size:${sz}px;color:${col};${ex}">${txt}</div>`;
+  const TW=(x,y,w,hh,txt,sz,col="#cfe6f7")=>`<div class="dxt c" style="left:${x}px;top:${y}px;width:${w}px;height:${hh}px;font-size:${sz}px;color:${col}">${txt}</div>`;
+  let f="";
+  const lth=Math.round(ch*.45),bx=M+12,bw=lw-24;
+  f+=PN(M,M,lw,lth)+PN(M,2*M+lth,lw,ch-lth-3*M)+PN(rx,M,rw,ch-2*M);
+  /* difficulty */
+  const gap=8,bh=Math.min(64,Math.floor((lth-24-2*gap)/3));
+  X.DIF.forEach((x,k)=>{f+=`<button class="dxd s${k}${dI===k?" on":""}${run?" lk":""}"${run?"":` data-a="dx_dif" data-d="${k}"`} style="left:${bx}px;top:${M+12+k*(bh+gap)}px;width:${bw}px;height:${bh}px;font-size:${Math.round(bh*.34)}px">${x.n.toUpperCase()}<span style="font-size:${Math.round(bh*.24)}px">${x.h} hour${S1(x.h)}</span></button>`});
+  /* party slots */
+  const pad=14,sw=Math.floor((rw-2*pad)/5),A=Math.min(112,sw-14),sx=rx+pad;
+  ent.forEach((e,n)=>{const x=sx+n*sw,at=run?"":` data-a="dx_add" data-n="${n}"`,st_=`left:${x}px;top:${M+12}px;width:${sw}px;--a:${A}px`;
+    if(!e){if(run)return;f+=`<div class="dxs"${at} style="${st_}"><div class="dxa em" style="font-size:${Math.round(A*.45)}px">+</div><div class="dxn">Add drone</div></div>`;return}
     const w=W[e.i],p=X.ch(dI,e.i),t=tier(w.cost);
-    h+=`<div class="dxs${rd?" rd dxc":""}"${at} style="left:${x}px;top:103px"><div class="dxa rt rt${t}">${e.art}</div><div class="dxp" style="color:${cc(p)}">${p}%</div><div class="dxn n${t}">${esc(w.n)}</div></div>`});
-  h+=T(262,224,466,run?"Each drone that made it brings back 1 data chip.":"Each drone rolls its own chance to bring back a data chip.","c","font-size:12px;color:#9fc4e6;text-shadow:0 1px 2px #000");
-  h+=T(262,244,466,"Reward chances","c","font-size:15px;color:#fff;font-weight:700;text-shadow:0 2px 3px #000");
-  h+=T(262,263,466,"Rolled once for each data chip","c","font-size:11px;color:#9fc4e6;text-shadow:0 1px 2px #000");
+    f+=`<div class="dxs${rd?" rd dxc":""}"${at} style="${st_}"><div class="dxa rt rt${t}">${e.art}</div><div class="dxp" style="color:${cc(p)};right:calc((100% - var(--a))/2 + 7px);font-size:${Math.round(A*.16)}px">${p}%</div><div class="dxn n${t}">${esc(w.n)}</div></div>`});
+  const y0=M+12+A+3+44,rwid=rw-2*pad;
+  f+=TX(rx+pad,y0+6,rwid,run?"Each drone that made it brings back 1 data chip.":"Each drone rolls its own chance to bring back a data chip.",14,"#9fc4e6","font-weight:700");
+  f+=TX(rx+pad,y0+30,rwid,"Reward chances",19)+TX(rx+pad,y0+54,rwid,"Rolled once for each data chip",13,"#9fc4e6");
   const ric=r=>r.k=="cr"?`<img src="${X.COIN}" alt="">`:r.k=="tk"?`<img src="${X.TKI}" alt="">`:r.k=="bx"?`<img src="${X.BOXI}" alt="">`:`<img src="${X.GIFT}" alt="">`;
   const rlab=r=>r.k=="bx"?`${r.r[0]==r.r[1]?r.r[0]+" ":r.r[0]+"-"+r.r[1]+" "}${r.r[1]>1?BOX[r.b].n.replace(/Box$/,"Boxes"):BOX[r.b].n}`:r.k=="tk"?`${fmt(r.r[0])}-${fmt(r.r[1])} tokens`:`${fmt(r.r[0])}-${fmt(r.r[1])} credits`;
-  X.rows(dI).forEach((r,k)=>{h+=`<div class="dxr" style="left:263px;top:${281+k*34}px;width:462px;height:32px">${ric(r)}<span>${rlab(r)}</span><em>${r.p}%</em></div>`});
-  /* left bottom panel: expected / timer */
+  const rr=X.rows(dI),ry=y0+78,rh=Math.max(26,Math.min(44,Math.floor((ch-M-ry-3*(rr.length-1)-8)/rr.length)));
+  rr.forEach((r,k)=>{f+=`<div class="dxr" style="left:${rx+pad}px;top:${ry+k*(rh+3)}px;width:${rwid}px;height:${rh}px;font-size:${Math.round(rh*.4)}px">${ric(r)}<span>${rlab(r)}</span><em>${r.p}%</em></div>`});
+  /* expected / timer */
+  const ly=2*M+lth,lh=ch-lth-3*M,okh=Math.min(66,Math.round(lh*.3)),okw=Math.round(okh*257/95),okx=M+Math.round((lw-okw)/2),oky=ly+lh-okh-12;
   if(!run){const ps=ent.filter(Boolean).map(e=>X.ch(dI,e.i)),ex=ps.reduce((a,b)=>a+b,0)/100;
-    h+=T(77,282,154,"Expected","c","font-size:15px;color:#fff;font-weight:700;text-shadow:0 2px 3px #000");
-    h+=ps.length?`<div class="dxt c" style="left:77px;top:304px;width:154px;height:16px;font-size:11.5px;color:#ffb534;font-weight:700">About ${ex.toFixed(1)} data chip${ex.toFixed(1)=="1.0"?"":"s"}</div><div class="dxt c" style="left:79px;top:324px;width:150px;height:40px">Win or lose, every drone that goes out rests for 1 hour.</div>`:`<div class="dxt c" style="left:79px;top:304px;width:150px;height:60px">Add drones to the party. Each one rolls its own chance to bring back a data chip.</div>`;
-    h+=`<button class="dxb ok${ps.length?"":" dim"}"${ps.length?' data-a="dx_send"':""} style="left:79px;top:370px;width:150px;height:55px">${ps.length?`Send ${ps.length} drone${S1(ps.length)}`:"Send drones"}</button>`}
-  else if(rd){h+=T(77,282,154,"Returned!","c","font-size:15px;color:#4fd16a;font-weight:700;text-shadow:0 2px 3px #000")+`<div class="dxt c" style="left:79px;top:310px;width:150px;height:40px;font-size:13px;color:#ffb534;font-weight:700">${pt.dr.length} drone${S1(pt.dr.length)} back from ${df.n}</div><button class="dxb ok" data-a="dx_col" style="left:79px;top:370px;width:150px;height:55px">Collect</button>`}
-  else{const pc=Math.min(100,(Date.now()-pt.t0)/(pt.t1-pt.t0)*100);
-    h+=T(77,282,154,"Exploring...","c","font-size:15px;color:#fff;font-weight:700;text-shadow:0 2px 3px #000")+`<div class="dxh" data-t="0" style="left:77px;width:154px;top:308px;font-size:26px">${X.fmt(pt.t1-Date.now())}</div><div class="dxq" style="left:79px;top:344px;width:150px"><i class="bg"></i><div data-p="0" style="position:absolute;left:0;top:0;bottom:0;width:${pc}%;overflow:hidden"><i style="width:150px;right:auto"></i></div></div><div class="dxt c" style="left:79px;top:362px;width:150px;height:28px">${pt.dr.length} drone${S1(pt.dr.length)} on a ${df.n} expedition</div><button class="dxb" data-a="dx_cancel" style="left:79px;top:392px;width:150px;height:34px;font-size:13px"><i style="position:absolute;inset:0;z-index:-1;background:var(--rect) center/100% 100% no-repeat"></i>Cancel expedition</button>`}
+    f+=TX(M,ly+10,lw,"Expected",18);
+    f+=ps.length?TX(M,ly+36,lw,`About ${ex.toFixed(1)} data chip${ex.toFixed(1)=="1.0"?"":"s"}`,15,"#ffb534")+TW(bx,ly+60,bw,oky-ly-64,"Win or lose, every drone that goes out rests for 1 hour.",13):TW(bx,ly+40,bw,oky-ly-44,"Add drones to the party. Each one rolls its own chance to bring back a data chip.",13);
+    f+=`<button class="dxb ok${ps.length?"":" dim"}"${ps.length?' data-a="dx_send"':""} style="left:${okx}px;top:${oky}px;width:${okw}px;height:${okh}px;font-size:${Math.round(okh*.3)}px">${ps.length?`Send ${ps.length} drone${S1(ps.length)}`:"Send drones"}</button>`}
+  else if(rd){f+=TX(M,ly+10,lw,"Returned!",18,"#4fd16a")+TX(bx,ly+44,bw,`${pt.dr.length} drone${S1(pt.dr.length)} back from ${df.n}`,15,"#ffb534","white-space:normal;height:40px")+`<button class="dxb ok" data-a="dx_col" style="left:${okx}px;top:${oky}px;width:${okw}px;height:${okh}px;font-size:${Math.round(okh*.3)}px">Collect</button>`}
+  else{const pc=Math.min(100,(Date.now()-pt.t0)/(pt.t1-pt.t0)*100),qh=Math.round(bw*30/371);
+    f+=TX(M,ly+10,lw,"Exploring...",18)+`<div class="dxh" data-t="0" style="left:${M}px;width:${lw}px;top:${ly+38}px;font-size:34px">${X.fmt(pt.t1-Date.now())}</div><div class="dxq" style="left:${bx}px;top:${ly+86}px;width:${bw}px;height:${qh}px"><i class="bg"></i><div data-p="0" style="position:absolute;left:0;top:0;bottom:0;width:${pc}%;overflow:hidden"><i style="width:${bw}px;right:auto"></i></div></div>`+TW(bx,ly+92+qh,bw,34,`${pt.dr.length} drone${S1(pt.dr.length)} on a ${df.n} expedition`,13)+`<button class="dxb" data-a="dx_cancel" style="left:${bx}px;top:${oky+okh-40}px;width:${bw}px;height:40px;font-size:15px"><i style="position:absolute;inset:0;z-index:-1;background:var(--rect) center/100% 100% no-repeat"></i>Cancel expedition</button>`}
+  let h=`<div class="dxf dxm" style="left:${Math.round((800-WW)/2)}px;top:${Math.round((480-HH)/2)+6}px;width:${Math.round(WW)}px;height:${Math.round(HH-6)}px"><div class="dxt2" style="font-size:20px">Drone Expedition</div><button class="dxx" data-a="back" aria-label="Close"></button>${f}</div>`;
   /* popups */
   const FR=(w,hh,title,body,act)=>`<div class="dxdim" data-a="${act}"></div><div class="dxf" style="left:${Math.round((800-w)/2)}px;top:${Math.round((480-hh)/2)+17}px;width:${w}px;height:${hh}px"><div class="dxt2">${title}</div><button class="dxx" data-a="${act}" aria-label="Close"></button>${body}</div>`;
   const RB=(a,x,y,w,hh,t,ex="")=>`<button class="dxb" data-a="${a}" style="left:${x}px;top:${y}px;width:${w}px;height:${hh}px;${ex}"><i style="position:absolute;inset:0;z-index:-1;background:var(--rect) center/100% 100% no-repeat"></i>${t}</button>`;
@@ -7395,7 +7407,7 @@ function vExp(){const X=window.dxApi;if(!X)return"";
   if(rs){const K_=window.K||{},rows=rs.list.map(r=>r.k=="cr"?`<div class="dxr" style="position:relative;margin-bottom:2px;height:32px"><img src="${X.COIN}" alt=""><span>+${fmt(r.n)} credits</span></div>`:r.k=="tk"?`<div class="dxr" style="position:relative;margin-bottom:2px;height:32px"><img src="${X.TKI}" alt=""><span>+${fmt(r.n)} tokens</span></div>`:r.k=="bx"?`<div class="dxr" style="position:relative;margin-bottom:2px;height:32px"><img src="${X.BOXI}" alt=""><span>${r.n} ${r.n>1?BOX[r.b].n.replace(/Box$/,"Boxes"):BOX[r.b].n} <small style="color:#9fc4e6;font-size:inherit">(in your box inventory)</small></span></div>`:(it=>`<div class="dxr" style="position:relative;margin-bottom:2px;height:32px">${ICO(r.kk,it,r.sh)}<span style="color:${RAR(it.cost)}">${r.sh?"Shiny ":""}${esc(it.n)}</span></div>`)(K_[r.kk][r.i])).join("");
     const n=Math.max(1,rs.list.length),LH=Math.min(7,n)*34,PH=172+LH;
     h+=FR(520,PH,"Expedition result",`<div class="dxh" style="left:0;right:0;top:8px;font-size:16px;color:${rs.tix?"#4fd16a":"#ff4a3a"}">${rs.tix?`${rs.tix} of ${rs.n} drone${S1(rs.n)} brought back a data chip`:"No data chips this time"}</div><div class="lst" id="mpL" data-sb="10" style="left:20px;top:34px;width:470px;height:${LH}px"><div style="width:462px">${rows}</div></div><div class="dxt c" style="left:14px;top:${40+LH}px;width:488px;height:14px">Your drones rest for 1 hour before they can go out again.</div><button class="dxb ok" data-a="dx_rclose" style="left:180px;top:${60+LH}px;width:150px;height:55px">OK</button>`,"dx_rclose")}
-  return `<div style="position:absolute;left:0;top:0;width:800px;height:480px;transform-origin:401px 235px;transform:scale(1.12)">${h}</div>`}
+  return h}
 const V={exp:vExp,rank:vRank,clans:vClans,chat:vChat,clan:vClan,create:vCreate,flag:vFlag,insp:vInspect,srch:vSearch};
 let mrAF=0;
 function drawMechCanvas(){const c=$("mpM");if(!c||scr!="insp"){mrAF=0;return}const g=c.getContext("2d"),p=find(ST.insp)||me();g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,492,492);
