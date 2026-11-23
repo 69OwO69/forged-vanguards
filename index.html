@@ -5261,7 +5261,7 @@ try{if(!S.gj7){S.gj7=1;addI("t",7,true);save();if(typeof head=="function")setTim
 (function(){const lab=()=>{$("sm").textContent=S.mute?"Off":"On";$("sx").textContent=S.nosfx?"Off":"On";};
  const gear=()=>{const h=$("hangar").classList.contains("hide");$("gear").classList.toggle("hide",h);$("qbtn").classList.toggle("hide",h||document.body.classList.contains("inw")||$("menu").classList.contains("hide")||["camp","prof","arn","quest","store","work"].some(i=>!$(i).classList.contains("hide")))};window._gear=gear;setInterval(gear,300);
 $("qbtn").onclick=()=>{$("qbtn").classList.add("hide");show("quest")};{const qi=$("qbtn").querySelector("img");$("qbtn").onmouseenter=()=>qi.src=qi.dataset.h;$("qbtn").onmouseleave=()=>qi.src=qi.dataset.n}$("quest").onclick=e=>{const b=e.target.closest("button");if(b&&b.dataset.go)show(b.dataset.go)};
- $("gear").onclick=()=>{lab();try{$("bld0").textContent="Build 2026-11-23 b141 · "+Object.keys(CAMPD).filter(k=>k[0]!="_").length+" enemy designs built in"}catch(_){}{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();$("set").onclick=e=>{if(e.target.id=="set")$("set").classList.add("hide")};
+ $("gear").onclick=()=>{lab();try{$("bld0").textContent="Build 2026-11-23 b142 · "+Object.keys(CAMPD).filter(k=>k[0]!="_").length+" enemy designs built in"}catch(_){}{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();$("set").onclick=e=>{if(e.target.id=="set")$("set").classList.add("hide")};
 /* ---------- evolution tree (settings): built from EVO, so every item added to EVO shows up automatically ---------- */
 (function(){
   const CAT={t:"Torso",l:"Legs",w:"Weapon",m:"Module"};let root=null,st=null;
@@ -7181,7 +7181,7 @@ function cvExp(){const X=window.dxApi;if(!X)return"";const d=X.S(),pk=X.pk(),rs=
     const w=W[e.i],rc=RAR(w.cost),p=X.ch(dI,e.i);return `<div class="dxc${rd?" rd":""}" style="--rc:${rc}"${at}><div class="dxa rt rt${tier(w.cost)}">${e.art}</div><div class="dxn" style="color:${rc}">${esc(w.n)}</div><div class="dxp" style="color:${cc(p)}">${p}%</div></div>`}).join("")+`</div>`;
   const dbt=X.DIF.map((x,k)=>`<button class="csb${dI===k?" sel":""}${run?" lk":""}"${run?"":` data-a="dx_dif" data-d="${k}"`} style="--dc:${x.c}"><b>${x.n}</b><span>${x.h} hour${x.h>1?"s":""}</span></button>`).join("");
   const ric=r=>r.k=="cr"?`<img src="${X.COIN}" alt="">`:r.k=="tk"?`<img src="${X.TKI}" alt="">`:r.k=="bx"?`<img src="${X.BOXI}" alt="">`:`<img src="${X.GIFT}" alt="">`;
-  const rlab=r=>r.k=="it"?`<b style="color:${RAR(5000)}">Mythic item</b>`:r.k=="bx"?"Silver Item Box":r.k=="tk"?`${fmt(r.r[0])}-${fmt(r.r[1])} tokens`:`${fmt(r.r[0])}-${fmt(r.r[1])} credits`;
+  const rlab=r=>r.k=="bx"?`${r.r[0]==r.r[1]?r.r[0]+" ":r.r[0]+"-"+r.r[1]+" "}${r.r[1]>1?BOX[r.b].n.replace(/Box$/,"Boxes"):BOX[r.b].n}`:r.k=="tk"?`${fmt(r.r[0])}-${fmt(r.r[1])} tokens`:`${fmt(r.r[0])}-${fmt(r.r[1])} credits`;
   const rt=`<div class="xpn w2"><div class="xph">Reward chances</div><div class="xe1" style="text-align:center">Rolled once for each data chip</div>`+X.rows(dI).map(r=>`<div class="xrr">${ric(r)}<span>${rlab(r)}</span><em>${r.p}%</em></div>`).join("")+`</div>`;
   let rp;
   if(!run){const ps=ent.filter(Boolean).map(e=>X.ch(dI,e.i)),ex=ps.reduce((a,b)=>a+b,0)/100;
@@ -7196,7 +7196,7 @@ function cvExp(){const X=window.dxApi;if(!X)return"";const d=X.S(),pk=X.pk(),rs=
       +`<button class="csb" data-a="dx_pcancel" style="left:${u(1180)};top:${u(640)};width:${u(300)};height:${u(76)};font-size:${u(38)}">Cancel</button>`;
     h+=cfram(1532,854,`<span>Choose a drone for slot ${pk.pi+1}</span>`,body,"dx_pcancel")}
   if(X.cc()&&run&&!rd)h+=cfram(900,430,`<span>Cancel expedition?</span>`,`<div class="xn2" style="left:${u(30)};top:${u(24)};width:${u(808)};text-align:center;font-size:${u(30)}">Your drones come back right away. You get no rewards, and they are not put on the 1 hour cooldown.</div><button class="csb" data-a="dx_cno" style="left:${u(30)};top:${u(200)};width:${u(398)};height:${u(90)}">Keep going</button><button class="csb sgn" data-a="dx_cyes" style="left:${u(440)};top:${u(200)};width:${u(398)};height:${u(90)}">Cancel it</button>`,"dx_cno");
-  if(rs){const K_=window.K||{},rows=rs.list.map(r=>r.k=="cr"?`<div class="xrr"><img src="${X.COIN}" alt=""><span>+${fmt(r.n)} credits</span></div>`:r.k=="tk"?`<div class="xrr"><img src="${X.TKI}" alt=""><span>+${fmt(r.n)} tokens</span></div>`:r.k=="bx"?`<div class="xrr"><img src="${X.BOXI}" alt=""><span>Silver Item Box (in your box inventory)</span></div>`:(it=>`<div class="xrr">${ICO(r.kk,it,r.sh)}<span style="color:${RAR(it.cost)}">${r.sh?"Shiny ":""}${esc(it.n)}</span></div>`)(K[r.kk][r.i])).join("");
+  if(rs){const K_=window.K||{},rows=rs.list.map(r=>r.k=="cr"?`<div class="xrr"><img src="${X.COIN}" alt=""><span>+${fmt(r.n)} credits</span></div>`:r.k=="tk"?`<div class="xrr"><img src="${X.TKI}" alt=""><span>+${fmt(r.n)} tokens</span></div>`:r.k=="bx"?`<div class="xrr"><img src="${X.BOXI}" alt=""><span>${r.n} ${r.n>1?BOX[r.b].n.replace(/Box$/,"Boxes"):BOX[r.b].n} <small style="color:#9fc4e6;font-size:inherit">(in your box inventory)</small></span></div>`:(it=>`<div class="xrr">${ICO(r.kk,it,r.sh)}<span style="color:${RAR(it.cost)}">${r.sh?"Shiny ":""}${esc(it.n)}</span></div>`)(K[r.kk][r.i])).join("");
         const PH=370+66*Math.max(1,rs.list.length);h+=cfram(1000,PH,`<span>Expedition result</span>`,`<div class="xr3"><div class="xrh" style="color:${rs.tix?"#4fd16a":"#ff4a3a"}">${rs.tix?`${rs.tix} of ${rs.n} drone${rs.n>1?"s":""} brought back a data chip`:"No data chips this time"}</div>${rows}<small>Your drones rest for 1 hour before they can go out again.</small></div><button class="csb sgn" data-a="dx_rclose" style="left:${u(334)};top:${u(PH-114-104)};width:${u(300)};height:${u(90)}">OK</button>`,"dx_rclose")}
   return h}
 function cvClans(){let L=sortedClans();if(ST.cq)L=L.filter(c=>c.name.toLowerCase().includes(ST.cq));
@@ -7465,8 +7465,11 @@ const DXI="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJMAAACJCAYAAAAoqAroAAA
 const DX_TEST=true;/* TESTING: expeditions return instantly and drones have no cooldown. Set to false to restore the real 1/4/8 hour trips and the 1 hour rest */
 const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
 /* ticket reward table (waterfall: the first row that hits wins, the last row is the fallback). Amounts scale with the difficulty */
-const RWM=[.25,.5,1],RWB=[{k:"it",p:1},{k:"bx",p:5},{k:"tk",p:14,r:[50,120]},{k:"cr",p:50,r:[20000,50000]},{k:"cr",p:0,r:[5000,15000]}];
-const rwRows=d=>{const rs=RWB.map(x=>x.r?{...x,r:x.k=="cr"?x.r.map(v=>Math.round(v*RWM[d]/50)*50):x.r.map(v=>Math.max(1,Math.round(v*RWM[d])))}:{...x}),sum=rs.reduce((a,x)=>a+x.p,0);rs[rs.length-1].p=100-sum;return rs};
+const RWT=[ /* per difficulty, first hit wins, the last row (p filled in below) is the fallback. k: bx=box (b=index in BOX, r=how many), tk=tokens, cr=credits */
+  [{k:"bx",b:0,p:55,r:[1,1]},{k:"tk",p:8,r:[5,15]},{k:"cr",p:0,r:[1000,3000]}],
+  [{k:"bx",b:2,p:4,r:[1,1]},{k:"bx",b:0,p:46,r:[1,5]},{k:"tk",p:15,r:[15,40]},{k:"cr",p:0,r:[3000,8000]}],
+  [{k:"bx",b:2,p:60,r:[1,2]},{k:"tk",p:20,r:[40,100]},{k:"cr",p:0,r:[8000,20000]}]];
+const rwRows=d=>{const rs=RWT[d].map(x=>({...x,r:[...x.r]}));rs[rs.length-1].p=100-rs.slice(0,-1).reduce((a,x)=>a+x.p,0);return rs};
 const rwRoll=d=>{const rs=rwRows(d);let r=Math.random()*100,a=0;for(const x of rs){if(r<a+x.p)return x;a+=x.p}return rs[rs.length-1]};
 const dxPull=rare=>{const bw=BOX[2].w;let t=4;if(!rare){let r=Math.random()*bw.reduce((q,c)=>q+c,0);for(t=0;t<bw.length-1&&r>=bw[t];t++)r-=bw[t]}
   let pool=[];if(t==5){for(const k in K)K[k].forEach((it,i)=>{if(it&&!it.gone&&it.secret)pool.push([k,i])});if(pool.length)t=5}
@@ -7527,8 +7530,7 @@ function dxAct(a,ds){const d=dxS();
       tix++;const r=rwRoll(p.d);
       if(r.k=="tk"){const n=rnd(r.r[0],r.r[1]);tk+=n;list.push({k:"tk",n})}
       else if(r.k=="cr"){const n=rnd(r.r[0],r.r[1]);cr+=n;list.push({k:"cr",n})}
-      else if(r.k=="bx"){S.bi=S.bi||{};S.bi[2]=(S.bi[2]||0)+1;list.push({k:"bx"})}
-      else{const g=dxPull(true);if(g)list.push(g);else{const n=rnd(5000,15000);cr+=n;list.push({k:"cr",n})}}});
+      else{const n=rnd(r.r[0],r.r[1]);S.bi=S.bi||{};S.bi[r.b]=(S.bi[r.b]||0)+n;list.push({k:"bx",b:r.b,n})}});
     qPay({cr,tk});RS={n:p.dr.length,tix,list,fail};d.pt=null;save()}
   else if(a=="cancel"){if(d.pt&&!nowReady(d.pt))CC=true}
   else if(a=="cno"){CC=false}
