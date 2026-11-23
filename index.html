@@ -1258,10 +1258,16 @@ button,[role=button],.nb,.bkb{touch-action:manipulation;-webkit-user-select:none
 #cmv .xtl img{width:calc(120*var(--cu));height:calc(100*var(--cu));object-fit:contain}
 #cmv .xtl span{font-size:calc(20*var(--cu));line-height:1.1;height:calc(44*var(--cu));overflow:hidden;text-align:center;display:block;width:100%}
 #cmv .xtl{border:0!important;background:none!important;padding:0!important;gap:0!important;justify-content:flex-start!important;height:calc(196*var(--cu))!important}
-#cmv .xta{position:relative;width:calc(150*var(--cu));height:calc(150*var(--cu));flex:none;background:#000}
+#cmv .xta{position:relative;width:calc(150*var(--cu));height:calc(150*var(--cu));flex:none;background:#000 var(--rg0) center/134% 134% no-repeat}
+#cmv .xta.rt1{background-image:var(--rg1)}#cmv .xta.rt2{background-image:var(--rg2)}#cmv .xta.rt3{background-image:var(--rg3)}#cmv .xta.rt4{background-image:var(--rg4)}#cmv .xta.rt5{background-image:var(--rg5)}#cmv .xta{overflow:hidden}
 #cmv .xta::after{content:"";position:absolute;inset:0;background:var(--rb0) 0 0/100% 100% no-repeat;pointer-events:none;z-index:2}
 #cmv .xta.rt1::after{background-image:var(--rb1)}#cmv .xta.rt2::after{background-image:var(--rb2)}#cmv .xta.rt3::after{background-image:var(--rb3)}#cmv .xta.rt4::after{background-image:var(--rb4)}#cmv .xta.rt5::after{background-image:var(--rb5)}
 #cmv .xtl .xta img,#cmv .xtl .xta svg{position:absolute;left:10%;top:10%;width:80%;height:80%;object-fit:contain}
+#cmv .dxa.rt{border:0;position:relative;overflow:hidden;background:#000 var(--rg0) center/134% 134% no-repeat}
+#cmv .dxa.rt::after{content:"";position:absolute;inset:0;background:var(--rb0) 0 0/100% 100% no-repeat;pointer-events:none;z-index:2}
+#cmv .dxa.rt1{background-image:var(--rg1)}#cmv .dxa.rt2{background-image:var(--rg2)}#cmv .dxa.rt3{background-image:var(--rg3)}#cmv .dxa.rt4{background-image:var(--rg4)}#cmv .dxa.rt5{background-image:var(--rg5)}
+#cmv .dxa.rt1::after{background-image:var(--rb1)}#cmv .dxa.rt2::after{background-image:var(--rb2)}#cmv .dxa.rt3::after{background-image:var(--rb3)}#cmv .dxa.rt4::after{background-image:var(--rb4)}#cmv .dxa.rt5::after{background-image:var(--rb5)}
+#cmv .dxa.rt img,#cmv .dxa.rt svg{position:absolute;left:10%;top:10%;width:80%;height:80%;max-width:none;max-height:none;object-fit:contain}
 #cmv .xtl b,#cmv .xtl em{z-index:3}
 #cmv .xtl span{margin-top:calc(4*var(--cu))}
 #cmv .xtl.on{outline:calc(7*var(--cu)) solid #ff9a0a;outline-offset:calc(2*var(--cu))}
@@ -5253,7 +5259,7 @@ try{if(!S.gj7){S.gj7=1;addI("t",7,true);save();if(typeof head=="function")setTim
 (function(){const lab=()=>{$("sm").textContent=S.mute?"Off":"On";$("sx").textContent=S.nosfx?"Off":"On";};
  const gear=()=>{const h=$("hangar").classList.contains("hide");$("gear").classList.toggle("hide",h);$("qbtn").classList.toggle("hide",h||document.body.classList.contains("inw")||$("menu").classList.contains("hide")||["camp","prof","arn","quest","store","work"].some(i=>!$(i).classList.contains("hide")))};window._gear=gear;setInterval(gear,300);
 $("qbtn").onclick=()=>{$("qbtn").classList.add("hide");show("quest")};{const qi=$("qbtn").querySelector("img");$("qbtn").onmouseenter=()=>qi.src=qi.dataset.h;$("qbtn").onmouseleave=()=>qi.src=qi.dataset.n}$("quest").onclick=e=>{const b=e.target.closest("button");if(b&&b.dataset.go)show(b.dataset.go)};
- $("gear").onclick=()=>{lab();try{$("bld0").textContent="Build 2026-11-23 b136 · "+Object.keys(CAMPD).filter(k=>k[0]!="_").length+" enemy designs built in"}catch(_){}{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();$("set").onclick=e=>{if(e.target.id=="set")$("set").classList.add("hide")};
+ $("gear").onclick=()=>{lab();try{$("bld0").textContent="Build 2026-11-23 b137 · "+Object.keys(CAMPD).filter(k=>k[0]!="_").length+" enemy designs built in"}catch(_){}{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();$("set").onclick=e=>{if(e.target.id=="set")$("set").classList.add("hide")};
 /* ---------- evolution tree (settings): built from EVO, so every item added to EVO shows up automatically ---------- */
 (function(){
   const CAT={t:"Torso",l:"Legs",w:"Weapon",m:"Module"};let root=null,st=null;
@@ -7170,7 +7176,7 @@ function cvExp(){const X=window.dxApi;if(!X)return"";const d=X.S(),pk=X.pk(),rs=
   let h=`<div class="rkf"></div>`+LV("back",u(28),u(22),100)+`<div class="rkt" style="top:${u(46)}">Drone Expedition</div><div class="xs" style="top:${u(128)}">${run?"Your party is out. Each drone that made it brings back 1 ticket.":"Send up to 5 drones as one party. Each drone has its own chance to bring back a ticket."}</div>`;
   h+=`<div class="xst">`+ent.map((e,n)=>{const at=run?"":` data-a="dx_add" data-n="${n}"`;
     if(!e)return `<div class="dxc em${run?" off":""}"${at}><div class="dxa">${run?"":"+"}</div><div class="dxn" style="color:#8aa8c4">${run?"":"Add drone"}</div><div class="dxp">&nbsp;</div></div>`;
-    const w=W[e.i],rc=RAR(w.cost),p=X.ch(dI,e.i);return `<div class="dxc${rd?" rd":""}" style="--rc:${rc}"${at}><div class="dxa">${e.art}</div><div class="dxn" style="color:${rc}">${esc(w.n)}</div><div class="dxp" style="color:${cc(p)}">${p}%</div></div>`}).join("")+`</div>`;
+    const w=W[e.i],rc=RAR(w.cost),p=X.ch(dI,e.i);return `<div class="dxc${rd?" rd":""}" style="--rc:${rc}"${at}><div class="dxa rt rt${tier(w.cost)}">${e.art}</div><div class="dxn" style="color:${rc}">${esc(w.n)}</div><div class="dxp" style="color:${cc(p)}">${p}%</div></div>`}).join("")+`</div>`;
   const dbt=X.DIF.map((x,k)=>`<button class="csb${dI===k?" sel":""}${run?" lk":""}"${run?"":` data-a="dx_dif" data-d="${k}"`} style="--dc:${x.c}"><b>${x.n}</b><span>${x.h} hour${x.h>1?"s":""}</span></button>`).join("");
   const ric=r=>r.k=="cr"?`<img src="${X.COIN}" alt="">`:r.k=="tk"?`<img src="${X.TKI}" alt="">`:r.k=="bx"?`<img src="${X.BOXI}" alt="">`:`<img src="${X.GIFT}" alt="">`;
   const rlab=r=>r.k=="it"?`<b style="color:${RAR(5000)}">Mythic item</b>`:r.k=="bx"?"Silver Item Box":r.k=="tk"?`${fmt(r.r[0])}-${fmt(r.r[1])} tokens`:`${fmt(r.r[0])}-${fmt(r.r[1])} credits`;
