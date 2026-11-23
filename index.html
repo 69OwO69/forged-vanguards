@@ -1435,7 +1435,7 @@ button,[role=button],.nb,.bkb{touch-action:manipulation;-webkit-user-select:none
 #cmx .dxb{all:unset;box-sizing:border-box;position:absolute;isolation:isolate;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:15px;font-weight:700;text-shadow:0 2px 3px #000,0 0 3px #000;line-height:1;white-space:nowrap}
 #cmx .dxb.ok{background:var(--dxok) 0 0/100% 100% no-repeat;font-size:15px}#cmx .dxb.ok:hover{background-image:var(--dxokh)}
 #cmx .dxb.dim{opacity:.45;pointer-events:none}
-#cmx .dxd{all:unset;box-sizing:border-box;position:absolute;display:flex;align-items:center;justify-content:space-between;padding:0 24px 0 18px;background:var(--nf0) 0 0/100% 100% no-repeat;color:#fff;font-size:15px;font-weight:700;text-shadow:0 2px 3px #000,0 0 3px #000;cursor:pointer;line-height:1}
+#cmx .dxd{all:unset;box-sizing:border-box;position:absolute;display:flex;align-items:center;justify-content:space-between;padding:0 34px 0 22px;background:var(--nf0) 0 0/100% 100% no-repeat;color:#fff;font-size:15px;font-weight:700;text-shadow:0 2px 3px #000,0 0 3px #000;cursor:pointer;line-height:1}
 #cmx .dxd span{font-size:12px;font-weight:700}
 #cmx .dxd.s0{background-image:var(--nf5)}#cmx .dxd.s1{background-image:var(--nf3)}#cmx .dxd.s2{background-image:var(--nf4)}#cmx .dxd.on{filter:brightness(1.3)}
 #cmx .dxd:hover{filter:brightness(1.15)}#cmx .dxd.on:hover{filter:brightness(1.3)}#cmx .dxd.lk{cursor:default}#cmx .dxd.lk:not(.on){opacity:.5}#cmx .dxd.lk:hover{filter:none}
@@ -1453,7 +1453,7 @@ button,[role=button],.nb,.bkb{touch-action:manipulation;-webkit-user-select:none
 #cmx .dxe{position:absolute;left:calc((100% - var(--a))/2);width:var(--a);top:calc(var(--a) - 18px);z-index:3;text-align:center;font-size:10px;font-weight:700;font-style:normal;color:#fff;text-shadow:0 1px 2px #000,0 0 2px #000;background:rgba(0,0,0,.6);pointer-events:none}
 #cmx .dxs.off{opacity:.45;pointer-events:none}#cmx .dxs.dis{opacity:.5;cursor:default}#cmx .dxs.dis:hover .dxa{filter:none}#cmx .dxs.on .dxa{filter:brightness(1.35)}
 #cmx .dxr{position:absolute;box-sizing:border-box;display:flex;align-items:center;gap:10px;padding:0 14px;color:#fff;font-size:13px;font-weight:700;text-shadow:0 1px 2px #000,0 0 2px #000;border:solid transparent;border-width:6px;border-image:var(--dxrow) 18 fill/6px stretch}
-#cmx .dxbx{position:relative;flex:none;display:flex;align-items:center;justify-content:flex-start;width:68px;height:100%}#cmx .dxbx .sw{width:62%;margin:0 auto}#cmx .dxbx .pile{width:170px;height:92px;transform:scale(.3);transform-origin:0 50%;flex:none}#cmx .dxbx .pile .sw{position:absolute!important}#cmx .dxr:hover .mdl{transform:rotate(-90deg)}
+#cmx .dxbx{position:relative;flex:none;display:flex;align-items:center;justify-content:flex-start;width:68px;height:100%}#cmx .dxbx .sw{width:62%;margin:0 auto}#cmx .dxbx .pile{width:170px;height:92px;transform:translateY(-9px) scale(.27);transform-origin:0 50%;flex:none}#cmx .dxbx .pile .sw{position:absolute!important}#cmx .dxr:hover .mdl{transform:rotate(-90deg)}
 #cmx .dxr>img,#cmx .dxr>svg{width:1.6em;height:1.6em;object-fit:contain;flex:none}#cmx .dxr>span:not(.dxbx){flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}#cmx .dxr em{font-style:normal;color:#fff}
 #cmx .dxq{position:absolute;height:12px;overflow:hidden}
 #cmx .dxq i{position:absolute;inset:0;background:var(--dxqb) 0 0/100% 100% no-repeat}#cmx .dxq i.bg{opacity:.28}
@@ -5298,7 +5298,7 @@ try{if(!S.gj7){S.gj7=1;addI("t",7,true);save();if(typeof head=="function")setTim
 (function(){const lab=()=>{$("sm").textContent=S.mute?"Off":"On";$("sx").textContent=S.nosfx?"Off":"On";};
  const gear=()=>{const h=$("hangar").classList.contains("hide");$("gear").classList.toggle("hide",h);$("qbtn").classList.toggle("hide",h||document.body.classList.contains("inw")||$("menu").classList.contains("hide")||["camp","prof","arn","quest","store","work"].some(i=>!$(i).classList.contains("hide")))};window._gear=gear;setInterval(gear,300);
 $("qbtn").onclick=()=>{$("qbtn").classList.add("hide");show("quest")};{const qi=$("qbtn").querySelector("img");$("qbtn").onmouseenter=()=>qi.src=qi.dataset.h;$("qbtn").onmouseleave=()=>qi.src=qi.dataset.n}$("quest").onclick=e=>{const b=e.target.closest("button");if(b&&b.dataset.go)show(b.dataset.go)};
- $("gear").onclick=()=>{lab();try{$("bld0").textContent="Build 2026-11-23 b149 · "+Object.keys(CAMPD).filter(k=>k[0]!="_").length+" enemy designs built in"}catch(_){}{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();$("set").onclick=e=>{if(e.target.id=="set")$("set").classList.add("hide")};
+ $("gear").onclick=()=>{lab();try{$("bld0").textContent="Build 2026-11-23 b150 · "+Object.keys(CAMPD).filter(k=>k[0]!="_").length+" enemy designs built in"}catch(_){}{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();$("set").onclick=e=>{if(e.target.id=="set")$("set").classList.add("hide")};
 /* ---------- evolution tree (settings): built from EVO, so every item added to EVO shows up automatically ---------- */
 (function(){
   const CAT={t:"Torso",l:"Legs",w:"Weapon",m:"Module"};let root=null,st=null;
@@ -7376,7 +7376,7 @@ function vExp(){const X=window.dxApi;if(!X)return"";
   f+=PN(M,M,lw,lth)+PN(M,2*M+lth,lw,ch-lth-3*M)+PN(rx,M,rw,ch-2*M);
   /* difficulty */
   const gap=8,bh=Math.min(64,Math.floor((lth-24-2*gap)/3));
-  X.DIF.forEach((x,k)=>{f+=`<button class="dxd s${k}${dI===k?" on":""}${run?" lk":""}"${run?"":` data-a="dx_dif" data-d="${k}"`} style="left:${bx}px;top:${M+12+k*(bh+gap)}px;width:${bw}px;height:${bh}px;font-size:${Math.round(bh*.34)}px">${x.n.toUpperCase()}<span style="font-size:${Math.round(bh*.24)}px">${x.h} hour${S1(x.h)}</span></button>`});
+  X.DIF.forEach((x,k)=>{f+=`<button class="dxd s${k}${dI===k?" on":""}${run?" lk":""}"${run?"":` data-a="dx_dif" data-d="${k}"`} style="left:${bx}px;top:${M+12+k*(bh+gap)}px;width:${bw}px;height:${bh}px;font-size:${Math.round(bh*.36)}px">${x.n.toUpperCase()}<span style="font-size:${Math.round(bh*.3)}px;margin-right:6px">${x.h} hour${S1(x.h)}</span></button>`});
   /* party slots */
   const pad=14,sw=Math.floor((rw-2*pad)/5),A=Math.min(112,sw-14),sx=rx+pad;
   ent.forEach((e,n)=>{const x=sx+n*sw,at=run?"":` data-a="dx_add" data-n="${n}"`,st_=`left:${x}px;top:${M+12}px;width:${sw}px;--a:${A}px`;
@@ -7558,7 +7558,7 @@ fit();
 /* ---------- Drone Expedition ---------- */
 (function(){try{
 const $=id=>document.getElementById(id);
-const DIF=[{n:"Easy",c:"#4fd16a",h:1,cr:[400,900],tk:[1,3]},{n:"Medium",c:"#ffb534",h:4,cr:[1500,3500],tk:[4,9]},{n:"Hard",c:"#ff4a3a",h:8,cr:[5000,12000],tk:[10,25]}];
+const DIF=[{n:"Easy",c:"#4fd16a",h:2,cr:[400,900],tk:[1,3]},{n:"Medium",c:"#ffb534",h:4,cr:[1500,3500],tk:[4,9]},{n:"Hard",c:"#ff4a3a",h:8,cr:[5000,12000],tk:[10,25]}];
 /* success chance in % by difficulty (rows) and drone rarity Common..Secret (columns) */
 /* drone type multiplier: physical best, heat medium, energy lowest (at every rarity) */
 const TYM={phys:1,fire:.85,energy:.7},ch=(d,i)=>{const w=W[i];return Math.round(SUC[d][tier(w.cost)]*(TYM[w.ty]||1))};
@@ -7569,8 +7569,8 @@ const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
 /* ticket reward table (waterfall: the first row that hits wins, the last row is the fallback). Amounts scale with the difficulty */
 const RWT=[ /* per difficulty, first hit wins, the last row (p filled in below) is the fallback. k: bx=box (b=index in BOX, r=how many), tk=tokens, cr=credits */
   [{k:"bx",b:0,p:45,r:[1,3]},{k:"bx",b:1,p:10,r:[1,1]},{k:"tk",p:8,r:[5,15]},{k:"cr",p:0,r:[1000,5000]}],
-  [{k:"bx",b:2,p:4,r:[1,1]},{k:"bx",b:0,p:46,r:[1,5]},{k:"tk",p:15,r:[15,40]},{k:"cr",p:0,r:[3000,8000]}],
-  [{k:"bx",b:2,p:60,r:[1,2]},{k:"tk",p:20,r:[40,100]},{k:"cr",p:0,r:[8000,20000]}]];
+  [{k:"bx",b:0,p:38,r:[2,6]},{k:"bx",b:1,p:12,r:[1,1]},{k:"bx",b:2,p:6,r:[1,1]},{k:"tk",p:10,r:[10,30]},{k:"cr",p:0,r:[2000,10000]}],
+  [{k:"bx",b:2,p:45,r:[2,4]},{k:"bx",b:1,p:15,r:[1,2]},{k:"tk",p:15,r:[40,100]},{k:"cr",p:0,r:[10000,25000]}]];
 const rwRows=d=>{const rs=RWT[d].map(x=>({...x,r:[...x.r]}));rs[rs.length-1].p=100-rs.slice(0,-1).reduce((a,x)=>a+x.p,0);return rs};
 const rwRoll=d=>{const rs=rwRows(d);let r=Math.random()*100,a=0;for(const x of rs){if(r<a+x.p)return x;a+=x.p}return rs[rs.length-1]};
 const dxPull=rare=>{const bw=BOX[2].w;let t=4;if(!rare){let r=Math.random()*bw.reduce((q,c)=>q+c,0);for(t=0;t<bw.length-1&&r>=bw[t];t++)r-=bw[t]}
