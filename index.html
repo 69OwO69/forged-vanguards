@@ -5214,7 +5214,7 @@ try{if(!S.gj7){S.gj7=1;addI("t",7,true);save();if(typeof head=="function")setTim
 (function(){const lab=()=>{$("sm").textContent=S.mute?"Off":"On";$("sx").textContent=S.nosfx?"Off":"On";};
  const gear=()=>{const h=$("hangar").classList.contains("hide");$("gear").classList.toggle("hide",h);$("qbtn").classList.toggle("hide",h||document.body.classList.contains("inw")||$("menu").classList.contains("hide")||["camp","prof","arn","quest","store","work"].some(i=>!$(i).classList.contains("hide")))};window._gear=gear;setInterval(gear,300);
 $("qbtn").onclick=()=>{$("qbtn").classList.add("hide");show("quest")};{const qi=$("qbtn").querySelector("img");$("qbtn").onmouseenter=()=>qi.src=qi.dataset.h;$("qbtn").onmouseleave=()=>qi.src=qi.dataset.n}$("quest").onclick=e=>{const b=e.target.closest("button");if(b&&b.dataset.go)show(b.dataset.go)};
- $("gear").onclick=()=>{lab();try{$("bld0").textContent="Build 2026-11-23 b131 · "+Object.keys(CAMPD).filter(k=>k[0]!="_").length+" enemy designs built in"}catch(_){}{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();$("set").onclick=e=>{if(e.target.id=="set")$("set").classList.add("hide")};
+ $("gear").onclick=()=>{lab();try{$("bld0").textContent="Build 2026-11-23 b132 · "+Object.keys(CAMPD).filter(k=>k[0]!="_").length+" enemy designs built in"}catch(_){}{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();$("set").onclick=e=>{if(e.target.id=="set")$("set").classList.add("hide")};
 /* ---------- evolution tree (settings): built from EVO, so every item added to EVO shows up automatically ---------- */
 (function(){
   const CAT={t:"Torso",l:"Legs",w:"Weapon",m:"Module"};let root=null,st=null;
@@ -5622,6 +5622,7 @@ $("ctl").onclick=async e=>{
   if(b.dataset.a=="sur"&&B.egg)return;if(B.turn!="p")return;if(b.dataset.f!=null&&B.cat=="g")B.gF=1;else if(b.dataset.a||b.dataset.f!=null)B.cat=null;/* APK: the weapons list stays open after a shot */
   if(B.busy&&!(B.nb>0&&(b.dataset.a=="l"||b.dataset.a=="r"||b.dataset.f!=null||b.dataset.a=="ch"||b.dataset.a=="cc"||b.dataset.c!=null||b.dataset.a=="go")))return;
   const p=B.p,wk_=B.tpMode=="walk";if(B.tpSel&&b.dataset.a!="tp"&&b.dataset.a!="mv")tpCancel();
+  if(p.did&&B.turn=="p"&&["shd","drone","droneoff","tp","kit","stomp","stompA","gas","ovd","hook","chg","bar","cool"].includes(b.dataset.a))return;/* an action is still waiting to be counted: a shield, drone or kit click here used to reset p.did, so the shot before it never cost an action point */
   if(b.dataset.a=="shd"){B.cat="s";shdToggle(p);return}if(b.dataset.a=="tp"){tpBegin();return}if(b.dataset.a=="mv"){B.cat="m";walkBegin();return}if(b.dataset.a=="tpc"){if(wk_){B.cat="m";controls()}return}
   if(b.dataset.a=="jl"||b.dataset.a=="jr"){if(!move(p,B.e,b.dataset.a=="jl"?-1:1,p.j,true))say("Blocked. Something is in the way.");else say("");controls();autoEnd();return}
   if(b.dataset.a=="l"||b.dataset.a=="r"){
@@ -5952,7 +5953,7 @@ function drawMechGlow(g,x,y,dir,m,hh){
       g.globalAlpha=al;const w=70*sc;g.drawImage(im,x+Math.cos(a)*rx-w/2,cy+sn*ry+Math.sin(a*.5)*10-w/2,w,w)}g.restore()};
   orb(true);drawMech(g,x,y,dir,m,hh);orb(false)}
 function shdAuto(m,mid){if(!m||!m.shdOn||!m.shd||!m.shd[0])return;const s=m.shd[0];const nE=s.e>0&&m.en<=0,hot=!mid&&s.h>0&&m.heat>=m.hc;/* mid = in the middle of a multi-hit volley: a heat shield stays up until the last hit has landed */if(nE||hot){m.shdOn=false;if(m==B.p){toast(nE?"Energy depleted - shield turned off":"Engine overheated - shield turned off");try{playBuf("shdoff",.9)}catch(_){}}}}
-function shdToggle(a){if(!a||!a.shd||!a.shd.length||B.over||B.busy||B.turn!="p")return;const s=a.shd[0];
+function shdToggle(a){if(!a||!a.shd||!a.shd.length||B.over||B.busy||B.turn!="p"||a.did)return;const s=a.shd[0];
   if(!a.shdOn){if(s.e>0&&a.en<=0){toast("No energy - can't activate the shield");return}if(s.h>0&&a.heat>=a.hc){toast("Engine overheated - can't activate the shield");return}a.shdOn=true;say("Shield activated.");try{playBuf("shdon",.9)}catch(_){}controls();endTurn();return}
   else{a.shdOn=false;say("Shield deactivated.");try{playBuf("shdoff",.9)}catch(_){}controls();endTurn();return}controls()}
 SVGI.pull=c=>SVGI.push(c).replace("<svg ",'<svg style="transform:scaleX(-1)" ');
@@ -6006,8 +6007,8 @@ async function summonVolley(a,b){
   B.busy=false;controls();return B.over;
 }
 const SPK=()=>`<i class="spk">`+Array.from({length:9},()=>`<s style="--x:${(Math.random()*100).toFixed(1)}%;--y:${(Math.random()*100).toFixed(1)}%;--w:${(14+Math.random()*26).toFixed(0)}px;--d:${(1.1+Math.random()*1.5).toFixed(2)}s;--dl:${(Math.random()*2.4).toFixed(2)}s"></s>`).join("")+`</i>`;
-async function droneOff(a){if(!a.don||B.over)return;B.busy=true;a.don=false;a.did=true;controls();playBuf("drone",.9);say("Drone recalled.");await anim(650,k=>{a.dp=1-k});a.dp=0;B.busy=false;controls()}
-async function droneOn(a){if(a.don||B.over)return;B.busy=true;a.don=true;a.did=true;controls();playBuf("drone",.9);say("Drone activated!");await anim(650,k=>{a.dp=k});a.dp=1;B.busy=false;controls()}
+async function droneOff(a){if(!a.don||B.over||a.did)return;B.busy=true;a.don=false;a.did=true;controls();playBuf("drone",.9);say("Drone recalled.");await anim(650,k=>{a.dp=1-k});a.dp=0;B.busy=false;controls()}
+async function droneOn(a){if(a.don||B.over||a.did)return;B.busy=true;a.don=true;a.did=true;controls();playBuf("drone",.9);say("Drone activated!");await anim(650,k=>{a.dp=k});a.dp=1;B.busy=false;controls()}
 async function droneTot(act,b){let n0;do{n0=act.n;await sleep(300)}while(act.n!=n0&&!B.over);if(B.act===act){B.act=null;if(act.n>1&&act.sum>0&&!B.over){B.fl.push({x:px(b.vx!=null?b.vx:b.x),y:GY-210,t:"-"+act.sum,l:100,tot:1});try{playBuf("rank",1)}catch(e){}await sleep(500)}}}
 /* knock the foe back (same rules as a gun hit: stops before blockers and never past the attacker) */
 function pushFoe(a,b,pv){const sg=Math.sign(b.x-a.x),amt=pv*sg;let t=Math.max(0,Math.min(MAXT,b.x+amt));if(sg>0&&t<=a.x)t=a.x+1;if(sg<0&&t>=a.x)t=a.x-1;{const dd=Math.sign(t-b.x);if(dd){const bl=[B.p,B.e,...(B.sms||[])].filter(o=>o&&o!==b&&!o.dead&&!o.gone);let q=b.x;while(q!=t){const nx=q+dd;if(bl.some(o=>o.x==nx))break;q=nx}t=q}}if(t!=b.x){const ox0=b.x;DX(b);b.x=t;b.ps={a:b.vx!=null?b.vx:ox0,b:t,t0:performance.now(),dur:Math.min(850,320+55*Math.abs(t-ox0))}}}
