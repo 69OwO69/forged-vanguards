@@ -1224,6 +1224,18 @@ button,[role=button],.nb,.bkb{touch-action:manipulation;-webkit-user-select:none
 #cmv .srk{position:relative;flex:1 1 0;min-width:0;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(4*var(--cu));padding:calc(8*var(--cu));background:#00141f;border:calc(6*var(--cu)) solid #1583c4;border-radius:calc(16*var(--cu))}
 #cmv .srk.mine{border-color:#ff9a0a;box-shadow:0 0 0 calc(4*var(--cu)) rgba(255,154,10,.35)!important}
 #cmv .srk>*{flex:none}#cmv .srk .pzm{height:calc(92*var(--cu));width:auto;max-width:calc(110*var(--cu));object-fit:contain}#cmv .srd>.srg:nth-child(2) .pzm{height:calc(110*var(--cu));max-width:calc(110*var(--cu))}#cmv .srd>.srg:nth-child(2) .srl{flex-wrap:nowrap}
+#cmv .srk.wd{flex-direction:row;gap:calc(14*var(--cu))}
+#cmv .srk>.srm{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(2*var(--cu));min-width:0}
+#cmv .srk.wd>.srm{flex:0 0 34%}#cmv .srk.wd .srt{font-size:calc(34*var(--cu));white-space:nowrap}
+#cmv .srk>.srr{display:flex;flex-direction:column;gap:calc(6*var(--cu));width:100%;min-width:0;flex:none}
+#cmv .srk.wd>.srr{width:auto;flex:1 1 0}
+#cmv .srk .srx{display:flex;align-items:center;gap:calc(10*var(--cu));flex:none;height:calc(52*var(--cu));background:#02101c;border:calc(3*var(--cu)) solid #123f66;border-radius:calc(8*var(--cu));padding:0 calc(14*var(--cu));box-sizing:border-box}
+#cmv .srk .sri{flex:none;width:calc(92*var(--cu));display:flex;align-items:center;justify-content:center;height:100%}
+#cmv .srk .sri>img{height:calc(36*var(--cu));width:auto}
+#cmv .srk .sri .pzb{width:calc(88*var(--cu))}
+#cmv .srk .srx b{flex:1;min-width:0;text-align:right;white-space:nowrap;font-weight:900;font-size:calc(34*var(--cu));text-shadow:calc(2*var(--cu)) calc(3*var(--cu)) 0 #000}
+#cmv .srd .srk:not(.wd) .pzm{height:calc(64*var(--cu))}
+#cmv .srd .srk:not(.wd) .srt{font-size:calc(38*var(--cu))}
 #cmv .srt{color:#fff;font-weight:900;font-size:calc(42*var(--cu));text-shadow:calc(2*var(--cu)) calc(3*var(--cu)) 0 #000}
 #cmv .srl{display:flex;flex-wrap:wrap;justify-content:center;gap:calc(8*var(--cu)) calc(12*var(--cu))}
 #cmv .sry{position:absolute;left:50%;top:calc(-18*var(--cu));bottom:auto;transform:translateX(-50%);white-space:nowrap;background:#ff9a0a;color:#fff;font-style:normal;font-weight:900;font-size:calc(24*var(--cu));padding:calc(2*var(--cu)) calc(14*var(--cu));border-radius:calc(8*var(--cu));text-shadow:calc(1*var(--cu)) calc(2*var(--cu)) 0 #000}
@@ -5298,7 +5310,7 @@ try{if(!S.gj7){S.gj7=1;addI("t",7,true);save();if(typeof head=="function")setTim
 (function(){const lab=()=>{$("sm").textContent=S.mute?"Off":"On";$("sx").textContent=S.nosfx?"Off":"On";};
  const gear=()=>{const h=$("hangar").classList.contains("hide");$("gear").classList.toggle("hide",h);$("qbtn").classList.toggle("hide",h||document.body.classList.contains("inw")||$("menu").classList.contains("hide")||["camp","prof","arn","quest","store","work"].some(i=>!$(i).classList.contains("hide")))};window._gear=gear;setInterval(gear,300);
 $("qbtn").onclick=()=>{$("qbtn").classList.add("hide");show("quest")};{const qi=$("qbtn").querySelector("img");$("qbtn").onmouseenter=()=>qi.src=qi.dataset.h;$("qbtn").onmouseleave=()=>qi.src=qi.dataset.n}$("quest").onclick=e=>{const b=e.target.closest("button");if(b&&b.dataset.go)show(b.dataset.go)};
- $("gear").onclick=()=>{lab();try{$("bld0").textContent="Build 2026-11-25 b163 · "+Object.keys(CAMPD).filter(k=>k[0]!="_").length+" enemy designs built in"}catch(_){}{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();$("set").onclick=e=>{if(e.target.id=="set")$("set").classList.add("hide")};
+ $("gear").onclick=()=>{lab();try{$("bld0").textContent="Build 2026-11-25 b164 · "+Object.keys(CAMPD).filter(k=>k[0]!="_").length+" enemy designs built in"}catch(_){}{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();$("set").onclick=e=>{if(e.target.id=="set")$("set").classList.add("hide")};
 /* ---------- evolution tree (settings): built from EVO, so every item added to EVO shows up automatically ---------- */
 (function(){
   const CAT={t:"Torso",l:"Legs",w:"Weapon",m:"Module"};let root=null,st=null;
@@ -7297,6 +7309,8 @@ const MED=x=>x.n==1?PZI.m1:x.n<=3?PZI.m2:x.n==5?PZI.m3:x.n==10?PZI.m10:PZI.md;
 function pzBox(t){const q=t=="Covert"?CV:CRI,f=({Silver:"brightness(1.35) contrast(1.5) saturate(.25)",Gold:"sepia(1) saturate(4.5) hue-rotate(2deg) brightness(1.05) contrast(1.75)",Covert:"hue-rotate(28deg) saturate(1.9) brightness(1.45) contrast(1.2)"})[t];return `<span class="pzb" style="filter:${f}"><img class="m0" src="${q.b}" alt=""><i class="mpn"><img class="mpl" src="${q.r}" alt=""><img class="mpr" src="${q.l}" alt=""></i><img class="mdl" src="${q.d}" alt=""></span>`}
 function srChips(r){const f=v=>v.toLocaleString(),ch=(ic,tx)=>`<span class="pzc">${ic}<b>${tx}</b></span>`;
   return (r.cr?ch(`<img src="${RES.coin}" alt="">`,f(r.cr)):"")+ch(`<img src="${TKI}" alt="">`,f(r.tk))+(r.bx?ch(pzBox(r.bt||"Silver"),"x"+r.bx):"")}
+function srRows(r){const f=v=>v.toLocaleString(),rw=(ic,tx,c)=>`<div class="srx"><span class="sri">${ic}</span><b style="color:${c}">${tx}</b></div>`;
+  return (r.cr?rw(`<img src="${RES.coin}" alt="">`,f(r.cr),"#f90"):"")+rw(`<img src="${TKI}" alt="">`,f(r.tk),"#f00")+(r.bx?rw(pzBox(r.bt||"Silver"),"X "+r.bx,"#fff"):"")}
 /* where the player stands: clan position (if in a clan) and arena position */
 function srMine(){const cs=sortedClans(),cp=D.clan?cs.findIndex(x=>x.id==D.clan.id)+1:0,ps=[...BOTS,me()].sort((a,b)=>b.ap-a.ap||b.wins-a.wins),pp=ps.findIndex(x=>x.me)+1,ti=(L,p)=>p?L.findIndex(x=>p<=x.n):-1;
   return{c:ti(SRW.c,cp),p:ti(SRW.p,pp),ct:D.clan?`Your clan: ${esc(D.clan.name)} \u00b7 #${cp}`:"You are not in a clan",pt:`Your rank: #${pp}`}}
@@ -7305,7 +7319,7 @@ function srLeft(){const n=new Date(),d=new Date(Date.UTC(n.getUTCFullYear(),n.ge
 function srTm(){return SEASON()}
 setInterval(()=>{const e=$("srtm");if(e)e.innerHTML=srTm()},15000);
 function cvPrize(){const M=srMine(),you='<i class="sry">You are here</i>';
-  const card=g=>(x,i)=>`<div class="srk${M[g]==i?" mine":""}">${M[g]==i?you:""}<img class="pzm" src="${MED(x)}" alt=""><span class="srt">${x.t}</span><div class="srl">${srChips(x)}</div></div>`;
+  const card=g=>(x,i)=>`<div class="srk${g=="c"?" wd":""}${M[g]==i?" mine":""}">${M[g]==i?you:""}<div class="srm"><img class="pzm" src="${MED(x)}" alt=""><span class="srt">${x.t}</span></div><div class="srr">${srRows(x)}</div></div>`;
   return `<div class="pzo"><div class="rkf"></div>${LV("pzX",`calc(100% - ${u(128)})`,u(22),100)}<div class="rkt" style="top:${u(46)}">Season rewards</div><div class="xs" id="srtm" style="top:${u(128)}">${srTm()}</div><div class="srd"><div class="srh">Top clans (every member)<span class="srme">${M.ct}</span></div><div class="srg">${SRW.c.map(card("c")).join("")}</div><div class="srh">Top arena players<span class="srme">${M.pt}</span></div><div class="srg">${SRW.p.map(card("p")).join("")}</div></div></div>`}
 function cvDraw(keep){const act=document.activeElement,ai=act&&act.tagName=="INPUT"&&cv.contains(act)?act.id:null,av=ai?act.value:null,ss=ai?act.selectionStart:0;
   const o0=$("mpO"),so=o0?o0.scrollTop:0;
