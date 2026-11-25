@@ -25,6 +25,8 @@ for(let i=0;i<W.length;i++){const w=W[i];if(!w||w.gone&&!w.bo)continue;if(w.shot
 for(const k in EVO){const [kk,i]=k.split(":");if(!K[kk][i]||!K[kk][EVO[k]])o.ev.push(k)}
 return o});
 R.ms.length?bad('multi-shot range collapses when rounded: '+R.ms.slice(0,8).join(', ')):ok('multi-shot damage ranges survive rounding');
+{const tpf=new Set(((t.match(/const TPF="([^"]*)"/)||[])[1]||'').split(',')),all=[...new Set([...t.replace(/[A-Za-z0-9+\/=]{120,}/g,'B').matchAll(/if\(!S\.(\w+)\)\{S\.\1=1/g)].map(x=>x[1]))],miss=all.filter(f=>!tpf.has(f));
+ miss.length?bad('one-time grant flags missing from TPF (a new test profile would receive them): '+miss.join(', ')):ok('test profile skips all '+all.length+' owner auto-grants')}
 R.ev.length?bad('EVO entries point at missing items: '+R.ev.join(', ')):ok('evolution table valid');
 R.lv.length?wn(R.lv.length+' guns without colour-change mask (e.g. '+R.lv.slice(0,4).join(', ')+')'):ok('all guns have colour-change art');
 for(const [w,h] of [[1280,720],[1366,768],[1440,900],[1600,900],[1920,1080],[2560,1440]]){await p.setViewportSize({width:w,height:h});
