@@ -1028,6 +1028,20 @@ img,canvas,svg{-webkit-user-drag:none}
 #fz .fzsr{grid-column:1/3;grid-row:1;box-sizing:border-box;width:100%;height:clamp(32px,4.4vh,44px);padding:0 12px;border:3px solid #1853a8;border-radius:6px;background:#07162c;box-shadow:inset 0 0 0 2px #0a2d68;color:#fff;font:inherit;font-size:clamp(14px,1.5vw,20px);outline:none;min-width:0}#fz .fzsr:focus{border-color:#ff9e1b}#fz .fzsr::placeholder{color:#7f93b4}
 #fz .fzlvb{border:0;border-radius:0;background:var(--lv1,none) center/100% 100% no-repeat;box-shadow:none;margin-bottom:6px;filter:brightness(1.25) saturate(1.4)}#fz .fzlvb::after{content:"";position:absolute;inset:0;background:var(--lv2,none) center/62% no-repeat;pointer-events:none}#fz .fzlvb:hover{filter:brightness(1.6) saturate(1.8)}
 body:has(#fz:not(.hide)) #gear{display:none!important}
+#fzfx{position:fixed;inset:0;z-index:320;background:rgba(0,0,0,0);transition:background .3s,opacity .35s;display:flex;align-items:center;justify-content:center;font-family:"Chakra Petch",system-ui,sans-serif;font-weight:700;color:#fff;cursor:pointer}#fzfx.on{background:rgba(0,0,0,.93)}
+#fzfx canvas{position:absolute;inset:0;pointer-events:none}
+#fzfx .fxw{position:relative;display:flex;align-items:center;justify-content:center;gap:clamp(24px,5vw,90px);max-width:94vw}
+#fzfx .fxc{display:flex;flex-direction:column;align-items:center;gap:8px}
+#fzfx .fxit{position:relative;width:min(34vh,28vw);aspect-ratio:1;border:3px solid #000;border-radius:10px;background:#000 center/134% 134% no-repeat;box-shadow:0 0 40px #000c;overflow:hidden}
+#fzfx .fxa,#fzfx .fxb{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;transition:opacity .35s}#fzfx .fxb{opacity:0;background:center/134% 134% no-repeat}#fzfx.sw .fxb{opacity:1}#fzfx.sw .fxa{opacity:0}
+#fzfx .fxa img,#fzfx .fxb img{width:82%;height:82%;object-fit:contain}
+#fzfx .fxnm{position:relative;font-size:clamp(18px,2.4vw,34px);text-shadow:0 3px 0 #000;text-align:center;min-height:1.2em;width:100%}#fzfx .fxnm span{transition:opacity .15s}#fzfx .fxnm .fxn2{transition-delay:.15s}
+#fzfx .fxo2{opacity:1}#fzfx .fxn2{opacity:0;position:absolute;left:0;right:0}#fzfx.sw .fxo2{opacity:0}#fzfx.sw .fxn2{opacity:1}
+#fzfx .fxlv{font-size:clamp(16px,1.8vw,26px);text-shadow:0 2px 0 #000}#fzfx .fxlv i,#fzfx .fxlv b{font-style:normal;color:#9fe870}
+#fzfx .fxs{position:relative;min-width:min(34vw,440px);min-height:6em}
+#fzfx .fxst{width:100%;transition:opacity .35s}#fzfx .fxst.fxn2{position:absolute;left:0;top:0;opacity:0}#fzfx.sw .fxst.fxn2{opacity:1}#fzfx.sw .fxst.fxo2{opacity:0}
+#fzfx .fxr{display:flex;justify-content:space-between;align-items:center;gap:18px;font-size:clamp(15px,1.7vw,24px);padding:4px 0;text-shadow:0 2px 0 #000}#fzfx .fxl{display:flex;align-items:center;gap:.45em;min-width:0}#fzfx .fxn2 b{color:#9fe870}
+
 #boxes .shsec{grid-column:1/-1;display:flex;align-items:center;gap:12px;margin:6px 0 0;font:700 clamp(14px,1.5vw,20px) "Chakra Petch",system-ui,sans-serif;letter-spacing:1px;text-transform:uppercase;color:#fff}#boxes .shsec::after{content:"";flex:1;height:3px;background:#1853a8}
 #boxes .kitrow.kall{max-height:none;overflow:visible;grid-template-columns:repeat(4,minmax(0,1fr))}
 #fz,#fz .fzc{background:#000!important}#fz .fzc{border:4px solid #2b2b2b}
@@ -3017,26 +3031,59 @@ function fzKit(id){if(!FZ||FZ.k==null||FZ.k=="m")return;const cp=copyOf(FZ.k,FZ.
     return askBuy(old||cp.kit?`<div>Remove <i>${old?old.n:"the colour kit"}</i> from <i>${it.n}</i>? The paint remover is used up and the item goes back to its level colour.</div>`:`<div>Strip the level colour from <i>${it.n}</i>? This is <i>permanent</i>: the level colour can never come back (a Max Black kit can paint it black again).</div>`,()=>{const c2=copyOf(FZ.k,FZ.i,FZ.u);if(!c2||!(S.ck[id]>0))return;if(c2.kit)delete c2.kit;else if(!c2.bare&&lvColId(lvOfP(RI(FZ.k,FZ.i),c2.x)))c2.bare=1;else return;S.ck[id]--;save();playBuf("equip",.5);toast("Paint removed from "+it.n);fzRender()})}
   if(cp.kit)return;
   askBuy(`<div>Apply <i>${ck.n}</i> to <i>${it.n}</i>? The kit is used up and the colour is permanent.</div>`,()=>{const c2=copyOf(FZ.k,FZ.i,FZ.u);if(!c2||c2.s||c2.kit||!(S.ck[id]>0))return;S.ck[id]--;c2.kit=id;save();playBuf("equip",.5);toast(ck.n+" applied to "+it.n);fzRender()})}
+/* upgrade / evolve cinematic: the screen dims, the item sits still at its before state while yellow lightning builds, a white flash turns it green and the item and stats switch to the new state */
+function fzCine(o){
+  const T_FL=1300,T_END=2500,B=o.before,A=o.after,el=document.createElement("div");el.id="fzfx";
+  const vals=(a,b)=>a.rows.map(x=>{const y=b&&b.rows.find(z=>z[0]===x[0]);const bad=y&&/resist/i.test(x[0])&&parseFloat(x[1])<parseFloat(y[1]),up=y&&String(y[1])!==String(x[1]);return `<div class="fxr"><span class="fxl">${x[2]?`<i class="fzi">${x[2]}</i>`:""}${x[0]}</span><b${bad?' style="color:#ff4a4a"':up||!b?"":' style="color:#fff"'}>${x[1]}</b></div>`}).join("");
+  const art=a=>ICO(a.k,K[a.k][a.i],a.sh,a.lv,a.kit),rg=a=>`var(--rg${Math.min(5,RI(a.k,a.i))})`;
+  el.innerHTML=`<canvas></canvas><div class="fxw"><div class="fxc"><div class="fxit" style="background-image:${rg(B)}"><span class="fxa">${art(B)}</span><span class="fxb" style="background-image:${rg(A)}">${art(A)}</span></div><div class="fxnm"><span class="fxo2">${K[B.k][B.i].n}</span><span class="fxn2">${K[A.k][A.i].n}</span></div><div class="fxlv">${o.label}</div></div><div class="fxs"><div class="fxst fxo2">${vals(B)}</div><div class="fxst fxn2">${vals(A,B)}</div></div></div>`;
+  document.body.appendChild(el);
+  const cv=el.querySelector("canvas"),g=cv.getContext("2d"),dpr=Math.min(devicePixelRatio||1,1.5);let W=0,H=0;
+  const rs=()=>{W=innerWidth;H=innerHeight;cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);cv.style.width=W+"px";cv.style.height=H+"px";g.setTransform(dpr,0,0,dpr,0,0)};rs();addEventListener("resize",rs);
+  const Y=[255,214,0],G=[40,255,70],bolts=Array.from({length:22},(_,n)=>({a:n/22*Math.PI*2+Math.random()*.25,w:Math.random()<.3?1.7:1,ttl:0,p:null}));
+  const gen=(b,cx,cy,L)=>{const n=10,pts=[[cx,cy]],ca=Math.cos(b.a),sa=Math.sin(b.a);let off=0;for(let k=1;k<=n;k++){const d=L*k/n;off+=(Math.random()-.5)*L*.07;pts.push([cx+ca*d-sa*off,cy+sa*d+ca*off])}b.p=pts;b.ttl=1+Math.floor(Math.random()*3)};
+  let t0=0,fl=0,done=0,sk=0,rf=0,resF,resE;const pF=new Promise(r=>resF=r),pE=new Promise(r=>resE=r);
+  const fin=()=>{if(done)return;done=1;cancelAnimationFrame(rf);el.classList.remove("on");setTimeout(()=>{removeEventListener("resize",rs);el.remove();resE()},380)};
+  const frame=now=>{if(!t0)t0=now;let t=now-t0;if(sk&&fl&&t<T_END-350)t=T_END-350,t0=now-t;
+    if(!fl&&t>=T_FL){fl=now;el.classList.add("sw");try{playBuf("shine",.9)}catch(e){}resF()}
+    const c=el.querySelector(".fxit").getBoundingClientRect(),cx=c.left+c.width/2,cy=c.top+c.height/2,L=Math.hypot(W,H)*.75,post=t>=T_FL,col=post?G:Y;
+    const ramp=!post?.3+.7*Math.min(1,t/T_FL):Math.max(0,1-(t-T_FL)/(T_END-T_FL))*.9+.1,fade=t>T_END-350?Math.max(0,(T_END-t)/350):1;
+    g.clearRect(0,0,W,H);g.globalCompositeOperation="lighter";
+    const gr=g.createRadialGradient(cx,cy,0,cx,cy,Math.max(W,H)*.6),rc=`${col[0]},${col[1]},${col[2]}`;gr.addColorStop(0,`rgba(${rc},${.85*ramp*fade})`);gr.addColorStop(.4,`rgba(${rc},${.32*ramp*fade})`);gr.addColorStop(1,`rgba(${rc},0)`);g.fillStyle=gr;g.fillRect(0,0,W,H);
+    g.lineCap="round";g.lineJoin="round";
+    for(const b of bolts){if(--b.ttl<=0||!b.p)gen(b,cx,cy,L*(.55+.45*Math.random()));const a=ramp*fade*(.6+.4*Math.random());
+      for(const [wd,al,cl] of [[38,.12,rc],[16,.34,rc],[5.5,.95,"255,255,255"]]){g.strokeStyle=`rgba(${cl},${al*a})`;g.lineWidth=wd*(b.w>1?1.5:1)*(H/900);g.beginPath();b.p.forEach((q,n)=>n?g.lineTo(q[0],q[1]):g.moveTo(q[0],q[1]));g.stroke()}}
+    if(fl){const f=Math.max(0,1-(now-fl)/380);if(f>0){g.globalCompositeOperation="source-over";g.fillStyle=`rgba(255,255,255,${.9*f})`;g.fillRect(0,0,W,H)}}
+    if(t>=T_END){fin();return}rf=requestAnimationFrame(frame)};
+  el.onclick=()=>{sk=1};
+  requestAnimationFrame(()=>{el.classList.add("on");try{playBuf("scifi",.6,.9)}catch(e){}rf=requestAnimationFrame(frame)});
+  return {flash:pF,end:pE}}
+const fzRows=(k,i,lv,sh)=>fzStats(k,i,lv,sh).map(x=>[x[0],x[1],x[2]]);
 async function fzDo(){
   if(FZ.busy)return;
-  if(mkUp()){const fk=FZ.k,ids=Object.keys(FZ.ix).map(Number).filter(u=>fzOK(fk,FZ.i,u));if(ids.length!=evNeed())return;const i=FZ.i,ou=FZ.u,osh=!!(copyOf(fk,i,ou)||{}).s;
+  if(mkUp()){const fk=FZ.k,ids=Object.keys(FZ.ix).map(Number).filter(u=>fzOK(fk,FZ.i,u));if(ids.length!=evNeed())return;const i=FZ.i,ou=FZ.u,cp0=copyOf(fk,i,ou),osh=!!(cp0||{}).s,ni=evoN(fk,i),nsh=osh||(canSh(fk,ni)&&Math.random()<SHP),r0=RI(fk,i);
+    FZ.busy=1;const cin=fzCine({before:{k:fk,i,sh:osh,lv:lvOfP(r0,cp0.x),kit:kv(cp0),rows:fzRows(fk,i,CAPL[r0],osh)},after:{k:fk,i:ni,sh:nsh,lv:1,kit:null,rows:fzRows(fk,ni,1,nsh)},label:'Evolving <b>level reset</b>'});
+    await cin.flash;
     S.xs[fk][i]=XS(fk,i).filter(c=>c.u!==ou&&!ids.includes(c.u));
     if(!S.xs[fk][i].length){S.own[fk]=S.own[fk].filter(x=>x!==i);delete S.xs[fk][i]}
-    const ni=evoN(fk,i),nc={u:++S.uid,x:0};if(osh||canSh(fk,ni)&&Math.random()<SHP)nc.s=1;
+    const nc={u:++S.uid,x:0};if(nsh)nc.s=1;
     if(S.own[fk].includes(ni))XS(fk,ni).push(nc);else{S.own[fk].push(ni);S.xs[fk][ni]=[nc]}
     const q=S.sel;if(fk=="w"){for(let n=0;n<9;n++)if(q.wu&&q.wu[n]===ou){q.w[n]=ni;q.wu[n]=nc.u}}else if(fk=="t"&&q.t===i&&q.tu===ou){q.t=ni;q.tu=nc.u}
     (S.loads||[]).forEach(l=>{if(!l)return;if(fk=="w"){if(l.w)l.w=l.w.map(x=>x===i&&!S.own.w.includes(i)?ni:x)}else if(l.t===i&&!S.own.t.includes(i))l.t=ni});
     toast(K[fk][i].n+" → "+K[fk][ni].n+"! Level reset"+(nc.s?" (SHINY)":""));try{playBuf("money",.5)}catch(e){}
-    FZ.k=null;FZ.u=null;FZ.ix={};save();work();fzRender();return}{const {k,i,u}=FZ,cp=copyOf(k,i,u);if(cp){const r=RI(k,i);let g=0;for(const kk in K)S.own[kk].forEach(ii=>XS(kk,ii).forEach(c=>{if(FZ.ix[c.u]&&fzOK(kk,ii,c.u))g+=fzY(kk,ii,c.u)}));
-    const x0=cp.x,x1=Math.min(MAXP[r],x0+g),la=lvOfP(r,x0),lb=lvOfP(r,x1);
-    if(g>0&&x1>x0&&$("fzbi")){FZ.busy=1;const fr=$("fzr");if(fr)fr.style.pointerEvents="none";const go=document.querySelector("[data-fgo]");if(go)go.disabled=true;await fzRunAnim(x0,x1,r);FZ.busy=0}}}
+    FZ.k=null;FZ.u=null;FZ.ix={};save();work();fzRender();await cin.end;FZ.busy=0;return}
   const {k,i,u}=FZ,cp=copyOf(k,i,u);if(!cp)return;const r=RI(k,i);let gain=0;
+  for(const kk in K)S.own[kk].forEach(ii=>XS(kk,ii).forEach(c=>{if(FZ.ix[c.u]&&fzOK(kk,ii,c.u))gain+=fzY(kk,ii,c.u)}));
+  if(gain<=0)return;
+  const x0=cp.x,x1=Math.min(MAXP[r],x0+gain),la=lvOfP(r,x0),lb=lvOfP(r,x1);if(x1<=x0)return;
+  FZ.busy=1;const cin=fzCine({before:{k,i,sh:!!cp.s,lv:la,kit:kv(cp),rows:fzRows(k,i,la,cp.s)},after:{k,i,sh:!!cp.s,lv:lb,kit:kv(cp),rows:fzRows(k,i,lb,cp.s)},label:lb>la?`Level ${la} <i>&rarr;</i> <b>${lb}</b>`:`<b>+${(x1-x0).toLocaleString()}</b> power`});
+  await cin.flash;
   for(const kk in K)S.own[kk].slice().forEach(ii=>{const a=XS(kk,ii),rm=a.filter(c=>FZ.ix[c.u]&&fzOK(kk,ii,c.u));if(!rm.length)return;
-    rm.forEach(c=>{gain+=fzY(kk,ii,c.u)});S.xs[kk][ii]=a.filter(c=>!rm.includes(c));
+    S.xs[kk][ii]=a.filter(c=>!rm.includes(c));
     if(!S.xs[kk][ii].length){S.own[kk]=S.own[kk].filter(x=>x!==ii);delete S.xs[kk][ii];(S.loads||[]).forEach(l=>{if(!l)return;if(kk=="w")l.w=l.w.map(x=>x===ii?null:x);else if(l[kk]===ii)l[kk]=null})}});
-  if(gain<=0)return;const l0=lvOfP(r,cp.x);cp.x=Math.min(MAXP[r],cp.x+gain);const l1=lvOfP(r,cp.x);if(l1>l0)msAdd("lv",l1-l0);
-  toast(K[k][i].n+": +"+gain.toLocaleString()+" power"+(l1>l0?" (level "+l0+" → "+l1+")":""));try{playBuf("money",.5)}catch(e){}
-  FZ.ix={};save();work();fzRender()}
+  cp.x=x1;if(lb>la)msAdd("lv",lb-la);
+  toast(K[k][i].n+": +"+gain.toLocaleString()+" power"+(lb>la?" (level "+la+" → "+lb+")":""));try{playBuf("money",.5)}catch(e){}
+  FZ.ix={};save();work();fzRender();await cin.end;FZ.busy=0}
 const IUC={};const IUR=u=>{if(!u||u.slice(0,5)!=="data:")return u;let r=IUC[u];if(r)return r;try{const i=u.indexOf(","),m=u.slice(5,u.indexOf(";")),b=atob(u.slice(i+1)),a=new Uint8Array(b.length);for(let n=0;n<b.length;n++)a[n]=b.charCodeAt(n);r=IUC[u]=URL.createObjectURL(new Blob([a],{type:m}))}catch(e){r=u}return r};
 const PMC=new WeakMap();
 /* Shotguns with a pump piece: the base art has no pump, so the inventory picture is the art with the pump put back at its rest position. */
@@ -5350,7 +5397,7 @@ try{if(!S.gj7){S.gj7=1;addI("t",7,true);save();if(typeof head=="function")setTim
 (function(){const lab=()=>{$("sm").textContent=S.mute?"Off":"On";$("sx").textContent=S.nosfx?"Off":"On";};
  const gear=()=>{const h=$("hangar").classList.contains("hide");$("gear").classList.toggle("hide",h);$("qbtn").classList.toggle("hide",h||document.body.classList.contains("inw")||$("menu").classList.contains("hide")||["camp","prof","arn","quest","store","work"].some(i=>!$(i).classList.contains("hide")))};window._gear=gear;setInterval(gear,300);
 $("qbtn").onclick=()=>{$("qbtn").classList.add("hide");show("quest")};{const qi=$("qbtn").querySelector("img");$("qbtn").onmouseenter=()=>qi.src=qi.dataset.h;$("qbtn").onmouseleave=()=>qi.src=qi.dataset.n}$("quest").onclick=e=>{const b=e.target.closest("button");if(b&&b.dataset.go)show(b.dataset.go)};
- $("gear").onclick=()=>{lab();try{$("bld0").textContent="Build 2026-11-25 b179 · "+Object.keys(CAMPD).filter(k=>k[0]!="_").length+" enemy designs built in"}catch(_){}{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();$("set").onclick=e=>{if(e.target.id=="set")$("set").classList.add("hide")};
+ $("gear").onclick=()=>{lab();try{$("bld0").textContent="Build 2026-11-25 b180 · "+Object.keys(CAMPD).filter(k=>k[0]!="_").length+" enemy designs built in"}catch(_){}{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();$("set").onclick=e=>{if(e.target.id=="set")$("set").classList.add("hide")};
 /* ---------- evolution tree (settings): built from EVO, so every item added to EVO shows up automatically ---------- */
 (function(){
   const CAT={t:"Torso",l:"Legs",w:"Weapon",m:"Module"};let root=null,st=null;
