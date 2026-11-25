@@ -5350,7 +5350,7 @@ try{if(!S.gj7){S.gj7=1;addI("t",7,true);save();if(typeof head=="function")setTim
 (function(){const lab=()=>{$("sm").textContent=S.mute?"Off":"On";$("sx").textContent=S.nosfx?"Off":"On";};
  const gear=()=>{const h=$("hangar").classList.contains("hide");$("gear").classList.toggle("hide",h);$("qbtn").classList.toggle("hide",h||document.body.classList.contains("inw")||$("menu").classList.contains("hide")||["camp","prof","arn","quest","store","work"].some(i=>!$(i).classList.contains("hide")))};window._gear=gear;setInterval(gear,300);
 $("qbtn").onclick=()=>{$("qbtn").classList.add("hide");show("quest")};{const qi=$("qbtn").querySelector("img");$("qbtn").onmouseenter=()=>qi.src=qi.dataset.h;$("qbtn").onmouseleave=()=>qi.src=qi.dataset.n}$("quest").onclick=e=>{const b=e.target.closest("button");if(b&&b.dataset.go)show(b.dataset.go)};
- $("gear").onclick=()=>{lab();try{$("bld0").textContent="Build 2026-11-25 b177 · "+Object.keys(CAMPD).filter(k=>k[0]!="_").length+" enemy designs built in"}catch(_){}{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();$("set").onclick=e=>{if(e.target.id=="set")$("set").classList.add("hide")};
+ $("gear").onclick=()=>{lab();try{$("bld0").textContent="Build 2026-11-25 b178 · "+Object.keys(CAMPD).filter(k=>k[0]!="_").length+" enemy designs built in"}catch(_){}{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();$("set").onclick=e=>{if(e.target.id=="set")$("set").classList.add("hide")};
 /* ---------- evolution tree (settings): built from EVO, so every item added to EVO shows up automatically ---------- */
 (function(){
   const CAT={t:"Torso",l:"Legs",w:"Weapon",m:"Module"};let root=null,st=null;
@@ -5784,7 +5784,7 @@ function consumeKit(kk){try{const i=kk.i,u=kk.u;if(u==null||!S.xs.m||!S.xs.m[i])
 async function kitUse(p,j){const kk=p.kits&&p.kits[j];if(!kk||kk.used||B.busy||B.over||B.turn!="p"||p_did())return;const m=M[kk.i],ef=kitEff(p,m);if(!ef.ok)return;
   B.busy=true;p.did=true;kk.used=1;consumeKit(kk);const x=px(p.vx!=null?p.vx:p.x),a=ef.amt;let say_="";
   switch(m.kc){
-    case"hp":p.hp+=a;B.fl.push({x,y:GY-170,t:"+"+a,l:70});say_="Repair kit used: +"+a+" hit points.";break;
+    case"hp":p.hp+=a;B.fl.push({x,y:GY-170,t:"+"+a,c:"green",l:70});say_="Repair kit used: +"+a+" hit points.";break;
     case"en":p.en+=a;B.fl.push({x,y:GY-170,t:"+"+a,c:"blue",l:70});say_="Energy kit used: +"+a+" energy.";break;
     case"ht":p.heat-=a;B.fl.push({x,y:GY-170,t:"-"+a,c:"orange",l:70});say_="Cooling kit used: -"+a+" heat.";break;
     case"am":p.am=(p.am||0)+a;B.fl.push({x,y:GY-170,t:"+"+a,c:"yellow",l:70});say_="Bullets kit used: +"+a+" bullets.";break;
@@ -6658,7 +6658,7 @@ async function t3P2(b,e,fx){
   finally{e.t3=1;e.t3s=0;e.tlFx=null;try{hudUpdate()}catch(_){}}
   if(ov){ov.classList.remove("on");await sleep(500);ov.remove()}
   if(!alive())return;
-  if(fx.healPct){const h=Math.min(Math.round(e.max*fx.healPct/100),Math.max(0,e.max-e.hp));e.hp+=h;try{B.fl.push({x:px(e.vx!=null?e.vx:e.x),y:GY-170,t:"+"+h,l:90})}catch(_){}try{playBuf("shdon",.8,1.3)}catch(_){}try{hudUpdate()}catch(_){}b.shake=Math.max(b.shake||0,4);await sleep(900)}
+  if(fx.healPct){const h=Math.min(Math.round(e.max*fx.healPct/100),Math.max(0,e.max-e.hp));e.hp+=h;try{B.fl.push({x:px(e.vx!=null?e.vx:e.x),y:GY-170,t:"+"+h,c:"green",l:90})}catch(_){}try{playBuf("shdon",.8,1.3)}catch(_){}try{hudUpdate()}catch(_){}b.shake=Math.max(b.shake||0,4);await sleep(900)}
   if(alive()){await bossVox(fx.v2);if(alive())bossMusic(b,fx.m2)}
   b.busy=busy0;try{controls()}catch(_){}}
 async function phaseCheck(){const b=B,e=b&&b.e,fx=e&&e.fx&&BOSSFX[e.fx];if(e&&e.fx=="overlord")return ovP2();if(!fx||(!fx.res&&!fx.t3)||e.phDone||e.dead||b.over||!(e.hp>0)||e.hp>e.max*(fx.at||50)/100)return;
@@ -6672,7 +6672,7 @@ async function phaseCheck(){const b=B,e=b&&b.e,fx=e&&e.fx&&BOSSFX[e.fx];if(e&&e.
   for(let i=0;i<ks.length&&alive();i++){const k=ks[i],c=ov.querySelector('[data-k="'+k+'"]'),n=c.querySelector("b"),from=Math.round(e.rs[k]||0),to=from+fx.res[k];
     c.classList.add("on");playBuf("foot",1,.92+i*.05);playBuf("foot",.8,.8+i*.04);
     e.rs[k]=to;n.textContent=to;try{hudUpdate()}catch(_){}b.shake=Math.max(b.shake||0,6);await sleep(800)}
-  if(fx.healPct&&alive()){const h=Math.min(Math.round(e.max*fx.healPct/100),Math.max(0,e.max-e.hp));e.hp+=h;try{B.fl.push({x:px(e.vx!=null?e.vx:e.x),y:GY-170,t:"+"+h,l:90})}catch(_){}try{playBuf("shdon",.8,1.3)}catch(_){}try{hudUpdate()}catch(_){}b.shake=Math.max(b.shake||0,4);await sleep(900)}
+  if(fx.healPct&&alive()){const h=Math.min(Math.round(e.max*fx.healPct/100),Math.max(0,e.max-e.hp));e.hp+=h;try{B.fl.push({x:px(e.vx!=null?e.vx:e.x),y:GY-170,t:"+"+h,c:"green",l:90})}catch(_){}try{playBuf("shdon",.8,1.3)}catch(_){}try{hudUpdate()}catch(_){}b.shake=Math.max(b.shake||0,4);await sleep(900)}
   await sleep(700);ov.classList.remove("on");await sleep(450);b.pcam=0;await sleep(900);ov.remove();
   if(alive()){await bossVox(fx.v2);if(alive())bossMusic(b,fx.m2)}
   b.busy=busy0;try{controls()}catch(_){}}
