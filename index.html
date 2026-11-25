@@ -5367,7 +5367,7 @@ try{if(!S.gj7){S.gj7=1;addI("t",7,true);save();if(typeof head=="function")setTim
 (function(){const lab=()=>{$("sm").textContent=S.mute?"Off":"On";$("sx").textContent=S.nosfx?"Off":"On";};
  const gear=()=>{const h=$("hangar").classList.contains("hide");$("gear").classList.toggle("hide",h);$("qbtn").classList.toggle("hide",h||document.body.classList.contains("inw")||$("menu").classList.contains("hide")||["camp","prof","arn","quest","store","work"].some(i=>!$(i).classList.contains("hide")))};window._gear=gear;setInterval(gear,300);
 $("qbtn").onclick=()=>{$("qbtn").classList.add("hide");show("quest")};{const qi=$("qbtn").querySelector("img");$("qbtn").onmouseenter=()=>qi.src=qi.dataset.h;$("qbtn").onmouseleave=()=>qi.src=qi.dataset.n}$("quest").onclick=e=>{const b=e.target.closest("button");if(b&&b.dataset.go)show(b.dataset.go)};
- $("gear").onclick=()=>{lab();try{$("bld0").textContent="Build 2026-11-25 b187 · "+Object.keys(CAMPD).filter(k=>k[0]!="_").length+" enemy designs built in"}catch(_){}{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();$("set").onclick=e=>{if(e.target.id=="set")$("set").classList.add("hide")};
+ $("gear").onclick=()=>{lab();try{$("bld0").textContent="Build 2026-11-25 b188 · "+Object.keys(CAMPD).filter(k=>k[0]!="_").length+" enemy designs built in"}catch(_){}{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();$("set").onclick=e=>{if(e.target.id=="set")$("set").classList.add("hide")};
 /* ---------- evolution tree (settings): built from EVO, so every item added to EVO shows up automatically ---------- */
 (function(){
   const CAT={t:"Torso",l:"Legs",w:"Weapon",m:"Module"};let root=null,st=null;
@@ -6811,6 +6811,8 @@ function aiReach(m,ox,s,j){const r=new Set([m.x]);const add=(dir,n)=>{let t=Math
   return ev({used:e.used.map((u,i)=>u?i:-1).filter(i=>i>=0),x:e.x,fx:p.x,fhp:p.hp,en:e.en,heat:e.heat,am:e.am||0,ra:e.ra||0,ov:e.ovT||0,dn:!!e.don,ovU:!!e.ovUsed,stU:!!e.stUsed,gsU:!!e.gsUsed},1+tlAfter).a}
 /* ---------- APK enemy AI (BMComputerManager.executeTurn), ported action-for-action ----------
    Priority each step (first match wins): drone off / drone on -> fire (adjacent: a random in-range gun; otherwise the best-scoring gun, score = avg damage + 2*(heat+energy dmg) + 10*resist) -> reposition (jump right, walk right only when backing off, jump left, walk left only when backing off, up to 20 hops ahead, until the desired gun is in range) -> approach the player. Ends the turn (pass) when nothing is left. */
+/* hooks and charges are gap-closers: the bot only reaches for them when none of its guns can fire from where it stands (it used to hook or charge at random even with every gun in range) */
+function aiCanFire(e,p){const d=Math.abs(e.x-p.x);return e.weps.some((w,i)=>!w.drone&&!w.heal&&!w.gone&&!w.hook&&!w.chrg&&!(w.uses&&((e.wuse&&e.wuse[i])||0)>=w.uses)&&!(e.used&&e.used[i])&&e.en>=w.en&&(e.am||0)>=(w.am||0)&&(e.ra||0)>=(w.ra||0)&&e.heat+(w.ht||0)<=e.hc&&d>=w.min&&d<=w.max)}
 function aiApk(e,p){
   const W=e.weps,x=e.x,px_=p.x,d=Math.abs(x-px_),J=e.j||0,Sw=e.s||0,R={en:e.en,am:e.am||0,ra:e.ra||0};
   const spent=w=>{const i=W.indexOf(w);return !!(w.uses&&!w.hook&&!w.chrg&&((e.wuse&&e.wuse[i])||0)>=w.uses)},/* a gun with limited uses per battle that is used up can never fire again: the bot must not pick it (it would silently skip its turn) */gunOK=w=>!w.drone&&!w.heal&&!w.gone&&!spent(w),afford=w=>e.en>=w.en&&(e.am||0)>=(w.am||0)&&(e.ra||0)>=(w.ra||0),inR=(w,dd)=>dd>=w.min&&dd<=w.max,heatOK=w=>e.heat+(w.ht||0)<=e.hc;
@@ -6864,8 +6866,8 @@ async function ai(){
     for(let n=0;n<1&&!B.over;n++){
       await sleep(330+Math.random()*660);if(B.over||e.dead||e.hp<=0||p.dead)break;
       /* chargeFire/hookFire refuse to run while B.busy (set at the top of ai), which silently ate the whole enemy turn: release it first, and if nothing happened fall through to the normal action */
-      if(e.chI!=null&&chOK(e,p)&&Math.random()<.5){const u0=e.chUsed||0;B.busy=false;await chargeFire(e);B.busy=true;if((e.chUsed||0)>u0)continue}
-      if(e.hkI!=null&&hkOK(e,p)&&Math.random()<.6){const u0=e.hkUsed||0;B.busy=false;await hookFire(e);B.busy=true;if((e.hkUsed||0)>u0)continue}
+      if(e.chI!=null&&!aiCanFire(e,p)&&chOK(e,p)&&Math.random()<.5){const u0=e.chUsed||0;B.busy=false;await chargeFire(e);B.busy=true;if((e.chUsed||0)>u0)continue}
+      if(e.hkI!=null&&!aiCanFire(e,p)&&hkOK(e,p)&&Math.random()<.6){const u0=e.hkUsed||0;B.busy=false;await hookFire(e);B.busy=true;if((e.hkUsed||0)>u0)continue}
       let act=null;try{act=aiApk(e,p)}catch(err){try{console.error(err)}catch(_){}}
       if(!act){try{act=aiPlan(e,p)}catch(err){}}if(!act)act=aiSimple(e,p);
       const sig0=()=>[e.x,e.en,e.heat,p.hp,e.hp,(e.used||[]).filter(Boolean).length,e.stUsed?1:0,e.magUsed||0,e.did?1:0,e.don?1:0,e.shdOn?1:0,e.tpUsed||0,e.am,e.ra,B.nb||0].join(),s0=sig0();
