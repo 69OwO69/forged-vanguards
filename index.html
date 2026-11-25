@@ -2830,17 +2830,11 @@ function eqFx(o,n){try{
     if(df>10){const t=x<sp?lg:rg;for(let z=0;z<4;z++)t.data[q+z]=da.data[q+z];if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y}}
   if(x1<0){return}
   L.getContext("2d").putImageData(lg,0,0);R.getContext("2d").putImageData(rg,0,0);
-  const uu=W_/460,mx=(x0+x1)/2,my=(y0+y1)/2,D=360,T=D+380,ps=[];
+  const uu=W_/460,mx=(x0+x1)/2,my=(y0+y1)/2,D=0,T=380,ps=[];/* APK: the item simply appears in its slot (no slide or fade); only the sparks and sounds are ours */
   for(let k=0;k<16;k++){const a=Math.random()*Math.PI*2,v=(1.2+Math.random()*3)*uu;ps.push({x:mx+(Math.random()-.5)*(x1-x0)*.6,y:my+(Math.random()-.5)*(y1-y0)*.6,vx:Math.cos(a)*v,vy:Math.sin(a)*v-1,l:.5+Math.random()*.5})}
   const t0=performance.now(),g=c.getContext("2d");EQA=1;
   const fr=t=>{const e=t-t0,p=Math.min(1,e/D),q=1-Math.pow(1-p,3);
-    g.clearRect(0,0,W_,H_);g.drawImage(B,0,0);g.globalAlpha=Math.min(1,p*2);
-    const o=(1-q)*uu;
-    if(pl.sd=="top")g.drawImage(L,0,-o*150),g.drawImage(R,0,-o*150);
-    else if(pl.sd=="L")g.drawImage(L,-o*130,0),g.drawImage(R,-o*130,0);
-    else if(pl.sd=="R")g.drawImage(L,o*130,0),g.drawImage(R,o*130,0);
-    else g.drawImage(L,-o*130,0),g.drawImage(R,o*130,0);
-    g.globalAlpha=1;
+    g.clearRect(0,0,W_,H_);g.drawImage(A,0,0);
     if(e>D*.7){const u=(e-D*.7)/(T-D*.7);g.save();g.globalCompositeOperation="lighter";
       if(u<.35){g.fillStyle="rgba(255,200,90,"+(.5*(1-u/.35))+")";g.beginPath();g.arc(mx,my,(18+u*70)*uu,0,7);g.fill()}
       ps.forEach(s=>{const a=1-u/s.l;if(a<=0)return;g.strokeStyle="rgba(255,"+(150+Math.random()*90|0)+",60,"+a+")";g.lineWidth=2;g.beginPath();g.moveTo(s.x+s.vx*u*14,s.y+s.vy*u*14+u*u*30);g.lineTo(s.x+s.vx*(u*14+3),s.y+s.vy*(u*14+3)+u*u*30);g.stroke()});g.restore()}
@@ -5367,7 +5361,7 @@ try{if(!S.gj7){S.gj7=1;addI("t",7,true);save();if(typeof head=="function")setTim
 (function(){const lab=()=>{$("sm").textContent=S.mute?"Off":"On";$("sx").textContent=S.nosfx?"Off":"On";};
  const gear=()=>{const h=$("hangar").classList.contains("hide");$("gear").classList.toggle("hide",h);$("qbtn").classList.toggle("hide",h||document.body.classList.contains("inw")||$("menu").classList.contains("hide")||["camp","prof","arn","quest","store","work"].some(i=>!$(i).classList.contains("hide")))};window._gear=gear;setInterval(gear,300);
 $("qbtn").onclick=()=>{$("qbtn").classList.add("hide");show("quest")};{const qi=$("qbtn").querySelector("img");$("qbtn").onmouseenter=()=>qi.src=qi.dataset.h;$("qbtn").onmouseleave=()=>qi.src=qi.dataset.n}$("quest").onclick=e=>{const b=e.target.closest("button");if(b&&b.dataset.go)show(b.dataset.go)};
- $("gear").onclick=()=>{lab();try{$("bld0").textContent="Build 2026-11-25 b194 · "+Object.keys(CAMPD).filter(k=>k[0]!="_").length+" enemy designs built in"}catch(_){}{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();$("set").onclick=e=>{if(e.target.id=="set")$("set").classList.add("hide")};
+ $("gear").onclick=()=>{lab();try{$("bld0").textContent="Build 2026-11-26 b195 · "+Object.keys(CAMPD).filter(k=>k[0]!="_").length+" enemy designs built in"}catch(_){}{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();$("set").onclick=e=>{if(e.target.id=="set")$("set").classList.add("hide")};
 /* ---------- evolution tree (settings): built from EVO, so every item added to EVO shows up automatically ---------- */
 (function(){
   const CAT={t:"Torso",l:"Legs",w:"Weapon",m:"Module"};let root=null,st=null;
