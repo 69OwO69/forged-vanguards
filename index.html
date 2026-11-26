@@ -1664,9 +1664,10 @@ button,[role=button],.nb,.bkb{touch-action:manipulation;-webkit-user-select:none
  const nPlate=()=>[S.sel.m].concat(S.sel.mx||[]).filter(x=>x===66).length;
  const bat=(f)=>()=>{if(!inBat()||B.over||B.turn!="p"||B.busy)return null;return f()};
  const msg=(h,t,o)=>Object.assign({m:1,h,t},o||{});
+ const canFire=()=>{try{return B.p.weps.some((w,k)=>w&&legal(B.p,B.e,k))}catch(e){return true}};
  const toward=()=>{F.hint="Move closer to the enemy.";if(B.cat=="m"){const mv=$$("#ctl [data-a=mv]");if(mv)return mv;return B.e.x>B.p.x?$$("#ctl [data-a=r]"):$$("#ctl [data-a=l]")}return B.cat?$$("#ctl [data-back]"):$$("#ctl [data-cat=m]")};
  const bonus=()=>({b:1,h:"BATTLE BONUS",t:"Pick a bonus for this fight. Damage makes your guns hit harder.",tg:()=>{const on=!g("bfp").classList.contains("hide")&&g("bfp").classList.contains("on");if(on)F.bfp=1;return on?$$("#bfp .c[data-k=d]"):null},dn:()=>(F.bfp&&!g("bfp").classList.contains("on"))||(inBat()&&B.turn=="p"&&!B.busy&&!F.bfp&&Date.now()-(F.t8||(F.t8=Date.now()))>9000),wt:"Get ready..."});
- const results=(mi,rw,nx)=>({b:2,mi,rw,nx,h:"VICTORY",t:"Press Continue to leave the battle.",tg:()=>{const r=g("rtt");if(r&&/DEFEAT/i.test(r.textContent))F.hint="You were beaten. Press Continue and try again.";return $$("#over #back")},dn:()=>inV("camp")&&!inB()&&S.camp.includes(MIS[mi].id)});
+ const results=(mi,rw,nx)=>({id:"res"+mi,b:2,mi,rw,nx,h:"VICTORY",t:"Press Continue to leave the battle.",tg:()=>{const r=g("rtt");if(r&&/DEFEAT/i.test(r.textContent))F.hint="You were beaten. Press Continue and try again.";return $$("#over #back")},dn:()=>inV("camp")&&!inB()&&S.camp.includes(MIS[mi].id)});
  const cok=()=>{const e=g("cok");return !!e&&!e.classList.contains("hide")&&!g("cfs").classList.contains("hide")};
  const steps=[
   /*0*/msg("WELCOME PILOT!","Let's build your first mech and send it into battle. Follow the arrows."),
@@ -1676,34 +1677,35 @@ button,[role=button],.nb,.bkb{touch-action:manipulation;-webkit-user-select:none
   /*4*/{h:"ARMOR",t:"Open the Mods tab and equip all 3 Armor Plating modules.",tg:()=>{F.hint="Equip all 3 Armor Plating modules ("+nPlate()+"/3).";return tabTile("m","m",66)},dn:()=>nPlate()>=3},
   /*5*/msg("MECH READY!","Your mech is built. Time to test it on the campaign."),
   /*6*/{h:"CAMPAIGN",t:"Open the Campaign.",tg:()=>nav("camp"),dn:()=>inV("camp")},
-  /*7*/{h:"MISSION 1",t:"Select the first mission.",tg:()=>inV("camp")?$$('#nodes [data-m="0"]'):nav("camp"),dn:()=>typeof sm!="undefined"&&sm===0&&inV("camp")&&!!$$("#mq [data-start]")},
+  /*7*/{id:"m1sel",h:"MISSION 1",t:"Select the first mission.",tg:()=>inV("camp")?$$('#nodes [data-m="0"]'):nav("camp"),dn:()=>typeof sm!="undefined"&&sm===0&&inV("camp")&&!!$$("#mq [data-start]")},
   /*8*/{h:"FIGHT",t:"Press Fight to start the battle.",tg:()=>inV("camp")?$$("#mq [data-start]"):nav("camp"),dn:()=>inBat()},
-  /*9*/Object.assign(bonus(),{mi:0,rw:7,nx:16}),
-  /*10*/{b:1,mi:0,rw:7,nx:16,h:"WEAPONS",t:"Open your weapons.",tg:bat(()=>B.cat=="g"?null:B.cat?$$("#ctl [data-back]"):$$("#ctl [data-cat=g]")),dn:()=>inBat()&&B.cat=="g"},
-  /*11*/{b:1,mi:0,rw:7,nx:16,h:"FIRE!",t:"Tap the Laser Cannon to shoot the enemy.",tg:bat(()=>{if(B.cat=="m")return toward();if(B.cat=="g"){const f=$$("#ctl [data-f]");return f||toward()}return $$("#ctl [data-cat=g]")}),dn:()=>F.shot},
-  /*12*/{b:1,m:1,mi:0,rw:7,nx:16,h:"STOMP UNLOCKED!",t:"Your mech can stomp! A stomp hits everything next to you and shoves it back. Let's try it.",on:()=>{S.tutStomp=1;try{playBuf("equip",.6)}catch(e){}save()}},
-  /*13*/{b:1,mi:0,rw:7,nx:16,h:"STOMP!",t:"Tap Stomp to crush the enemy.",tg:bat(()=>{const s=$$("#ctl [data-a=stompA]");if(s&&!B.cat)return s;if(s)return $$("#ctl [data-back]");return toward()}),dn:()=>F.stomp,wt:"Wait for your turn..."},
-  /*14*/{b:1,free:1,mi:0,rw:7,nx:16,h:"WELL DONE!",t:"Now finish the fight!",dn:()=>inV("over")||!inBat()},
-  /*15*/results(0,7,16),
-  /*16*/msg("NEW GEAR","Nice work, pilot! Let's get you some new gear from the Shop."),
+  /*9*/Object.assign(bonus(),{mi:0,rw:"m1sel",nx:"newgear"}),
+  /*10*/{b:1,mi:0,rw:"m1sel",nx:"newgear",h:"WEAPONS",t:"Open your weapons.",tg:bat(()=>{if(!canFire())return toward();return B.cat=="g"?null:B.cat?$$("#ctl [data-back]"):$$("#ctl [data-cat=g]")}),dn:()=>inBat()&&B.cat=="g"&&canFire()},
+  /*11*/{b:1,mi:0,rw:"m1sel",nx:"newgear",h:"FIRE!",t:"Tap the Laser Cannon to shoot the enemy.",tg:bat(()=>{if(!canFire())return toward();if(B.cat=="g")return $$("#ctl [data-f]");return $$("#ctl [data-cat=g]")}),dn:()=>F.shot},
+  /*12*/{b:1,free:1,mi:0,rw:"m1sel",nx:"newgear",h:"WELL DONE!",t:"Now finish the fight!",dn:()=>inV("over")||!inBat()},
+  /*13*/results(0,"m1sel","newgear"),
+  /*16*/msg("NEW GEAR","Nice work, pilot! Let's get you some new gear from the Shop.",{id:"newgear"}),
   /*17*/{h:"SHOP",t:"Open the Shop.",tg:()=>nav("store"),dn:()=>inV("store")},
-  /*18*/{h:"ITEM BOX",t:"Buy an Item Box.",tg:()=>{if(!g("cfm").classList.contains("hide"))return $$("#cfy");if(!inV("store"))return nav("store");if(SHT!==0)return $$('#shtabs [data-tab="0"]');return $$('#boxes [data-box="0"]')},dn:()=>!!(S.bi&&S.bi[0]>0)&&g("cfm").classList.contains("hide")},
+  /*18*/{id:"box1",h:"ITEM BOX",t:"Buy an Item Box.",tg:()=>{if(!g("cfm").classList.contains("hide"))return $$("#cfy");if(!inV("store"))return nav("store");if(SHT!==0)return $$('#shtabs [data-tab="0"]');return $$('#boxes [data-box="0"]')},dn:()=>!!(S.bi&&S.bi[0]>0)&&g("cfm").classList.contains("hide")},
   /*19*/{h:"INVENTORY",t:"Your box is in the Inventory tab.",tg:()=>{if(!inV("store"))return nav("store");return $$('#shtabs [data-tab="3"]')},dn:()=>inV("store")&&SHT===3},
   /*20*/{h:"OPEN IT",t:"Tap the Item Box to open it.",tg:()=>$$('#boxes [data-open="0"]'),dn:()=>!g("cfs").classList.contains("hide")},
   /*21*/{h:"REVEAL",t:"Tap each card to reveal your new items.",tg:()=>$$("#cfs .cd:not(.fl)"),dn:()=>cok(),wt:"Opening the box..."},
-  /*22*/{h:"COLLECT",t:"Collect your new items.",tg:()=>$$("#cok"),dn:()=>g("cfs").classList.contains("hide")},
-  /*23*/msg("NEW ITEMS!","You got Mountain Feet, an Adv. Energy Shield and a drone. Let's equip them."),
-  /*24*/{h:"LEGS",t:"Equip the Mountain Feet.",tg:()=>tabTile("l","l",35),dn:()=>S.sel.l==35},
-  /*25*/{h:"SHIELD",t:"Open the Special tab and equip the shield.",tg:()=>tabTile("m","tp",25),dn:()=>S.sel.m==25||(S.sel.mx||[]).includes(25)},
+  /*22*/{id:"collect",h:"COLLECT",t:"Collect your new items.",tg:()=>$$("#cok"),dn:()=>g("cfs").classList.contains("hide")},
+  /*23*/msg("NEW ITEMS!","You got the Spector torso, a One Barrel BB Gun and the Arial Target drone. Let's equip them."),
+  /*24*/{h:"TORSO",t:"Equip the Spector torso.",tg:()=>tabTile("t","t",23),dn:()=>S.sel.t==23},
+  /*25*/{h:"GUN",t:"Open the Side guns tab and equip the One Barrel BB Gun.",tg:()=>tabTile("w","side",248),dn:()=>S.sel.w.includes(248)},
   /*26*/{h:"DRONE",t:"Open the Drones tab and equip the drone.",tg:()=>tabTile("w","drone",74),dn:()=>S.sel.w.includes(74)},
-  /*27*/{h:"MISSION 2",t:"Open the Campaign and select the second mission.",tg:()=>inV("camp")?$$('#nodes [data-m="1"]'):nav("camp"),dn:()=>typeof sm!="undefined"&&sm===1&&inV("camp")&&!!$$("#mq [data-start]")},
+  /*27*/{id:"m2sel",h:"MISSION 2",t:"Open the Campaign and select the second mission.",tg:()=>inV("camp")?$$('#nodes [data-m="1"]'):nav("camp"),dn:()=>typeof sm!="undefined"&&sm===1&&inV("camp")&&!!$$("#mq [data-start]")},
   /*28*/{h:"FIGHT",t:"Press Fight to start the battle.",tg:()=>inV("camp")?$$("#mq [data-start]"):nav("camp"),dn:()=>inBat()},
-  /*29*/Object.assign(bonus(),{mi:1,rw:27,nx:32}),
-  /*30*/{b:1,free:1,mi:1,rw:27,nx:32,h:"FIGHT!",t:"Use everything you have learned.",dn:()=>inV("over")||!inBat()},
-  /*31*/results(1,27,32),
-  /*32*/msg("CONGRATULATIONS!","You have completed the tutorial!",{on:()=>{S.tutDone=1;S.tut=null;save()}})
+  /*29*/Object.assign(bonus(),{mi:1,rw:"m2sel",nx:"done"}),
+  /*30*/{b:1,m:1,mi:1,rw:"m2sel",nx:"done",h:"STOMP UNLOCKED!",t:"Your mech can stomp! A stomp hits everything next to you and shoves it back. Let's try it.",on:()=>{S.tutStomp=1;try{playBuf("equip",.6)}catch(e){}save()}},
+  /*31*/{b:1,mi:1,rw:"m2sel",nx:"done",h:"STOMP!",t:"Tap Stomp to crush the enemy.",tg:bat(()=>{const s=$$("#ctl [data-a=stompA]");if(s&&!B.cat)return s;if(s)return $$("#ctl [data-back]");return toward()}),dn:()=>F.stomp,wt:"Wait for your turn..."},
+  /*32*/{b:1,free:1,mi:1,rw:"m2sel",nx:"done",h:"FIGHT!",t:"Use everything you have learned.",dn:()=>inV("over")||!inBat()},
+  /*33*/results(1,"m2sel","done"),
+  /*34*/msg("CONGRATULATIONS!","You have completed the tutorial!",{id:"done",on:()=>{S.tutDone=1;S.tut=null;save()}})
  ];
- const T=window.TUT={f:F,locked:()=>S.tut!=null&&!S.tutDone&&!S.tutStomp,boxItems:()=>S.tut!=null&&!S.tutDone&&S.tut>=18&&S.tut<=22?[["l",35],["m",25],["w",74]]:null,steps};
+ const ix=n=>steps.findIndex(s=>s.id===n);steps.forEach(s=>{for(const k of["rw","nx"])if(typeof s[k]=="string")s[k]=ix(s[k])});
+ const T=window.TUT={f:F,locked:()=>S.tut!=null&&!S.tutDone&&!S.tutStomp,boxItems:()=>S.tut!=null&&!S.tutDone&&S.tut>=ix("box1")&&S.tut<=ix("collect")?[["t",23],["w",248],["w",74]]:null,steps};
  let i=0,en=0,shown=-1,tmr=0;
  const hide=()=>{w.classList.remove("on")},ex=(a,r)=>{for(const k in r)a.style[k]=r[k]};
  const place=(el,st)=>{const vw=innerWidth,vh=innerHeight,tb=[0,1,2,3].map(k=>g("tb"+k)),th=g("tth"),ta=g("tta"),tx=g("ttx");
@@ -1727,7 +1729,8 @@ button,[role=button],.nb,.bkb{touch-action:manipulation;-webkit-user-select:none
    if(st.b==2&&!over&&!inBat()&&inV("camp")){jump(cl?st.nx:st.rw);return}}
   if(st.dn&&!st.m){let d=false;try{d=st.dn()}catch(e){}if(d){adv();return}}
   F.hint="";let el=null;if(!st.m&&st.tg){try{el=st.tg()}catch(e){el=null}}draw(st);
-  if(el&&el._tz!==i){el._tz=i;try{el.scrollIntoView({block:"nearest",inline:"nearest"})}catch(e){}}
+  if(el&&el._tz!==i){el._tz=i;try{const iv=el.closest("#inv");if(iv){const a=el.getBoundingClientRect(),b=iv.getBoundingClientRect();if(a.top<b.top)iv.scrollTop-=b.top-a.top;else if(a.bottom>b.bottom)iv.scrollTop+=a.bottom-b.bottom}}catch(e){}}
+  if(window.scrollX||window.scrollY)window.scrollTo(0,0);for(const e of[document.documentElement,document.body])if(e.scrollTop||e.scrollLeft){e.scrollTop=0;e.scrollLeft=0}
   place(st.m?null:el,st)};
  /* keyboard shortcuts must not bypass the arrows */
  for(const ev of["keydown","keyup","keypress"])addEventListener(ev,e=>{if(!en||!w.classList.contains("on")||steps[i]&&steps[i].free)return;if(e.target&&/INPUT|TEXTAREA/.test(e.target.tagName))return;if(e.key==="Enter"&&steps[i]&&steps[i].m&&ev=="keydown"){const ok=g("tok");if(ok){e.preventDefault();e.stopPropagation();ok.click()}return}e.preventDefault();e.stopPropagation()},true);
@@ -5538,7 +5541,7 @@ try{if(!S.gj7){S.gj7=1;addI("t",7,true);save();if(typeof head=="function")setTim
 (function(){const lab=()=>{$("sm").textContent=S.mute?"Off":"On";$("sx").textContent=S.nosfx?"Off":"On";};
  const gear=()=>{const h=$("hangar").classList.contains("hide");$("gear").classList.toggle("hide",h);$("qbtn").classList.toggle("hide",h||document.body.classList.contains("inw")||$("menu").classList.contains("hide")||["camp","prof","arn","quest","store","work"].some(i=>!$(i).classList.contains("hide")))};window._gear=gear;setInterval(gear,300);
 $("qbtn").onclick=()=>{$("qbtn").classList.add("hide");show("quest")};{const qi=$("qbtn").querySelector("img");$("qbtn").onmouseenter=()=>qi.src=qi.dataset.h;$("qbtn").onmouseleave=()=>qi.src=qi.dataset.n}$("quest").onclick=e=>{const b=e.target.closest("button");if(b&&b.dataset.go)show(b.dataset.go)};
- $("gear").onclick=()=>{lab();try{$("bld0").textContent="Build 2026-11-26 b201 · "+Object.keys(CAMPD).filter(k=>k[0]!="_").length+" enemy designs built in"}catch(_){}{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();
+ $("gear").onclick=()=>{lab();try{$("bld0").textContent="Build 2026-11-26 b202 · "+Object.keys(CAMPD).filter(k=>k[0]!="_").length+" enemy designs built in"}catch(_){}{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();
 {/* profile switch: your real save is never touched by the test profile; switching reloads the page */const pf=$("spf"),px=$("spx");let cf=0,ct=0;const lab2=()=>{pf.textContent=PFK?"Test (switch to Main)":"Main (switch to Test)";px.textContent="Reset";$("spr").style.display=PFK?"":"none"};const arm=(b,fn)=>{if(cf===b){clearTimeout(ct);cf=0;fn();return}cf=b;b.textContent="Tap again to confirm";clearTimeout(ct);ct=setTimeout(()=>{cf=0;lab2()},4000)};lab2();
  $("slo").onclick=()=>{try{localStorage.removeItem("fv_session"+PFK);sessionStorage.removeItem("fv_session"+PFK)}catch(e){}location.reload()};
  pf.onclick=()=>arm(pf,()=>{try{save();localStorage.setItem("fv_profile",PFK?"main":"test")}catch(e){}location.reload()});
