@@ -1711,7 +1711,7 @@ button,[role=button],.nb,.bkb{touch-action:manipulation;-webkit-user-select:none
  const hide=()=>{w.classList.remove("on")},ex=(a,r)=>{for(const k in r)a.style[k]=r[k]};
  const place=(el,st)=>{const vw=innerWidth,vh=innerHeight,tb=[0,1,2,3].map(k=>g("tb"+k)),th=g("tth"),ta=g("tta"),tx=g("ttx");
   w.classList.toggle("free",!!st.free);
-  if(!el){th.hidden=ta.hidden=true;ex(tb[0],{left:0,top:0,width:vw+"px",height:vh+"px"});tb[0].classList.toggle("clr",!st.m);for(let k=1;k<4;k++)ex(tb[k],{width:0,height:0});
+  if(!el){th.hidden=ta.hidden=true;ex(tb[0],{left:0,top:0,width:vw+"px",height:vh+"px"});tb[0].classList.toggle("clr",!st.m);tb[0].style.pointerEvents=!st.m&&!st.wt&&!st.free?"none":"";/* no target and nothing to wait for: never trap the player */for(let k=1;k<4;k++)ex(tb[k],{width:0,height:0});
    if((st.m||st.wt)&&!st.free){tx.hidden=false;if(st.m)ex(tx,{left:(vw-tx.offsetWidth)/2+"px",top:(vh-tx.offsetHeight)/2+"px"});else ex(tx,{left:(vw-tx.offsetWidth)/2+"px",top:"14px"})}else tx.hidden=true;return}
   tb[0].classList.remove("clr");const r=el.getBoundingClientRect(),P=6,L=Math.max(0,r.left-P),Tp=Math.max(0,r.top-P),R=Math.min(vw,r.right+P),Bt=Math.min(vh,r.bottom+P);
   ex(tb[0],{left:0,top:0,width:vw+"px",height:Tp+"px"});ex(tb[1],{left:0,top:Bt+"px",width:vw+"px",height:Math.max(0,vh-Bt)+"px"});ex(tb[2],{left:0,top:Tp+"px",width:L+"px",height:Math.max(0,Bt-Tp)+"px"});ex(tb[3],{left:R+"px",top:Tp+"px",width:Math.max(0,vw-R)+"px",height:Math.max(0,Bt-Tp)+"px"});
@@ -1726,8 +1726,8 @@ button,[role=button],.nb,.bkb{touch-action:manipulation;-webkit-user-select:none
  const tick=()=>{if(!en)return;if(!g("wl").classList.contains("hide")){hide();return}const st=steps[i];if(!st){en=0;hide();return}
   w.classList.add("on");
   if(st.b){const over=!g("over").classList.contains("hide");const cl=S.camp.includes(MIS[st.mi].id);
-   if(st.b==1&&!inBat()&&!over){jump(cl?st.nx:st.rw);return}
-   if(st.b==2&&!over&&!inBat()&&inV("camp")){jump(cl?st.nx:st.rw);return}}
+   if(st.b==1&&!inBat()){jump(cl?st.nx:st.rw);return}
+   if(st.b==2&&!over&&!inBat()){jump(cl?st.nx:st.rw);return}/* after a defeat Continue can land on the menu: go back to the retry step */}
   if(st.dn&&!st.m){let d=false;try{d=st.dn()}catch(e){}if(d){adv();return}}
   F.hint="";let el=null;if(!st.m&&st.tg){try{el=st.tg()}catch(e){el=null}}draw(st);
   if(el&&el._tz!==i){el._tz=i;try{const iv=el.closest("#inv");if(iv){const a=el.getBoundingClientRect(),b=iv.getBoundingClientRect();if(a.top<b.top)iv.scrollTop-=b.top-a.top;else if(a.bottom>b.bottom)iv.scrollTop+=a.bottom-b.bottom}}catch(e){}}
@@ -5543,7 +5543,7 @@ try{if(!S.gj7){S.gj7=1;addI("t",7,true);save();if(typeof head=="function")setTim
 (function(){const lab=()=>{$("sm").textContent=S.mute?"Off":"On";$("sx").textContent=S.nosfx?"Off":"On";};
  const gear=()=>{const h=$("hangar").classList.contains("hide");$("gear").classList.toggle("hide",h);$("qbtn").classList.toggle("hide",h||document.body.classList.contains("inw")||$("menu").classList.contains("hide")||["camp","prof","arn","quest","store","work"].some(i=>!$(i).classList.contains("hide")))};window._gear=gear;setInterval(gear,300);
 $("qbtn").onclick=()=>{$("qbtn").classList.add("hide");show("quest")};{const qi=$("qbtn").querySelector("img");$("qbtn").onmouseenter=()=>qi.src=qi.dataset.h;$("qbtn").onmouseleave=()=>qi.src=qi.dataset.n}$("quest").onclick=e=>{const b=e.target.closest("button");if(b&&b.dataset.go)show(b.dataset.go)};
- $("gear").onclick=()=>{lab();try{$("bld0").textContent="Build 2026-11-26 b204 · "+Object.keys(CAMPD).filter(k=>k[0]!="_").length+" enemy designs built in"}catch(_){}{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();
+ $("gear").onclick=()=>{lab();try{$("bld0").textContent="Build 2026-11-26 b205 · "+Object.keys(CAMPD).filter(k=>k[0]!="_").length+" enemy designs built in"}catch(_){}{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();
 {/* profile switch: your real save is never touched by the test profile; switching reloads the page */const pf=$("spf"),px=$("spx");let cf=0,ct=0;const lab2=()=>{pf.textContent=PFK?"Test (switch to Main)":"Main (switch to Test)";px.textContent="Reset";$("spr").style.display=PFK?"":"none"};const arm=(b,fn)=>{if(cf===b){clearTimeout(ct);cf=0;fn();return}cf=b;b.textContent="Tap again to confirm";clearTimeout(ct);ct=setTimeout(()=>{cf=0;lab2()},4000)};lab2();
  $("slo").onclick=()=>{try{localStorage.removeItem("fv_session"+PFK);sessionStorage.removeItem("fv_session"+PFK)}catch(e){}location.reload()};
  pf.onclick=()=>arm(pf,()=>{try{save();localStorage.setItem("fv_profile",PFK?"main":"test")}catch(e){}location.reload()});
