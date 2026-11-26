@@ -3227,6 +3227,7 @@ function hangar(){show("menu")}
 function nsz(v,max){const n=String(Number(v).toLocaleString()).length;return n>max+3?" s2":n>max?" s1":""}
 function fitHud(root){/* shrink any number that would spill out of its slot */const run=()=>root.querySelectorAll(".lg .t,.lg .xb span").forEach(n=>{n.style.fontSize="";if(!n.clientWidth)return;let f=parseFloat(getComputedStyle(n).fontSize);while(n.scrollWidth>n.clientWidth+.5&&f>6){f-=.5;n.style.fontSize=f+"px"}});run();requestAnimationFrame(run)}
 addEventListener("resize",()=>document.querySelectorAll(".bar.hud").forEach(fitHud));
+/* coins, tokens and season points always show the current value, whatever screen granted them */{let _h=null;setInterval(()=>{try{if(typeof S==='undefined'||!S)return;const a=[S.cr,S.tk,S.ap].join();if(_h!==null&&a!==_h)head();_h=a}catch(e){}},250)}
 const RK_N=25,RK_PER=5;
 /* stars needed to move up from internal rank r (1 = lowest = rank 25 on screen): ranks 25-8 need 5, 7-4 need 8, 3-1 need 10 */
 const RKC=r=>{const R=RK_N+1-r;return R>=8?5:R>=4?8:10};
@@ -5545,7 +5546,7 @@ try{if(!S.gj7){S.gj7=1;addI("t",7,true);save();if(typeof head=="function")setTim
 (function(){const lab=()=>{$("sm").textContent=S.mute?"Off":"On";$("sx").textContent=S.nosfx?"Off":"On";};
  const gear=()=>{const h=$("hangar").classList.contains("hide");$("gear").classList.toggle("hide",h);$("qbtn").classList.toggle("hide",h||document.body.classList.contains("inw")||$("menu").classList.contains("hide")||["camp","prof","arn","quest","store","work"].some(i=>!$(i).classList.contains("hide")))};window._gear=gear;setInterval(gear,300);
 $("qbtn").onclick=()=>{$("qbtn").classList.add("hide");show("quest")};{const qi=$("qbtn").querySelector("img");$("qbtn").onmouseenter=()=>qi.src=qi.dataset.h;$("qbtn").onmouseleave=()=>qi.src=qi.dataset.n}$("quest").onclick=e=>{const b=e.target.closest("button");if(b&&b.dataset.go)show(b.dataset.go)};
- $("gear").onclick=()=>{lab();try{$("bld0").textContent="Build 2026-11-27 b210 · "+Object.keys(CAMPD).filter(k=>k[0]!="_").length+" enemy designs built in"}catch(_){}{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();
+ $("gear").onclick=()=>{lab();try{$("bld0").textContent="Build 2026-11-27 b211 · "+Object.keys(CAMPD).filter(k=>k[0]!="_").length+" enemy designs built in"}catch(_){}{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();
 {/* profile switch: your real save is never touched by the test profile; switching reloads the page */const pf=$("spf"),px=$("spx");let cf=0,ct=0;const lab2=()=>{pf.textContent=PFK?"Test (switch to Main)":"Main (switch to Test)";px.textContent="Reset";$("spr").style.display=PFK?"":"none"};const arm=(b,fn)=>{if(cf===b){clearTimeout(ct);cf=0;fn();return}cf=b;b.textContent="Tap again to confirm";clearTimeout(ct);ct=setTimeout(()=>{cf=0;lab2()},4000)};lab2();
  $("slo").onclick=()=>{try{localStorage.removeItem("fv_session"+PFK);sessionStorage.removeItem("fv_session"+PFK)}catch(e){}location.reload()};
  pf.onclick=()=>arm(pf,()=>{try{save();localStorage.setItem("fv_profile",PFK?"main":"test")}catch(e){}location.reload()});
@@ -6800,13 +6801,10 @@ function afxHit(m,col){const U=MK,p=afxPt(m,1),x=p.x,y=p.y,now=performance.now()
   if(first){afxSpark(x,y,20,4,40,"horizontal",col||"orange","spark");afxSpark(x,y,14,1,40,"horizontal","","debrie")}
   else{afxSpark(x,y,6,2,40,"horizontal",col||"orange","spark");afxSpark(x,y,3,1,40,"horizontal","","debrie")}}
 /* Boss phase 2: at "at"% health the camera pushes in, the resistance shields tick up one by one, then the phase 2 voice line plays and the phase 2 loop starts when it ends */
-/* ===== Overlord Prime: lethal-hit clamp (3 -> 2 -> drone leaves 1), then phase 2 ===== */
+/* ===== Overlord Prime: a lethal hit leaves 1 HP, then phase 2 ===== */
 function ovClamp(e){let h=e.hp;Object.defineProperty(e,"hp",{configurable:true,enumerable:true,get(){return h},set(v){
-  if(e.phDone||!(v<h)){h=v;return}
-  const st=e.cl||0,pw=(B&&B.p&&B.p.weps)||[],drone=(B&&B.dv)||!pw.some(w=>w.drone);/* no drone owned: any hit may finish the clamp, so the fight can never soft-lock */
-  if(v<=0){if(st==0){v=3;e.cl=1}else if(st==1){v=2;e.cl=2}else v=drone?1:2}
-  else if(st>=1&&v<2&&!(st>=2&&drone))v=2;
-  h=Math.min(v,h)}})}
+  /* a hit that would kill him in phase 1 (any gun, the drone too) leaves him at 1 HP, then phase 2 starts */
+  if(!e.phDone&&v<1)v=1;h=v}})}
 function GLD(fn,g,x,y,dir,m,hh){
   if(!m.ph2&&!m.look){fn(g,x,y,dir,m,hh);return}
   const t=performance.now();
