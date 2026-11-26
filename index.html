@@ -1680,12 +1680,14 @@ button,[role=button],.nb,.bkb{touch-action:manipulation;-webkit-user-select:none
   /*7*/{id:"m1sel",h:"MISSION 1",t:"Select the first mission.",tg:()=>inV("camp")?$$('#nodes [data-m="0"]'):nav("camp"),dn:()=>typeof sm!="undefined"&&sm===0&&inV("camp")&&!!$$("#mq [data-start]")},
   /*8*/{h:"FIGHT",t:"Press Fight to start the battle.",tg:()=>inV("camp")?$$("#mq [data-start]"):nav("camp"),dn:()=>inBat()},
   /*9*/Object.assign(bonus(),{mi:0,rw:"m1sel",nx:"newgear"}),
-  /*10a*/{b:1,mi:0,rw:"m1sel",nx:"newgear",h:"MOVE",t:"Walk toward the enemy.",tg:bat(()=>{F.hint="Move closer to the enemy.";return toward()}),dn:()=>{if(!inBat())return false;if(F.px0==null)F.px0=B.p.x;return B.p.x!==F.px0},wt:"Enemy's turn..."},
   /*10*/{b:1,mi:0,rw:"m1sel",nx:"newgear",h:"WEAPONS",t:"Open your weapons.",tg:bat(()=>{if(!canFire())return toward();return B.cat=="g"?null:B.cat?$$("#ctl [data-back]"):$$("#ctl [data-cat=g]")}),dn:()=>inBat()&&B.cat=="g"&&canFire(),wt:"Enemy's turn..."},
   /*11*/{b:1,mi:0,rw:"m1sel",nx:"newgear",h:"FIRE!",t:"Tap the Laser Cannon to shoot the enemy.",tg:bat(()=>{if(!canFire())return toward();if(B.cat=="g")return $$("#ctl [data-f]");return $$("#ctl [data-cat=g]")}),dn:()=>F.shot,wt:"Enemy's turn..."},
+  {b:1,mi:0,rw:"m1sel",nx:"newgear",id:"close",h:"ENEMY'S TURN",t:"Move closer to the enemy.",tg:bat(()=>B.e.x-B.p.x>1?toward():null),dn:()=>inBat()&&B.turn=="p"&&!B.busy&&Math.abs(B.e.x-B.p.x)<=1,wt:"Enemy's turn...",sk:()=>inV("over")||!inBat()||B.e.hp<=0},
+  {b:1,m:1,mi:0,rw:"m1sel",nx:"newgear",h:"STOMP UNLOCKED!",t:"Your mech can stomp! A stomp hits everything next to you and shoves it back. Let's try it.",on:()=>{S.tutStomp=1;try{playBuf("equip",.6)}catch(e){}save()},sk:()=>inV("over")||!inBat()||B.e.hp<=0},
+  {b:1,mi:0,rw:"m1sel",nx:"newgear",h:"STOMP!",t:"Tap Stomp to crush the enemy.",tg:bat(()=>{const s=$$("#ctl [data-a=stompA]");if(s&&!B.cat)return s;if(s)return $$("#ctl [data-back]");return toward()}),dn:()=>F.stomp,wt:"Wait for your turn...",sk:()=>inV("over")||!inBat()||B.e.hp<=0},
   /*12*/{b:1,free:1,mi:0,rw:"m1sel",nx:"newgear",h:"WELL DONE!",t:"Now finish the fight!",dn:()=>inV("over")||!inBat()},
   /*13*/results(0,"m1sel","newgear"),
-  /*16*/msg("NEW GEAR","Nice work, pilot! Let's get you some new gear from the Shop.",{id:"newgear"}),
+  /*16*/msg("NEW GEAR","Nice work, pilot! Let's get you some new gear from the Shop.",{id:"newgear",on:()=>{S.tutStomp=1;save()}}),
   /*17*/{h:"SHOP",t:"Open the Shop.",tg:()=>nav("store"),dn:()=>inV("store")},
   /*18*/{id:"box1",h:"ITEM BOX",t:"Buy an Item Box.",tg:()=>{if(!g("cfm").classList.contains("hide"))return $$("#cfy");if(!inV("store"))return nav("store");if(SHT!==0)return $$('#shtabs [data-tab="0"]');return $$('#boxes [data-box="0"]')},dn:()=>!!(S.bi&&S.bi[0]>0)&&g("cfm").classList.contains("hide")},
   /*19*/{h:"INVENTORY",t:"Your box is in the Inventory tab.",tg:()=>{if(!inV("store"))return nav("store");return $$('#shtabs [data-tab="3"]')},dn:()=>inV("store")&&SHT===3},
@@ -1699,9 +1701,8 @@ button,[role=button],.nb,.bkb{touch-action:manipulation;-webkit-user-select:none
   /*27*/{id:"m2sel",h:"MISSION 2",t:"Open the Campaign and select the second mission.",tg:()=>inV("camp")?$$('#nodes [data-m="1"]'):nav("camp"),dn:()=>typeof sm!="undefined"&&sm===1&&inV("camp")&&!!$$("#mq [data-start]")},
   /*28*/{h:"FIGHT",t:"Press Fight to start the battle.",tg:()=>inV("camp")?$$("#mq [data-start]"):nav("camp"),dn:()=>inBat()},
   /*29*/Object.assign(bonus(),{mi:1,rw:"m2sel",nx:"done"}),
-  /*30*/{b:1,m:1,mi:1,rw:"m2sel",nx:"done",h:"STOMP UNLOCKED!",t:"Your mech can stomp! A stomp hits everything next to you and shoves it back. Let's try it.",on:()=>{S.tutStomp=1;try{playBuf("equip",.6)}catch(e){}save()}},
-  /*31*/{b:1,mi:1,rw:"m2sel",nx:"done",h:"STOMP!",t:"Tap Stomp to crush the enemy.",tg:bat(()=>{const s=$$("#ctl [data-a=stompA]");if(s&&!B.cat)return s;if(s)return $$("#ctl [data-back]");return toward()}),dn:()=>F.stomp,wt:"Wait for your turn..."},
-  /*32*/{b:1,free:1,mi:1,rw:"m2sel",nx:"done",h:"FIGHT!",t:"Use everything you have learned.",dn:()=>inV("over")||!inBat()},
+  {b:1,mi:1,rw:"m2sel",nx:"done",id:"drone",h:"DRONE",t:"Open your specials and activate the drone.",tg:bat(()=>{if(B.cat=="s")return $$("#ctl [data-a=drone]");return B.cat?$$("#ctl [data-back]"):$$("#ctl [data-cat=s]")}),dn:()=>inBat()&&!!B.p.don,wt:"Enemy's turn...",sk:()=>inV("over")||!inBat()||B.e.hp<=0},
+  /*32*/{b:1,free:1,mi:1,rw:"m2sel",nx:"done",h:"FIGHT!",t:"Use everything you have learned, including the stomp.",dn:()=>inV("over")||!inBat()},
   /*33*/results(1,"m2sel","done"),
   /*34*/msg("CONGRATULATIONS!","You have completed the tutorial!",{id:"done",on:()=>{S.tutDone=1;S.tut=null;save()}})
  ];
@@ -1728,6 +1729,7 @@ button,[role=button],.nb,.bkb{touch-action:manipulation;-webkit-user-select:none
   if(st.b){const over=!g("over").classList.contains("hide");const cl=S.camp.includes(MIS[st.mi].id);
    if(st.b==1&&!inBat()){jump(cl?st.nx:st.rw);return}
    if(st.b==2&&!over&&!inBat()){jump(cl?st.nx:st.rw);return}/* after a defeat Continue can land on the menu: go back to the retry step */}
+  if(st.sk){let k=false;try{k=st.sk()}catch(e){}if(k){adv();return}}
   if(st.dn&&!st.m){let d=false;try{d=st.dn()}catch(e){}if(d){adv();return}}
   F.hint="";let el=null;if(!st.m&&st.tg){try{el=st.tg()}catch(e){el=null}}draw(st);
   if(el&&el._tz!==i){el._tz=i;try{const iv=el.closest("#inv");if(iv){const a=el.getBoundingClientRect(),b=iv.getBoundingClientRect();if(a.top<b.top)iv.scrollTop-=b.top-a.top;else if(a.bottom>b.bottom)iv.scrollTop+=a.bottom-b.bottom}}catch(e){}}
@@ -4107,7 +4109,7 @@ function startBattle0(mi){
   const rnd=n=>Math.floor(Math.random()*n),tier=S.wins;
   const ws=[];const pool=W.map((_,i)=>i).filter(i=>i<=2+tier&&!W[i].side&&!W[i].gone&&!W[i].drone&&!W[i].mythic);while(ws.length<3)ws.push(pool[rnd(pool.length)]);
   const p=myMech(),mix=mi?MIS.indexOf(mi):-1,e=mi?(mix>=0?mqEnemy(mix,0,CDIF):(designFor(mi)?specMech(designFor(mi)):mi.fixed?foremanMech():mechOf(mi.t,mi.l,mi.w,mi.mul))):botMech();
-  if(mi&&mi.swarm)setupSwarm(e);e.c="#d9604f";{const r_=Math.random(),m1=mi&&mi.id===1,pl=m1?3:r_<1/3?4:r_<2/3?3:2,el=m1?6:9-pl;p.x=pl;e.x=el;p.vx=pl;e.vx=el}/* mission 1 always starts with two empty tiles between the mechs */if(p.weps.some(w=>w.drone))p.dp=0;if(e.weps.some(w=>w.drone))e.dp=0;
+  if(mi&&mi.swarm)setupSwarm(e);e.c="#d9604f";{const r_=Math.random(),m1=mi&&mi.id===1,m2=mi&&mi.id===2,pl=m1||m2?4:r_<1/3?4:r_<2/3?3:2,el=m1?6:9-pl;p.x=pl;e.x=el;p.vx=pl;e.vx=el}/* mission 1 always starts with one empty tile between the mechs, mission 2 right in front of you */if(p.weps.some(w=>w.drone))p.dp=0;if(e.weps.some(w=>w.drone))e.dp=0;
   if(!e.swarm){p.en=p.enCap||p.en;e.en=e.enCap||e.en}/* energy starts at the max capacity */
   B={t0:Date.now(),mi,p,e,wi:0,wn:mix>=0?WV(mix).length:0,dif:mix>=0?CDIF:0,turn:"p",tl:{p:1,e:2},busy:false,over:false,proj:null,zin:true,cz:1,cx:427.5,projs:[],debris:[],sparks:[],boom:[],fl:[],rkm:[],hit:{p:0,e:0}};/* enemies always carry enough bullets/rockets to fire every ammo weapon they own (3 uses each) */["am","ra"].forEach(k=>{const e_=B.e,need=(e_.weps||[]).reduce((n,w)=>n+((w&&w[k])||0),0)*3;if((e_[k]||0)<need)e_[k]=need});
   swInit(p);
@@ -5543,7 +5545,7 @@ try{if(!S.gj7){S.gj7=1;addI("t",7,true);save();if(typeof head=="function")setTim
 (function(){const lab=()=>{$("sm").textContent=S.mute?"Off":"On";$("sx").textContent=S.nosfx?"Off":"On";};
  const gear=()=>{const h=$("hangar").classList.contains("hide");$("gear").classList.toggle("hide",h);$("qbtn").classList.toggle("hide",h||document.body.classList.contains("inw")||$("menu").classList.contains("hide")||["camp","prof","arn","quest","store","work"].some(i=>!$(i).classList.contains("hide")))};window._gear=gear;setInterval(gear,300);
 $("qbtn").onclick=()=>{$("qbtn").classList.add("hide");show("quest")};{const qi=$("qbtn").querySelector("img");$("qbtn").onmouseenter=()=>qi.src=qi.dataset.h;$("qbtn").onmouseleave=()=>qi.src=qi.dataset.n}$("quest").onclick=e=>{const b=e.target.closest("button");if(b&&b.dataset.go)show(b.dataset.go)};
- $("gear").onclick=()=>{lab();try{$("bld0").textContent="Build 2026-11-26 b207 · "+Object.keys(CAMPD).filter(k=>k[0]!="_").length+" enemy designs built in"}catch(_){}{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();
+ $("gear").onclick=()=>{lab();try{$("bld0").textContent="Build 2026-11-27 b209 · "+Object.keys(CAMPD).filter(k=>k[0]!="_").length+" enemy designs built in"}catch(_){}{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();
 {/* profile switch: your real save is never touched by the test profile; switching reloads the page */const pf=$("spf"),px=$("spx");let cf=0,ct=0;const lab2=()=>{pf.textContent=PFK?"Test (switch to Main)":"Main (switch to Test)";px.textContent="Reset";$("spr").style.display=PFK?"":"none"};const arm=(b,fn)=>{if(cf===b){clearTimeout(ct);cf=0;fn();return}cf=b;b.textContent="Tap again to confirm";clearTimeout(ct);ct=setTimeout(()=>{cf=0;lab2()},4000)};lab2();
  $("slo").onclick=()=>{try{localStorage.removeItem("fv_session"+PFK);sessionStorage.removeItem("fv_session"+PFK)}catch(e){}location.reload()};
  pf.onclick=()=>arm(pf,()=>{try{save();localStorage.setItem("fv_profile",PFK?"main":"test")}catch(e){}location.reload()});
