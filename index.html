@@ -1569,7 +1569,7 @@ button,[role=button],.nb,.bkb{touch-action:manipulation;-webkit-user-select:none
  <div class="rw"><span>Graphics</span><select id="gq" style="padding:6px 8px;background:#121c2a;color:#e6eefb;border:1px solid #3a5070;border-radius:6px"><option value="0">Auto (recommended)</option><option value="2">Performance</option><option value="3">Lowest</option></select></div>
  <div class="rw"><span>Show FPS in battle</span><button class="nb" id="sf" style="padding:6px 14px"></button></div>
  <div class="rw"><span>Enemy designs <small id="edn"></small></span><span><button class="nb" id="edi" style="padding:6px 12px">Import</button> <button class="nb" id="edc" style="padding:6px 12px">Clear</button></span></div>
- <div class="rw"><span>Evolution tree</span><button class="nb" id="sev" style="padding:6px 14px">Open</button></div>  <div class="rw"><span>Testing: profile</span><button class="nb" id="spf" style="padding:6px 14px"></button></div>  <div class="rw"><span>Testing: show login screen</span><button class="nb" id="slo" style="padding:6px 14px">Log out</button></div>  <div class="rw" id="spr"><span>Testing: reset test profile</span><button class="nb" id="spx" style="padding:6px 14px">Reset</button></div>
+ <div class="rw"><span>Evolution tree</span><button class="nb" id="sev" style="padding:6px 14px">Open</button></div>  <div class="rw"><span>Testing: profile</span><button class="nb" id="spf" style="padding:6px 14px"></button></div>  <div class="rw"><span>Testing: show login screen</span><button class="nb" id="slo" style="padding:6px 14px">Log out</button></div>  <div class="rw" id="spr"><span>Testing: reset test profile (restarts the tutorial)</span><button class="nb" id="spx" style="padding:6px 14px">Reset</button></div>
  <small id="bld0"></small><small>More settings coming soon.</small><button class="nb" id="sc">Close</button></div></div>
 <style id="wlcss">
 #wl{position:fixed;inset:0;z-index:600;display:flex;align-items:center;justify-content:center;background:#000;font-family:ACE,sans-serif;color:#fff;--Q:min(calc(100vw/900),calc(calc(var(--vh,1vh)*100)/620));overflow:hidden;user-select:none}
@@ -1613,7 +1613,7 @@ button,[role=button],.nb,.bkb{touch-action:manipulation;-webkit-user-select:none
 </div></div>
 <script>
 /* Welcome / login screens (APK flow: new or existing player, login, guest warning, registration), scaled to fill the window. Accounts are not connected to a server yet: every form accepts valid input and starts the game; Supabase replaces done() later. */
-(()=>{const g=id=>document.getElementById(id),w=g("wl"),SK="fv_session"+(typeof PFK!="undefined"?PFK:"");
+(()=>{const g=id=>document.getElementById(id),w=g("wl"),SK="fv_session"+(()=>{try{return localStorage.getItem("fv_profile")==="test"?"_test":""}catch(e){return""}})();
  try{if(localStorage.getItem(SK))return}catch(e){}
  const P={ne:g("wl_ne"),lg:g("wl_lg"),gs:g("wl_gs"),rg:g("wl_rg")};let cur="ne";
  const go=k=>{cur=k;for(const x in P)P[x].hidden=x!==k;const f={lg:"wl_lu",rg:"wl_ru"}[k];if(f)setTimeout(()=>g(f).focus(),30);for(const e of["wl_le","wl_re"])g(e).classList.remove("on");if(k=="ne")for(const i of["wl_lu","wl_lp","wl_ru","wl_rp","wl_rq"])g(i).value=""};
@@ -1629,6 +1629,86 @@ button,[role=button],.nb,.bkb{touch-action:manipulation;-webkit-user-select:none
  g("wl_ro").onclick=()=>{const u=g("wl_ru").value.trim(),p=g("wl_rp").value,q=g("wl_rq").value;if(!U.test(u))return err("wl_re","Username: 3-16 letters, numbers or _");if(p.length<6)return err("wl_re","Password must be at least 6 characters");const d=q.trim().replace(/^@/,"").toLowerCase();if(!/^[a-z0-9_.]{2,32}$/.test(d))return err("wl_re","Enter your Discord username (for recovery)");done("register",u,true,d)};
  w.addEventListener("keydown",e=>{e.stopPropagation();if(e.key=="Enter"){const b={lg:"wl_lo",rg:"wl_ro"}[cur];if(b)g(b).click()}else if(e.key=="Escape"){const b={lg:"wl_lb",rg:"wl_rb"}[cur];if(cur=="gs")go("ne");else if(b)g(b).click()}},true);
  w.classList.remove("hide");go("ne");
+})();
+</script>
+<style id="tutcss">
+#tut{position:fixed;inset:0;z-index:900;pointer-events:none;display:none;font-family:ACE,sans-serif;color:#fff}
+#tut.on{display:block}
+#tut .tb{position:fixed;pointer-events:auto;background:rgba(0,0,0,.66)}
+#tut.free .tb{display:none}
+#tut .tb.clr{background:transparent}
+#tut .th{position:fixed;box-sizing:border-box;border:3px solid #ffb02e;border-radius:6px;box-shadow:0 0 16px 2px rgba(255,176,46,.8);pointer-events:none;animation:tutp 1s ease-in-out infinite alternate}
+@keyframes tutp{to{box-shadow:0 0 26px 6px rgba(255,176,46,1)}}
+#tut .ta{position:fixed;width:clamp(34px,3vw,56px);height:clamp(34px,3vw,56px);pointer-events:none;filter:drop-shadow(0 2px 0 #000);animation:tutb .5s ease-in-out infinite alternate}
+#tut .ta.up{animation-name:tutbu}
+@keyframes tutb{to{transform:translateY(-14px)}}
+@keyframes tutbu{to{transform:translateY(14px)}}
+#tut .tx{position:fixed;box-sizing:border-box;width:min(92vw,clamp(280px,26vw,480px));background:#071a30;border:3px solid #1d7fd8;border-radius:10px;box-shadow:0 0 0 3px #04101e,0 8px 24px rgba(0,0,0,.6);padding:clamp(10px,.9vw,18px) clamp(14px,1.2vw,24px);pointer-events:none;text-align:center}
+#tut .tx b{display:block;font-size:clamp(18px,1.5vw,30px);color:#ffb02e;margin-bottom:.25em;text-shadow:-1px -1px #000,1px -1px #000,-1px 1px #000,1px 1px #000}
+#tut .tx span{display:block;font-size:clamp(14px,1.15vw,22px);line-height:1.3;text-shadow:0 2px 0 #000}
+#tut .tx button{pointer-events:auto;margin-top:.7em;min-width:clamp(110px,9vw,170px);padding:.5em 1em;font:inherit;font-size:clamp(15px,1.2vw,24px);color:#fff;background:#2c8a3a;border:3px solid #7be08a;border-radius:7px;cursor:pointer;text-shadow:0 2px 0 #000}
+#tut .tx button:hover{filter:brightness(1.2)}
+#tut .tx.mid{left:50%;top:50%;transform:translate(-50%,-50%)}
+</style>
+<div id="tut" aria-live="polite"><div class="tb" id="tb0"></div><div class="tb" id="tb1"></div><div class="tb" id="tb2"></div><div class="tb" id="tb3"></div><div class="th" id="tth" hidden></div><svg class="ta" id="tta" viewBox="0 0 40 40" hidden><path d="M20 38 L3 18 H13 V2 H27 V18 H37 Z" fill="#ffb02e" stroke="#000" stroke-width="3" stroke-linejoin="round"/></svg><div class="tx" id="ttx" hidden></div></div>
+<script>
+/* Tutorial (APK order, fitted to this game). Unskippable: every click outside the highlighted control is blocked. Runs on the test profile (S.tut = step number, saved so a refresh resumes the same step). */
+(()=>{const g=id=>document.getElementById(id),w=g("tut"),$$=(s)=>[...document.querySelectorAll(s)].find(e=>e.getClientRects().length>0&&!e.disabled&&!e.classList.contains("dis")&&getComputedStyle(e).visibility!="hidden"),inV=v=>{const e=g(v);return !!e&&!e.classList.contains("hide")},inB=()=>!g("battle").classList.contains("hide"),inBat=()=>inB()&&typeof B!="undefined"&&B&&B.p&&B.e;
+ const F={};/* events from the battle */
+ const nav=s=>$$('[data-go="'+s+'"]')||(inV("menu")?null:inV("work")?$$("#wx"):$$('[data-go="menu"]'));
+ const tabTile=(k,cat,i)=>{if(!inV("work"))return nav("work");if(WCAT!==cat)return $$('#cats [data-cat="'+cat+'"]');return $$('#inv .tile[data-k="'+k+'"][data-i="'+i+'"]')};
+ const bat=(f)=>()=>{if(!inBat()||B.over||B.turn!="p"||B.busy)return null;return f()};
+ const msg=(h,t)=>({m:1,h,t});
+ const toward=()=>{F.hint="Move closer to the enemy.";if(B.cat=="m"){const mv=$$("#ctl [data-a=mv]");if(mv)return mv;return B.e.x>B.p.x?$$("#ctl [data-a=r]"):$$("#ctl [data-a=l]")}return B.cat?$$("#ctl [data-back]"):$$("#ctl [data-cat=m]")};
+ const steps=[
+  msg("WELCOME PILOT!","Let's build your first mech and send it into battle. Follow the arrows."),
+  {h:"TORSO",t:"Tap the Newbie torso to equip it.",tg:()=>tabTile("t","t",11),dn:()=>S.sel.t==11},
+  {h:"LEGS",t:"Now open the Legs tab and equip the Metal Walkers.",tg:()=>tabTile("l","l",4),dn:()=>S.sel.l==4},
+  {h:"WEAPON",t:"Open the Side guns tab and equip the Laser Cannon.",tg:()=>tabTile("w","side",3),dn:()=>S.sel.w.includes(3)},
+  msg("MECH READY!","Your mech is built. Time to test it on the campaign."),
+  {h:"CAMPAIGN",t:"Open the Campaign.",tg:()=>nav("camp"),dn:()=>inV("camp")},
+  {h:"MISSION 1",t:"Select the first mission.",tg:()=>inV("camp")?$$('#nodes [data-m="0"]'):nav("camp"),dn:()=>typeof sm!="undefined"&&sm===0&&inV("camp")&&!!$$("#mq [data-start]")},
+  {h:"FIGHT",t:"Press Fight to start the battle.",tg:()=>inV("camp")?$$("#mq [data-start]"):nav("camp"),dn:()=>inBat()},
+  {b:1,h:"BATTLE BONUS",t:"Pick a bonus for this fight. Damage makes your guns hit harder.",tg:()=>{const on=!g("bfp").classList.contains("hide")&&g("bfp").classList.contains("on");if(on)F.bfp=1;return on?$$("#bfp .c[data-k=d]"):null},dn:()=>(F.bfp&&!g("bfp").classList.contains("on"))||(inBat()&&B.turn=="p"&&!B.busy&&!F.bfp&&Date.now()-(F.t8||(F.t8=Date.now()))>9000),wt:"Get ready..."},
+  {b:1,h:"WEAPONS",t:"Open your weapons.",tg:bat(()=>B.cat=="g"?null:B.cat?$$("#ctl [data-back]"):$$("#ctl [data-cat=g]")),dn:()=>inBat()&&B.cat=="g"},
+  {b:1,h:"FIRE!",t:"Tap the Laser Cannon to shoot the enemy.",tg:bat(()=>{if(B.cat=="m")return toward();if(B.cat=="g"){const f=$$("#ctl [data-f]");return f||toward()}return $$("#ctl [data-cat=g]")}),dn:()=>F.shot},
+  {b:1,m:1,h:"STOMP UNLOCKED!",t:"Your mech can stomp! A stomp hits everything next to you and shoves it back. Let's try it.",on:()=>{S.tutStomp=1;try{playBuf("equip",.6)}catch(e){}save()}},
+  {b:1,h:"STOMP!",t:"Tap Stomp to crush the enemy.",tg:bat(()=>{const s=$$("#ctl [data-a=stompA]");if(s&&!B.cat)return s;if(s&&B.cat=="m")return $$("#ctl [data-back]");if(s)return $$("#ctl [data-back]");return toward()}),dn:()=>F.stomp,wt:"Wait for your turn..."},
+  {b:1,free:1,h:"WELL DONE!",t:"Now finish the fight!",dn:()=>inV("over")||!inBat()},
+  {b:2,h:"VICTORY",t:"Press Continue to leave the battle.",tg:()=>{const r=g("rtt");if(r&&/DEFEAT/i.test(r.textContent))F.hint="You were beaten. Press Continue and try again.";return $$("#over #back")},dn:()=>inV("camp")&&!inB()},
+  {r:1,m:1,h:"PART 1 COMPLETE",t:"You equipped a mech, fought a mission and used the stomp. More training is coming soon.",on:()=>{S.tutDone=1;S.tut=null;save()}}
+ ];
+ const T=window.TUT={f:F,locked:()=>S.tut!=null&&!S.tutDone&&!S.tutStomp,steps};
+ let i=0,en=0,cur=null,tmr=0,shown=-1,scr=-1;
+ const hide=()=>{w.classList.remove("on")},ex=(a,r)=>{for(const k in r)a.style[k]=r[k]};
+ const place=(el,st)=>{const vw=innerWidth,vh=innerHeight,tb=[0,1,2,3].map(k=>g("tb"+k)),th=g("tth"),ta=g("tta"),tx=g("ttx");
+  w.classList.toggle("free",!!st.free);
+  if(!el){th.hidden=ta.hidden=true;ex(tb[0],{left:0,top:0,width:vw+"px",height:vh+"px"});tb[0].classList.toggle("clr",!st.m);for(let k=1;k<4;k++)ex(tb[k],{width:0,height:0});
+   if(st.m||st.wt){tx.hidden=false;tx.className="tx"+(st.m?" mid":"");if(!st.m)ex(tx,{left:(vw-tx.offsetWidth)/2+"px",top:"14px",transform:"none"});else ex(tx,{left:"50%",top:"50%"})}else tx.hidden=true;return}
+  tb[0].classList.remove("clr");const r=el.getBoundingClientRect(),P=6,L=Math.max(0,r.left-P),Tp=Math.max(0,r.top-P),R=Math.min(vw,r.right+P),Bt=Math.min(vh,r.bottom+P);
+  ex(tb[0],{left:0,top:0,width:vw+"px",height:Tp+"px"});ex(tb[1],{left:0,top:Bt+"px",width:vw+"px",height:Math.max(0,vh-Bt)+"px"});ex(tb[2],{left:0,top:Tp+"px",width:L+"px",height:Math.max(0,Bt-Tp)+"px"});ex(tb[3],{left:R+"px",top:Tp+"px",width:Math.max(0,vw-R)+"px",height:Math.max(0,Bt-Tp)+"px"});
+  th.hidden=false;ex(th,{left:L+"px",top:Tp+"px",width:R-L+"px",height:Bt-Tp+"px"});
+  tx.hidden=false;tx.className="tx";ex(tx,{transform:"none"});const bw=tx.offsetWidth,bh=tx.offsetHeight,aw=ta.getBoundingClientRect().width||40,below=Bt+aw+bh+16<=vh||Tp-aw-bh-16<0;
+  ta.hidden=false;ta.classList.toggle("up",below);ta.style.transform="";ta.style.rotate=below?"180deg":"0deg";
+  const cx=(L+R)/2;ex(ta,{left:cx-aw/2+"px",top:(below?Bt+2:Tp-aw-2)+"px"});
+  const ty=below?Bt+aw+6:Tp-aw-6-bh;ex(tx,{left:Math.max(8,Math.min(vw-bw-8,cx-bw/2))+"px",top:Math.max(8,Math.min(vh-bh-8,ty))+"px"})};
+ const draw=st=>{const tx=g("ttx"),tt=F.hint||st.t,key=i+"|"+tt;if(shown!==key){shown=key;tx.innerHTML="<b>"+st.h+"</b><span>"+tt+"</span>"+(st.m?'<button type="button" id="tok">OK</button>':"");const ok=g("tok");if(ok)ok.onclick=()=>adv()}};
+ const adv=()=>{const st=steps[i];try{if(st.on)st.on()}catch(e){}if(S.tutDone||S.tut==null){en=0;hide();return}i++;S.tut=i;save();F.shot=F.stomp=0;F.bfp=0;F.t8=0;shown=-1;scr=-1;tick()};
+ const tick=()=>{if(!en)return;if(!g("wl").classList.contains("hide")){hide();return}const st=steps[i];if(!st){en=0;hide();return}
+  w.classList.add("on");
+  if(st.b&&!inBat()&&i>7&&!(st.b==2&&inV("over"))){const hv=!g("over").classList.contains("hide");if(!hv&&!(st.b==2&&inV("camp"))){/* battle gone (refresh / left): back to selecting the mission */if(!S.camp.includes(MIS[0].id)){i=6;S.tut=i;save();shown=-1}else if(st.b==2){}}}
+  if(st.b==2&&inV("camp")&&!inB()&&!S.camp.includes(MIS[0].id)){i=6;S.tut=i;save();shown=-1;return}
+  if(st.dn&&!st.m){let d=false;try{d=st.dn()}catch(e){}if(d){adv();return}}
+  F.hint="";let el=null;if(!st.m&&st.tg){try{el=st.tg()}catch(e){el=null}}draw(st);
+  if(el&&el._tz!==i){el._tz=i;try{el.scrollIntoView({block:"nearest",inline:"nearest"})}catch(e){}}
+  place(st.m?null:el,st)};
+ /* keyboard shortcuts must not bypass the arrows */
+ for(const ev of["keydown","keyup","keypress"])addEventListener(ev,e=>{if(!en||!w.classList.contains("on")||steps[i]&&steps[i].free)return;if(e.target&&/INPUT|TEXTAREA/.test(e.target.tagName))return;if(e.key==="Enter"&&steps[i]&&steps[i].m&&ev=="keydown"){const ok=g("tok");if(ok){e.preventDefault();e.stopPropagation();ok.click()}return}e.preventDefault();e.stopPropagation()},true);
+ /* battle events */
+ const hook=()=>{try{const sh=shoot;shoot=async function(a){const r=await sh.apply(this,arguments);try{if(a===B.p)F.shot=1}catch(e){}return r};const sk=stompHit;stompHit=async function(a){const r=await sk.apply(this,arguments);try{if(a===B.p)F.stomp=1}catch(e){}return r}}catch(e){console.error("tutorial hooks",e)}};
+ const start=()=>{if(typeof PFK=="undefined"||!PFK||S.tutDone)return;if(S.tut==null){S.tut=0;S.tutStomp=0;S.sel.t=S.sel.l=S.sel.tu=S.sel.lu=null;S.sel.w=S.sel.w.map(()=>null);S.sel.wu=S.sel.wu.map(()=>null);S.sel.m=S.sel.mu=null;S.sel.mx=S.sel.mx.map(()=>null);S.sel.mxu=S.sel.mxu.map(()=>null);save();try{work()}catch(e){}}
+  hook();i=Math.min(S.tut|0,steps.length-1);en=1;shown=-1;tmr=setInterval(tick,120);addEventListener("resize",tick);tick()};
+ if(document.readyState=="complete")setTimeout(start,50);else addEventListener("load",()=>setTimeout(start,50))
 })();
 </script>
 <div id="toast" class="hide"></div>
@@ -4163,7 +4243,7 @@ function controls(){
     const cb=(k,ic,t)=>T(img(CBI[ic]),t,`data-cat="${k}"`,!!B.egg&&k!="m");
     bar=cb("m","move","Movement")+cb("g","guns","Weapons")+cb("s","spec","Specials")+cb("k","kits","Kits")+
       (B.ms&&B.ms.length>1?T(img(CBI.swm),swTip(),'data-cat="sw"',!!B.egg):"")+
-      T(img(CBI.spk),p.mag?`${TRDL(p.lid)?"Ram":"Stomp"} (${L[p.lid].n}) · ${SP(p).dmg[0]==SP(p).dmg[1]?SP(p).dmg[0]:SP(p).dmg[0]+"-"+SP(p).dmg[1]} ${({phys:"physical",fire:"explosive",energy:"electric"})[SP(p).ty]} dmg${SP(p).hd?" · +"+SP(p).hd+" heat dmg":""}${SP(p).ed?" · drains "+SP(p).ed+" energy":""} · pushes ${SP(p).push} · reach ${SP(p).rg} · free${p.mag.uses?" · "+Math.max(0,p.mag.uses-(p.magUsed||0))+" of "+p.mag.uses+" uses left":""}${wkOK?" · also drops a Twin Walker (once per battle)":""}`:`Stomp · ${STP.dmg[0]}-${STP.dmg[1]} dmg · pushes ${STP.push} · range ${STP.rg}${STP.en?" · "+STP.en+" en":" · free"}${wkOK?" · also drops a Twin Walker (once per battle)":""}`,'data-a="stompA"',!!B.egg||!stOK,idle&&p.en<SP(p).en?["en"]:idle&&!wkOK&&!(SPU(p)&&E.some(o=>Math.abs(o.x-p.x)<=SP(p).rg))?[SPU(p)?"rg":"en"]:null,p.mag&&p.mag.uses?Array.from({length:p.mag.uses},(_,j)=>j<(p.magUsed||0)?1:0):undefined)+
+      T(img(CBI.spk),p.mag?`${TRDL(p.lid)?"Ram":"Stomp"} (${L[p.lid].n}) · ${SP(p).dmg[0]==SP(p).dmg[1]?SP(p).dmg[0]:SP(p).dmg[0]+"-"+SP(p).dmg[1]} ${({phys:"physical",fire:"explosive",energy:"electric"})[SP(p).ty]} dmg${SP(p).hd?" · +"+SP(p).hd+" heat dmg":""}${SP(p).ed?" · drains "+SP(p).ed+" energy":""} · pushes ${SP(p).push} · reach ${SP(p).rg} · free${p.mag.uses?" · "+Math.max(0,p.mag.uses-(p.magUsed||0))+" of "+p.mag.uses+" uses left":""}${wkOK?" · also drops a Twin Walker (once per battle)":""}`:`Stomp · ${STP.dmg[0]}-${STP.dmg[1]} dmg · pushes ${STP.push} · range ${STP.rg}${STP.en?" · "+STP.en+" en":" · free"}${wkOK?" · also drops a Twin Walker (once per battle)":""}`,'data-a="stompA"',!!B.egg||!stOK||!!(window.TUT&&TUT.locked()),idle&&p.en<SP(p).en?["en"]:idle&&!wkOK&&!(SPU(p)&&E.some(o=>Math.abs(o.x-p.x)<=SP(p).rg))?[SPU(p)?"rg":"en"]:null,p.mag&&p.mag.uses?Array.from({length:p.mag.uses},(_,j)=>j<(p.magUsed||0)?1:0):undefined)+
       T(img(CBI.stomp),`Shut engine down · uses 1 action · cools up to ${p.cool} heat (now ${p.heat}/${p.hc})`,'data-a="cool"',!!B.egg||!idle);
   }else{
     lbl=CATN[cat];let it="";const bkBtn=T(iz(CBX.back,1.3),"Back",'data-back="1"',false);
@@ -5431,7 +5511,7 @@ try{if(!S.gj7){S.gj7=1;addI("t",7,true);save();if(typeof head=="function")setTim
 (function(){const lab=()=>{$("sm").textContent=S.mute?"Off":"On";$("sx").textContent=S.nosfx?"Off":"On";};
  const gear=()=>{const h=$("hangar").classList.contains("hide");$("gear").classList.toggle("hide",h);$("qbtn").classList.toggle("hide",h||document.body.classList.contains("inw")||$("menu").classList.contains("hide")||["camp","prof","arn","quest","store","work"].some(i=>!$(i).classList.contains("hide")))};window._gear=gear;setInterval(gear,300);
 $("qbtn").onclick=()=>{$("qbtn").classList.add("hide");show("quest")};{const qi=$("qbtn").querySelector("img");$("qbtn").onmouseenter=()=>qi.src=qi.dataset.h;$("qbtn").onmouseleave=()=>qi.src=qi.dataset.n}$("quest").onclick=e=>{const b=e.target.closest("button");if(b&&b.dataset.go)show(b.dataset.go)};
- $("gear").onclick=()=>{lab();try{$("bld0").textContent="Build 2026-11-26 b199 · "+Object.keys(CAMPD).filter(k=>k[0]!="_").length+" enemy designs built in"}catch(_){}{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();
+ $("gear").onclick=()=>{lab();try{$("bld0").textContent="Build 2026-11-26 b200 · "+Object.keys(CAMPD).filter(k=>k[0]!="_").length+" enemy designs built in"}catch(_){}{const n=Object.keys(S.designs||{}).length;$("edn").textContent=n?"("+n+" loaded)":"";}$("set").classList.remove("hide")};$("edi").onclick=()=>{const t=prompt("Paste the enemy designs JSON from the Enemy Builder:");if(t)importDesigns(t);$("edn").textContent=Object.keys(S.designs||{}).length+" loaded"};$("edc").onclick=()=>{S.designs={};save();$("edn").textContent="";toast("Enemy designs cleared")};$("sc").onclick=()=>$("set").classList.add("hide");$("sev").onclick=()=>window.openEvoTree&&window.openEvoTree();
 {/* profile switch: your real save is never touched by the test profile; switching reloads the page */const pf=$("spf"),px=$("spx");let cf=0,ct=0;const lab2=()=>{pf.textContent=PFK?"Test (switch to Main)":"Main (switch to Test)";px.textContent="Reset";$("spr").style.display=PFK?"":"none"};const arm=(b,fn)=>{if(cf===b){clearTimeout(ct);cf=0;fn();return}cf=b;b.textContent="Tap again to confirm";clearTimeout(ct);ct=setTimeout(()=>{cf=0;lab2()},4000)};lab2();
  $("slo").onclick=()=>{try{localStorage.removeItem("fv_session"+PFK);sessionStorage.removeItem("fv_session"+PFK)}catch(e){}location.reload()};
  pf.onclick=()=>arm(pf,()=>{try{save();localStorage.setItem("fv_profile",PFK?"main":"test")}catch(e){}location.reload()});
